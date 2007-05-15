@@ -1,0 +1,36 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page assetTag Documentation for assetTag executable
+
+\section NAME NAME
+assetTag
+
+\section SYNOPSIS SYNOPSIS
+
+The assetTag executable is used to read or write Dell system asset tags. Asset
+tags are generally 10 characters and can be set to any value by the system
+owner. It is generally used for asset tracking purposes.
+
+<pre>
+    $ ./assetTag
+    Existing Asset Tag:
+
+    $ ./assetTagS -s foobar
+    Existing Asset Tag:
+    Changing Asset Tag: foobar
+    Change Successful. The changes may not take effect until reboot, depending on
+    system type.
+
+</pre>
+
+\section DESCRIPTION
+
+\section RETURN VALUE
+
+\section ERRORS
+
+\section RESTRICTIONS
+
+\section SEE ALSO
+
+*/

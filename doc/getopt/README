@@ -1,0 +1,118 @@
+getopts v0.3.0 {http://www.dragon-ware.com/~steve/projects/getopts}
+Written by: Steve Mertz <steve@dragon-ware.com>
+License: BSD Style
+Development Environment: Slackware 7.1, gcc 2.95.2
+Development Environment: Slackware 8.1, gcc 2.95.3
+Development Environment: FreeBSD 5.0-CURRENT (20020210)
+Known to work on: OpenBSD, Windows, FreeBSD, Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+GetOpts is a command line parser.  It was built because the author couldn't
+find a command line parser that he liked.
+
+Easy to use.  
+
+In the file that contains your main()...
+
+/* See included main.c */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "getopts.h"
+
+int main(int argc, char **argv)
+{
+  char *args;
+  int c;
+
+  struct options opts[] = 
+  {
+    { 1, "debug",   "Set the debugging level", "d", 1 },
+    { 2, "version", "Display the version info", "V", 0 },
+    { 3, NULL,      "Set the config file",      "f", 1 },
+    { 4, "test",    "Test getopts_usage",       "t", 0 },
+    { 0, NULL,      NULL,                      NULL, 0 }
+  };
+
+  while ((c = getopts(argc, argv, opts, args)) != 0)
+    {
+      switch(c)
+        {
+          case 1:
+            printf("Setting debug level to: %s\n", args);
+/*            setDebugLevel(args); */
+            break;
+          case 2:
+            printf("ProgName 0.1.1\n");
+            printf("Written by: Steve Mertz\n");
+            exit(0);
+            break;
+          case 3:
+            printf("Setting config file to: %s\n", args);
+/*            readConfig(args); */
+            break;
+          case 4:
+            /* This is just to test.  "argv[0]" is the program name */
+            getopts_usage(argv[0], opts);
+            break;
+          default:
+            break;
+        }
+/* This free() is required since getopts() automagically allocates space
+   for "args" everytime it's called. */
+      free(args);
+    }
+  return 0;
+} 
+
+
+This example program.  Please note there is no -h or --help, as these are
+built in to the getopts() function, which is why in the array that is declared,
+you enter a description.  It should format everything correctly in the help if
+things aren't too long.
+
+Looking at the options struct.  
+
+{ 1, "debug",   "Set the debugging level", "d", 1 },
+
+This first entry here is '1', this is the number that getopts() will return
+if it matches any of the command line arguments.  The next entry "debug" is
+the long name of the command line argument.  It will be used like "--debug".
+The third entry is the description.  This is what will be shown in the event
+of using "-h" or "--help".  Or should the arguements not be there and it 
+decides to dump out the usage. The fourth entry is the short name or "-d" as
+it would be seen on the command line.  The last (fifth) entry '1' is going to
+be either a one or a zero.  And it tells if there are any arguments for this 
+option.  like "--debug 3" could be used here for setting debug level to '3'.
+
+Either the fullname (entry 2) or the short name (entry 4) can have NULL for
+its entry, signifying it should only use one or the other.  But you need 
+atleast 1 of them.  
+
+-- IGNORE THIS PARAGRAPH --  This is only here for Historical references.
+At this current time, you can only have 1 argument for an option (space
+delimited). In the next release I may change this so that you can have either
+multiple arguments or have quoted arguments.
+-------------------------------------------------------------------------------
+
+NEW:
+~~~~
+20020822 -- Added a new function: getopts_usage()  This is so you can call 
+            getopts_usage() from within your own program to get the usage
+            should you want to.  Thanks to Tim Tassonis for this idea.
+
+TODO:
+~~~~~
+o Use proper formatting techniques rather than just tab spacing.
+o Write better documentation.
+o Have multiple arguments for options.
+
+
+BUGS (fixed):
+~~~~~~~~~~~~~
+20020822 -- A seg fault would occur if you didn't use arguments for the options. -- Tim Tassonis
+20020719 -- Static buffers for option arguments  -- Tim Tassonis
+         -- Memory Leaks (found thanks to Tim!)
+         -- Wasted Cycles (took out code that didn't actually do anything.)
+20011218 -- Could not use '-' in arguments for options. -- Dirk Eddelbuettel
+20010113 -- None as of today that I know of.  -- Steve Mertz

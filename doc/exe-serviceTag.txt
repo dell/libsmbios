@@ -1,0 +1,39 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page serviceTag Documentation for serviceTag executable
+
+\section NAME NAME
+serviceTag
+
+\section SYNOPSIS SYNOPSIS
+
+The serviceTag executable is used to read or write Dell system service tags. 
+Service tags are generally either 5 or 7 characters and are set at the Dell
+factory to the Dell-managed service tag number. This tag should not be set by
+end-users, as it is used for service and support purposes.
+
+Note that some systems do not allow setting of service tag outside of the Dell
+factory.
+
+<pre>
+    $ ./serviceTag
+    Existing Service Tag:
+
+    $ ./serviceTagS -s foobar1
+    Existing Service Tag:
+    Changing Service Tag: foobar1
+    Change Successful. The changes may not take effect until reboot, depending on
+    system type.
+</pre>
+
+\section DESCRIPTION
+
+\section RETURN VALUE
+
+\section ERRORS
+
+\section RESTRICTIONS
+
+\section SEE ALSO
+
+*/

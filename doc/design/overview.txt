@@ -1,0 +1,67 @@
+/* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+   vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:cindent:
+*/
+
+/** \page overview_overview Libsmbios Overview
+ \section overview_reasoning Libsmbios - A BIOS Access library
+
+ Many BIOS tools exist today.  However, there are few, if any, libraries for
+ accessing BIOS information.  Libsmbios was designed with the following goals
+ in mind.
+
+ \subsection overview_goals Libsmbios Goals
+ \li Best-practice design principles
+ \li Extensible Access to SMBIOS Information
+ \li Ability to perform unit tests across multiple systems \a without \a using \a physical \a hardware 
+ \li Centralized, data-driven exception handling for broken BIOS tables
+
+ \section overview_best_practice_design Best-Practice Design Principles
+ Libsmbios uses the current best-practice in design principles:
+ \li Abstract Factory pattern
+ \li Dependency Inversion Principle
+ \li Observer/Observable pattern
+
+ \section overview_extensible Extensible Access
+ Libsmbios provides two layers of access to BIOS data.  The first layer uses 
+ table numbers, address, and offsets to access data.  An example is the using
+ table number 0, offset 5 to access the BIOS Version string inside the SMBIOS
+ BIOS Information table.  This layer relies on the basic formats of each BIOS
+ interface, i.e. the table format of SMBIOS is standardized.  Therefore, new
+ tables can be accessed through layer 1 even though the code has no knowledge
+ of the new table content.
+
+ The second layer uses XML to model BIOS data.  The XML file contains 
+ human-readable strings to identify table numbers, address, and offsets.  To 
+ build on the example above, the same data could be accessed as 
+ "BIOS Information", "BIOS Version".  Layer 2 uses the XML to interpret the 
+ type of data within the table.  At layer 1, the code can only provide the 
+ integer value 0x02040020.  At layer 2, the code can identify that the value
+ is a bit field and, according to the XML, means that PCI, ISA, EISA, and Boot
+ from CD is supported by the BIOS.  Naturally, layer 2 accesses data through
+ layer 1 with the enhanced capabilities of XML modeling.
+
+ The image below shows the logical model of the Libsmbios design.  This should 
+ not be misinterpreted as a class diagram or hierarchy.  For that type of 
+ information, please see the Class Hierarchy page.
+ 
+ \image html InterfaceLogicalModel.jpg "Logical Model of Libsmbios"
+
+ \section overview_unittest Unit Test Design
+ Software-based unit testing of the Libsmbios code is one of the key features
+ of the library.  Simply put, over 80% of the code path can
+ be tested without the use of hardware platforms.  This is possible because 
+ layer 1 is designed to use files or memory interchangeably when accessing 
+ BIOS data. That means the memory of a particular server can be dumped to a 
+ file and stored in a unit test tree.  Every time the code is unit-tested it 
+ can use memory files from multiple servers as input.  There is no limit to 
+ the number of these "virtual systems" that can be captured, stored, and tested
+ in the unit test framework.
+
+ The image below shows the use of multiple virtual systems within the unit test
+ framework.
+
+ \image html UnitTestLogicalModel.jpg "Unit Testing of Libsmbios"
+ 
+
+*/
+

@@ -1,0 +1,63 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:textwidth=80:
+//
+//Do not use "\section", "\subsection", or other page-related commands here as
+//this file is inlined in the ISmbios.h file.
+// 
+/**  \page unit_test_theory Unit Test Overview
+
+  \section test_over Unit testing overview
+
+  <p>The libsmbios project uses CPPUNIT as it's primary test tool. This tool
+  allows the developer to write module- and API-level unit tests.
+  http://cppunit.sourceforge.net/
+
+  One of the major design principles for the library as a whole is testability.
+  This means that we use API-level unit testing, along with the Abstract Factory
+  design pattern and Mock Objects to ensure that all code is thoroughly tested.
+
+  The libsmbios code layout separates the low-level code that does memory or
+  CMOS access from the rest of the codebase. This allows these modules to be
+  easily swapped out during testing to simulate a real environment. 
+
+  For example, the base test suite runs about 50 tests. These 50 tests are run
+  against memory and cmos data dumps that fool all of the mid-layer code into
+  believing that they are running against a real machine's bios.
+
+  A side-benefit of this approach to testing is that it also enhances
+  portability.
+  
+  \section test_type Types of tests
+
+  There are several types of tests and automated reports built into the tree. 
+  Here is a sample:
+    \li <pre>make unit_test</pre>
+    \li <pre>make coverage</pre>
+    \li <pre>make valgrind</pre>
+
+  \subsection ut1 unit_test
+  <p>The output from the unit test run is saved in a file called 
+  "testResults.xml", which is saved in your tree in different places depending 
+  on which OS you are building on. You can view the failures and failure 
+  messages in this file.
+
+  \subsection ut2 coverage
+  <p> The 'coverage' and 'valgrind' targets expand upon the unit test run by
+  extracting different data out of the run. The 'make coverage' target saves the
+  coverage report \link code_coverage here.\endlink It is saved in the
+  filesystem as doc/report/code-coverage.txt. You can view the raw data behind
+  the coverage report. This data is saved in the coverage/ directory. 
+
+  You will find a complete, marked-up copy of the source code in the coverage/
+  directory. This marked up copy shows how many times each line of code is run
+  during the unit tests. This is an excellent resource to guide developers in
+  writing effective unit tests. You should always assume that code that has not
+  been covered by a unit test is buggy and figure out a way to write a test for
+  it.
+
+  \subsection ut3 valgrind
+  <p>The 'valgrind' target runs the unit_test suite under a memory leak
+  detection program called \a valgrind. This tool will catch all memory leaks,
+  unitialized memory access, use-after-free, as well as other common programming
+  errors. The valgrind report is saved under doc/reports/valgrind-output.txt.
+    
+ */

@@ -1,0 +1,39 @@
+
+Things that all executables need to have in order to be moved into
+supported-bins/. 
+    - must use getopt, and follow standard argument conventions, listed below.
+    - must have good error messages for failures
+    - must follow include file guidelines
+    - must be properly licensed
+    - must have proper makefile and static/dynamic executable
+    - must follow coding style (indentation, spacing, etc)
+    - should work cross platform (must have _very_ good excuse if not.)
+    - should allow use against debug memory/cmos dumps (not possible for
+      things like SMI, though.)
+
+
+STANDARD ARGUMENT CONVENTIONS
+
+We need to standardize the arguments across the binaries in this dir such that
+the following list is always a common list of cmdline options. default help
+text is also listed.
+
+If a program does not use these args, it should never re-use these letters or
+long option names for another value. (For example, if an executable doesnt use
+--set, it shouldn't use -s for something else.)
+
+ |---------------------> Std getopt seq number
+ |    |----------------> Short option
+ |    |    |-----------> Long option
+ |    |    |             std help text
+==============================================================================
+249      --rawpassword   password is in raw format, do not convert to scancode
+250  -s  --set           ##set a value##  -- specific to binary
+251  -g  --get           ##get a value##  -- specific to binary
+252  -p  --password      BIOS setup password
+253  -c  --cmos_file     Debug: CMOS dump file to use instead of physical cmos
+254  -m  --memory_file   Debug: Memory dump file to use instead of physical memory
+255  -v  --version       display libsmbios/program version
+(builtin) -h  --help     display help text
+
+

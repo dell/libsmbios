@@ -1,0 +1,32 @@
+
+/**
+\page patches How to submit a patch
+
+\section what_patch What is a patch?
+
+A patch is a way that you can make changes to the libsmbios code and send just
+your changes to the libsmbios development team. The team can see the lines
+of code that you changed, so they don't need to hunt through the code to see
+what changed. You can also use the patch to apply the changes to the official
+code base.
+
+You create a patch by downloading the source code for libsmbios and working on
+coding up your changes. 
+
+\subsection patch_tarball Creating a patch from tarball
+    need to finish this section. :-)
+
+\section verify_patch How do I verify my changes.
+
+There are several requirements for any proposed change to libsmbios. The
+requirements are very easy to fulfill. The list of requirements are below. Any
+patch not including all of these items will be rejected.
+
+- <b>Update TODO file</b>
+- <b>Update doxygen </b>
+- <b>Add unit tests for new code</b> 
+- <b>Verify code coverage for new code</b> <pre>make coverage</pre>
+- <b>Run all unit tests before submission</b> <pre>make unit_test</pre>
+- <b>Run memory leak detection before submission</b> <pre>make valgrind</pre>
+
+*/

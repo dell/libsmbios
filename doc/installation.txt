@@ -1,0 +1,21 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page installation Installation of Libsmbios
+*
+* \section install Installation Requirements
+*
+* The libsmbios project is split into two libraries. The first library is the
+* base smbios lib. This library has no external dependencies when installing.
+*
+* The next lib is the smbiosxml library. This library simply has the dependency
+* on the Xerces XML parser and the base smbios library.
+*
+* \subsection linux_inst Linux Installation
+*
+* An RPM is provided for Linux Installation.
+*
+* \subsection win_ins Windows Installation
+*
+* need some text here.
+*
+*/

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsmbios-mt", "libsmbios-mt\libsmbios-mt.vcproj", "{F3D3A9F9-2E32-4FE8-A8D8-120E464464CB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "getSystemId", "getSystemId\getSystemId.vcproj", "{4BE10EA0-AA14-4FA4-8CFA-12EB5A1DD35A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F3D3A9F9-2E32-4FE8-A8D8-120E464464CB} = {F3D3A9F9-2E32-4FE8-A8D8-120E464464CB}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3D3A9F9-2E32-4FE8-A8D8-120E464464CB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F3D3A9F9-2E32-4FE8-A8D8-120E464464CB}.Debug|Win32.Build.0 = Debug|Win32
+		{F3D3A9F9-2E32-4FE8-A8D8-120E464464CB}.Release|Win32.ActiveCfg = Release|Win32
+		{F3D3A9F9-2E32-4FE8-A8D8-120E464464CB}.Release|Win32.Build.0 = Release|Win32
+		{4BE10EA0-AA14-4FA4-8CFA-12EB5A1DD35A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4BE10EA0-AA14-4FA4-8CFA-12EB5A1DD35A}.Debug|Win32.Build.0 = Debug|Win32
+		{4BE10EA0-AA14-4FA4-8CFA-12EB5A1DD35A}.Release|Win32.ActiveCfg = Release|Win32
+		{4BE10EA0-AA14-4FA4-8CFA-12EB5A1DD35A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

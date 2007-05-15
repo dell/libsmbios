@@ -1,0 +1,126 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page bios_hdr Dell BIOS .HDR files
+
+\section obtain OBTAINING BIOS HEADER (.HDR) FILES
+\subsection hdr_tool Scripted extraction of BIOS .HDR files
+
+There is now an automated tool available to automate the process of extracting
+.HDR files from the BIOS update executables that you can download from
+support.dell.com. This tool is called "extract_hdr" and is contained in the
+firmware-tools RPM. You can install this RPM from the libsmbios yum repository
+by following the instructions here: 
+    \li \ref yum. 
+
+or, for quick, scripted, setup:
+    \li <a href="http://linux.dell.com/repo/software/">Bootstrap script for
+    quick setup of libsmbios repository</a>
+
+After setting up the libsmbios
+yum repository, you can install the firmware tools rpm by running "yum install
+firmware-tools".
+
+It is _HIGHLY_ recommended that you install wine. It is not a strict
+dependency, as the extraction methods that use wine will be skipped if wine is
+not installed. But, if you have wine installed, you can extract more types of
+BIOS images. The downside is that some BIOS images may cause wine to hang. If
+this happens, kill the wine and wineserver processes. The extraction process
+should not take more than 5-10 seconds. If it takes significantly longer, it
+is likely that wine has hung. If you choose to script BIOS extractions in an
+automated process, it is recommended that you run a reaping program that
+checks for wine processes that are older than 10 seconds and kills them
+automatically.
+
+After you have the tools installed, you can extract a single header like this:
+
+\verbatim
+[user@build ~]$ extract_hdr -i sab-a01.exe -o test_output/
+  attempt extract: /home/user/sab-a01.exe
+    good: extractHdrFromPrecisionWindowsExe
+
+[user@build ~]$ find test_output/
+test_output/
+test_output/hdr
+test_output/hdr/system_bios_0x1028_0x00df_version_a01.hdr
+test_output/hdr/config.ini
+test_output/hdr/system_bios_0x1028_0x00da_LATEST.hdr
+test_output/hdr/system_bios_0x1028_0x00df_LATEST.hdr
+test_output/hdr/system_bios_0x1028_0x00da_version_a01.hdr
+
+[user@build ~]$ ll test_output/hdr/
+total 1064
+-rw-rw-r--  1 user user    521 Jan 17 23:13 config.ini
+lrwxrwxrwx  1 user user     41 Jan 17 23:13 system_bios_0x1028_0x00da_LATEST.hdr -> system_bios_0x1028_0x00da_version_a01.hdr
+-rw-rw-r--  1 user user 524380 Jan 17 23:13 system_bios_0x1028_0x00da_version_a01.hdr
+lrwxrwxrwx  1 user user     41 Jan 17 23:13 system_bios_0x1028_0x00df_LATEST.hdr -> system_bios_0x1028_0x00df_version_a01.hdr
+-rw-rw-r--  1 user user 524380 Jan 17 23:13 system_bios_0x1028_0x00df_version_a01.hdr
+
+[user@build ~]$
+\endverbatim
+
+Note the creation of the hdr/ subdirectory, as well as symlinks corresponding
+to the latest BIOS release for each platform. These can come in handy.
+
+\subsection hdr_tool_multiple Extraction of multiple .HDR files at the same time
+
+You do not have to use the "-i input_file" option to specify a single file to
+extract. If you create a subdirectory under the output directory (specified
+with the '-o' option), and drop any number of BIOS executables, they will all
+automatically be extracted if you do not give the '-i' option. Note that the
+directory name must be >3 chars, as 3-char dir names are reserved for internal
+use by the extraction tool.
+
+For example:
+
+\verbatim
+[user@build ~]$ mkdir test_output
+[user@build ~]$ mkdir test_output/extract_these_please
+[user@build ~]$ mv sab-a01.exe  sab-a02.exe  WS380A02.EXE  WS380A04.EXE test_output/extract_these_please/
+
+[user@build ~]$ extract_hdr -o test_output/
+  attempt extract: /home/user/test_output/extract_these_please/WS380A02.EXE
+    good: extractHdrFromPrecisionWindowsExe
+  attempt extract: /home/user/test_output/extract_these_please/WS380A04.EXE
+    good: extractHdrFromPrecisionWindowsExe
+  attempt extract: /home/user/test_output/extract_these_please/sab-a01.exe
+    good: extractHdrFromPrecisionWindowsExe
+  attempt extract: /home/user/test_output/extract_these_please/sab-a02.exe
+    good: extractHdrFromPrecisionWindowsExe
+
+[user@build ~]$ find test_output/
+test_output/
+test_output/hdr
+test_output/hdr/system_bios_0x1028_0x00df_version_a01.hdr
+test_output/hdr/system_bios_0x1028_0x01a8_LATEST.hdr
+test_output/hdr/system_bios_0x1028_0x01a8_version_a02.hdr
+test_output/hdr/config.ini
+test_output/hdr/system_bios_0x1028_0x00da_version_a02.hdr
+test_output/hdr/system_bios_0x1028_0x00da_LATEST.hdr
+test_output/hdr/system_bios_0x1028_0x00df_LATEST.hdr
+test_output/hdr/system_bios_0x1028_0x00da_version_a01.hdr
+test_output/hdr/system_bios_0x1028_0x01a8_version_a04.hdr
+test_output/hdr/system_bios_0x1028_0x00df_version_a02.hdr
+test_output/extract_these_please
+test_output/extract_these_please/WS380A04.EXE
+test_output/extract_these_please/sab-a01.exe
+test_output/extract_these_please/WS380A02.EXE
+test_output/extract_these_please/sab-a02.exe
+
+[user@build ~]$ ls -l test_output/hdr/
+total 3036
+-rw-rw-r--  1 user user   1330 Jan 17 23:30 config.ini
+lrwxrwxrwx  1 user user     41 Jan 17 23:30 system_bios_0x1028_0x00da_LATEST.hdr -> system_bios_0x1028_0x00da_version_a02.hdr
+-rw-rw-r--  1 user user 524380 Jan 17 23:30 system_bios_0x1028_0x00da_version_a01.hdr
+-rw-rw-r--  1 user user 524380 Jan 17 23:30 system_bios_0x1028_0x00da_version_a02.hdr
+lrwxrwxrwx  1 user user     41 Jan 17 23:30 system_bios_0x1028_0x00df_LATEST.hdr -> system_bios_0x1028_0x00df_version_a02.hdr
+-rw-rw-r--  1 user user 524380 Jan 17 23:30 system_bios_0x1028_0x00df_version_a01.hdr
+-rw-rw-r--  1 user user 524380 Jan 17 23:30 system_bios_0x1028_0x00df_version_a02.hdr
+lrwxrwxrwx  1 user user     41 Jan 17 23:30 system_bios_0x1028_0x01a8_LATEST.hdr -> system_bios_0x1028_0x01a8_version_a04.hdr
+-rw-rw-r--  1 user user 458844 Jan 17 23:30 system_bios_0x1028_0x01a8_version_a02.hdr
+-rw-rw-r--  1 user user 458844 Jan 17 23:30 system_bios_0x1028_0x01a8_version_a04.hdr
+[user@build ~]$
+
+\endverbatim
+
+
+*/

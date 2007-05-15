@@ -1,0 +1,42 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page propertyTag Documentation for propertyTag executable
+
+\section NAME NAME
+propertyTag
+
+\section SYNOPSIS SYNOPSIS
+
+The propertyTag executable is used to read or write the Dell property
+ownership tags. Property ownership tags are generally 80-characters and can be
+set to any value by the system owner. This tag is displayed across the screen
+during BIOS POST through system bootup. It is also displayed if the system has
+an admin/user password set that must be entered to continue bootup.
+
+The propertyTag executable relies on the "dcdbas" kernel-mode driver. This
+driver is included in Linux kernels starting at 2.6.14. A dkms package is
+provided in the libsmbios package for earlier 2.6.x kernels.
+
+<pre>
+    $ ./propertyTag
+    Existing Property Tag:
+
+    $ ./propertyTagS -s "New property ownership tag."
+    Existing Property Ownership Tag:
+    Changing Property Ownership Tag: New property ownership tag.
+    Change Successful. The changes may not take effect until reboot, depending on
+    system type.
+
+</pre>
+
+\section DESCRIPTION
+
+\section RETURN VALUE
+
+\section ERRORS
+
+\section RESTRICTIONS
+
+\section SEE ALSO
+
+*/

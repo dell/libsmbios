@@ -1,0 +1,86 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page compilation_linux Compiling Libsmbios on Linux
+ \section lin_comp Linux Compilation
+ Libsmbios has been tested with the following compilers on Linux:
+    - GCC 3.2 
+    - GCC 3.3
+    - GCC 3.4
+
+ Note: Older versions of libsmbios were tested on GCC 2.96. Libsmbios is no
+ longer actively maintained for this and earlier versions of GCC.
+
+ In addition to the tools mentioned in the \ref all section, for the Linux
+ compile the following tools are recommended (but not required):
+    - Valgrind: http://valgrind.kde.org/ 
+
+ The steps to build the library on Linux are as follows:
+  - Untar the distribution:
+    \verbatim
+    user@host:~/$ tar xvjf libsmbios-0.1.0.tar.bz2
+    libsmbios-0.1.0/
+    libsmbios-0.1.0/Makefile
+    libsmbios-0.1.0/common.mk
+    libsmbios-0.1.0/cppunit/
+    libsmbios-0.1.0/cppunit/Makefile
+       ...
+    \endverbatim
+
+  - run "make default"
+
+  - Other make targets of interest:
+        - <pre><b>make noxml      </b></pre>-- Compiles only code that has no XML dependencies (same as "default")
+        - <pre><b>make xml        </b></pre>-- Compiles all code, must have additional libs installed (xerces) to compile everything
+        - <pre><b>make all        </b></pre>-- same as "xml"
+        - <pre><b>make static     </b></pre>-- compile statically-linked binaries
+        - <pre><b>make unit_test  </b></pre>-- Runs all unit tests <b> Highly recommended </b>
+        - <pre><b>make valgrind   </b></pre>-- Checks for memory leaks 
+        - <pre><b>make coverage   </b></pre>-- produce \ref code_coverage
+        - <pre><b>make header_file_check  </b></pre>-- check against \ref header_rules
+        - <pre><b>make tarball    </b></pre>-- create a release tarball
+
+ \subsection xerces Compiling Xerces on Linux
+    To compile all of libsmbios, xerces is necessary. You can download the
+    xerces-devel package from the libsmbios yum repository, which will save
+    you some troubles. Information on the libsmbios yum repository is here:
+    \ref yum.  To install the necessary xerces libs, do a "yum install
+    xerces-devel" after setting up the repository.
+ 
+    If you wish to compile xerces from source, some people have reported
+    problems compiling xerces on Linux. Here are a few things you need to do
+    to compile the xerces tarball to an RPM. 
+
+    1) Rename the tarball:
+
+\verbatim
+$ mkdir build
+$ cd build/
+$ mkdir RPMS SRPMS SPECS BUILD SOURCES
+$ rpmbuild --define "_topdir $(pwd)" -ta ../xerces-c-current.tar.gz
+error: File /home/michael_e_brown/xerces-c-src_2_7_0.tar.gz: No such file or
+directory
+$ cp ../xerces-c-current.tar.gz SOURCES/xerces-c-src_2_7_0.tar.gz
+\endverbatim
+
+    
+    2) Unpackaged files:
+
+    Xerces compilation may fail on newer Red Hat distributions due to
+    "unpackaged files" in their RPM. You can work around this issue by
+    building xercies like this:
+
+\verbatim
+$ rpmbuild --define "_topdir $(pwd)" --define "_unpackaged_files_terminate_build 0" -ta SOURCES/xerces-c-src_2_7_0.tar.gz
+\endverbatim
+
+    3) SUSE x64 - The RPM does not compile due to failed validation checks.
+    The current spec file places 64-bit libs in the wrong directory and needs
+    to be patched. A version for SUSE with a fixed SPEC file is available in
+    the libsmbios yum repository. A fix has been submitted upstream. \ref yum
+
+    4) FC4 - The RPM does not compile due to obsolete spec file syntax. A
+    version for FC4 with a fix for this defect is in the libsmbios yum
+    repository. A fix has been submitted upstream. \ref yum
+
+*/
+

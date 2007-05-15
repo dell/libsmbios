@@ -1,0 +1,97 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:
+//
+//Do not use "\section", "\subsection", or other page-related commands here as
+//this file is inlined in the ISmbios.h file.
+// 
+/**  \page workaround_theory Implementation of Workarounds and Exceptions
+ *
+     * <b>Overview</b>
+     *
+     * <p>A sad fact of life is that software has bugs. The system BIOS is no
+     * exception, and facilities must be designed in from the ground up to deal
+     * with exceptions in SMBIOS table where important and critical data in the
+     * SMBIOS table is wrong. If the design does not take this fact into
+     * account, then over time the design will be compromised as workaround
+     * after workaround are inserted into the code to fixup problems.
+     *
+     * It is with this in mind that a standard way to fixup buggy and broken
+     * tables was designed. A few points were kept in mind when doing the
+     * design:
+     *  \li Client code outside of libsmbios should never see bad data. 
+     *  \li All workarounds should be "Data-driven" and not "Code-driven". We
+     *  should be able to come up with a grammar to describe the bugs, their
+     *  symptoms, and their fixups that is generic. No source code should need
+     *  to change to add a new workaround.
+     *  \li All fixups should be performed as close to the data source as possible to
+     *  limit "leaking" of workaounds all over the code.
+     *  \li No code inside the ISmbiosTable or ISmbiosItem heirarchy should ever
+     *  have to take into account workarounds.
+     *  \li Workarounds should have the smallest possible effect on the speed of
+     *  normal operations on a table. 
+     *  \li Design of the workaround code should not force private data into the
+     *  public namespace just so that workarounds can be applied.
+     *
+     * <b>Prevention is the best medicine</b>
+     *
+     * <p>One outcome of the libsmbios project is a tool that can be used to
+     * validate BIOS conformance to all of the relevant specifications. This
+     * tool, validateBios (on Linux) and validateBios.exe (on Windows) can be
+     * used to verify that all BIOS properly implements all specifications.
+     * 
+     * <p>The validateBios executable is a natural outgrowth of the unit test
+     * suite. When first written, the purpose of the unit test suite was to find
+     * bugs in the libsmbios code and prevent them from progressing beyond an
+     * individual developer workstation. This approach was highly successfull,
+     * but after a certain point, the unit test suite went beyond finding bugs
+     * in libsmbios code and started finding bugs in the BIOS test data sets
+     * that were used.
+     *
+     * <p> At this point, it was easy to just paste in the failing functions
+     * into a separate executable that can be distributed to the BIOS team. This
+     * has been done, and work to add more tests to this executable are ongoing.
+     * We hope that the BIOS team adopts the libsmbios validateBios executable
+     * as part of their standard testing methodology for testing all potential
+     * BIOS releases.
+     *
+     * <b>Theory of Operation</b>
+     * 
+     * The fundamental point upon which the workaround concept is based is that
+     * the ISmbiosTable object will normally have a buffer of the pristine
+     * SMBIOS table, as read from memory. The ISmbiosItem class gets its own
+     * copy of its individual data buffer when it is instantiated from the table. 
+     * The workaround framework takes advantage of this fact to fixup the raw
+     * ISmbiosItem data after it is instantiated, but before the client code has
+     * a chance to ever look at potentially wrong data in the Item.
+     *
+     * This insertion into the instantiation, and fixup of the item's raw data
+     * meets most of the design objectives for the workaround design.
+     *
+     * <b>Implementation</b>
+     *
+     * The ISmbiosTable object contains a Workaround object. This workaround
+     * object is initialized at the same time that the table is created. The
+     * workaround initialization process uses the raw table data to initialize
+     * enough of itself to select the appropriate set of workarounds for the
+     * system it is running on. After the workaround object has been 
+     * initialized, workarounds are active.
+     *
+     * Creation of ISmbiosItem objects is centrally controlled by the
+     * ISmbiosTable::makeItem() function. It is here where the workaround fixups
+     * are applied. First, the item is created normally. Next, the item's
+     * ->fixup() method is called with the table's workaround instance as a
+     * parameter.
+     *
+     * The next step is the ISmbiosItem calls the workaround object's
+     * ->fixupItem() function call. The parameters are the item's "this"
+     * pointer, a pointer to the item's raw buffer, and the size of the raw
+     * buffer.
+     *
+     * The purpose of this circuitous chain of function calls is to ensure the
+     * following:
+     *  \li ISmbiosItem never needs to know about the containing table's workaround
+     * object 
+     *  \li Workaround never needs to access non-public data and/or methods in
+     *  the ISmbiosItem.
+     *
+     *
+*/

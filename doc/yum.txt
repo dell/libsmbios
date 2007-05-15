@@ -1,0 +1,41 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page yum Libsmbios package repository (yum)
+\section overview  Package repository overview
+
+Please visit <a href="http://linux.dell.com/repo/software">the unofficial repo
+site</a> for instructions on how to setup the repository.
+
+After you have set up libsmbios based on the instructions in the repository,
+above, you can install libsmbios by running this command:
+
+\verbatim
+yum install libsmbios-bin
+\endverbatim
+
+Yum will automatically upgrade libsmbios with the rest of your system when you
+run yum updates.
+
+\section non_beta_warn Note on software repositories
+These software repositories are provided as a convenience to our customers.
+Note that all software released in these repositories is open-source software.
+Some of the software in these repositories is not Dell-developed and comes
+from outside parties (including, but not limited to: Xerces, cppunit,
+doxygen). Please examine the licenses of all software that you install to
+ensure that you know the different terms and conditions.
+
+Please be aware that all software is provided with no warranty, express or
+implied. Use the software on this site at your own risk. There is no Dell
+Technical Support available for any software offered for download on this
+site. The only support available is through the public mailing lists for each
+software component.
+
+\section beta_warn Note on BETA software
+Beta software repositories are provided to facilitate testing by people
+willing to accept the risks associated with beta quality software. All
+software is provided as-is, with no warranties, express or implied. While we
+make every effort to ensure that all software that we release contains no
+defects, they do sometimes happen. If it breaks, rest assured that you can
+keep all the pieces.
+
+*/

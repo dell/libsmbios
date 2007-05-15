@@ -1,0 +1,51 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:
+//
+//Do not use "\section", "\subsection", or other page-related commands here as
+//this file is inlined in the ISmbios.h file.
+// 
+/**  \page item_theory Smbios Item Overview
+ *
+     * <b>Theory of Operation</b>
+     *
+     * <p>The ISmbiosItem class models access to individual items in the SMBIOS
+     * table. It does this by providing a set of accessor functions that allow
+     * structured data to be pulled out of the item. 
+     *
+     * <p>There are two modes of operation, depending on how the ISmbiosTable is
+     * set up. First, normal mode allows clients to access any information in
+     * the Item by offset and length. This access mode imposes no checks or
+     * typing requirements on the data being accessed aside from bounds checking
+     * that no buffer overruns occur. The drawback of this mode is that the
+     * client code must always know the exact data length and offset of any data
+     * that they want to extract.
+     *
+     * <p>The next mode of operation is XML enhanced operation. In this mode,
+     * the client can pass in strings representing what data is requested. The
+     * item will use an XML file to look up the exact offset of this data using
+     * the string passed as a referenced. Then the item returns the data to the
+     * client. The advantage of this access mode is that data is strongly typed,
+     * and the client is prevented from invalid access modes. For example, they
+     * may not access half of a u16 data item using the getU8() function call.
+     *
+     * <b>Class Hierarchy</b>
+     *
+     * <p>The class heirarchy for ISmbiosItem is simple. The abstract interface
+     * class is ISmbiosItem. The full implementation of normal-mode access is in
+     * SmbiosItem, and the XML enhanced mode access is implemented in
+     * SmbiosItemXml (formerly SmbiosItemAccess).
+     *
+     * <b>Implementation</b>
+     *
+     * <p>The SmbiosItem is implemented with its own data buffer for item data.
+     * This is reasonable as the max size for any single item is 256 bytes of
+     * data. Upon construction, the Item copies the relevant item data out of
+     * the containing table and from then maintains its own memory buffer.
+     *
+     * <b>Lifetime and Ownership</b>
+     *
+     * <p>The SmbiosItem is destroyed when the containing table is destroyed.
+     * There is no method to allow the table to release an item. The copy
+     * constructor is purposefully made 'private' to the Item to disallow third
+     * parties from taking bad references to individual items.
+     *
+*/ 

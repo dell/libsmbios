@@ -1,0 +1,180 @@
+/** \page TODO The TODO list
+
+\section active Active items on the TODO list
+Here is a list of things that I know need to be done and, if possible, who
+is currently working on them. 
+
+TODO for 0.13.X release:
+    -- do doxygen output
+
+TODO for 0.10.X release:
+ - Integrate XML output for dumpSmbios binary. Patch submitted already.
+    - status 01/13/2006: patch integrated for a couple months, but put in unofficial dumpSmbios_IPS binary because I think the output and API will change a bit.
+ - Password decoding for 0xD5/0xD6 tokens
+
+Other Misc TODO (medium term):
+
+ - DFCT: OEM systems -- workarounds do not work due to Sys ID problem
+
+ - DFCT: Windows memory interface (using the GetSystemFirmwareTable()
+    interface) is buggy. It doesn't have proper bounds checks and doesn't 
+    throw proper exception for unhandled mem access. 
+    - update: 2005/08/24 -- This is no longer the default access method,
+    so this defect is less important now.
+
+ - BIOS conformance tester (underway: Michael Brown)
+ - Tester that points out missing XML entries for SMBIOS Table and CMOS Table.
+
+ - XML for CMOS Tokens (Michael Brown)
+
+ - Install:
+    - Windows ISM file
+
+ - Python language bindings (Michael Brown)
+
+ - BIOS workarounds improvements:
+    - generate workarounds from an XML file at compile time.
+    - runtime addition of new workarounds
+
+ - Ensure all exceptions throw an appropriate string or integer.
+
+ - C Language bindings and naming conventions (???)
+
+\section long_term Longer Term Activities
+There are a few more things that this can become, after the list above is 
+taken care of. Here is the wish-list so far:
+
+ - $PIR table
+ - MP table
+ - RCI table
+ - RBU table
+ - Dell SMI + kernel drivers  (DONE! Yay! 2005-09-15.)
+
+
+\section completed Completed Activities
+
+ - (COMPLETE 2005/12/??) (Michael Brown, Matt Domsch)
+    - fix dell_rbu driver crash
+    - bootstrap script
+    - inventory script
+
+ - (COMPLETE 2005/09/??) (Michael Brown)
+        - dell rbu integration
+        - tokenCtl binary
+        - probes binary
+
+ - (COMPLETE 2005/09/04) (Senthil OR) Patch from Senthil to add "checkSkipTest()" feature in unit tests. The testInput.xml can now specify unit tests which should not be run on a platform. Use this feature very sparingly. There is only one use right now, to skip a test known to fail on lattitude due to a BIOS bug.
+
+ - (COMPLETE 2005/09/04) (Michael Brown) Automatic library selection.
+    - Divided up the library build into 6 different libs for debug/no-debug, single/multi thread static, and single/multi thread DLL runtimes. Include system now automatically chooses library for clients to link to.
+
+ - (COMPLETE 2005/09/04) (Sean-Marc Castruita/Michael Brown) Integrate WMI code for windows to allow operation on win2000 on Dell 9G servers
+
+ - (COMPLETE 2005/09/03) (Michael Brown) Change smbios class heirarchy to use strategy code to obtain SMBIOS buffer, rather than inheritance. Streamlines addition of new methods to get the tables immensely.
+
+ - (COMPLETE 2005/09/02) (Michael Brown) service tag parsing for SMI call (0xFF removal.)
+
+ - (COMPLETE 2005/08/29) (Michael Brown) Property Ownership Tag get/set
+ - (COMPLETE 2005/08/29) (Michael Brown) Security Key for 0xDA tokens
+
+ - (COMPLETE 2005/08/22) (Tim Fettig) fix "smbios.xml" file. It is broken. The smbios23.xml is the only working
+    one, but it is missing info that smbios.xml has.
+        - look at XML for ENUMs and BITFIELDs (David Schmidt)
+        - need api to get enum text. XML may need rearranging
+
+ - (COMPLETE x/y/z) (Michael Brown and David Schmidt)
+    Dell functions  (Michael Brown and David Schmidt)
+    Here is the proposed "Dell" C/C++ API. Basically, I have just taken the 
+    list of things DSA currently does and put them here. We may need a few
+    other functions when Disney gets around to looking at this.
+
+    Currently working on this...DTS
+    03/24/04 Status: Implemented most of the gets except for State byte and boot to up.
+    Need to trim the strings as they return from smbios.  Need to change unit tests to test
+    for the entire length, including whitespace.
+
+    - <pre><b>get/setServiceTag() </b></pre>-- get or set Service Tag (5 or 7 char tag)
+    - <pre><b>get/setAssetTag()   </b></pre>-- get or set Asset Tag
+    - <pre><b>getSystemName()     </b></pre>-- returns string with system name
+    - <pre><b>getBiosVersion()    </b></pre>-- returns string with BIOS version
+    - <pre><b>getSystemType()     </b></pre>-- std 6 char PEnnnn name.
+    - <pre><b>getVendorName()     </b></pre>-- Dell or OEM vendor
+    - <pre><b>getBootToUP() / setBootToUP()   </b></pre>-- sets BIOS boot-to-UP flag
+    - <pre><b>getStateByte1() / setStateByte1() </b></pre>-- BIOS NVRAM state byte
+    - <pre><b>getStateByte2() / setStateByte2() </b></pre>-- BIOS NVRAM state byte
+
+ - (COMPLETE 2005/05/03) (Michael Brown)
+    DFCT: Windows 2003 SP1 and SMBIOS in high memory will not work
+    -- fixed SP1 to use GetSystemFirmwareTable API to get SMBIOS table, rather
+    than go directly to memory, which is no longer supported.
+
+ - (COMPLETE 2004/04/08) (Michael Brown)
+    De-cache and Refresh API for SMBIOS table. 
+    - Basically need a way to tell the library to refresh info from memory.
+      Current systems all have a static SMBIOS table that is not changed after
+      boot. New systems will dynamically update SMBIOS table at runtime through
+      SMI calls.
+
+ - (COMPLETE 2004/04/01) (Jayasri Sangu)
+    need to write function that checks the checksum of the header (Jayasri Sangu)
+
+ - (COMPLETE 2004/03/28) (Michael Brown)
+    look at exceptions. Most of our exceptions should take a descriptive 
+    string. Make sure every place that throws an exception throws a good
+    exception.  We need to implement a parent IException class that accepts
+    an error code and an optional message string.  (Herb Hollinger and David Schmidt)
+
+ - (COMPLETE 2004/03/26) (Herb Hollinger)
+    CMOS access on windows (Herb Hollinger)
+
+ - (COMPLETE 2004/03/24) (David Schmidt)
+    Add test data for each platform that we currently have in-tree memdumps for.
+    (system id, service tag, asset tag, etc.)
+ 
+ - (COMPLETE 2004/03/22) (Michael Brown)
+    Workarounds framework for BIOS errors (Michael Brown)
+
+ - (COMPLETE 2004/03/14) (Herb Hollinger)
+    Windows now parses SMBIOS table from Memory directly from userspace
+    using NT DDK calls.
+
+ - (COMPLETE 2004/03/19) (David Schmidt)
+    GetID from Std SMBIOS table (id and rev table). (David Schmidt)
+
+ - (COMPLETE 2004/03/16)  (Michael Brown w/ additional work by David Schmidt)
+    - getSystemID()       -- returns word with one or two byte system ID
+
+ - (COMPLETE 2004/03/15)  (Herb Hollinger)
+    build on Windows (x86/x86-64/ia64) (Herb Hollinger)
+
+ - (COMPLETE 2004/03/15) (Michael Brown)
+    automatic unit test generator from descriptive text file.
+        (Abhay's idea.)
+    - text file contains platform name, dump data file names,
+        and ID, system name, etc.
+    - program automatically generates new PLATFORM.cc test file
+
+ - (COMPLETE 2004/03/07) (Michael Brown)
+    parameterize unit tests, so that they can take as an arg where unit test 
+    data files reside
+
+ - (COMPLETE 2004/03/06) (Michael Brown)
+    convert most of the objects to singletons, if appropriate (Michael Brown)
+    - Free users from having to allocate or de-allocate any memory
+        to use this lib.
+
+ - (COMPLETE 3/06/04) (Michael Brown)
+    ability to compile in XML so runtime doesn't need extra files, but still
+    be able to override the built-in XML at runtime with an updated file.
+
+ - (COMPLETE 2/29/04) RPM spec file (Michael Brown)
+
+ - (COMPLETE 2/28/04)
+    general build improvements.  (Michael Brown)
+    we should be able to cut down on the size of most of the makefiles
+
+ - (COMPLETE 2/26/04)
+    - bitfield manipulation getBitfield(int)    (David Schmidt)
+    - bitfield from XML     getBitfield(string) (David Schmidt)
+
+*/

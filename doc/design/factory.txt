@@ -1,0 +1,12 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:
+//
+//Do not use "\section", "\subsection", or other page-related commands here as
+//this file is inlined in the ISmbios.h file.
+// 
+/**  \page factory_theory Abstract Factory Design Overview
+ *
+  <b>Theory of Operation</b>
+
+  \todo finish Abstract Factory theory and overview
+ 
+ */

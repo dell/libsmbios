@@ -1,0 +1,37 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page compilation_win Compiling Libsmbios on Windows
+ \section req_comp_win Compilation requirements
+
+ In order to compile libsmbios from source, you need to have the following
+ available on your system:
+ - cppunit 1.8.0 or higher (tested with 1.8.0 and 1.10.2)
+    http://cppunit.sourceforge.net/
+ - xerces 2.3 or higher (tested with 2.3, 2.4, 2.5, and 2.6)
+    http://xml.apache.org/xerces-c/index.html
+
+ The following items are not strictly necessary to do a build, but are highly
+ recommended:
+ - GraphViz: http://www.research.att.com/sw/tools/graphviz/
+ - Doxygen: http://www.doxygen.org/
+
+
+ \section win_comp Windows 
+   Libsmbios has been tested with the following compilers on Windows:
+   - Microsoft Visual C++ 6.0
+   - Microsoft Visual C++ .NET 2003
+
+   A workspace is available under build/VC6/ to assist in compiling on Visual
+   C++. 
+
+   A workspace is available under build/VC.NET_2003/ to compile on VC.NET
+   2003.
+
+   Several environment variables need to be set for the VC .NET 2003 build.
+   There is a sample batch file to set these variables and start the IDE here:
+   <a href="http://linux.dell.com/libsmbios/download/windows/dev_environment">http://linux.dell.com/libsmbios/download/windows/dev_environment</a>. 
+   Also included are pre-compiled versions (with source) of xerces and
+   cppunit, so everything that you need to compile all of the tools is there.
+
+*/
+

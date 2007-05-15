@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+    <idByte>0x00B4</idByte>
+	<systemName>OptiPlex GX110</systemName>
+	<serviceTag>6EGWH</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A05</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000f0430">
+        <biosInformation numstrings="3">
+            <vendor>Dell Computer Corporation</vendor>
+            <version>A05</version>
+            <release>09/18/2000</release>
+        </biosInformation>
+    </smbios>
+
+    <hdr_152_a09>
+        <filename>system_bios_0x1028_0x0152_version_a09.hdr</filename>
+        <biosver>a09</biosver>
+        <hdrmajorver>1</hdrmajorver>
+        <hdrminorver>0</hdrminorver>
+        <sysid>0x152</sysid>
+    </hdr_152_a09>
+
+    <hdr_152_x09>
+        <filename>system_bios_0x1028_0x0152_version_x09.hdr</filename>
+        <biosver>x09</biosver>
+        <hdrmajorver>1</hdrmajorver>
+        <hdrminorver>0</hdrminorver>
+        <sysid>0x152</sysid>
+    </hdr_152_x09>
+
+    <hdr_152_p09>
+        <filename>system_bios_0x1028_0x0152_version_p09.hdr</filename>
+        <biosver>p09</biosver>
+        <hdrmajorver>1</hdrmajorver>
+        <hdrminorver>0</hdrminorver>
+        <sysid>0x152</sysid>
+    </hdr_152_p09>
+
+    <hdr_152_a10>
+        <filename>system_bios_0x1028_0x0152_version_a10.hdr</filename>
+        <biosver>a10</biosver>
+        <hdrmajorver>1</hdrmajorver>
+        <hdrminorver>0</hdrminorver>
+        <sysid>0x152</sysid>
+    </hdr_152_a10>
+
+    <hdr_1b1_000208>
+        <filename>MLB-000208.HDR</filename>
+        <biosver>0.2.8</biosver>
+        <hdrmajorver>2</hdrmajorver>
+        <hdrminorver>1</hdrminorver>
+        <sysid>0x1b1</sysid>
+    </hdr_1b1_000208>
+
+    <hdr_1bb_000209>
+        <filename>MLB-000209.HDR</filename>
+        <biosver>0.2.9</biosver>
+        <hdrmajorver>2</hdrmajorver>
+        <hdrminorver>1</hdrminorver>
+        <sysid>0x1bb</sysid>
+    </hdr_1bb_000209>
+
+    <hdr_1bb_990209>
+        <filename>MLB-990209.HDR</filename>
+        <biosver>99.2.9</biosver>
+        <hdrmajorver>2</hdrmajorver>
+        <hdrminorver>1</hdrminorver>
+        <sysid>0x1bb</sysid>
+    </hdr_1bb_990209>
+
+</TESTINPUT>

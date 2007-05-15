@@ -1,0 +1,25 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page compilation Compiling Libsmbios
+ \section compiling Compilation requirements
+ \subsection all All Platforms
+
+ In order to compile libsmbios from source, you need to have the following
+ available on your system:
+ - cppunit 1.8.0 or higher (tested with 1.8.0 and 1.10.2)
+    http://cppunit.sourceforge.net/
+ - xerces 2.3 or higher (tested with 2.3, 2.4, 2.5, 2.6, and 2.7)
+    http://xml.apache.org/xerces-c/index.html
+
+ The following items are not strictly necessary to do a build, but are highly
+ recommended:
+ - GraphViz: http://www.research.att.com/sw/tools/graphviz/
+ - Doxygen: http://www.doxygen.org/
+
+ See the following pages for specific directions for each platform:
+  - \ref compilation_linux
+  - \ref compilation_win
+  - \ref unit_test_run
+
+*/
+

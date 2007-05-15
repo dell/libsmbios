@@ -1,0 +1,1885 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Rules for usage="BITFIELD" are are follows: (NOTE:list all <BITS> tags in assecnding order (ie. lsb="0" first) )
+
+	->length "BYTE" & "WORD"  must contain an lsb="" and msb="" attribute even if they are the same value. If the 			  bitpattern spans multiple bits, you must also specify a type="ENUM" and then place <MAP> tags under that in 			ascending order using 1 as a base value (ie <MAP value="01" meaning="Reserved"/> <MAP value="02" meaning="OK"/>,etc...)
+	
+       
+    ->length "QWORD" must contain an lsb="" and msb="" and they must be the same value. This type does not support
+      bits spaning and does not support type="ENUM" resolution. 
+      
+Rules for usage="ENUM" are are follows: (NOTE: all ENUM values are of BYTE length )
+
+	->length "BYTE" values must be in ascending order using 1 as the base value. The <BITS> tag can not have any attributes
+	assigned to it and must have at least 1 <MAP> value. The <MAP> tags begin with the value 1 (ie <MAP value="01" 			meaning="Reserved"/> <MAP value="02" meaning="OK"/>,etc...) The sum of the value of the BYTE is used to determine 
+	which <MAP> to return with a 0 byte value returning <MAP value="01"/>, a 1 byte value returning <MAP value="02"/>
+	,etc..
+      
+
+-->
+<!--Modified 07/28/2005 8:35APM by Tim Fettig IT Guide Limited-->
+<!--Modified 10/18/2001 5:09PM by Craig Lowery-->
+<!-- edited with XML Spy v4.0.1 U (http://www.xmlspy.com) by 4.0  Installed Multi Suite for 5 users (Dell Computer Corporation) -->
+<STRUCTUREDEFS version="2.3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="smbios.xsd">
+	<STRUCTURE type="0" description="BIOS Information" required="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Vendor" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="BIOS Version" length="BYTE" usage="STRING"/>
+		<FIELD offset="6h" name="BIOS Starting Address Segment" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="8h" name="BIOS Release Date" length="BYTE" usage="STRING"/>
+		<FIELD offset="9h" name="BIOS ROM Size" length="BYTE" usage="SIZE"/>
+		<FIELD offset="Ah" name="BIOS Characteristics" length="QWORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Reserved"/>
+				<BITS lsb="1" msb="1" name="Reserved"/>
+				<BITS lsb="2" msb="2" name="Unknown"/>
+				<BITS lsb="3" msb="3" name="BIOS Characteristics Not Supported"/>
+				<BITS lsb="4" msb="4" name="ISA is supported"/>
+				<BITS lsb="5" msb="5" name="MCA is supported"/>
+				<BITS lsb="6" msb="6" name="EISA is supported"/>
+				<BITS lsb="7" msb="7" name="PCI is supported"/>
+				<BITS lsb="8" msb="8" name="PC Card (PCMCIA) is supported"/>
+				<BITS lsb="9" msb="9" name="Plug and Play is supported"/>
+				<BITS lsb="10" msb="10" name="APM is supported"/>
+				<BITS lsb="11" msb="11" name="BIOS is Upgradeable (Flash)"/>
+				<BITS lsb="12" msb="12" name="BIOS shadowing is allowed"/>
+				<BITS lsb="13" msb="13" name="VL-VESA is supported"/>
+				<BITS lsb="14" msb="14" name="ESCD support is available"/>
+				<BITS lsb="15" msb="15" name="Boot from CD is supported"/>
+				<BITS lsb="16" msb="16" name="Selectable Boot is supported"/>
+				<BITS lsb="17" msb="17" name="BIOS ROM is socketed"/>
+				<BITS lsb="18" msb="18" name="Boot from PC Card (PCMCI) is supported"/>
+				<BITS lsb="19" msb="19" name="EDD (Enhanced Disk Drive) Specification is supported"/>
+				<BITS lsb="20" msb="20" name='Int 13h - Japanese Floppy for NEC 9800 1.2mb (3.5", 1k Bytes/Sector, 360 RPM) is supported'/>
+				<BITS lsb="21" msb="21" name='Int 13h - Japanese Floppy for Toshiba 1.2mb (3.5", 360 RPM) is supported'/>
+				<BITS lsb="22" msb="22" name='Int 13h - 5.25" / 360 KB Floppy Services are supported'/>
+				<BITS lsb="23" msb="23" name='Int 13h - 5.25" / 1.2 MB Floppy Services are supported'/>
+				<BITS lsb="24" msb="24" name='Int 13h - 3.5" / 720KB Floppy Services are supported'/>
+				<BITS lsb="25" msb="25" name='Int 13h - 3.5" / 2.88 MB Floppy Services are supported'/>
+				<BITS lsb="26" msb="26" name="Int 5h, Print Screen Service is supported"/>
+				<BITS lsb="27" msb="27" name="Int 9h, 8042 keyboard services are supported"/>
+				<BITS lsb="28" msb="28" name="Int 14h, Serial Serices are supported"/>
+				<BITS lsb="29" msb="29" name="Int 17h, Printer Services are supported"/>
+				<BITS lsb="30" msb="30" name="Int 10h, CGA/Mono Video Services are supported"/>
+				<BITS lsb="31" msb="31" name="NEC PC-98"/>
+				<BITS lsb="32" msb="47" name="Reserved for BIOS Vendor"/>
+				<BITS lsb="48" msb="63" name="Reserved for System Vendor"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="12h" name="BIOS Characteristics Extension Byte 1" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="ACPI supported"/>
+				<BITS lsb="1" msb="1" name="USB Legacy is supported"/>
+				<BITS lsb="2" msb="2" name="AGP is supported"/>
+				<BITS lsb="3" msb="3" name="I20 boot is supported"/>
+				<BITS lsb="4" msb="4" name="LS-120 boot is supported"/>
+				<BITS lsb="5" msb="5" name="ATAPI ZIP Drive boot is supported"/>
+				<BITS lsb="6" msb="6" name="1394 boot is supported"/>
+				<BITS lsb="7" msb="7" name="Smart Battery is supported"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="13h" name="BIOS Characterstics Extension Byte 2" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="BIOS Boot Specification supported"/>
+				<BITS lsb="1" msb="1" name="Function key-initiated network Service boot supported"/>
+				<BITS lsb="2" msb="7" name="Reserved for future use"/>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="1" description="System Information" required="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Product Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="6h" name="Version" length="BYTE" usage="STRING"/>
+		<FIELD offset="7h" name="Serial Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="8h" version="2.1" name="UUID" length="BYTE" count="16" usage="NUMBER"/>
+		<FIELD offset="18h" version="2.1" name="Wake-up Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS >
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="APM Timer"/>
+					<MAP value="4h" meaning="Modem Ring"/>
+					<MAP value="5h" meaning="LAN Remote"/>
+					<MAP value="6h" meaning="Power Switch"/>
+					<MAP value="7h" meaning="PCI PME#"/>
+					<MAP value="8h" meaning="AC Power Restored"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="2" description="Base Board Information">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Product" length="BYTE" usage="STRING"/>
+		<FIELD offset="6h" name="Version" length="BYTE" usage="STRING"/>
+		<FIELD offset="7h" name="Serial Number" length="BYTE" usage="STRING"/>
+	</STRUCTURE>
+	<STRUCTURE type="3" description="System Enclosure or Chassis" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Enclosure Type" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="6" type="ENUM" name="Enumeration value">
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Desktop"/>
+					<MAP value="4h" meaning="Low Profile Desktop"/>
+					<MAP value="5h" meaning="Pizza Box"/>
+					<MAP value="6h" meaning="Mini Tower"/>
+					<MAP value="7h" meaning="Tower"/>
+					<MAP value="8h" meaning="Portable"/>
+					<MAP value="9h" meaning="Laptop"/>
+					<MAP value="Ah" meaning="Notebook"/>
+					<MAP value="Bh" meaning="Hand Held"/>
+					<MAP value="Ch" meaning="Docking Station"/>
+					<MAP value="Dh" meaning="All in One"/>
+					<MAP value="Eh" meaning="Sub Notebook"/>
+					<MAP value="Fh" meaning="Space-saving"/>
+					<MAP value="10h" meaning="Lunch Box"/>
+					<MAP value="11h" meaning="Main Server Chassis"/>
+					<MAP value="12h" meaning="Expansion Chassis"/>
+					<MAP value="13h" meaning="SubChassis"/>
+					<MAP value="14h" meaning="Bus Expansion Chassis"/>
+					<MAP value="15h" meaning="Peripheral Chassis"/>
+					<MAP value="16h" meaning="RAID Chassis"/>
+					<MAP value="17h" meaning="Rack Mount Chassis"/>
+					<MAP value="18h" meaning="Sealed-case PC"/>
+				</BITS>
+				<BITS lsb="7" msb="7" name="Chassis lock"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" name="Version" length="BYTE" usage="STRING"/>
+		<FIELD offset="7h" name="Serial Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="8h" name="Asset Tag Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="9h" version="2.1" name="Boot-up State" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Safe"/>
+					<MAP value="4h" meaning="Warning"/>
+					<MAP value="5h" meaning="Critical"/>
+					<MAP value="6h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ah" version="2.1" name="Power Supply State" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Safe"/>
+					<MAP value="4h" meaning="Warning"/>
+					<MAP value="5h" meaning="Critical"/>
+					<MAP value="6h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Bh" version="2.1" name="Thermal State" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Safe"/>
+					<MAP value="4h" meaning="Warning"/>
+					<MAP value="5h" meaning="Critical"/>
+					<MAP value="6h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ch" version="2.1" name="Security Status" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="None"/>
+					<MAP value="4h" meaning="External interface locked out"/>
+					<MAP value="5h" meaning="External interface enabled"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Dh" version="2.3" name="OEM-defined" length="DWORD" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="4" description="Processor Information" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Socket Designation" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Processor Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Central Processor"/>
+					<MAP value="4h" meaning="Math Processor"/>
+					<MAP value="5h" meaning="DSP Processor"/>
+					<MAP value="6h" meaning="Video Processor"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" name="Processor Family" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="8086"/>
+					<MAP value="4h" meaning="80286"/>
+					<MAP value="5h" meaning="Intel386 Processor"/>
+					<MAP value="6h" meaning="Intel486 Processor"/>
+					<MAP value="7h" meaning="8087"/>
+					<MAP value="8h" meaning="80287"/>
+					<MAP value="9h" meaning="80387"/>
+					<MAP value="Ah" meaning="80487"/>
+					<MAP value="Bh" meaning="Pentium processor Family"/>
+					<MAP value="Ch" meaning="Pentium Pro processor"/>
+					<MAP value="Dh" meaning="Pentium II processor"/>
+					<MAP value="Eh" meaning="Pentium processor with MMX technology"/>
+					<MAP value="Fh" meaning="Celeron processor"/>
+					<MAP value="10h" meaning="Pentium II Xeon processor"/>
+					<MAP value="11h" meaning="Pentium III processor"/>
+					<MAP value="12h" meaning="M1 Family"/>
+					<MAP value="13h" meaning="Reserved for specific M1 versions"/>
+					<MAP value="14h" meaning="Reserved - specific M1 version"/>
+					<MAP value="15h" meaning="Reserved - specific M1 version"/>
+					<MAP value="16h" meaning="Reserved - specific M1 version"/>
+					<MAP value="17h" meaning="Reserved - specific M1 version"/>
+					<MAP value="18h" meaning="Reserved - specific M1 version"/>
+					<MAP value="19h" meaning="K5 Family"/>
+					<MAP value="1Ah" meaning="Reserved for specific K5 versions"/>
+					<MAP value="1Bh" meaning="Reserved for specific K5 versions"/>
+					<MAP value="1Ch" meaning="Reserved for specific K5 versions"/>
+					<MAP value="1Dh" meaning="Reserved for specific K5 versions"/>
+					<MAP value="1Eh" meaning="Reserved for specific K5 versions"/>
+					<MAP value="1Fh" meaning="Reserved for specific K5 versions"/>
+					<MAP value="20h" meaning="Power PC family"/>
+					<MAP value="21h" meaning="Power PC 601"/>
+					<MAP value="22h" meaning="Power PC 603"/>
+					<MAP value="23h" meaning="Power PC 603+"/>
+					<MAP value="24h" meaning="Power PC 604"/>
+					<MAP value="30h" meaning="Alpha Family"/>
+					<MAP value="40h" meaning="MIPS Family"/>
+					<MAP value="50h" meaning="SPARC Family"/>
+					<MAP value="60h" meaning="68040 Family"/>
+					<MAP value="61h" meaning="68xxx"/>
+					<MAP value="62h" meaning="68000"/>
+					<MAP value="63h" meaning="68010"/>
+					<MAP value="64h" meaning="68020"/>
+					<MAP value="65h" meaning="68030"/>
+					<MAP value="70h" meaning="Hobbit Family"/>
+					<MAP value="80h" meaning="Weitek"/>
+					<MAP value="90h" meaning="PA-RISC Family"/>
+					<MAP value="A0h" meaning="V30 Family"/>
+					<MAP value="B0h" meaning="Pentium II Xeon processor"/>
+					<MAP value="B1h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B2h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B3h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B4h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B5h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B6h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B7h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B8h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="B9h" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="BAh" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="BBh" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="BCh" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="BDh" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="BEh" meaning="Reserved for specific Pentium processor versions"/>
+					<MAP value="BFh" meaning="Reserved for specific Pentium processor versions"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" name="Processor Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="8h" name="Processor ID" length="QWORD" usage="ADDRESS"/>
+		<FIELD offset="10h" name="Processor Version" length="BYTE" usage="STRING"/>
+		<FIELD offset="11h" name="Voltage" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="5V capabable" switch="SW_04h_Legacy"/> <!-- this may now work -->
+				<BITS lsb="0" msb="6" name="Voltage" switch="SW_04h_NotLegacy"/>
+				<BITS lsb="1" msb="1" name="3.3V capabable" switch="SW_04h_Legacy"/>
+				<BITS lsb="2" msb="2" name="2.9V capabable" switch="SW_04h_Legacy"/>
+				<BITS lsb="3" msb="3" name="Reserved" switch="SW_04h_Legacy"/>
+				<BITS lsb="4" msb="6" name="Reserved" switch="SW_04h_Legacy"/>
+				<BITS lsb="7" msb="7" type="ENUM" name="Format">
+					<MAP value="0" meaning="Legacy" switch_id="SW_04h_Legacy"/>
+					<MAP value="1" meaning="Not Legacy" switch_id="SW_04h_NotLegacy"/>
+				</BITS>
+	
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="12h" name="External Clock" length="WORD" usage="SPEED">
+			<MAPPING>
+				<BITS>
+					<MAP value="0" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="14h" name="Max Speed" length="WORD" usage="SPEED">
+			<MAPPING>
+				<BITS>
+					<MAP value="0" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="16h" name="Current Speed" length="WORD" usage="SPEED">
+			<MAPPING>
+				<BITS>
+					<MAP value="0" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="18h" name="Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="2" type="ENUM" name="CPU Status">
+					<MAP value="0h" meaning="Unknown"/>
+					<MAP value="01h" meaning="CPU Enabled"/>
+					<MAP value="02h" meaning="CPU Disabled by User via BIOS Setup"/>
+					<MAP value="03h" meaning="CPU Disabled by BIOS (POST Error)"/>
+					<MAP value="04h" meaning="CPU is Idle, waiting to be enabled"/>
+					<MAP value="05h" meaning="Reserved"/>
+					<MAP value="06h" meaning="Reserved"/>
+					<MAP value="07h" meaning="Other"/>
+				</BITS>
+				<BITS lsb="3" msb="5" name="Reserved"/>
+				<BITS lsb="7" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="19h" name="Processor Upgrade" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Daughter Board"/>
+					<MAP value="4h" meaning="ZIF Socket"/>
+					<MAP value="5h" meaning="Replaceable Piggy Back"/>
+					<MAP value="6h" meaning="None"/>
+					<MAP value="7h" meaning="LIF Socket"/>
+					<MAP value="8h" meaning="Slot 1"/>
+					<MAP value="9h" meaning="Slot 2"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="1Ah" version="2.1" name="L1 Cache Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="1Ch" version="2.1" name="L2 Cache Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="1Eh" version="2.1" name="L3 Cache Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="20h" version="2.3" name="Serial Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="21h" version="2.3" name="Asset Tag" length="BYTE" usage="STRING"/>
+		<FIELD offset="22h" version="2.3" name="Part Number" length="BYTE" usage="STRING"/>
+	</STRUCTURE>
+	<STRUCTURE type="5" description="Memory Controller Information" obsolete="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="6" description="Memory Module Information" obsolete="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="7" description="Cache Information" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Socket Designation" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Cache Configuration" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="2" name="Cache Level"/>
+				<BITS lsb="3" msb="3" name="Socketed"/>
+				<BITS lsb="4" msb="4" name="Reserved"/>
+				<BITS lsb="5" msb="6" type="ENUM"  name="Location relative to CPU">
+					<MAP value="0" meaning="Internal"/>
+					<MAP value="1" meaning="External"/>
+					<MAP value="2" meaning="Reserved"/>
+					<MAP value="3" meaning="Unknown"/>
+				</BITS>
+				<BITS lsb="7" msb="7" name="Enabled at boot time"/>
+				<BITS lsb="8" msb="9" type="ENUM" name="Operational Mode">
+					<MAP value="0" meaning="Write Through"/>
+					<MAP value="1" meaning="Write Back"/>
+					<MAP value="2" meaning="Varies with Memory Adress"/>
+					<MAP value="3" meaning="Unknown"/>
+				</BITS>
+				<BITS lsb="10" msb="15" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" name="Maximum Cache Size" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="14" name="Size in given granularity"/>
+				<BITS lsb="15" msb="15" type="ENUM" name="Granularity">
+					<MAP value="0" meaning="1K"/>
+					<MAP value="1" meaning="64K"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="9h" name="Installed Size" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="14" name="Size in given granularity"/>
+				<BITS lsb="15" msb="15" type="ENUM" name="Granularity">
+					<MAP value="0" meaning="1K"/>
+					<MAP value="1" meaning="64K"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Bh" name="Supported SRAM Type" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Other"/>
+				<BITS lsb="1" msb="1" name="Unknown"/>
+				<BITS lsb="2" msb="2" name="Non-Burst"/>
+				<BITS lsb="3" msb="3" name="Burst"/>
+				<BITS lsb="4" msb="4" name="Pipeline Burst"/>
+				<BITS lsb="5" msb="5" name="Synchronous"/>
+				<BITS lsb="6" msb="6" name="Asynchronous"/>
+				<BITS lsb="7" msb="15" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Dh" name="Current SRAM Type" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Other"/>
+				<BITS lsb="1" msb="1" name="Unknown"/>
+				<BITS lsb="2" msb="2" name="Non-Burst"/>
+				<BITS lsb="3" msb="3" name="Burst"/>
+				<BITS lsb="4" msb="4" name="Pipeline Burst"/>
+				<BITS lsb="5" msb="5" name="Synchronous"/>
+				<BITS lsb="6" msb="6" name="Asynchronous"/>
+				<BITS lsb="7" msb="15" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Fh" version="2.1" name="Cache Speed" length="BYTE" usage="SPEED"/>
+		<FIELD offset="10h" version="2.1" name="Error Correction Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="None"/>
+					<MAP value="4h" meaning="Parity"/>
+					<MAP value="5h" meaning="Single-bit ECC"/>
+					<MAP value="6h" meaning="Multi-bit ECC"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="11h" version="2.1" name="System Cache Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Instruction"/>
+					<MAP value="4h" meaning="Data"/>
+					<MAP value="5h" meaning="Unified"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="12h" version="2.1" name="Associativity" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Direct Mapped"/>
+					<MAP value="4h" meaning="2-way Set Associative"/>
+					<MAP value="5h" meaning="4-way Set Associative"/>
+					<MAP value="6h" meaning="Fully Associative"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="8" description="Port Connector Information" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Internal Reference Designator" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Internal Connector Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<!-- <MAP value="00h" meaning="None"/> IS THIS SUPPOSED TO BE HERE?
+					Most BYTE ENUM start with 1  --> 
+					<MAP value="01h" meaning="Centronics"/>
+					<MAP value="02h" meaning="Mini Centronics"/>
+					<MAP value="03h" meaning="Proprietary"/>
+					<MAP value="04h" meaning="DB-25 pin male"/>
+					<MAP value="05h" meaning="DB-25 pin female"/>
+					<MAP value="06h" meaning="DB-15 pin male"/>
+					<MAP value="07h" meaning="DB-15 pin female"/>
+					<MAP value="08h" meaning="DB-9 pin male"/>
+					<MAP value="09h" meaning="DB-9 pin female"/>
+					<MAP value="0Ah" meaning="RJ-11"/>
+					<MAP value="0Bh" meaning="RJ-45"/>
+					<MAP value="0Ch" meaning="50 Pin MiniSCSI"/>
+					<MAP value="0Dh" meaning="Mini-DIN"/>
+					<MAP value="0Eh" meaning="Micro-DIN"/>
+					<MAP value="0Fh" meaning="PS/2"/>
+					<MAP value="10h" meaning="Infrared"/>
+					<MAP value="11h" meaning="HP-HIL"/>
+					<MAP value="12h" meaning="Access Bus (USB)"/>
+					<MAP value="13h" meaning="SSA SCSI"/>
+					<MAP value="14h" meaning="Circular DIN-8 male"/>
+					<MAP value="15h" meaning="Circular DIN-8 female"/>
+					<MAP value="16h" meaning="On Boarde IDE"/>
+					<MAP value="17h" meaning="On Board Floppy"/>
+					<MAP value="18h" meaning="9 Pin Dual Inline (pin 10 cut)"/>
+					<MAP value="19h" meaning="25 Pin Dual Inline (pin 26 cut)"/>
+					<MAP value="1Ah" meaning="50 Pin Dual Inline"/>
+					<MAP value="1Bh" meaning="68 Pin Dual Inline"/>
+					<MAP value="1Ch" meaning="On Board Sound Input from CD-ROM"/>
+					<MAP value="1Dh" meaning="Mini-Centronics Type-14"/>
+					<MAP value="1Eh" meaning="Mini-Centronics Type-26"/>
+					<MAP value="1Fh" meaning="Mini-jack (headphones)"/>
+					<MAP value="20h" meaning="BNC"/>
+					<MAP value="21h" meaning="1394"/>
+					<MAP value="A0h" meaning="PC-98"/>
+					<MAP value="A1h" meaning="PC-98Hireso"/>
+					<MAP value="A2h" meaning="PC-H98"/>
+					<MAP value="A3h" meaning="PC-98Note"/>
+					<MAP value="A4h" meaning="PC-98Full"/>
+					<MAP value="FFh" meaning="Other"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" name="External Reference Designator" length="BYTE" usage="STRING"/>
+		<FIELD offset="7h" name="External Connector Type" length="BYTE" usage="ENUM"/>
+		<FIELD offset="8h" name="Port Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<!-- <MAP value="00h" meaning="None"/> IS THIS SUPPOSED TO BE HERE?
+					Most BYTE ENUM start with 1 -->
+					<MAP value="01h" meaning="Parallel Port XT/AT Compatible"/>
+					<MAP value="02h" meaning="Parallel Port PS/2"/>
+					<MAP value="03h" meaning="Parallel Port ECP"/>
+					<MAP value="04h" meaning="Parallel Port EPP"/>
+					<MAP value="05h" meaning="Parallel Port ECP/EPP"/>
+					<MAP value="06h" meaning="Serial Port XT/AT Compatible"/>
+					<MAP value="07h" meaning="Serial Port 16450 Compatible"/>
+					<MAP value="08h" meaning="Serial Port 16550 Compatible"/>
+					<MAP value="09h" meaning="Serial Port 16550A Compatible"/>
+					<MAP value="0Ah" meaning="SCSI Port"/>
+					<MAP value="0Bh" meaning="MIDI Port"/>
+					<MAP value="0Ch" meaning="Joy Stick Port"/>
+					<MAP value="0Dh" meaning="Keyboard Port"/>
+					<MAP value="0Eh" meaning="Mouse Port"/>
+					<MAP value="0Fh" meaning="SSA SCSI"/>
+					<MAP value="10h" meaning="USB"/>
+					<MAP value="11h" meaning="FireWire (IEEE P1394)"/>
+					<MAP value="12h" meaning="PCMCIA Type II"/>
+					<MAP value="13h" meaning="PCMCIA Type II"/>
+					<MAP value="14h" meaning="PCMCIA Type III"/>
+					<MAP value="15h" meaning="Cardbus"/>
+					<MAP value="16h" meaning="Access Bus Port"/>
+					<MAP value="17h" meaning="SCSI II"/>
+					<MAP value="18h" meaning="SCSI Wide"/>
+					<MAP value="19h" meaning="PC-98"/>
+					<MAP value="1Ah" meaning="PC-98-Hireso"/>
+					<MAP value="1Bh" meaning="PC-H98"/>
+					<MAP value="1Ch" meaning="Video Port"/>
+					<MAP value="1Dh" meaning="Audio Port"/>
+					<MAP value="1Eh" meaning="Modem Port"/>
+					<MAP value="1Fh" meaning="Network Port"/>
+					<MAP value="A0h" meaning="8251 Compatible"/>
+					<MAP value="A1h" meaning="8251 FIFO Compatible"/>
+					<MAP value="0FFh" meaning="Other"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="9" description="System Slots" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Slot Designation" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Slot Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="ISA"/>
+					<MAP value="04h" meaning="MCA"/>
+					<MAP value="05h" meaning="EISA"/>
+					<MAP value="06h" meaning="PCI"/>
+					<MAP value="07h" meaning="PC Card (PCMCIA)"/>
+					<MAP value="08h" meaning="VL-VESA"/>
+					<MAP value="09h" meaning="Proprietary"/>
+					<MAP value="0Ah" meaning="Processor Card Slot"/>
+					<MAP value="0Bh" meaning="Proprietary Memory Card SLot"/>
+					<MAP value="0Ch" meaning="I/O Riser Card"/>
+					<MAP value="0Dh" meaning="NuBus"/>
+					<MAP value="0Eh" meaning="PCI - 66MHz Capable"/>
+					<MAP value="0Fh" meaning="AGP"/>
+					<MAP value="10h" meaning="AGP 2X"/>
+					<MAP value="11h" meaning="AGP 4X"/>
+					<MAP value="12h" meaning="PCI-X"/>
+					<MAP value="A0h" meaning="PC-98/C20"/>
+					<MAP value="A1h" meaning="PC-98/C24"/>
+					<MAP value="A2h" meaning="PC-98/E"/>
+					<MAP value="A3h" meaning="PC-98/Local Bus"/>
+					<MAP value="A4h" meaning="PC-98/Card"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" name="Slot Data Bus Width" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="8 bit"/>
+					<MAP value="04h" meaning="16 bit"/>
+					<MAP value="05h" meaning="32 bit"/>
+					<MAP value="06h" meaning="64 bit"/>
+					<MAP value="07h" meaning="128 bit"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="07h" name="Current Usage" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Available"/>
+					<MAP value="04h" meaning="In use"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="08h" name="Slot Length" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Short Length"/>
+					<MAP value="04h" meaning="Long Length"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="09h" name="Slot ID" length="WORD" usage="NUMBER"/>
+		<FIELD offset="0Bh" name="Slot Characteristics 1" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Characteristics unknown"/>
+				<BITS lsb="1" msb="1" name="Provides 5.0 volts"/>
+				<BITS lsb="2" msb="2" name="Provides 3.3 volts"/>
+				<BITS lsb="3" msb="3" name="Slot's opening is shared with another slot"/>
+				<BITS lsb="4" msb="4" name="PC Card slot supports PC Card-16"/>
+				<BITS lsb="5" msb="5" name="PC Card slot supports CardBus"/>
+				<BITS lsb="6" msb="6" name="PC Card slot supports Zoom Video"/>
+				<BITS lsb="7" msb="7" name="PC Card slot supports Modem Ring Resume"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="0CH" version="2.1" name="Slot Characteristics 2" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="PCI slot supports Power Management Enable (PME) signal"/>
+				<BITS lsb="1" msb="1" name="Slot supports hot-plug devices"/>
+				<BITS lsb="2" msb="2" name="PCI slot supports SMBus signal"/>
+				<BITS msb="7" lsb="3" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="10" description="On Board Devices Information">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Device Type" length="BYTE" count="PAD" spacing="2" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="6" type="ENUM" name="Device Type">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Other"/>
+					<MAP value="03h" meaning="Unknown"/>
+					<MAP value="04h" meaning="Video"/>
+					<MAP value="05h" meaning="SCSI Controller"/>
+					<MAP value="06h" meaning="Ethernet"/>
+					<MAP value="07h" meaning="Token Ring"/>
+					<MAP value="08h" meaning="Sound"/>
+				</BITS>
+				<BITS lsb="7" msb="7" name="Device Status"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" name="Description String" length="BYTE" count="PAD" spacing="2" usage="STRING"/>
+	</STRUCTURE>
+	<STRUCTURE type="11" description="OEM Strings">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Count" length="BYTE" usage="STRINGS"/>
+	</STRUCTURE>
+	<STRUCTURE type="12" description="System Configuration Options">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Count" length="BYTE" usage="STRINGS"/>
+	</STRUCTURE>
+	<STRUCTURE type="13" description="BIOS Language Information">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Installable Languages" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.1" name="Flags" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Abbreviated format"/>
+				<BITS lsb="1" msb="7" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" name="Reserved" length="BYTE" usage="NONE" count="15"/>
+		<FIELD offset="15h" name="Current Language" length="BYTE" usage="STRING"/>
+	</STRUCTURE>
+	<STRUCTURE type="14" description="Group Associations" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Group Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" name="Item Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="6h" name="Item Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="15" description="System Event Log">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Log Area Length" length="WORD" usage="SIZE"/>
+		<FIELD offset="6h" name="Log Header Start Offset" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="8h" name="Log Data Start Offset" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="Ah" name="Access Method" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<!-- <MAP value="00h" meaning="Indexed I/O 1 8-bit index port"/> IS THIS SUPPOSED TO BE HERE?
+					MOst BYTE ENUM start with 1 (since this is not unknown or Other are the below values correct?-->
+					<MAP value="01h" meaning="Indexed I/O 2 8-bit index ports"/>
+					<MAP value="02h" meaning="Indexed I/O 1 16-bit index port"/>
+					<MAP value="03h" meaning="Memory-mapped physical 32-bit address"/>
+					<MAP value="04h" meaning="Available via General-Purpose NonVolatile Data functions"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Bh" name="Log Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Log area valid"/>
+				<BITS lsb="1" msb="1" name="Log area full"/>
+				<BITS lsb="2" msb="7" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ch" name="Log Change Token" length="DWORD" usage="NUMBER"/>
+		<FIELD offset="10h" name="Access Method Address" length="DWORD" usage="ADDRESS"/>
+		<FIELD offset="14h" version="2.1" name="Log Header Format" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="00h" meaning="No header"/>
+					<MAP value="01h" meaning="Type 1 header"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="15h" version="2.1" name="Number of Supported Log Type Descriptors" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="16h" version="2.1" name="Length of Each Type Descriptor" length="BYTE" usage="SIZE"/>
+	</STRUCTURE>
+	<STRUCTURE type="16" description="Physical Memory Array" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Location" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="System board or motherboard"/>
+					<MAP value="04h" meaning="ISA add-on card"/>
+					<MAP value="05h" meaning="EISA add-on card"/>
+					<MAP value="06h" meaning="PCI add-on card"/>
+					<MAP value="07h" meaning="MCA add-on card"/>
+					<MAP value="08h" meaning="PCMCIA add-on card"/>
+					<MAP value="09h" meaning="Proprietary add-on card"/>
+					<MAP value="0Ah" meaning="NuBus card"/>
+					<MAP value="A0h" meaning="PC-98/C20 add-on card"/>
+					<MAP value="A1h" meaning="PC-98/C24 add-on card"/>
+					<MAP value="A2h" meaning="PC-98/E add-on card"/>
+					<MAP value="A3h" meaning="PC-98/Local bus add-on card"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.1" name="Use" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="System memory"/>
+					<MAP value="04h" meaning="Video memory"/>
+					<MAP value="05h" meaning="Flash memory"/>
+					<MAP value="06h" meaning="non-volatile RAM"/>
+					<MAP value="07h" meaning="Cache memory"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.1" name="Memory Error Correction" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="None"/>
+					<MAP value="04h" meaning="Parity"/>
+					<MAP value="05h" meaning="Single-bit ECC"/>
+					<MAP value="06h" meaning="Multi-bit ECC"/>
+					<MAP value="07h" meaning="CRC"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" version="2.1" name="Maximum Capacity" length="DWORD" usage="SIZE"/>
+		<FIELD offset="Bh" version="2.1" name="Memory Error Information Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="Dh" version="2.1" name="Number of Memory Devices" length="WORD" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="17" description="Memory Device" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Memory Array Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="6h" version="2.1" name="Memory Error Information Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="8h" version="2.1" name="Total Width" length="WORD" usage="SIZE"/>
+		<FIELD offset="Ah" version="2.1" name="Data Width" length="WORD" usage="SIZE"/>
+		<FIELD offset="Ch" version="2.1" name="Size" length="WORD" usage="SIZE"/>
+		<FIELD offset="Eh" version="2.1" name="Form Factor" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="SIMM"/>
+					<MAP value="04h" meaning="SIP"/>
+					<MAP value="05h" meaning="Chip"/>
+					<MAP value="06h" meaning="DIP"/>
+					<MAP value="07h" meaning="ZIP"/>
+					<MAP value="08h" meaning="Proprietary Card"/>
+					<MAP value="09h" meaning="DIMM"/>
+					<MAP value="0ah" meaning="TSOP"/>
+					<MAP value="0bh" meaning="Row of chips"/>
+					<MAP value="0ch" meaning="RIMM"/>
+					<MAP value="0dh" meaning="SODIMM"/>
+					<MAP value="0eh" meaning="SRIMM"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Fh" version="2.1" name="Device Set" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="10h" version="2.1" name="Device Locator" length="BYTE" usage="STRING"/>
+		<FIELD offset="11h" version="2.1" name="Bank Locator" length="BYTE" usage="STRING"/>
+		<FIELD offset="12h" version="2.1" name="Memory Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="DRAM"/>
+					<MAP value="04h" meaning="EDRAM"/>
+					<MAP value="05h" meaning="VRAM"/>
+					<MAP value="06h" meaning="SRAM"/>
+					<MAP value="07h" meaning="RAM"/>
+					<MAP value="08h" meaning="ROM"/>
+					<MAP value="09h" meaning="FLASH"/>
+					<MAP value="0Ah" meaning="EEPROM"/>
+					<MAP value="0Bh" meaning="FEPROM"/>
+					<MAP value="0Ch" meaning="EPROM"/>
+					<MAP value="0Dh" meaning="CDRAM"/>
+					<MAP value="0Eh" meaning="3DRAM"/>
+					<MAP value="0Fh" meaning="SDRAM"/>
+					<MAP value="10h" meaning="SGRAM"/>
+					<MAP value="11h" meaning="RDRAM"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="13h" version="2.1" name="Type Detail" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Reserved"/>
+				<BITS lsb="1" msb="1" name="Other"/>
+				<BITS lsb="2" msb="2" name="Unknown"/>
+				<BITS lsb="3" msb="3" name="Fast-paged"/>
+				<BITS lsb="4" msb="4" name="Static column"/>
+				<BITS lsb="5" msb="5" name="Pseudo-static"/>
+				<BITS lsb="6" msb="6" name="RAMBUS"/>
+				<BITS lsb="7" msb="7" name="Synchronous"/>
+				<BITS lsb="8" msb="8" name="CMOS"/>
+				<BITS lsb="9" msb="9" name="EDO"/>
+				<BITS lsb="10" msb="10" name="Window DRAM"/>
+				<BITS lsb="11" msb="11" name="Cache DRAM"/>
+				<BITS lsb="12" msb="12" name="Non-volatile"/>
+				<BITS lsb="13" msb="15" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="15h" version="2.3" name="Speed" length="WORD" usage="SPEED"/>
+		<FIELD offset="17h" version="2.3" name="Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="18h" version="2.3" name="Serial Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="19h" version="2.3" name="Asset Tag" length="BYTE" usage="STRING"/>
+		<FIELD offset="1Ah" version="2.3" name="Part Number" length="BYTE" usage="STRING"/>
+	</STRUCTURE>
+	<STRUCTURE type="18" description="Memory Error Information 32-bit" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Error Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="OK"/>
+					<MAP value="04h" meaning="Bad read"/>
+					<MAP value="05h" meaning="Parity error"/>
+					<MAP value="06h" meaning="Single-bit error"/>
+					<MAP value="07h" meaning="Double-bit error"/>
+					<MAP value="08h" meaning="Multi-bit error"/>
+					<MAP value="09h" meaning="Nibble error"/>
+					<MAP value="0Ah" meaning="Checksum error"/>
+					<MAP value="0Bh" meaning="CRC error"/>
+					<MAP value="0Ch" meaning="Corrected signel-bit error"/>
+					<MAP value="0Dh" meaning="Corrected error"/>
+					<MAP value="0Eh" meaning="Uncorrectable error"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.1" name="Error Granularity" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Device level"/>
+					<MAP value="04h" meaning="Memory partition level"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.1" name="Error Operation" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Read"/>
+					<MAP value="04h" meaning="Write"/>
+					<MAP value="05h" meaning="Partial write"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" version="2.1" name="Vendor Syndrome" length="DWORD" usage="NUMBER"/>
+		<FIELD offset="Bh" version="2.1" name="Memory Array Error Address" length="DWORD" usage="ADDRESS"/>
+		<FIELD offset="Fh" version="2.1" name="Device Error Address" length="DWORD" usage="ADDRESS"/>
+		<FIELD offset="13h" version="2.1" name="Error Resolution" length="DWORD" usage="ADDRESS"/>
+	</STRUCTURE>
+	<STRUCTURE type="19" description="Memory Array Mapped Address" required="true" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Starting Address" length="DWORD" usage="ADDRESS"/>
+		<FIELD offset="8h" version="2.1" name="Ending Address" length="DWORD" usage="ADDRESS"/>
+		<FIELD offset="Ch" version="2.1" name="Memory Array Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="Eh" version="2.1" name="Partition Width" length="BYTE" usage="SIZE"/>
+	</STRUCTURE>
+	<STRUCTURE type="20" description="Memory Device Mapped Address" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Starting Address" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="8h" version="2.1" name="Ending Address" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="Ch" version="2.1" name="Memory Device Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="Eh" version="2.1" name="Memory Array Mapped Address Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="10h" version="2.1" name="Partition Row Position" length="BYTE" usage="NUMBER">
+		</FIELD>
+		<FIELD offset="11h" version="2.1" name="Interleave Position" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="15" type="ENUM" >
+					<MAP value="0" meaning="Non-interleaved"/>
+					<MAP value="FFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="12h" version="2.1" name="Interleaved Data Depth" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="15" type="ENUM" >
+					<MAP value="0" meaning="Not part of an interleave"/>
+					<MAP value="FFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="21" description="Built-in Pointing Device">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Device Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Mouse"/>
+					<MAP value="04h" meaning="Track Ball"/>
+					<MAP value="05h" meaning="Track Point"/>
+					<MAP value="06h" meaning="Glide Point"/>
+					<MAP value="07h" meaning="Touch Pad"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.1" name="Interface" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Serial"/>
+					<MAP value="04h" meaning="PS/2"/>
+					<MAP value="05h" meaning="Infrared"/>
+					<MAP value="06h" meaning="HP-HIL"/>
+					<MAP value="07h" meaning="Bus mouse"/>
+					<MAP value="08h" meaning="ADB (Apple Desktop Bus)"/>
+					<MAP value="A0h" meaning="Bus mouse DB-9"/>
+					<MAP value="A1h" meaning="Bus mouse micro-DIN"/>
+					<MAP value="A2h" meaning="USB"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.1" name="Number of Buttons" length="BYTE" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="22" description="Portable Battery" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.1" name="Location" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.1" name="Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="6h" version="2.1" name="Manufacture Date" length="BYTE" usage="STRING"/>
+		<FIELD offset="7h" version="2.1" name="Serial Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="8h" version="2.1" name="Device Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="9h" version="2.1" name="Device Chemistry" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Lead acid"/>
+					<MAP value="04h" meaning="Nickel Cadmium"/>
+					<MAP value="05h" meaning="Nickel metal hydride"/>
+					<MAP value="06h" meaning="Lithium-ion"/>
+					<MAP value="07h" meaning="Zinc air"/>
+					<MAP value="08h" meaning="Lithium Polymer"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ah" version="2.1" name="Capacity Design" length="WORD" usage="NUMBER">
+		<!-- this should be a BITFIELD to use the MAPPING and BITS values.. defaults to Hex value output -->
+			<MAPPING>
+				<BITS>
+					<MAP value="00h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ch" version="2.1" name="Design Voltage" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="00h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Eh" version="2.1" name="SBDS Version Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="Fh" version="2.1" name="Maximum Error in Battery Data" length="BYTE" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="FFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="10h" version="2.2" name="SBDS Serial Number" length="WORD" usage="NUMBER"/>
+		<FIELD offset="12h" version="2.2" name="SBDS Manufacture Date" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS msb="4" lsb="0" name="Day"/>
+				<BITS msb="8" lsb="5" name="Month"/>
+				<BITS msb="15" lsb="9" name="Year"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="14h" version="2.2" name="SBDS Device Chemistry" length="BYTE" usage="STRING"/>
+		<FIELD offset="15h" version="2.2" name="Design Capacity Multiplier" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="16h" version="2.2" name="OEM-specific" length="DWORD" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="23" description="System Reset">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" name="Capabilities" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" type="ENUM" name="Status">
+					<MAP value="0" meaning="Reset not enabled by user"/>
+					<MAP value="1" meaning="Reset enabled by user"/>
+				</BITS>
+				<BITS msb="2" lsb="1" type="ENUM" name="Boot option">
+					<MAP value="00h" meaning="Reserved"/>
+					<MAP value="01h" meaning="Operating system"/>
+					<MAP value="02h" meaning="System utilities"/>
+					<MAP value="03h" meaning="Do not reboot"/>
+				</BITS>
+				<BITS msb="4" lsb="3" type="ENUM" name="Boot option on limit">
+					<MAP value="00h" meaning="Reserved"/>
+					<MAP value="01h" meaning="Operating system"/>
+					<MAP value="02h" meaning="System utilities"/>
+					<MAP value="03h" meaning="Do not reboot"/>
+				</BITS>
+				<BITS lsb="5" msb="5" name="System contains watchdog timer"/>
+				<BITS msb="7" lsb="6" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" name="Reset Count" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="0FFFFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" name="Reset Limit" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="0FFFFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="9h" name="Timer Interval" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="0FFFFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Bh" name="Timeout" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="0FFFFh" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="24" description="Hardware Security">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Hardware Security Settings" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS msb="1" lsb="0" type="ENUM" name="Front Panel Reset Status">
+					<MAP value="00h" meaning="Disabled"/>
+					<MAP value="01h" meaning="Enabled"/>
+					<MAP value="02h" meaning="Not implemented"/>
+					<MAP value="03h" meaning="Unknown"/>
+				</BITS>
+				<BITS msb="3" lsb="2" type="ENUM" name="Administrator Password Status">
+					<MAP value="00h" meaning="Disabled"/>
+					<MAP value="01h" meaning="Enabled"/>
+					<MAP value="02h" meaning="Not implemented"/>
+					<MAP value="03h" meaning="Unknown"/>
+				</BITS>
+				<BITS msb="5" lsb="4" type="ENUM" name="Keyboard Password Status">
+					<MAP value="00h" meaning="Disabled"/>
+					<MAP value="01h" meaning="Enabled"/>
+					<MAP value="02h" meaning="Not implemented"/>
+					<MAP value="03h" meaning="Unknown"/>
+				</BITS>
+				<BITS msb="7" lsb="6" type="ENUM" name="Power-on Password Status">
+					<MAP value="00h" meaning="Disabled"/>
+					<MAP value="01h" meaning="Enabled"/>
+					<MAP value="02h" meaning="Not implemented"/>
+					<MAP value="03h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="25" description="System Power Controls">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Next Scheduled Power-on Month" length="BYTE" usage="BCD"/>
+		<FIELD offset="5h" version="2.2" name="Next Schedule Power-on Day-of-month" length="BYTE" usage="BCD"/>
+		<FIELD offset="6h" version="2.2" name="Next Scheduled Power-on Hour" length="BYTE" usage="BCD"/>
+		<FIELD offset="7h" version="2.2" name="Next Scheduled Power-on Minute" length="BYTE" usage="BCD"/>
+		<FIELD offset="8h" version="2.2" name="Next Scheduled Power-on Second" length="BYTE" usage="BCD"/>
+	</STRUCTURE>
+	<STRUCTURE type="26" description="Voltage Probe" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Description" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.2" name="Location and Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS msb="4" lsb="0" type="ENUM" name="Location">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Other"/>
+					<MAP value="03h" meaning="Unknown"/>
+					<MAP value="04h" meaning="Processor"/>
+					<MAP value="05h" meaning="Disk"/>
+					<MAP value="06h" meaning="Peripheral Bay"/>
+					<MAP value="07h" meaning="System Management Module"/>
+					<MAP value="08h" meaning="Motherboard"/>
+					<MAP value="09h" meaning="Memory Module"/>
+					<MAP value="0Ah" meaning="Processor Module"/>
+					<MAP value="0Bh" meaning="Power Unit"/>
+					<MAP value="0Ch" meaning="Add-in Card"/>
+				</BITS>
+				<BITS msb="7" lsb="5" type="ENUM" name="Status">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="OK"/>
+					<MAP value="04h" meaning="Non-critical"/>
+					<MAP value="05h" meaning="Critical"/>
+					<MAP value="06h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.2" name="Maximum Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="8h" version="2.2" name="Minimum Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ah" version="2.2" name="Resolution" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ch" version="2.2" name="Tolerance" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Eh" version="2.2" name="Accuracy" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="10h" version="2.2" name="OEM-defined" length="DWORD" usage="NUMBER"/>
+		<FIELD offset="14h" version="2.2" name="Nominal Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="27" description="Cooling Device" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Temperature Proble Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="6h" version="2.2" name="Device Type and Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS msb="4" lsb="0" type="ENUM" name="Device Type">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Other"/>
+					<MAP value="03h" meaning="Unknown"/>
+					<MAP value="04h" meaning="Fan"/>
+					<MAP value="05h" meaning="Centrifugal Blower"/>
+					<MAP value="06h" meaning="Chip Fan"/>
+					<MAP value="07h" meaning="Cabinet Fan"/>
+					<MAP value="08h" meaning="Power Supply Fan"/>
+					<MAP value="09h" meaning="Heat Pipe"/>
+					<MAP value="0Ah" meaning="Integrated Refrigeration"/>
+					<MAP value="F4h" meaning="Active Cooling"/>
+					<MAP value="F5h" meaning="Passive Cooling"/>
+				</BITS>
+				<BITS msb="7" lsb="5" type="ENUM" name="Status">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="OK"/>
+					<MAP value="04h" meaning="Non-critical"/>
+					<MAP value="05h" meaning="Critical"/>
+					<MAP value="06h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" version="2.2" name="Cooling Unit Group" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="8h" version="2.2" name="OEM-defined" length="DWORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="00h" meaning="Not a group member"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="28" description="Temperature Probe" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Description" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.2" name="Location and Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS msb="4" lsb="0" type="ENUM" name="Location">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Other"/>
+					<MAP value="03h" meaning="Unknown"/>
+					<MAP value="04h" meaning="Processor"/>
+					<MAP value="05h" meaning="Disk"/>
+					<MAP value="06h" meaning="Peripheral Bay"/>
+					<MAP value="07h" meaning="System Management Module"/>
+					<MAP value="08h" meaning="Motherboard"/>
+					<MAP value="09h" meaning="Memory Module"/>
+					<MAP value="0Ah" meaning="Processor Module"/>
+					<MAP value="0Bh" meaning="Power Unit"/>
+					<MAP value="0Ch" meaning="Add-in Card"/>
+				</BITS>
+				<BITS msb="7" lsb="5" type="ENUM" name="Status">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="OK"/>
+					<MAP value="04h" meaning="Non-critical"/>
+					<MAP value="05h" meaning="Critical"/>
+					<MAP value="06h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.2" name="Maximum Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="8h" version="2.2" name="Minimum Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ah" version="2.2" name="Resolution" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ch" version="2.2" name="Tolerance" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Eh" version="2.2" name="Accuracy" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="10h" version="2.2" name="OEM-defined" length="DWORD" usage="NUMBER"/>
+		<FIELD offset="14h" version="2.2" name="Nominal Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="29" description="Electrical  Current Probe" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Description" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.2" name="Location and Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS msb="4" lsb="0" type="ENUM" name="Location">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Processor"/>
+					<MAP value="04h" meaning="Disk"/>
+					<MAP value="05h" meaning="Peripheral Bay"/>
+					<MAP value="06h" meaning="System Management Module"/>
+					<MAP value="07h" meaning="Motherboard"/>
+					<MAP value="08h" meaning="Memory Module"/>
+					<MAP value="09h" meaning="Processor Module"/>
+					<MAP value="0Ah" meaning="Power Unit"/>
+					<MAP value="0Bh" meaning="Add-in Card"/>
+				</BITS>
+				<BITS msb="7" lsb="5" type="ENUM" name="Status">
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="OK"/>
+					<MAP value="04h" meaning="Non-critical"/>
+					<MAP value="05h" meaning="Critical"/>
+					<MAP value="06h" meaning="Non-recoverable"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.2" name="Maximum Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="8h" version="2.2" name="Minimum Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ah" version="2.2" name="Resolution" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Ch" version="2.2" name="Tolerance" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Eh" version="2.2" name="Accuracy" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="10h" version="2.2" name="OEM-defined" length="DWORD" usage="NUMBER"/>
+		<FIELD offset="14h" version="2.2" name="Nominal Value" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Unknown"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="30" description="Out-of-Band Remote Access">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Manufacturer Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.2" name="Connections" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Inbound connection enabled"/>
+				<BITS lsb="1" msb="1" name="Outbound connection enabled"/>
+				<BITS msb="7" lsb="2" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="31" description="Boot Integrity Services Entry Point">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="32" description="System Boot Information" required="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Reserved" length="BYTE" count="6" usage="NONE"/>
+		<FIELD offset="Ah" version="2.3" name="Boot Status" length="BYTE" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="3" type="ENUM" >
+					<MAP value="0" meaning="No errors detected"/>
+					<MAP value="1" meaning="No bootable media"/>
+					<MAP value="2" meaning="The normal operating system failed to load"/>
+					<MAP value="3" meaning="Firmware-detected hardware failure including unknown failure types"/>
+					<MAP value="4" meaning="Operating system-detected hardware failure"/>
+					<MAP value="5" meaning="User-requested boot usually via keystroke"/>
+					<MAP value="6" meaning="System security violation"/>
+					<MAP value="7" meaning="Previously requested image"/>
+					<MAP value="8" meaning="A system watchdog timer expired causing the system to reboot"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Bh" version="2.3" name="Boot Status Additional Data" length="BYTE" count="9" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="33" description="Memory Error Information 64-bit">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Error Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="OK"/>
+					<MAP value="04h" meaning="Bad read"/>
+					<MAP value="05h" meaning="Parity error"/>
+					<MAP value="06h" meaning="Single-bit error"/>
+					<MAP value="07h" meaning="Double-bit error"/>
+					<MAP value="08h" meaning="Multi-bit error"/>
+					<MAP value="09h" meaning="Nibble error"/>
+					<MAP value="0Ah" meaning="Checksum error"/>
+					<MAP value="0Bh" meaning="CRC error"/>
+					<MAP value="0Ch" meaning="Corrected signel-bit error"/>
+					<MAP value="0Dh" meaning="Corrected error"/>
+					<MAP value="0Eh" meaning="Uncorrectable error"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.3" name="Error Granularity" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Device level"/>
+					<MAP value="04h" meaning="Memory partition level"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.3" name="Error Operation" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Read"/>
+					<MAP value="04h" meaning="Write"/>
+					<MAP value="05h" meaning="Partial write"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" version="2.3" name="Vendor Syndrome" length="DWORD" usage="NUMBER"/>
+		<FIELD offset="Bh" version="2.3" name="Memory Array Error Address" length="QWORD" usage="NUMBER"/>
+		<FIELD offset="13h" version="2.3" name="Device Error Address" length="QWORD" usage="NUMBER"/>
+		<FIELD offset="1Bh" version="2.3" name="Error Resolution" length="DWORD" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="34" description="Management Device">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Description" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.3" name="Device Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="National Semiconductor LM75"/>
+					<MAP value="04h" meaning="National Semiconductor LM78"/>
+					<MAP value="05h" meaning="National Semiconductor LM79"/>
+					<MAP value="06h" meaning="National Semiconductor LM80"/>
+					<MAP value="07h" meaning="National Semiconductor LM81"/>
+					<MAP value="08h" meaning="Analog Devices ADM9240"/>
+					<MAP value="09h" meaning="Dallas Semiconductor DS1780"/>
+					<MAP value="0Ah" meaning="Maxim 1617"/>
+					<MAP value="0Bh" meaning="Genesys GL518SM"/>
+					<MAP value="0Ch" meaning="Winbond W83781D"/>
+					<MAP value="0Dh" meaning="Holtek HT72H791"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.3" name="Address" length="DWORD" usage="ADDRESS"/>
+		<FIELD offset="Ah" version="2.3" name="Address Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="I/O Port"/>
+					<MAP value="04h" meaning="Memory"/>
+					<MAP value="05h" meaning="SM Bus"/>
+					<MAP value="06h" meaning="National Semiconductor LM80"/>
+					<MAP value="07h" meaning="National Semiconductor LM81"/>
+					<MAP value="08h" meaning="Analog Devices ADM9240"/>
+					<MAP value="09h" meaning="Dallas Semiconductor DS1780"/>
+					<MAP value="0Ah" meaning="Maxim 1617"/>
+					<MAP value="0Bh" meaning="Genesys GL518SM"/>
+					<MAP value="0Ch" meaning="Winbond W83781D"/>
+					<MAP value="0Dh" meaning="Holtek HT72H791"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="35" description="Management Device Component">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Description" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.3" name="Management Device Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="7h" version="2.3" name="Component Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="9h" version="2.3" name="Threshold Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="36" description="Management Device Threshold" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Lower Threshold - Non-critical" length="WORD" usage="NUMBER"/>
+		<FIELD offset="6h" version="2.3" name="Upper Threshold - Non-critical" length="WORD" usage="NUMBER"/>
+		<FIELD offset="8h" version="2.3" name="Lower Threshold - Critical" length="WORD" usage="NUMBER"/>
+		<FIELD offset="Ah" version="2.3" name="Upper Threshold - Critical" length="WORD" usage="NUMBER"/>
+		<FIELD offset="Ch" version="2.3" name="Lower Threshold - Non-recoverable" length="WORD" usage="NUMBER"/>
+		<FIELD offset="Eh" version="2.3" name="Upper Threshold - Non-recoverable" length="WORD" usage="NUMBER"/>
+	</STRUCTURE>
+	<STRUCTURE type="37" description="Memory Channel" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Channel Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="RamBus"/>
+					<MAP value="04h" meaning="SyncLink"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.3" name="Maximum Channel Load" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="6h" version="2.3" name="Memory Device Count" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="7h" version="2.3" name="Memory Device Load" length="BYTE" count="PAD" spacing="3" usage="NUMBER"/>
+		<FIELD offset="8h" version="2.3" name="Memory Device Handle" length="WORD" count="PAD" spacing="3" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="38" description="IPMI Device Information">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Interface Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="KCS - Keyboard Controller Style"/>
+					<MAP value="02h" meaning="SMIC - Server Management Interface Chip"/>
+					<MAP value="03h" meaning="BT - Block Transfer"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.3" name="IPMI Specification Revision" length="BYTE" usage="BCD"/>
+		<FIELD offset="6h" version="2.3" name="I2C Slave Address" length="BYTE" usage="ADDRESS"/>
+		<FIELD offset="7h" version="2.3" name="NV Storage Device Address" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="8h" version="2.3" name="Base Address" length="QWORD" usage="ADDRESS"/>
+	</STRUCTURE>
+	<STRUCTURE type="39" description="System Power Supply" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.3" name="Power Unit Group" length="BYTE" usage="NUMBER">
+		<!-- to use the MAPPING and BITS the usage should be BITFIELD -->
+			<MAPPING>
+				<BITS>
+					<MAP value="00h" meaning="Not a group member"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="5h" version="2.3" name="Location" length="BYTE" usage="STRING"/>
+		<FIELD offset="6h" version="2.3" name="Device Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="7h" version="2.3" name="Manufacturer" length="BYTE" usage="STRING"/>
+		<FIELD offset="8h" version="2.3" name="Serial Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="9h" version="2.3" name="Asset Tag Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="Ah" version="2.3" name="Model Part Number" length="BYTE" usage="STRING"/>
+		<FIELD offset="Bh" version="2.3" name="Revision Level" length="BYTE" usage="STRING"/>
+		<FIELD offset="Ch" version="2.3" name="Max Power Capacity" length="WORD" usage="NUMBER">
+			<MAPPING>
+				<BITS>
+					<MAP value="8000h" meaning="Not a group member"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Eh" version="2.3" name="Power Supply Characteristics" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="Power supply is hot replaceable"/>
+				<BITS lsb="1" msb="1" name="Power supply is present"/>
+				<BITS lsb="2" msb="2" name="Power supply is unplugged"/>
+				<BITS msb="6" lsb="3" type="ENUM" name="DMTF Input Voltage Range Switching">
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Manual"/>
+					<MAP value="4h" meaning="Auto-switch"/>
+					<MAP value="5h" meaning="Wide range"/>
+					<MAP value="6h" meaning="Not applicable"/>
+				</BITS>
+				<BITS msb="9" lsb="7" type="ENUM" name="Status">
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Manual"/>
+					<MAP value="4h" meaning="Auto-switch"/>
+					<MAP value="5h" meaning="Wide range"/>
+					<MAP value="6h" meaning="Not applicable"/>
+				</BITS>
+				<BITS msb="13" lsb="10" type="ENUM" name="DMTF Power Supply Type">
+					<MAP value="1h" meaning="Other"/>
+					<MAP value="2h" meaning="Unknown"/>
+					<MAP value="3h" meaning="Linear"/>
+					<MAP value="4h" meaning="Switching"/>
+					<MAP value="5h" meaning="Battery"/>
+					<MAP value="6h" meaning="UPS"/>
+					<MAP value="7h" meaning="Converter"/>
+					<MAP value="8h" meaning="Regulator"/>
+				</BITS>
+				<BITS msb="15" lsb="14" name="Reserved"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="10h" version="2.3" name="Input Voltage Probe Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="12h" version="2.3" name="Cooling Device Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="14h" version="2.3" name="Input Current Probe Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="126" description="Inactive" repeats="true">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="127" description="End-of-Table">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+	</STRUCTURE>
+	<STRUCTURE type="208" description="Revisions and IDs">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Dell Implementation, Major Revision" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="5h" version="2.2" name="Dell Implementation, Minor Revision" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="6h" version="2.2" name="Dell System ID" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="7h" version="2.2" name="Dell Hardware Revision" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="8h" version="2.2" name="Dell System ID Extension" length="WORD" usage="NUMBER"/>
+		<FIELD offset="Ah" version="2.2" name="Manufacture Date" length="BYTE" usage="STRING"/>
+		<FIELD offset="Bh" version="2.2" name="First Power-on Date" length="BYTE" usage="STRING"/>
+	</STRUCTURE>
+	<STRUCTURE type="209" description="Parallel Port">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Base I/O Address" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="6h" version="2.2" name="IRQ" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="7h" version="2.2" name="Connector Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="DB-25 Female IEEE 1284-A Receptacle"/>
+					<MAP value="04h" meaning="DB-25 Male IEEE 1284-A Plug"/>
+					<MAP value="05h" meaning="Centronics IEEE 1284-B Receptacle"/>
+					<MAP value="06h" meaning="Mini-Centronics IEEE 1284-C Receptacle"/>
+					<MAP value="07h" meaning="Proprietary"/>
+					<MAP value="A0h" meaning="Centronics-14"/>
+					<MAP value="A1h" meaning="DB-36 Female"/>
+					<MAP value="A2h" meaning="Mini-Centronics-20"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="8h" version="2.2" name="Connector Pin-out" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="XT/AT"/>
+					<MAP value="04h" meaning="PS/2"/>
+					<MAP value="05h" meaning="IEEE 1284"/>
+					<MAP value="06h" meaning="Proprietary"/>
+					<MAP value="A0h" meaning="PC-98"/>
+					<MAP value="A1h" meaning="PC-98-Hireso"/>
+					<MAP value="A2h" meaning="PC-H98"/>
+					<MAP value="A3h" meaning="PC-98Note"/>
+					<MAP value="A4h" meaning="PC-98Full"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="9h" version="2.2" name="Capabilities" length="WORD" usage="BITFIELD">
+			<MAPPING>
+				<BITS lsb="0" msb="0" name="XT/AT"/>
+				<BITS lsb="1" msb="1" name="PS/2"/>
+				<BITS lsb="2" msb="2" name="ECP"/>
+				<BITS lsb="3" msb="3" name="EPP"/>
+				<BITS lsb="4" msb="4" name="PC-98"/>
+				<BITS lsb="5" msb="5" name="PC-98-Hireso"/>
+				<BITS lsb="6" msb="6" name="PC-H98"/>
+				<BITS msb="14" lsb="7" name="Reserved"/>
+				<BITS lsb="15" msb="15" name="Device supports DMA"/>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="Bh" version="2.2" name="Security Settings" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="None"/>
+					<MAP value="04h" meaning="External Interface Locked Out"/>
+					<MAP value="05h" meaning="External Interface Enabled"/>
+					<MAP value="06h" meaning="Boot-bypass"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="210" description="Serial Port">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Base I/O Address" length="WORD" usage="ADDRESS"/>
+		<FIELD offset="6h" version="2.2" name="IRQ" length="BYTE" usage="NUMBER"/>
+		<FIELD offset="7h" version="2.2" name="Connector Type" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="DB-9 Male"/>
+					<MAP value="04h" meaning="DB-9 Female"/>
+					<MAP value="05h" meaning="DB-25 Male"/>
+					<MAP value="06h" meaning="DB-25 Female"/>
+					<MAP value="07h" meaning="RJ-11"/>
+					<MAP value="08h" meaning="RJ-45"/>
+					<MAP value="09h" meaning="Proprietary"/>
+					<MAP value="0Ah" meaning="Circular DIN-8 Male"/>
+					<MAP value="0Bh" meaning="Circular DIN-8 Female"/>
+					<MAP value="A0h" meaning="Mini-Centronics Type-14"/>
+					<MAP value="A1h" meaning="Mini-Centronics Type-26"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="8h" version="2.2" name="Capabilities" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="XT/AT compatible"/>
+					<MAP value="04h" meaning="16450 compatible"/>
+					<MAP value="05h" meaning="16550 compatible"/>
+					<MAP value="06h" meaning="16550A compatible"/>
+					<MAP value="A0h" meaning="8251 compatible"/>
+					<MAP value="A1h" meaning="8251 FIFO compatible"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="9h" version="2.2" name="Maximum BIOS Speed" length="WORD" usage="NUMBER"/>
+		<FIELD offset="Bh" version="2.2" name="Security Settings" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="None"/>
+					<MAP value="04h" meaning="External Interface Locked Out"/>
+					<MAP value="05h" meaning="External Interface Enabled"/>
+					<MAP value="06h" meaning="Boot-bypass"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+	<STRUCTURE type="211" description="IR Port">
+		<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
+		<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
+		<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
+		<FIELD offset="4h" version="2.2" name="Location" length="BYTE" usage="STRING"/>
+		<FIELD offset="5h" version="2.2" name="Enable State" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Enabled"/>
+					<MAP value="04h" meaning="Disabled"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="6h" version="2.2" name="Speed Limit Enable" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="Enabled"/>
+					<MAP value="04h" meaning="Disabled"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+		<FIELD offset="7h" version="2.2" name="Speed Limit" length="WORD" usage="SPEED"/>
+		<FIELD offset="9h" version="2.2" name="Physical Port Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="Ah" version="2.2" name="Virtual COM Port Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="Bh" version="2.2" name="Virtual LPT Port Name" length="BYTE" usage="STRING"/>
+		<FIELD offset="Ch" version="2.2" name="Protocol" length="BYTE" usage="ENUM">
+			<MAPPING>
+				<BITS>
+					<MAP value="01h" meaning="Other"/>
+					<MAP value="02h" meaning="Unknown"/>
+					<MAP value="03h" meaning="SIR"/>
+					<MAP value="04h" meaning="FIR"/>
+					<MAP value="05h" meaning="MIR"/>
+				</BITS>
+			</MAPPING>
+		</FIELD>
+	</STRUCTURE>
+</STRUCTUREDEFS>

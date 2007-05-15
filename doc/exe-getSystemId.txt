@@ -1,0 +1,35 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page getSystemId Documentation for getSystemId executable
+
+\section NAME NAME
+getSystemId
+
+\section SYNOPSIS SYNOPSIS
+The getSystemId executable is used to pull commonly-used system information
+from a system and display it in an easily-readable and parseable format. it
+displays Dell system ID, service tag, product name, BIOS version, and system
+vendor.
+<pre>
+    $ ./getSystemId
+    cppunit/platform/PE1850/memdump.dat
+    Libsmbios:    0.10.4_beta2
+    System ID:    0x016C
+    Error getting the Service Tag : String does not exist.
+    Product Name: PowerEdge 1850
+    BIOS Version: P19
+    Vendor:       Dell Computer Corporation
+    Is Dell:      1
+</pre>
+
+\section DESCRIPTION
+
+\section RETURN VALUE
+
+\section ERRORS
+
+\section RESTRICTIONS
+
+\section SEE ALSO
+
+*/

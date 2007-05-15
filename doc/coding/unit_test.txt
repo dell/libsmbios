@@ -1,0 +1,95 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page unit_test_run Running unit tests for libsmbios
+ \section ut Running Unit Tests
+   The normal libsmbios tarball contains only a small subset of the unit test
+   data, for space reasons. To run the subset of unit tests, simply run the
+   following:
+
+\verbatim
+$ make unit_test 
+--------------------------
+ Running cppunit tests...
+ --------------------------
+ Running test for ./cppunit/platform/opti
+ opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+ opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+   ... cut ...
+\endverbatim
+
+   The unit tests will exit with a successful return code if all tests pass. A
+   bad exit status indicates the presence of test failures. Check the output
+   in "testResults.xml" to see which test failed and the details of the
+   failure.
+   
+   To run the complete unit test suite, download the
+   "libsmbios-unit_test_data-*.tar.bz2" tarball and untar it anywhere. Then,
+   supply the "UNIT_TEST_DATA_DIR" variable to tell the build system where the
+   data is located. It should be run like this:
+
+\verbatim
+$ make unit_test UNIT_TEST_DATA_DIR=../libsmbios_test-x.y.z/platform/*
+--------------------------
+ Running cppunit tests...
+ --------------------------
+ Running test for ./cppunit/platform/opti
+ opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+ opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+   ... cut ...
+
+ Running test for ../libsmbios_test/platform/ES3020
+ ES3020          void testSmbiosXml::testTable_Subscript()... [ ok ]
+ ES3020          void testSmbiosXml::testTable_Subscript()... [ ok ]
+   ... cut ...
+\endverbatim
+
+    If any data set fails, the test suite will stop cycling through the data
+    set. Test results will be located in "testResults.xml" in the root of the
+    libsmbios directory tree.
+
+    All patches should be unit tested before submission.
+
+ \subsection vg Running memory leak checks
+  The libsmbios project uses valgrind to check for memory leaks for every
+  release. To run the leak detection code, there are two ways to run. Note
+  that the leak checks use the same UNIT_TEST_DATA_DIR variable that the
+  unit_tests use. The first way to run the tests is like this:
+
+  \verbatim
+$ make valgrind UNIT_TEST_DATA_DIR=../libsmbios_test/platform/*
+--------------------------
+Running cppunit memory leak detection tests...
+--------------------------
+
+Running test for ./cppunit/platform/opti
+opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+ ... cut ...
+  \endverbatim
+
+  After the run is complete, a report is stored under "doc/report/" to
+  document the valgrind run.
+
+  If you would rather skip the report and see the results on the screen, you
+  can run the following:
+
+\verbatim
+$ make quick_valgrind
+--------------------------
+ Running quick cppunit memory leak detection tests...
+ --------------------------
+
+
+ Running test for ./cppunit/platform/opti
+ ==15993== Memcheck, a memory error detector for x86-linux.
+ ==15993== Copyright (C) 2002-2003, and GNU GPL'd, by Julian Seward.
+ ==15993== Using valgrind-2.1.0, a program supervision framework for x86-linux.
+ ==15993== Copyright (C) 2000-2003, and GNU GPL'd, by Julian Seward.
+    ... cut ...
+ opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+ opti    void testSmbiosXml::testTable_Subscript()... [ ok ]
+    ... cut ...
+\endverbatim
+
+*/
+

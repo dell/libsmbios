@@ -1,0 +1,67 @@
+/** \page security Security Considerations for Libsmbios
+
+\section OS Authentication and Access Controls
+The basic design of the libsmbios library is that it reads the SMBIOS table from
+memory. The library is runs completely in userspace (eg. no Kernel driver is
+required.) On the basis of this, it is safe to say that the current design for
+libsmbios is already much safer and secure than some of the existing Dell code 
+for SMBIOS that currently runs as a driver in the Kernel.
+
+As all of the facilities used for access to the SMBIOS tables are base-OS
+features, the security and availability of the tables are based upon OS
+privlege levels.
+
+For example, on Linux, access to the tables is through /dev/mem, and the OS
+security associated with this file is in effect. By default, on Linux access to
+/dev/mem is limited to the root superuser.
+
+On Windows, access is through the "\\Device\PhysicalMemory" file. Access to this
+file is limited to the Administrator superuser.
+
+
+\section smbios_a_s SMBIOS Access and Security.
+The SMBIOS tables are, on all currently shipping and planned Dell servers, a
+<b>read-only</b> table that is used by BIOS to pass information to the OS,
+Applications, and System Management utilities. In general, the SMBIOS tables
+provide access to no significantly privleged information, nor to any sensitive
+information. Because of this, access to SMBIOS presents no special security
+concerns. The information in the SMBIOS tables would not allow an attacker to
+disable the system nor do anything malicious that would not otherwise be
+possible.
+
+It is also important to note that the Libsmbios code does not significantly
+enable anything that is not already otherwise possible to do on Dell systems.
+There already exist other utilities that read and parse SMBIOS tables on both
+Linux and Windows. Libsmbios simply provides a unified library of code that can
+be used by different project that will help control code duplication and wasted
+effort by diverse teams working with this data.
+
+\section cmos_a_s_main CMOS Token Access and Security.
+\subsection what_cmos What are CMOS Tokens
+CMOS Tokens are a special type of item in the SMBIOS table. They have an SMBIOS
+structure number of 0xD4, which is a vendor-proprietary reserved number for
+vendors to use for special vendor data.
+
+CMOS Tokens provide a way for BIOS to notify management applications about the
+mapping between specific features and bits in CMOS that can be controlled to
+enable or disable that feature. For example, one specific bit in CMOS may
+control the BIOS "Numlock at boot" feature. If this bit is on, the Numlock key
+is on during boot, if this bit is off, numlock is off. CMOS Tokens provide a
+"pointer" to find which bits to modify.
+
+CMOS Tokens also control other features such as enable/disable PXE, boot order,
+enable NICs, etc. This method allows BIOS to move the physical location of these
+bits around in CMOS to best fit BIOS needs, while still allowing management
+applications to "find" where the bits are that need to be manipulated.
+
+\subsection cmos_a_s Access and Security
+CMOS Tokens are manipulated through a special IO-Port range. All IO operations
+are under access control of the OS. The OS will generally only allow access to
+these IO ports by the superuser account. 
+
+It is important to note that restricting this information does not protect the
+user, as a malicious attacker that has administrative access can completely wipe
+CMOS or manipulate CMOS without any special knowledge or access that Libsmbios
+may add.
+
+*/

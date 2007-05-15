@@ -1,0 +1,20 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/*! \page dell_drivers Dell 'dcdbas' and 'dell_rbu' Linux kernel drivers.
+
+\section ins_dcdbas_dell_rbu Installing the Dell 'dcdbas' and 'dell_rbu' drivers.
+The dcdbas and dell_rbu drivers are Linux kernel drivers that are required to perform certain operations in libsmbios. For example, BIOS updates require the dell_rbu driver. These kernel drivers are included in the standard linux kernel starting with Linux 2.6.14. If you have this kernel and these drivers are not present, please talk to your vendor about enabling these drivers. For others on earlier kernels, there is a DKMS-based RPM containing these drivers that you can install. Here are the instructions:
+
+ - The current DKMS drivers should work for all 2.6 and 2.4 kernels. Tested on
+   RHEL3, RHEL4, FC4, FC3. Should work on others.
+
+ - Set up your system to pull from the Dell yum RPM repository. See \ref yum
+
+ - Install the dcdbas and dell_rbu RPMS via yum:
+\verbatim
+# yum install dcdbas dell_rbu
+\endverbatim
+
+ - The drivers are automatically compiled and loaded into your kernel at install time. If you install newer kernels, DKMS will automatically recompile for that kernel on boot.
+
+*/

@@ -1,0 +1,51 @@
+/** \page coding_style Page on Coding Style for libsmbios
+
+This page is not yet complete :-)
+
+Indentation and tabbing policy:
+    - Indentation is 4 spaces, no tab characters are allowed
+    - the reference indentation policy is in build/scripts/indent.sh. The
+      "Artistic Style" (astyle) program is an automated indentation engine 
+      that will re-tab and re-indent C++ code. The appropriate settings to 
+      use are contained in the indent.sh script. This script should be run on
+      new code to assure that it follows the project policy. The script will
+      occasionally be re-run against old code to ensure that it stays within
+      guidelines.
+
+references:
+    New C++ casting style:
+    - http://www.cs.rpi.edu/~wiseb/xrds/ovp3-1b.html
+
+    Portability:
+    - http://www.mozilla.org/hacking/portable-cpp.html
+
+    Localization:
+    - http://www.mozilla.org/projects/l10n/customizable-code.html#write_l12y
+    - http://www.i18nguy.com/unicode/c-unicode.html
+
+    Configuration:
+    - http://www.boost.org/libs/config/config.htm
+
+
+ Use modelines: Ensure that every file has a complete set of modelines for
+ common editors. VIM modelines should appear in every file. When we get
+ a significant set of developers using EMACS, then appropriate modelines for
+ EMACS should be added to each file
+
+ Modelines should be in the first or last 5 lines of the program text. Modelines
+ in other locations are generally ignored by editors.
+
+example emacs modeline:
+\verbatim
+/* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+\endverbatim
+
+example vim modeline:
+\verbatim
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+\endverbatim
+
+ Copyright: Each file should contain copyright attribution information.
+
+
+*/

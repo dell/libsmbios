@@ -1,0 +1,18 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page design Design Documentation
+ \section foobar Design/Concept Review Presentation
+ \li \ref presentation
+ \section docs Design Overview
+ \li *\ref unit_test_theory  
+ \li \ref smbios_theory
+ \li \ref item_theory
+ \li \ref workaround_theory
+ \li *\ref factory_theory  
+ \li *\ref memory_theory  
+ \li *\ref cmos_theory  
+ \li \ref security
+
+*/
+
+

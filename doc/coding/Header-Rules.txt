@@ -1,0 +1,63 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:
+
+/** \page header_rules Rules for header file inclusion
+
+ - Header files should always successfully compile standalone. Use the "make
+   header_file_check" makefile target to test this.
+
+ - Header files in include/smbios should only include other headers in include/
+   or system headers.
+
+ - Header files should _never_ include a "using namespace" directive.
+
+ - if "file.h" is in our source tree use "file.h" like this:
+ \verbatim #include "file.h" \endverbatim 
+ - all other header files use <file.h>, like this:
+ \verbatim #include <file.h> \endverbatim
+
+ - Always use 'C'-style comments in header files: \/* ... *\/
+
+ - header file order in HEADER files
+    - Always include "smbios/compat.h" first.
+    - Include system includes next
+    - Include "smbios/types.h" next, if necessary
+    - include any "I*.h" interface headers next
+    - include any other includes
+
+ - header file order in C++ code  
+    - If you have _any_ system includes, include "smbios/compat.h" first
+    - Include system includes next, if necessary
+    - Should _rarely_ have to include "types.h", should be in a header already.
+    - Include any "I*.h" interface headers next
+    - all others
+
+
+Here is an example header file:
+
+\verbatim
+// standard include guard... prevent multiple inclusion
+#ifndef SMBIOSINTERFACE_H
+#define SMBIOSINTERFACE_H
+
+// compat header should always be first header
+#include "smbios/compat.h"
+
+// next include system header files
+#include <cstdlib>		// Provides size_t and NULL
+#include <iostream>
+#include <string>
+#include <map>
+#include <memory>       // Provides auto_ptr<>
+
+// types.h should be first user-defined header.
+#include "smbios/types.h"  
+
+// include other smbios/I*.h headers next
+#include "smbios/IFactory.h"
+
+     //....  declarations here ....
+
+#endif /* SMBIOSINTERFACE_H */
+\endverbatim
+   
+*/

@@ -1,0 +1,131 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:
+//
+//Do not use "\section", "\subsection", or other page-related commands here as
+//this file is inlined in the ISmbios.h file.
+// 
+/**  \page smbios_theory Smbios Table Overview
+ *
+     * <b>Theory of Operation</b>
+     *
+     * <p>The SmbiosTable is meant to model the system SMBIOS table as a standard
+     * C++ data object. The system SMBIOS table most closely resembles a C++ STL
+     * vector class that happens to be read-only (const). We have chosen to
+     * implement the ISmbiosTable class so that it follows closely the STL
+     * standard containers.  If you have used iterators to traverse
+     * a vector, or the [] operator, then you should be able to use the
+     * ISmbiosTable easily. The only difference here is that the [] operator
+     * takes as input the \a type of smbios item you wish to pull from the
+     * table, rather than an array index.
+     *
+     * The SmbiosTable class maintains it's own buffer that mirrors the contents
+     * of the actual system SMBIOS table. This is for efficiency reasons, as the
+     * table has a max length of 64k, and each access of the table potentially
+     * has to do special OS calls to re-read the data. There is a de-cache and
+     * reset API to tell the class to re-read data from main memory for the case
+     * of SMBIOS tables that are dynamically updated by firmware.
+     *
+     * <b>Object Ownership Rules</b>
+     *
+     * There are several types of objects that client code will have to deal
+     * with. Described below are the ownership semantics for the following
+     * objects:
+     *  \li smbios::SmbiosFactory
+     *  \li smbios::ISmbiosTable
+     *  \li smbios::ISmbiosItem
+     *
+     * smbios::SmbiosFactory objects are singleton objects and may not be deleted.
+     * The only way to safely reclaim memory from a factory is to run the
+     * ->reset() method call, which will delete the factory and any
+     * factory-owned ISmbiosTable instances.
+     *
+     * smbios::ISmbiosTable objects are owned by the SmbiosFactory if the table is
+     * created with the getSingleton() method call. The client should not
+     * attempt to keep Table references past the point where the factory is
+     * reset(). If you get the ISmbiosTable object via the 
+     * makeNew() you own the resulting table object and must delete() it.
+     *
+     * smbios::ISmbiosItem objects that are given out in response to Queries
+     * (smbios::ISmbiosTable::operator[]()or the iterator object), are owned by 
+     * the Table. The client should never attempt to A) keep Item references 
+     * past the lifetime of the
+     * containing table, or B) delete the Item.
+     * 
+     * <b>Class Heirarchy Description</b>
+     * <p> The class heirarchy is based upon ISmbiosTable at the top level. This
+     * class is a pure virtual Abstract Base Class that provides the public
+     * interfact that outside clients can use. All of the operations that you
+     * can do on the Table are modeled in the ISmbiosTable class.
+     *
+     * The inheritance heirarchy is based around the concept that, no matter
+     * which OS or platform you are running on, the actual table data and
+     * parsing is going to be exactly the same. Because of this, all operations
+     * that operate on table data (parsing header, parsing out items), are
+     * implemented in the SmbiosTable class, which is a direct subclass of
+     * ISmbiosTable. 
+     *
+     * The next level of the heirarchy is where we abstract the different
+     * methods of actually getting the table. This layer is different among the
+     * different OSs. This layer is responsible for loading the data items in
+     * SmbiosTable, and is implemented in SmbiosTableFileIo and
+     * SmbiosTableMemory. These two classes either load data from a file or from
+     * memory, respectively. File loading is used in the unit tests.
+     *
+     * The last detail of the inheritance heirarchy is that the methods that use
+     * XML to assist in parsing smbios data are separated into their own class.
+     * This is done for space and dependency reasons. First, the smbios without
+     * xml parsing is smaller. Next, xml parsing implies an additional runtime
+     * dependency on xerces, which is the xml library we use to parse xml. The
+     * classes which implement this are SmbiosTableXml and
+     * SmbiosTableXmlOsSpecific
+     *
+     * <b>Using the ISmbiosTable interface</b>
+     *
+     * \dontinclude testStandalone.cpp
+     * To use the ISmbiosTable interface, first you must instantiate an object
+     * with an ISmbiosTable interface. Since ISmbiosTable is a pure abstract
+     * class, you cannot directly instantiate an object of this type. The way to
+     * get a pointer to an ISmbiosTable class is by using the SmbiosFactory.
+     * \skip BEGIN EXAMPLE factory
+     * \skipline //
+     * \until getFactory
+     *
+     * Once you have a pointer to an ISmbiosTable object, you normally want to
+     * find items of a given type. This example uses the XML enhanced method,
+     * looking up the text in the XML file and finding the corresponding item:
+     * \skipline smbios::ISmbiosTable::iterator
+     *
+     * After you have a pointer to an item, you can pull out information from
+     * that item. Again, the string is converted to an int inside the class by
+     * looking the text up in XML:
+     * \skipline getU8
+     *
+     * <b>Using the iterator interface</b>
+     * <p>When there is more than one item of a given type in the table and you
+     * want to get data from each one, you should use the iterator pattern.
+     *
+     * To use the iterator, you instantiate the table the same way using the factory:
+     * \dontinclude testStandalone.cpp
+     * \skip BEGIN EXAMPLE iterator
+     * \skipline //
+     * \until getSingleton
+     * 
+     * You can then iterate over the list of items using a for() or while()
+     * loop. This example prints out each item to a stream:
+     * \skipline // iterate
+     * \until }
+     *
+     *
+     * \todo 
+     * The last couple of things that need to be added to ISmbiosTable to
+     * complete the API are:
+     *      \li Add accessor functions for the different header fields in the 
+     *          Smbios Table Entry Point.
+     *      \li Add a function to explicitly check the checksums stored in the 
+     *          Entry Point.
+     *
+     * \todo 
+     *  Need to remove the itemList member variable from ISmbiosTable. 
+     *  It needs to be put into SmbiosTable (private implementation class), 
+     *  and we need to provide a set of functions that the iterator can use in 
+     *  its place.
+     */

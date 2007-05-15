@@ -1,0 +1,267 @@
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=txt:textwidth=80:
+/** \page presentation Libsmbios Concept/Design Review Presentation
+
+    <H2>Why libsmbios?</H2>
+
+    <p>Many systems management applications require access to data stored in the
+    system SMBIOS table. Some sort of uniform mechanism is needed by diverse
+    groups across Dell to access SMBIOS information. Currently there are
+    numerous disjoint libraries within Dell used by various groups to get this
+    information. This is not acceptable because we are collectively duplicating
+    work instead of solving the underlying problem.
+
+    <p>In this presentation, I have attempted to list all of the various reasons
+    I have seen for the existing lack of code reuse and sharing in Dell in this
+    specific area. I have then listed the specific ways in which libsmbios has
+    sought to address each of these problems. Most of the existing 
+    implementations of code to obtain information from SMBIOS present one or 
+    more of the following difficulties:
+
+    \li Dependency Management
+    \li Changing Requirements
+    \li Rigidity
+    \li Fragility
+    \li Immobility
+    \li Viscosity of Design
+    \li Viscosity of Environment
+
+    Here is a brief description of each of the above problems, an example of the
+    problem, and the ways in which libsmbios sets out to help with this problem.
+
+<hr>
+    <H3>Dependency Management</H3>
+        <b>Problem:</b> Bringing in one small piece of code necessitates bringing in a pile of
+        supporting code just to use the one component you want. Developers
+        become hesitant to bring in code due to this. Some projects have tight
+        space/depencency requirements that others may not have. Libs that do not
+        target lowest common denominator are likely to be shunned.
+
+        <b>Example:</b> DUP/SVM: managing compatibility against N prior versions of
+        Disney because they have to work with existing installed version of
+        Disney.
+
+        How libsmbios helps: 
+            - The open nature of libsmbios means users can 
+              "have it their way"(TM) Users/clients can statically link 
+              libsmbios for 'embedded, zero-install' use. Others can depend on a
+              normal system library compiled. 
+
+            - The driverless nature of libsmbios means users/clients need not
+              manage driver dependencies for existing installs.
+
+            - Open source means we can get this accepted into the Base OS and
+              depend on there being a current version installed all the time.
+
+<hr>
+    <H3>Changing Requirements</H3>
+        <b>Problem:</b> Code originally written for one project may not be suitable for another
+        project due to differences in requirements between the projects. For
+        example, one project might assume a static install on a target system,
+        while another assumes that it must run with zero-install footprint.
+        Obviously the latter will have great difficulty using the former,
+        depending on the assumptions made by the former.
+
+        <b>Example:</b> Autry/SVM cannot rely on existing, installed version of Disney
+        to gather data, neither can they rely on Disney _not_ being installed
+        and use their own because Disney lacks a contention resolution
+        mechanism.  Catch-22 results.
+
+        How libsmbios helps:
+            - Libsmbios was designed to be 'splittable', ie. the core smbios
+              parsing code has no external dependencies, and should be able to
+              be used in any environment.
+
+            - Libsmbios is open. Users can submit code to help libsmbios fit
+              into places the original designers never thought to put it.
+
+            - Libsmbios is based upon best-practice design with a solid unit
+              testing framework. The development team can make changes to the
+              framework and be confident that the design still works because of
+              the depth of testing.
+
+<hr>
+    <H3>Rigidity</H3>
+        <b>Problem:</b> "Tendency for software to be difficult to change, even in simple ways."
+        For example, if the software does not have a clear and concise way of
+        extending the code to support future systems, then people will be
+        confused about how to add this support when it is needed. They may
+        attempt to do it the "wrong" way, degrading the design.
+
+        <b>Example:</b> Existing code for SMBIOS parsing from almost everywhere has no
+        automated unit test framework to back up changes to the code. Every
+        change to the code must undergo an extensive, manual unit test phase to
+        ensure that problems are caught on every system, from legacy to
+        yet-to-be released systems. If there are holes in the manual unit test 
+        plan, then there are potential "test escapes".
+
+        How libsmbios helps:
+            - Extensive, in-depth, thorough, and automated unit test suite.
+              Every change that a developer makes to the core library can
+              immediately be tested to ensure that it works on every system,
+              from legacy to development machines. There are over 20 platforms
+              in the unit test database, with a clear, easy-to-use way to add
+              new systems to the database. Over 1000 tests are run every time
+              you run the unit test framework.
+
+            - Built-in code coverage analysis. Every time you add code, you can
+              inspect the code coverage analysis to ensure that the unit test
+              framework is actually hitting the code that has been changed or
+              added.
+
+            - Built-in leak-detection analysis. Built-in leak detection when
+              automated unit tests are run ensure that no memory leaks are added
+              to the codebase.
+
+            - To sum up: you can make changes to the codebase with confidence
+              that you will not break working code.
+
+<hr>
+    <H3>Fragility</H3>
+        <b>Problem:</b> "Tendency of software to break in many places each time it is changed."
+        Closely related to Rigidity. This describes that aspect of software
+        engineering where adding a new feature breaks previously-working
+        features, or fixing a bug in one configuration breaks another
+        configuration.
+
+        <b>Example:</b> Everybody can supply their own example here where a change in
+        one spot of the code broke a completely unrelated module. :-)
+
+        How libsmbios helps:
+            - see above under "Rigidity".
+
+<hr>
+    <H3>Immobility</H3>
+        <b>Problem:</b> "Inability to reuse software from other projects or from parts of the 
+        same project."
+
+        <b>Example:</b>
+
+        How libsmbios helps:
+            - Open nature of libsmbios encourages everybody do both do their own
+              thing and also contribute back their findings or new code. 
+
+            - Portable design. Libsmbios is designed from the ground up to be
+              portable to different OSs with minimal work and with little to no
+              impact on existing platforms.
+
+            - Existing projects within Dell cannot do things like support a
+              completely new OS, for example SuSE, Debian, FreeBSD, Solaris, or
+              BeOS without official support by the development team. Few 
+              development teams would go out of their way to support non-Tier-1
+              OSs. The Open nature of libsmbios, combined with a design that
+              keeps an eye open for portability helps. People like Custom
+              Engineering can maintain support for these platforms without
+              impacting the mainline code. This means that Custom Engineering
+              can benefit from the design and bugfixes in the mainline version
+              without having to keep their own complete standalone version
+              around and in-sync.
+
+<hr>
+    <H3>Viscosity of Design</H3>
+        <b>Problem:</b> When "design preserving" methods of change are harder to employ than 
+        design-destroying methods of change. 
+
+        <b>Example:</b> Disney code to get System ID. One 300-line C function that
+        covers all platforms. Developers adding a new system to this
+        function are faced with the daunting task of figuring out _how_ to do
+        this with no concrete way of knowing that their change broke no legacy
+        platforms.
+
+        How libsmbios helps: 
+            - All functions where it is anticipated that there will be a
+              different way of doing things in the future have been made
+              extensible from the start. This makes it easy for engineers to
+              come in later and do the "right" thing to add new support.
+              For example: 
+                - "Workarounds" framework to deal with BIOS bugs.
+                - Clear, extensible system for getting System ID 
+                - Clear, extensible system for getting System Name
+
+<hr>
+    <H3>Viscosity of Environment</H3>
+        <b>Problem:</b> When development environment is slow and inefficient. Long compile
+        times, long checkin times, etc.
+
+        <b>Example:</b> ClearCase
+
+        How libsmbios helps:
+            - Come on guys, libsmbios can't fix <i>everything</i> :-)
+
+
+<hr>
+<hr>
+    <H2>Design Principles</H2>
+
+    <H3>The Open Closed Principle (OCP)</H3>
+    We should write our modules so that they can be extended, without
+    requiring them to be modified.
+
+    We want to be able to change what the modules do without changing the source
+    code of the modules.
+
+    How this is applied to libsmbios:
+        - All user/client visible interfaces are expressed in terms of abstract
+        interfaces. All object creation is done by abstract factories, so
+        people who want to extend libsmbios can supply their own factory to make
+        new, user-defined types.
+
+    <H3>The Dependency Inversion Principle (DIP)</H3>
+    Always depend on abstractions rather than concrete implementations.
+
+    How this is applied to libsmbios:
+        - All user/client interfaces are abstract.
+
+    <H3>Package Architecture</H3>
+    The Release Equivalency Principle (REP)
+        "The granule of reuse is the granule of release"
+
+    The Common Closure Principle (CCP)
+        "Classes that change together, belong together"
+
+    The Common Reuse Principle (CRP)
+        "Classes that are not reused together should not be grouped together."
+
+    <H3>Package Coupling</H3>
+    The Acyclic Dependencies Principle (ADP)
+        "The dependencies between packages must not form cycles." 
+
+    The Stable Dependencies Principle (SDP)
+        "Depend in the direction of stability." 
+
+        How this is applied to libsmbios:
+            - Libsmbios is meant to be "stable". The base smbios parsing code
+              has no external dependencies that would drive libsmbios to
+              unexpectedly change. 
+
+<hr>
+<hr>
+
+Statistics:
+    \li Total .cpp size: ~5200 Raw LOC
+        <p>~1300 Raw LOC for SMBIOS table parsing
+        <p> ~800 Raw LOC for SMBIOS CMOS Token parsing/manipulation
+        <p> ~700 Raw LOC for XML-Enhanced SMBIOS Parsing
+        <p> ~400 Raw LOC for common 
+        <p> ~450 Raw LOC for Memory access (Linux/Windows)
+        <p> ~500 Raw LOC for CMOS access (Linux/Windows)
+
+    \li Interface size (public .h files, incl docs): ~1600 LOC
+    \li Implementation headers (private .h, incl docs): ~1200 LOC
+    \li Portability headers: ~1500 LOC
+
+    \li Total code size: ~9500 Raw LOC 
+        - all headers and code files, not including generated headers.
+
+<hr>
+<hr>
+
+credits:
+    \li Material and descriptions shamelessly pulled from:
+    http://www.objectmentor.com/publications/Principles%20and%20Patterns.PDF
+
+<hr>
+<p>
+<p><small>there isn't anything else here. go back to the main page and look at the
+pretty pictures. :-)</small>
+<p>
+*/
