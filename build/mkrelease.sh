@@ -11,8 +11,8 @@ PLAGUE_BUILDS="fc5 fc6 fcdev rhel3 rhel4 rhel5 sles9 sles10"
     LIBSMBIOS_TOPDIR=/var/ftp/pub/Applications/libsmbios/
 
 cur_dir=$(cd $(dirname $0); pwd)
-cd $cur_dir
-. $cur_dir/version.mk
+cd $cur_dir/../
+. version.mk
 RELEASE_VERSION=${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}
 RELEASE_STRING=${RELEASE_NAME}-${RELEASE_VERSION}
 
