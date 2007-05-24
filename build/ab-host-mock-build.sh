@@ -5,23 +5,18 @@
 # called by autobuild-hook.sh as a host-specific builder. It builds RPMS
 # and places them into plague.
 
-set -e
 set -x
-
-PLAGUE_BUILDS="fc5 fc6 fcdev rhel3 rhel4 rhel5 sles9 sles10"
-PREFIX=testing_
 
 cur_dir=$(cd $(dirname $0); pwd)
 cd $cur_dir/..
 
-make -e tarball srpm
+umask 002
 
-for file in ./*.src.rpm
-do
-	for distro in $PLAGUE_BUILDS
-	do
-		plague-client build $file ${PREFIX}${distro}
-		sleep 5
-	done
-    rm $file
-done
+set -e
+
+mkdir _builddir
+cd _builddir
+../configure
+make -e srpm
+
+PREFIX=testing_ /var/ftp/pub/yum/dell-repo/scripts/upload_rpm.sh ./*.src.rpm

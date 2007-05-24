@@ -1,6 +1,7 @@
 #!/bin/sh
 
 CURDIR=$(cd $(dirname $0); pwd)
+umask 002
 
 [ -z "$BUILD_CYCLE" ] || export RELEASE_EXTRALEVEL=.${BUILD_CYCLE}.autobuild
 if [ -x $CURDIR/ab-host-$(hostname)-$(id -un).sh ]; then
