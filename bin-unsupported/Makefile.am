@@ -1,62 +1,94 @@
-bin_PROGRAMS = activateCmosToken  createUnitTestFiles  disable_console_redir  dumpCmos isCmosTokenActive  smitest  stateByteCtl  upBootCtl  getPasswordFormat  ascii2enUS_scancode  probes dellLEDCtl
+# vim:tw=0:et:ts=4:sw=4
+bin_PROGRAMS += \
+    bin-unsupported/activateCmosToken  \
+    bin-unsupported/createUnitTestFiles  \
+    bin-unsupported/disable_console_redir  \
+    bin-unsupported/dumpCmos \
+    bin-unsupported/isCmosTokenActive  \
+    bin-unsupported/smitest  \
+    bin-unsupported/stateByteCtl  \
+    bin-unsupported/upBootCtl  \
+    bin-unsupported/getPasswordFormat  \
+    bin-unsupported/ascii2enUS_scancode  \
+    bin-unsupported/probes \
+    bin-unsupported/dellLEDCtl
 
-EXTRA_PROGRAMS = activateCmosTokenS  createUnitTestFilesS  disable_console_redirS  dumpCmosS isCmosTokenActiveS  smitestS  stateByteCtlS  upBootCtlS  getPasswordFormatS  ascii2enUS_scancodeS  probesS dellLEDCtlS
+EXTRA_PROGRAMS += \
+    bin-unsupported/activateCmosTokenS  \
+    bin-unsupported/createUnitTestFilesS  \
+    bin-unsupported/disable_console_redirS  \
+    bin-unsupported/dumpCmosS \
+    bin-unsupported/isCmosTokenActiveS  \
+    bin-unsupported/smitestS  \
+    bin-unsupported/stateByteCtlS  \
+    bin-unsupported/upBootCtlS  \
+    bin-unsupported/getPasswordFormatS  \
+    bin-unsupported/ascii2enUS_scancodeS  \
+    bin-unsupported/probesS \
+    bin-unsupported/dellLEDCtlS
 
-static: $(EXTRA_PROGRAMS)
+EXTRA_DIST += bin-unsupported/getopts.h bin-unsupported/getopts_LICENSE.txt
 
-CLEANFILES=$(EXTRA_PROGRAMS)
+bin_unsupported_activateCmosToken_SOURCES = $(getopts_c) bin-unsupported/activateCmosToken.cpp
+bin_unsupported_createUnitTestFiles_SOURCES = $(getopts_c) bin-unsupported/createUnitTestFiles.cpp
+bin_unsupported_disable_console_redir_SOURCES = $(getopts_c) bin-unsupported/disable_console_redir.cpp
+bin_unsupported_dumpCmos_SOURCES = $(getopts_c) bin-unsupported/dumpCmos.cpp
+bin_unsupported_isCmosTokenActive_SOURCES = $(getopts_c) bin-unsupported/isCmosTokenActive.cpp
+bin_unsupported_smitest_SOURCES = $(getopts_c) bin-unsupported/smitest.cpp
+bin_unsupported_stateByteCtl_SOURCES = $(getopts_c) bin-unsupported/stateByteCtl.cpp
+bin_unsupported_upBootCtl_SOURCES = $(getopts_c) bin-unsupported/upBootCtl.cpp
+bin_unsupported_getPasswordFormat_SOURCES = $(getopts_c) bin-unsupported/getPasswordFormat.cpp
+bin_unsupported_ascii2enUS_scancode_SOURCES = $(getopts_c) bin-unsupported/ascii2enUS_scancode.cpp
+bin_unsupported_probes_SOURCES = $(getopts_c) bin-unsupported/probes.cpp
+bin_unsupported_dellLEDCtl_SOURCES = $(getopts_c) bin-unsupported/dellLEDCtl.cpp
 
-AM_LDFLAGS = -L@top_builddir@/libraries/ -lsmbios
-INCLUDES = -I@top_builddir@/include -I@top_srcdir@/include
+bin_unsupported_activateCmosToken_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_createUnitTestFiles_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_disable_console_redir_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_dumpCmos_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_isCmosTokenActive_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_smitest_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_stateByteCtl_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_upBootCtl_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_getPasswordFormat_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_ascii2enUS_scancode_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_probes_LDFLAGS= -Llibraries/ -lsmbios
+bin_unsupported_dellLEDCtl_LDFLAGS= -Llibraries/ -lsmbios
 
-EXTRA_DIST = getopts.h getopts_LICENSE.txt
-
-activateCmosToken_SOURCES = getopts.c activateCmosToken.cpp
-createUnitTestFiles_SOURCES = getopts.c createUnitTestFiles.cpp
-disable_console_redir_SOURCES = getopts.c disable_console_redir.cpp
-dumpCmos_SOURCES = getopts.c dumpCmos.cpp
-isCmosTokenActive_SOURCES = getopts.c isCmosTokenActive.cpp
-smitest_SOURCES = getopts.c smitest.cpp
-stateByteCtl_SOURCES = getopts.c stateByteCtl.cpp
-upBootCtl_SOURCES = getopts.c upBootCtl.cpp
-getPasswordFormat_SOURCES = getopts.c getPasswordFormat.cpp
-ascii2enUS_scancode_SOURCES = getopts.c ascii2enUS_scancode.cpp
-probes_SOURCES = getopts.c probes.cpp
-dellLEDCtl_SOURCES = getopts.c dellLEDCtl.cpp
 
 #static 
-activateCmosTokenS_SOURCES = getopts.c activateCmosToken.cpp
-activateCmosTokenS_LDFLAGS = -all-static
+bin_unsupported_activateCmosTokenS_SOURCES = $(getopts_c) bin-unsupported/activateCmosToken.cpp
+bin_unsupported_activateCmosTokenS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-createUnitTestFilesS_SOURCES = getopts.c createUnitTestFiles.cpp
-createUnitTestFilesS_LDFLAGS = -all-static
+bin_unsupported_createUnitTestFilesS_SOURCES = $(getopts_c) bin-unsupported/createUnitTestFiles.cpp
+bin_unsupported_createUnitTestFilesS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-disable_console_redirS_SOURCES = getopts.c disable_console_redir.cpp
-disable_console_redirS_LDFLAGS = -all-static
+bin_unsupported_disable_console_redirS_SOURCES = $(getopts_c) bin-unsupported/disable_console_redir.cpp
+bin_unsupported_disable_console_redirS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-dumpCmosS_SOURCES = getopts.c dumpCmos.cpp
-dumpCmosS_LDFLAGS = -all-static
+bin_unsupported_dumpCmosS_SOURCES = $(getopts_c) bin-unsupported/dumpCmos.cpp
+bin_unsupported_dumpCmosS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-isCmosTokenActiveS_SOURCES = getopts.c isCmosTokenActive.cpp
-isCmosTokenActiveS_LDFLAGS = -all-static
+bin_unsupported_isCmosTokenActiveS_SOURCES = $(getopts_c) bin-unsupported/isCmosTokenActive.cpp
+bin_unsupported_isCmosTokenActiveS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-smitestS_SOURCES = getopts.c smitest.cpp
-smitestS_LDFLAGS = -all-static
+bin_unsupported_smitestS_SOURCES = $(getopts_c) bin-unsupported/smitest.cpp
+bin_unsupported_smitestS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-stateByteCtlS_SOURCES = getopts.c stateByteCtl.cpp
-stateByteCtlS_LDFLAGS = -all-static
+bin_unsupported_stateByteCtlS_SOURCES = $(getopts_c) bin-unsupported/stateByteCtl.cpp
+bin_unsupported_stateByteCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-upBootCtlS_SOURCES = getopts.c upBootCtl.cpp
-upBootCtlS_LDFLAGS = -all-static
+bin_unsupported_upBootCtlS_SOURCES = $(getopts_c) bin-unsupported/upBootCtl.cpp
+bin_unsupported_upBootCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-getPasswordFormatS_SOURCES = getopts.c getPasswordFormat.cpp
-getPasswordFormatS_LDFLAGS = -all-static
+bin_unsupported_getPasswordFormatS_SOURCES = $(getopts_c) bin-unsupported/getPasswordFormat.cpp
+bin_unsupported_getPasswordFormatS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-ascii2enUS_scancodeS_SOURCES = getopts.c ascii2enUS_scancode.cpp
-ascii2enUS_scancodeS_LDFLAGS = -all-static
+bin_unsupported_ascii2enUS_scancodeS_SOURCES = $(getopts_c) bin-unsupported/ascii2enUS_scancode.cpp
+bin_unsupported_ascii2enUS_scancodeS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-probesS_SOURCES = getopts.c probes.cpp
-probesS_LDFLAGS = -all-static
+bin_unsupported_probesS_SOURCES = $(getopts_c) bin-unsupported/probes.cpp
+bin_unsupported_probesS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 
-dellLEDCtlS_SOURCES = getopts.c dellLEDCtl.cpp
-dellLEDCtlS_LDFLAGS = -all-static
+bin_unsupported_dellLEDCtlS_SOURCES = $(getopts_c) bin-unsupported/dellLEDCtl.cpp
+bin_unsupported_dellLEDCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios

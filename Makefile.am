@@ -1,6 +1,8 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:
 
-SUBDIRS = libraries bin-supported bin-unsupported cppunit
+AUTOMAKE_OPTIONS := subdir-objects
+
+#SUBDIRS = bin-supported bin-unsupported cppunit
 
 # dont move these 5 lines, as this is how we override the autoconf version and package name
 RELEASE_NAME=@RELEASE_NAME@
@@ -14,8 +16,26 @@ RELEASE_STRING := $(RELEASE_NAME)-$(RELEASE_VERSION)
 VERSION = $(RELEASE_VERSION)
 PACKAGE = $(RELEASE_NAME)
 
+LIBSMBIOS_LIBTOOL_CURRENT=@LIBSMBIOS_LIBTOOL_CURRENT@
+LIBSMBIOS_LIBTOOL_REVISION=@LIBSMBIOS_LIBTOOL_REVISION@
+LIBSMBIOS_LIBTOOL_AGE=@LIBSMBIOS_LIBTOOL_AGE@
+LIBSMBIOSXML_LIBTOOL_CURRENT=@LIBSMBIOSXML_LIBTOOL_CURRENT@
+LIBSMBIOSXML_LIBTOOL_REVISION=@LIBSMBIOSXML_LIBTOOL_REVISION@
+LIBSMBIOSXML_LIBTOOL_AGE=@LIBSMBIOSXML_LIBTOOL_AGE@
+
 CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp doc/reports/code-coverage.txt doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt
 DISTCLEANFILES=*~
+
+EXTRA_DIST =
+bin_PROGRAMS=
+EXTRA_PROGRAMS=
+
+include libraries/Makefile.am
+include bin-supported/Makefile.am
+include bin-unsupported/Makefile.am
+
+static: $(EXTRA_PROGRAMS)
+CLEANFILES+=$(EXTRA_PROGRAMS)
 
 rpm: dist
 	BLD_DIR=$$(mktemp -d /tmp/rpmbuild-$$$$-XXXXXX); \
@@ -75,14 +95,13 @@ doc/reports/valgrind_output.txt:
 	@echo '<pre>' >> doc/reports/valgrind_output.txt
 	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> doc/reports/valgrind_output.txt
 	@echo "</pre>*/" >> doc/reports/valgrind_output.txt
+########## END DOCS ################
 
 
-
-EXTRA_DIST = \
+EXTRA_DIST += \
  libsmbios.spec \
  build/scripts 		\
  build/VC.2005 		\
- version.mk 		\
  COPYING-GPL		\
  COPYING-OSL				\
  include/smbios/SmbiosLowLevel.h		\

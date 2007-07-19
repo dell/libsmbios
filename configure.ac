@@ -1,9 +1,49 @@
 #                                               -*- Autoconf -*-
+# vim:tw=0:et:ts=4:sw=4
 # Process this file with autoconf to produce a configure script.
 
-# version not defined here. It is in version.mk and Makefile
-# includes that.
-AC_INIT([libsmbios],[version_not_defined])
+####################################
+# change version here.
+AC_INIT([libsmbios],[0.13.7])
+
+temp_RELEASE_NAME=libsmbios
+temp_RELEASE_MAJOR=0
+temp_RELEASE_MINOR=13
+temp_RELEASE_SUBLEVEL=7
+temp_RELEASE_EXTRALEVEL=
+####################################
+
+for i in RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL
+do
+    varname=temp_$i
+    if ! test -z "${!varname}"; then
+        eval $i=${!varname}; export $i
+    fi
+done
+
+if test -z "$RELEASE_RPM_EXTRALEVEL"; then
+    if test -z "$RELEASE_EXTRALEVEL"; then
+        RELEASE_RPM_EXTRALEVEL=%{nil}
+    else
+        RELEASE_RPM_EXTRALEVEL=$RELEASE_EXTRALEVEL
+    fi
+fi
+
+PACKAGE_VERSION=[`echo ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}`]
+PACKAGE_STRING=[`echo ${RELEASE_NAME} ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}`]
+VERSION=$PACKAGE_VERSION
+
+cat confdefs.h |
+    grep -v 'define VERSION ' |
+    grep -v 'define PACKAGE_VERSION ' |
+    grep -v 'define PACKAGE_STRING '  > confdefs.new
+mv confdefs.new confdefs.h
+cat >>confdefs.h <<_ACEOF 
+#define VERSION "$VERSION"
+#define PACKAGE_VERSION "$PACKAGE_VERSION"
+#define PACKAGE_STRING "$PACKAGE_STRING"
+_ACEOF
+
 
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([build])
@@ -26,6 +66,7 @@ AC_ARG_ENABLE(graphviz,
 
 # Checks for programs.
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_LIBTOOL
@@ -67,51 +108,12 @@ if test x$wantgraphviz != xyes ; then
     AM_CONDITIONAL(HAS_DOT, false)
 fi
 
-if test -z "$RELEASE_NAME"; then
-    RELEASE_NAME=[`. $srcdir/version.mk; echo $RELEASE_NAME`]
-fi
 
-if test -z "$RELEASE_MAJOR"; then
-    RELEASE_MAJOR=[`. $srcdir/version.mk; echo $RELEASE_MAJOR`]
-fi
-
-if test -z "$RELEASE_MINOR"; then
-    RELEASE_MINOR=[`. $srcdir/version.mk; echo $RELEASE_MINOR`]
-fi
-
-if test -z "$RELEASE_SUBLEVEL"; then
-    RELEASE_SUBLEVEL=[`. $srcdir/version.mk; echo $RELEASE_SUBLEVEL`]
-fi
-
-if test -z "$RELEASE_EXTRALEVEL"; then
-    RELEASE_EXTRALEVEL=[`. $srcdir/version.mk; echo $RELEASE_EXTRALEVEL`]
-fi
-
-if test -z "$RELEASE_RPM_EXTRALEVEL"; then
-    if test -z "$RELEASE_EXTRALEVEL"; then
-        RELEASE_RPM_EXTRALEVEL=%{nil}
-    else
-        RELEASE_RPM_EXTRALEVEL=$RELEASE_EXTRALEVEL
-    fi
-fi
-
-PACKAGE_VERSION=[`echo ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}`]
-PACKAGE_STRING=[`echo ${RELEASE_NAME} ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}`]
-VERSION=$PACKAGE_VERSION
-
-AC_SUBST([RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL RELEASE_RPM_EXTRALEVEL])
-
-cat confdefs.h | 
-    grep -v 'define VERSION ' |
-    grep -v 'define PACKAGE_VERSION ' |
-    grep -v 'define PACKAGE_STRING '  > confdefs.new
-mv confdefs.new confdefs.h
-cat >>confdefs.h <<_ACEOF
-#define VERSION "$VERSION"
-#define PACKAGE_VERSION "$PACKAGE_VERSION"
-#define PACKAGE_STRING "$PACKAGE_STRING"
-_ACEOF
-
+# Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
+# If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
+# If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
+# If any interfaces have been added since the last public release, then increment age.
+# If any interfaces have been removed since the last public release, then set age to 0. 
 LIBSMBIOS_LIBTOOL_CURRENT=$(( $RELEASE_MAJOR + 1 ))
 LIBSMBIOS_LIBTOOL_REVISION=$RELEASE_MINOR
 LIBSMBIOS_LIBTOOL_AGE=0
@@ -120,8 +122,9 @@ LIBSMBIOSXML_LIBTOOL_CURRENT=$(( $RELEASE_MAJOR + 1 ))
 LIBSMBIOSXML_LIBTOOL_REVISION=$RELEASE_MINOR
 LIBSMBIOSXML_LIBTOOL_AGE=0
 
+AC_SUBST([RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL RELEASE_RPM_EXTRALEVEL])
 AC_SUBST([ LIBSMBIOS_LIBTOOL_CURRENT  LIBSMBIOS_LIBTOOL_REVISION LIBSMBIOS_LIBTOOL_AGE  LIBSMBIOSXML_LIBTOOL_CURRENT LIBSMBIOSXML_LIBTOOL_REVISION  LIBSMBIOSXML_LIBTOOL_AGE ])
 
 # generate files and exit
-AC_CONFIG_FILES([Makefile libraries/Makefile bin-supported/Makefile bin-unsupported/Makefile cppunit/Makefile doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog])
+AC_CONFIG_FILES([Makefile doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog])
 AC_OUTPUT
