@@ -126,5 +126,11 @@ AC_SUBST([RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTR
 AC_SUBST([ LIBSMBIOS_LIBTOOL_CURRENT  LIBSMBIOS_LIBTOOL_REVISION LIBSMBIOS_LIBTOOL_AGE  LIBSMBIOSXML_LIBTOOL_CURRENT LIBSMBIOSXML_LIBTOOL_REVISION  LIBSMBIOSXML_LIBTOOL_AGE ])
 
 # generate files and exit
-AC_CONFIG_FILES([Makefile doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog])
+AC_CONFIG_FILES([
+    Makefile 
+    include/smbios/version.h 
+    doc/full-documentation.dox 
+    doc/interface-only.dox 
+    libsmbios.spec:libsmbios.spec.in:ChangeLog
+    ])
 AC_OUTPUT

@@ -20878,7 +20878,7 @@ LIBSMBIOSXML_LIBTOOL_AGE=0
 
 
 # generate files and exit
-                                        ac_config_files="$ac_config_files Makefile doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog"
+                                                  ac_config_files="$ac_config_files Makefile include/smbios/version.h doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -21498,6 +21498,7 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+  "include/smbios/version.h" ) CONFIG_FILES="$CONFIG_FILES include/smbios/version.h" ;;
   "doc/full-documentation.dox" ) CONFIG_FILES="$CONFIG_FILES doc/full-documentation.dox" ;;
   "doc/interface-only.dox" ) CONFIG_FILES="$CONFIG_FILES doc/interface-only.dox" ;;
   "libsmbios.spec" ) CONFIG_FILES="$CONFIG_FILES libsmbios.spec:libsmbios.spec.in:ChangeLog" ;;
