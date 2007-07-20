@@ -30,6 +30,7 @@ EXTRA_PROGRAMS += \
 getopts_h=bin-supported/getopts.h
 getopts_c=bin-supported/getopts.c
 EXTRA_DIST += $(getopts_h)
+CLEANFILES += bin-supported/.libs
 
 bin_supported_assetTag_SOURCES = bin-supported/assetTag.cpp $(getopts_c)
 bin_supported_getSystemId_SOURCES = bin-supported/getSystemId.cpp $(getopts_c)

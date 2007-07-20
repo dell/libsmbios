@@ -28,6 +28,7 @@ EXTRA_PROGRAMS += \
     bin-unsupported/dellLEDCtlS
 
 EXTRA_DIST += bin-unsupported/getopts.h bin-unsupported/getopts_LICENSE.txt
+CLEANFILES += bin-unsupported/.libs
 
 bin_unsupported_activateCmosToken_SOURCES = $(getopts_c) bin-unsupported/activateCmosToken.cpp
 bin_unsupported_createUnitTestFiles_SOURCES = $(getopts_c) bin-unsupported/createUnitTestFiles.cpp
