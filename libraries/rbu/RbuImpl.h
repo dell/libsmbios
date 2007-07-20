@@ -25,7 +25,7 @@
 #include "smbios/DellRbu.h"
 #include "FactoryImpl2.h"
 #include "ExceptionImpl.h"
-#include "RbuLowLevel.h"
+#include "smbios/RbuLowLevel.h"
 
 #   if defined(DEBUG_RBU)
 #       define DCOUT(line) do { cout << line; } while(0)

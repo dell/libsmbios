@@ -23,6 +23,7 @@
 
 #include "smbios/DellRbu.h"
 #include "smbios/SystemInfo.h"
+#include "smbios/RbuLowLevel.h"
 #include "smbios/version.h"
 #include "getopts.h"
 
@@ -50,7 +51,6 @@ struct options opts[] =
 
 class noHdrFile : public exception {};
 
-#include "../rbu/RbuLowLevel.h"
 namespace rbu{
 extern driver_type getDriverType();
 extern packet_type getSupportedPacketType();

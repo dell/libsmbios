@@ -26,6 +26,12 @@
 #   define RBU_ACTIVATE (0x005c)
 #   define RBU_CANCEL   (0x005d)
 
+// WARNING WARNING WARNING
+// 
+// This file is not guaranteed to be API/ABI stable. Include it at your own risk.
+//
+// WARNING WARNING WARNING
+
 namespace rbu 
 {
 #   if defined(_MSC_VER)
