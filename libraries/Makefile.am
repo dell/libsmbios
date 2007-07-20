@@ -83,33 +83,9 @@ libraries/common/StdSmbiosXml.h: Makefile.am $(top_srcdir)/doc/smbios23.xml $(to
 	@diff -q $@ $@.new >/dev/null 2>&1 || mv -f $@.new $@
 	@rm -f $@.new
 
-FILE_RELEASE_STRING=$(shell grep LIBSMBIOS_RELEASE_VERSION $$( ([ ! -e $(top_builddir)/include/smbios/version.h ] && echo $(top_srcdir)/include/smbios/version.h) || echo $(top_builddir)/include/smbios/version.h) 2>/dev/null )
-GEN_RELEASE_STRING=\#define LIBSMBIOS_RELEASE_VERSION "$(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_SUBLEVEL)"
 
-# leading space required for automake
- ifneq ($(FILE_RELEASE_STRING),$(GEN_RELEASE_STRING))
- .PHONY: include/smbios/version.h
- endif
-
-include/smbios/version.h: $(top_builddir)/Makefile
-	@echo Building $@
-	@mkdir -p $(shell dirname $@)
-	@chmod ug+w $$(dirname $@)
-	@echo '#ifndef SMBIOS_VERSION_H'  > $@.new
-	@echo '#define SMBIOS_VERSION_H'  >> $@.new
-	@echo ' // This is an automatically generated file, do not edit.'  >> $@.new
-	@echo ' // This file is generated in common.mk'  >> $@.new
-	@echo ''  >> $@.new
-	@echo '$(GEN_RELEASE_STRING)'  >> $@.new
-	@echo ' '  >> $@.new
-	@echo '#endif'  >> $@.new
-	@diff -q $@ $@.new >/dev/null 2>&1 || mv -f $@.new $@
-	@rm -f $@.new
-
-dist-hook: include/smbios/version.h libraries/common/StdSmbiosXml.h
+dist-hook: libraries/common/StdSmbiosXml.h
 	mkdir -p $(distdir)/include/smbios $(distdir)/libraries/common/
-	[ ! -e $(top_builddir)/include/smbios/version.h ] || cp -f $(top_builddir)/include/smbios/version.h $(distdir)/include/smbios
-	[ ! -e $(top_srcdir)/include/smbios/version.h ] || cp -f $(top_srcdir)/include/smbios/version.h $(distdir)/include/smbios
 	[ ! -e $(top_srcdir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_srcdir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
 	[ ! -e $(top_builddir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_builddir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
 

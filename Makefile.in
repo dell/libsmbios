@@ -96,7 +96,8 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/ChangeLog \
 	$(srcdir)/libraries/Makefile.am $(srcdir)/libsmbios.spec.in \
 	$(top_srcdir)/configure \
 	$(top_srcdir)/doc/full-documentation.dox.in \
-	$(top_srcdir)/doc/interface-only.dox.in AUTHORS COPYING \
+	$(top_srcdir)/doc/interface-only.dox.in \
+	$(top_srcdir)/include/smbios/version.h.in AUTHORS COPYING \
 	ChangeLog INSTALL NEWS TODO build/compile build/config.guess \
 	build/config.sub build/depcomp build/install-sh \
 	build/ltmain.sh build/missing build/mkinstalldirs
@@ -108,7 +109,8 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno configure.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/build/mkinstalldirs
-CONFIG_CLEAN_FILES = doc/full-documentation.dox doc/interface-only.dox \
+CONFIG_CLEAN_FILES = include/smbios/version.h \
+	doc/full-documentation.dox doc/interface-only.dox \
 	libsmbios.spec
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -897,6 +899,8 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(srcdir) && $(AUTOCONF)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
+include/smbios/version.h: $(top_builddir)/config.status $(top_srcdir)/include/smbios/version.h.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 doc/full-documentation.dox: $(top_builddir)/config.status $(top_srcdir)/doc/full-documentation.dox.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 doc/interface-only.dox: $(top_builddir)/config.status $(top_srcdir)/doc/interface-only.dox.in
