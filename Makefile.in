@@ -679,8 +679,8 @@ CLEANFILES = libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm \
 	_buildtemp doc/reports/code-coverage.txt \
 	doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt \
 	libraries/common/StdSmbiosXml.h libraries/.libs \
-	bin-supported/.libs bin-unsupported/.libs \
-	cppunit/testResults.xml cppunit/.libs $(EXTRA_PROGRAMS)
+	bin-supported/.libs bin-unsupported/.libs testResults.xml \
+	cppunit/.libs $(EXTRA_PROGRAMS)
 DISTCLEANFILES = *~
 ########## END DOCS ################
 EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
