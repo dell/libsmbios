@@ -1,7 +1,7 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
 
-CLEANFILES+= cppunit/testResults.xml
+CLEANFILES+= cppunit/testResults.xml cppunit/.libs
 
 EXTRA_DIST += \
  	cppunit/runtests.sh	\
