@@ -1,8 +1,7 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:
 
 AUTOMAKE_OPTIONS := subdir-objects
-
-#SUBDIRS = bin-supported bin-unsupported cppunit
+SUBDIRS = 
 
 # dont move these 5 lines, as this is how we override the autoconf version and package name
 RELEASE_NAME=@RELEASE_NAME@
@@ -33,6 +32,7 @@ EXTRA_PROGRAMS=
 include libraries/Makefile.am
 include bin-supported/Makefile.am
 include bin-unsupported/Makefile.am
+include cppunit/Makefile.am
 
 static: $(EXTRA_PROGRAMS)
 CLEANFILES+=$(EXTRA_PROGRAMS)

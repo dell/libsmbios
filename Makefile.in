@@ -20,6 +20,8 @@
 
 # vim:tw=0:et:ts=4:sw=4
 
+# vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
+
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -93,14 +95,16 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/ChangeLog \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/bin-supported/Makefile.am \
 	$(srcdir)/bin-unsupported/Makefile.am \
-	$(srcdir)/libraries/Makefile.am $(srcdir)/libsmbios.spec.in \
-	$(top_srcdir)/configure \
+	$(srcdir)/cppunit/Makefile.am $(srcdir)/libraries/Makefile.am \
+	$(srcdir)/libsmbios.spec.in $(top_srcdir)/configure \
 	$(top_srcdir)/doc/full-documentation.dox.in \
 	$(top_srcdir)/doc/interface-only.dox.in \
 	$(top_srcdir)/include/smbios/version.h.in AUTHORS COPYING \
 	ChangeLog INSTALL NEWS TODO build/compile build/config.guess \
 	build/config.sub build/depcomp build/install-sh \
 	build/ltmain.sh build/missing build/mkinstalldirs
+check_PROGRAMS = cppunit/testRbu$(EXEEXT) \
+	cppunit/testPlatform$(EXEEXT) cppunit/testStandalone$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -392,6 +396,20 @@ am_bin_unsupported_upBootCtlS_OBJECTS = $(am__objects_1) \
 bin_unsupported_upBootCtlS_OBJECTS =  \
 	$(am_bin_unsupported_upBootCtlS_OBJECTS)
 bin_unsupported_upBootCtlS_LDADD = $(LDADD)
+am_cppunit_testPlatform_OBJECTS =  \
+	cppunit/cppunit_testPlatform-main.$(OBJEXT) \
+	cppunit/interface/cppunit_testPlatform-testPlatform.$(OBJEXT)
+cppunit_testPlatform_OBJECTS = $(am_cppunit_testPlatform_OBJECTS)
+cppunit_testPlatform_LDADD = $(LDADD)
+am_cppunit_testRbu_OBJECTS = cppunit/cppunit_testRbu-main.$(OBJEXT) \
+	cppunit/interface/cppunit_testRbu-testRbu.$(OBJEXT)
+cppunit_testRbu_OBJECTS = $(am_cppunit_testRbu_OBJECTS)
+cppunit_testRbu_LDADD = $(LDADD)
+am_cppunit_testStandalone_OBJECTS =  \
+	cppunit/cppunit_testStandalone-main.$(OBJEXT) \
+	cppunit/interface/cppunit_testStandalone-testStandalone.$(OBJEXT)
+cppunit_testStandalone_OBJECTS = $(am_cppunit_testStandalone_OBJECTS)
+cppunit_testStandalone_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/build/depcomp
 am__depfiles_maybe = depfiles
@@ -458,7 +476,9 @@ SOURCES = $(libraries_libsmbios_la_SOURCES) \
 	$(bin_unsupported_stateByteCtl_SOURCES) \
 	$(bin_unsupported_stateByteCtlS_SOURCES) \
 	$(bin_unsupported_upBootCtl_SOURCES) \
-	$(bin_unsupported_upBootCtlS_SOURCES)
+	$(bin_unsupported_upBootCtlS_SOURCES) \
+	$(cppunit_testPlatform_SOURCES) $(cppunit_testRbu_SOURCES) \
+	$(cppunit_testStandalone_SOURCES)
 DIST_SOURCES = $(libraries_libsmbios_la_SOURCES) \
 	$(libraries_libsmbiosxml_la_SOURCES) \
 	$(bin_supported_assetTag_SOURCES) \
@@ -506,9 +526,18 @@ DIST_SOURCES = $(libraries_libsmbios_la_SOURCES) \
 	$(bin_unsupported_stateByteCtl_SOURCES) \
 	$(bin_unsupported_stateByteCtlS_SOURCES) \
 	$(bin_unsupported_upBootCtl_SOURCES) \
-	$(bin_unsupported_upBootCtlS_SOURCES)
+	$(bin_unsupported_upBootCtlS_SOURCES) \
+	$(cppunit_testPlatform_SOURCES) $(cppunit_testRbu_SOURCES) \
+	$(cppunit_testStandalone_SOURCES)
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-exec-recursive install-info-recursive \
+	install-recursive installcheck-recursive installdirs-recursive \
+	pdf-recursive ps-recursive uninstall-info-recursive \
+	uninstall-recursive
 ETAGS = etags
 CTAGS = ctags
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -630,8 +659,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS := subdir-objects
-
-#SUBDIRS = bin-supported bin-unsupported cppunit
+SUBDIRS = 
 
 # dont move these 5 lines, as this is how we override the autoconf version and package name
 RELEASE_NAME = @RELEASE_NAME@
@@ -651,7 +679,8 @@ CLEANFILES = libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm \
 	_buildtemp doc/reports/code-coverage.txt \
 	doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt \
 	$(top_builddir)/include/smbios/version.h \
-	libraries/common/StdSmbiosXml.h $(EXTRA_PROGRAMS)
+	libraries/common/StdSmbiosXml.h cppunit/testResults.xml \
+	$(EXTRA_PROGRAMS)
 DISTCLEANFILES = *~
 ########## END DOCS ################
 EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
@@ -672,14 +701,17 @@ EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
 	libraries/xml_libxml2/SmbiosXmlImpl.h \
 	libraries/xml_libxml2/XmlUtils.h $(getopts_h) \
 	bin-unsupported/getopts.h bin-unsupported/getopts_LICENSE.txt \
-	libsmbios.spec build/scripts build/VC.2005 COPYING-GPL \
-	COPYING-OSL include/smbios/SmbiosLowLevel.h \
-	include/smbios/DellRbu.h include/smbios/ICmosRW.h \
-	include/smbios/IException.h include/smbios/IFactory.h \
-	include/smbios/IMemory.h include/smbios/IObserver.h \
-	include/smbios/ISmbios.h include/smbios/ISmbiosXml.h \
-	include/smbios/ISmi.h include/smbios/IToken.h \
-	include/smbios/SmbiosDefs.h include/smbios/RbuLowLevel.h \
+	cppunit/runtests.sh cppunit/platform cppunit/outputctl.h \
+	cppunit/interface/testPlatform.h cppunit/interface/testRbu.h \
+	cppunit/interface/testStandalone.h libsmbios.spec \
+	build/scripts build/VC.2005 COPYING-GPL COPYING-OSL \
+	include/smbios/SmbiosLowLevel.h include/smbios/DellRbu.h \
+	include/smbios/ICmosRW.h include/smbios/IException.h \
+	include/smbios/IFactory.h include/smbios/IMemory.h \
+	include/smbios/IObserver.h include/smbios/ISmbios.h \
+	include/smbios/ISmbiosXml.h include/smbios/ISmi.h \
+	include/smbios/IToken.h include/smbios/SmbiosDefs.h \
+	include/smbios/RbuLowLevel.h \
 	include/smbios/config/abi/msvc_prefix.hpp \
 	include/smbios/config/abi/msvc_suffix.hpp \
 	include/smbios/config/boost_LICENSE_1_0_txt \
@@ -859,13 +891,32 @@ bin_unsupported_probesS_SOURCES = $(getopts_c) bin-unsupported/probes.cpp
 bin_unsupported_probesS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_unsupported_dellLEDCtlS_SOURCES = $(getopts_c) bin-unsupported/dellLEDCtl.cpp
 bin_unsupported_dellLEDCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
-all: all-am
+TESTS = cppunit/runtests.sh
+cppunit_testRbu_LDFLAGS = $(shell xml2-config --libs) -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -lsmbiosxml -Llibraries
+cppunit_testRbu_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/libraries/xml_libxml2 -I@top_srcdir@/cppunit/
+cppunit_testRbu_SOURCES = \
+    cppunit/main.cpp  \
+    cppunit/interface/testRbu.cpp
+
+cppunit_testPlatform_LDFLAGS = $(shell xml2-config --libs) -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -lsmbiosxml -Llibraries
+cppunit_testPlatform_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/libraries/xml_libxml2 -I@top_srcdir@/cppunit/
+cppunit_testPlatform_SOURCES = \
+    cppunit/main.cpp  \
+    cppunit/interface/testPlatform.cpp 
+
+cppunit_testStandalone_LDFLAGS = $(shell xml2-config --libs) -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -lsmbiosxml -Llibraries
+cppunit_testStandalone_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/libraries/xml_libxml2 -I@top_srcdir@/cppunit/
+cppunit_testStandalone_SOURCES = \
+    cppunit/main.cpp  \
+    cppunit/interface/testStandalone.cpp 
+
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .cpp .lo .o .obj
 am--refresh:
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/libraries/Makefile.am $(srcdir)/bin-supported/Makefile.am $(srcdir)/bin-unsupported/Makefile.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/libraries/Makefile.am $(srcdir)/bin-supported/Makefile.am $(srcdir)/bin-unsupported/Makefile.am $(srcdir)/cppunit/Makefile.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1122,6 +1173,13 @@ clean-binPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
+
+clean-checkPROGRAMS:
+	@list='$(check_PROGRAMS)'; for p in $$list; do \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  echo " rm -f $$p $$f"; \
+	  rm -f $$p $$f ; \
+	done
 bin-supported/$(am__dirstamp):
 	@$(mkdir_p) bin-supported
 	@: > bin-supported/$(am__dirstamp)
@@ -1334,6 +1392,42 @@ bin-unsupported/upBootCtl$(EXEEXT): $(bin_unsupported_upBootCtl_OBJECTS) $(bin_u
 bin-unsupported/upBootCtlS$(EXEEXT): $(bin_unsupported_upBootCtlS_OBJECTS) $(bin_unsupported_upBootCtlS_DEPENDENCIES) bin-unsupported/$(am__dirstamp)
 	@rm -f bin-unsupported/upBootCtlS$(EXEEXT)
 	$(CXXLINK) $(bin_unsupported_upBootCtlS_LDFLAGS) $(bin_unsupported_upBootCtlS_OBJECTS) $(bin_unsupported_upBootCtlS_LDADD) $(LIBS)
+cppunit/$(am__dirstamp):
+	@$(mkdir_p) cppunit
+	@: > cppunit/$(am__dirstamp)
+cppunit/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) cppunit/$(DEPDIR)
+	@: > cppunit/$(DEPDIR)/$(am__dirstamp)
+cppunit/cppunit_testPlatform-main.$(OBJEXT): cppunit/$(am__dirstamp) \
+	cppunit/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/$(am__dirstamp):
+	@$(mkdir_p) cppunit/interface
+	@: > cppunit/interface/$(am__dirstamp)
+cppunit/interface/$(DEPDIR)/$(am__dirstamp):
+	@$(mkdir_p) cppunit/interface/$(DEPDIR)
+	@: > cppunit/interface/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/cppunit_testPlatform-testPlatform.$(OBJEXT):  \
+	cppunit/interface/$(am__dirstamp) \
+	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
+cppunit/testPlatform$(EXEEXT): $(cppunit_testPlatform_OBJECTS) $(cppunit_testPlatform_DEPENDENCIES) cppunit/$(am__dirstamp)
+	@rm -f cppunit/testPlatform$(EXEEXT)
+	$(CXXLINK) $(cppunit_testPlatform_LDFLAGS) $(cppunit_testPlatform_OBJECTS) $(cppunit_testPlatform_LDADD) $(LIBS)
+cppunit/cppunit_testRbu-main.$(OBJEXT): cppunit/$(am__dirstamp) \
+	cppunit/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/cppunit_testRbu-testRbu.$(OBJEXT):  \
+	cppunit/interface/$(am__dirstamp) \
+	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
+cppunit/testRbu$(EXEEXT): $(cppunit_testRbu_OBJECTS) $(cppunit_testRbu_DEPENDENCIES) cppunit/$(am__dirstamp)
+	@rm -f cppunit/testRbu$(EXEEXT)
+	$(CXXLINK) $(cppunit_testRbu_LDFLAGS) $(cppunit_testRbu_OBJECTS) $(cppunit_testRbu_LDADD) $(LIBS)
+cppunit/cppunit_testStandalone-main.$(OBJEXT):  \
+	cppunit/$(am__dirstamp) cppunit/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/cppunit_testStandalone-testStandalone.$(OBJEXT):  \
+	cppunit/interface/$(am__dirstamp) \
+	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
+cppunit/testStandalone$(EXEEXT): $(cppunit_testStandalone_OBJECTS) $(cppunit_testStandalone_DEPENDENCIES) cppunit/$(am__dirstamp)
+	@rm -f cppunit/testStandalone$(EXEEXT)
+	$(CXXLINK) $(cppunit_testStandalone_LDFLAGS) $(cppunit_testStandalone_OBJECTS) $(cppunit_testStandalone_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -1362,6 +1456,12 @@ mostlyclean-compile:
 	-rm -f bin-unsupported/smitest.$(OBJEXT)
 	-rm -f bin-unsupported/stateByteCtl.$(OBJEXT)
 	-rm -f bin-unsupported/upBootCtl.$(OBJEXT)
+	-rm -f cppunit/cppunit_testPlatform-main.$(OBJEXT)
+	-rm -f cppunit/cppunit_testRbu-main.$(OBJEXT)
+	-rm -f cppunit/cppunit_testStandalone-main.$(OBJEXT)
+	-rm -f cppunit/interface/cppunit_testPlatform-testPlatform.$(OBJEXT)
+	-rm -f cppunit/interface/cppunit_testRbu-testRbu.$(OBJEXT)
+	-rm -f cppunit/interface/cppunit_testStandalone-testStandalone.$(OBJEXT)
 	-rm -f libraries/cmos/libraries_libsmbios_la-CmosRW.$(OBJEXT)
 	-rm -f libraries/cmos/libraries_libsmbios_la-CmosRW.lo
 	-rm -f libraries/cmos/libraries_libsmbios_la-CmosRWFactory.$(OBJEXT)
@@ -1459,6 +1559,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@bin-unsupported/$(DEPDIR)/smitest.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-unsupported/$(DEPDIR)/stateByteCtl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-unsupported/$(DEPDIR)/upBootCtl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/$(DEPDIR)/cppunit_testPlatform-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/$(DEPDIR)/cppunit_testRbu-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/$(DEPDIR)/cppunit_testStandalone-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/cmos/$(DEPDIR)/libraries_libsmbios_la-CmosRW.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/cmos/$(DEPDIR)/libraries_libsmbios_la-CmosRWFactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/cmos/$(DEPDIR)/libraries_libsmbios_la-CmosRW_LinuxIO.Plo@am__quote@
@@ -1808,6 +1914,90 @@ bin-supported/bin_supported_dellBiosUpdateS-dellBiosUpdate.obj: bin-supported/de
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_supported_dellBiosUpdateS_CXXFLAGS) $(CXXFLAGS) -c -o bin-supported/bin_supported_dellBiosUpdateS-dellBiosUpdate.obj `if test -f 'bin-supported/dellBiosUpdate.cpp'; then $(CYGPATH_W) 'bin-supported/dellBiosUpdate.cpp'; else $(CYGPATH_W) '$(srcdir)/bin-supported/dellBiosUpdate.cpp'; fi`
 
+cppunit/cppunit_testPlatform-main.o: cppunit/main.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/cppunit_testPlatform-main.o -MD -MP -MF "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Tpo" -c -o cppunit/cppunit_testPlatform-main.o `test -f 'cppunit/main.cpp' || echo '$(srcdir)/'`cppunit/main.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Tpo" "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Po"; else rm -f "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testPlatform-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testPlatform-main.o `test -f 'cppunit/main.cpp' || echo '$(srcdir)/'`cppunit/main.cpp
+
+cppunit/cppunit_testPlatform-main.obj: cppunit/main.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/cppunit_testPlatform-main.obj -MD -MP -MF "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Tpo" -c -o cppunit/cppunit_testPlatform-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Tpo" "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Po"; else rm -f "cppunit/$(DEPDIR)/cppunit_testPlatform-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testPlatform-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testPlatform-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`
+
+cppunit/interface/cppunit_testPlatform-testPlatform.o: cppunit/interface/testPlatform.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testPlatform-testPlatform.o -MD -MP -MF "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo" -c -o cppunit/interface/cppunit_testPlatform-testPlatform.o `test -f 'cppunit/interface/testPlatform.cpp' || echo '$(srcdir)/'`cppunit/interface/testPlatform.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo" "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Po"; else rm -f "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/testPlatform.cpp' object='cppunit/interface/cppunit_testPlatform-testPlatform.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testPlatform-testPlatform.o `test -f 'cppunit/interface/testPlatform.cpp' || echo '$(srcdir)/'`cppunit/interface/testPlatform.cpp
+
+cppunit/interface/cppunit_testPlatform-testPlatform.obj: cppunit/interface/testPlatform.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testPlatform-testPlatform.obj -MD -MP -MF "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo" -c -o cppunit/interface/cppunit_testPlatform-testPlatform.obj `if test -f 'cppunit/interface/testPlatform.cpp'; then $(CYGPATH_W) 'cppunit/interface/testPlatform.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/testPlatform.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo" "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Po"; else rm -f "cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/testPlatform.cpp' object='cppunit/interface/cppunit_testPlatform-testPlatform.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testPlatform-testPlatform.obj `if test -f 'cppunit/interface/testPlatform.cpp'; then $(CYGPATH_W) 'cppunit/interface/testPlatform.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/testPlatform.cpp'; fi`
+
+cppunit/cppunit_testRbu-main.o: cppunit/main.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/cppunit_testRbu-main.o -MD -MP -MF "cppunit/$(DEPDIR)/cppunit_testRbu-main.Tpo" -c -o cppunit/cppunit_testRbu-main.o `test -f 'cppunit/main.cpp' || echo '$(srcdir)/'`cppunit/main.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/$(DEPDIR)/cppunit_testRbu-main.Tpo" "cppunit/$(DEPDIR)/cppunit_testRbu-main.Po"; else rm -f "cppunit/$(DEPDIR)/cppunit_testRbu-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testRbu-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testRbu-main.o `test -f 'cppunit/main.cpp' || echo '$(srcdir)/'`cppunit/main.cpp
+
+cppunit/cppunit_testRbu-main.obj: cppunit/main.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/cppunit_testRbu-main.obj -MD -MP -MF "cppunit/$(DEPDIR)/cppunit_testRbu-main.Tpo" -c -o cppunit/cppunit_testRbu-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/$(DEPDIR)/cppunit_testRbu-main.Tpo" "cppunit/$(DEPDIR)/cppunit_testRbu-main.Po"; else rm -f "cppunit/$(DEPDIR)/cppunit_testRbu-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testRbu-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testRbu-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`
+
+cppunit/interface/cppunit_testRbu-testRbu.o: cppunit/interface/testRbu.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testRbu-testRbu.o -MD -MP -MF "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo" -c -o cppunit/interface/cppunit_testRbu-testRbu.o `test -f 'cppunit/interface/testRbu.cpp' || echo '$(srcdir)/'`cppunit/interface/testRbu.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo" "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Po"; else rm -f "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/testRbu.cpp' object='cppunit/interface/cppunit_testRbu-testRbu.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testRbu-testRbu.o `test -f 'cppunit/interface/testRbu.cpp' || echo '$(srcdir)/'`cppunit/interface/testRbu.cpp
+
+cppunit/interface/cppunit_testRbu-testRbu.obj: cppunit/interface/testRbu.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testRbu-testRbu.obj -MD -MP -MF "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo" -c -o cppunit/interface/cppunit_testRbu-testRbu.obj `if test -f 'cppunit/interface/testRbu.cpp'; then $(CYGPATH_W) 'cppunit/interface/testRbu.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/testRbu.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo" "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Po"; else rm -f "cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/testRbu.cpp' object='cppunit/interface/cppunit_testRbu-testRbu.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testRbu-testRbu.obj `if test -f 'cppunit/interface/testRbu.cpp'; then $(CYGPATH_W) 'cppunit/interface/testRbu.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/testRbu.cpp'; fi`
+
+cppunit/cppunit_testStandalone-main.o: cppunit/main.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/cppunit_testStandalone-main.o -MD -MP -MF "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Tpo" -c -o cppunit/cppunit_testStandalone-main.o `test -f 'cppunit/main.cpp' || echo '$(srcdir)/'`cppunit/main.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Tpo" "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Po"; else rm -f "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testStandalone-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testStandalone-main.o `test -f 'cppunit/main.cpp' || echo '$(srcdir)/'`cppunit/main.cpp
+
+cppunit/cppunit_testStandalone-main.obj: cppunit/main.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/cppunit_testStandalone-main.obj -MD -MP -MF "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Tpo" -c -o cppunit/cppunit_testStandalone-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Tpo" "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Po"; else rm -f "cppunit/$(DEPDIR)/cppunit_testStandalone-main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testStandalone-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testStandalone-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`
+
+cppunit/interface/cppunit_testStandalone-testStandalone.o: cppunit/interface/testStandalone.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testStandalone-testStandalone.o -MD -MP -MF "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo" -c -o cppunit/interface/cppunit_testStandalone-testStandalone.o `test -f 'cppunit/interface/testStandalone.cpp' || echo '$(srcdir)/'`cppunit/interface/testStandalone.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo" "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Po"; else rm -f "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/testStandalone.cpp' object='cppunit/interface/cppunit_testStandalone-testStandalone.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testStandalone-testStandalone.o `test -f 'cppunit/interface/testStandalone.cpp' || echo '$(srcdir)/'`cppunit/interface/testStandalone.cpp
+
+cppunit/interface/cppunit_testStandalone-testStandalone.obj: cppunit/interface/testStandalone.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testStandalone-testStandalone.obj -MD -MP -MF "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo" -c -o cppunit/interface/cppunit_testStandalone-testStandalone.obj `if test -f 'cppunit/interface/testStandalone.cpp'; then $(CYGPATH_W) 'cppunit/interface/testStandalone.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/testStandalone.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo" "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Po"; else rm -f "cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/testStandalone.cpp' object='cppunit/interface/cppunit_testStandalone-testStandalone.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testStandalone-testStandalone.obj `if test -f 'cppunit/interface/testStandalone.cpp'; then $(CYGPATH_W) 'cppunit/interface/testStandalone.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/testStandalone.cpp'; fi`
+
 mostlyclean-libtool:
 	-rm -f *.lo
 
@@ -1828,6 +2018,77 @@ distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+ctags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+	done
+
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -1838,10 +2099,23 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      tags="$$tags $$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
@@ -1854,7 +2128,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    $$tags $$unique; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -1876,10 +2150,83 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
+check-TESTS: $(TESTS)
+	@failed=0; all=0; xfail=0; xpass=0; skip=0; \
+	srcdir=$(srcdir); export srcdir; \
+	list='$(TESTS)'; \
+	if test -n "$$list"; then \
+	  for tst in $$list; do \
+	    if test -f ./$$tst; then dir=./; \
+	    elif test -f $$tst; then dir=; \
+	    else dir="$(srcdir)/"; fi; \
+	    if $(TESTS_ENVIRONMENT) $${dir}$$tst; then \
+	      all=`expr $$all + 1`; \
+	      case " $(XFAIL_TESTS) " in \
+	      *" $$tst "*) \
+		xpass=`expr $$xpass + 1`; \
+		failed=`expr $$failed + 1`; \
+		echo "XPASS: $$tst"; \
+	      ;; \
+	      *) \
+		echo "PASS: $$tst"; \
+	      ;; \
+	      esac; \
+	    elif test $$? -ne 77; then \
+	      all=`expr $$all + 1`; \
+	      case " $(XFAIL_TESTS) " in \
+	      *" $$tst "*) \
+		xfail=`expr $$xfail + 1`; \
+		echo "XFAIL: $$tst"; \
+	      ;; \
+	      *) \
+		failed=`expr $$failed + 1`; \
+		echo "FAIL: $$tst"; \
+	      ;; \
+	      esac; \
+	    else \
+	      skip=`expr $$skip + 1`; \
+	      echo "SKIP: $$tst"; \
+	    fi; \
+	  done; \
+	  if test "$$failed" -eq 0; then \
+	    if test "$$xfail" -eq 0; then \
+	      banner="All $$all tests passed"; \
+	    else \
+	      banner="All $$all tests behaved as expected ($$xfail expected failures)"; \
+	    fi; \
+	  else \
+	    if test "$$xpass" -eq 0; then \
+	      banner="$$failed of $$all tests failed"; \
+	    else \
+	      banner="$$failed of $$all tests did not behave as expected ($$xpass unexpected passes)"; \
+	    fi; \
+	  fi; \
+	  dashes="$$banner"; \
+	  skipped=""; \
+	  if test "$$skip" -ne 0; then \
+	    skipped="($$skip tests were not run)"; \
+	    test `echo "$$skipped" | wc -c` -le `echo "$$banner" | wc -c` || \
+	      dashes="$$skipped"; \
+	  fi; \
+	  report=""; \
+	  if test "$$failed" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then \
+	    report="Please report to $(PACKAGE_BUGREPORT)"; \
+	    test `echo "$$report" | wc -c` -le `echo "$$banner" | wc -c` || \
+	      dashes="$$report"; \
+	  fi; \
+	  dashes=`echo "$$dashes" | sed s/./=/g`; \
+	  echo "$$dashes"; \
+	  echo "$$banner"; \
+	  test -z "$$skipped" || echo "$$skipped"; \
+	  test -z "$$report" || echo "$$report"; \
+	  echo "$$dashes"; \
+	  test "$$failed" -eq 0; \
+	else :; fi
+
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/. $(distdir)/bin-supported $(distdir)/bin-unsupported $(distdir)/build $(distdir)/doc $(distdir)/include/smbios $(distdir)/include/smbios/config $(distdir)/include/smbios/config/abi $(distdir)/include/smbios/config/compiler $(distdir)/include/smbios/config/platform $(distdir)/include/smbios/config/stdlib $(distdir)/libraries $(distdir)/libraries/cmos $(distdir)/libraries/common $(distdir)/libraries/memory $(distdir)/libraries/rbu $(distdir)/libraries/smbios $(distdir)/libraries/smi $(distdir)/libraries/systeminfo $(distdir)/libraries/xml_libxerces $(distdir)/libraries/xml_libxml2
+	$(mkdir_p) $(distdir)/. $(distdir)/bin-supported $(distdir)/bin-unsupported $(distdir)/build $(distdir)/cppunit $(distdir)/cppunit/interface $(distdir)/doc $(distdir)/include/smbios $(distdir)/include/smbios/config $(distdir)/include/smbios/config/abi $(distdir)/include/smbios/config/compiler $(distdir)/include/smbios/config/platform $(distdir)/include/smbios/config/stdlib $(distdir)/libraries $(distdir)/libraries/cmos $(distdir)/libraries/common $(distdir)/libraries/memory $(distdir)/libraries/rbu $(distdir)/libraries/smbios $(distdir)/libraries/smi $(distdir)/libraries/systeminfo $(distdir)/libraries/xml_libxerces $(distdir)/libraries/xml_libxml2
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -1904,6 +2251,21 @@ distdir: $(DISTFILES)
 	    test -f $(distdir)/$$file \
 	    || cp -p $$d/$$file $(distdir)/$$file \
 	    || exit 1; \
+	  fi; \
+	done
+	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d "$(distdir)/$$subdir" \
+	    || $(mkdir_p) "$(distdir)/$$subdir" \
+	    || exit 1; \
+	    distdir=`$(am__cd) $(distdir) && pwd`; \
+	    top_distdir=`$(am__cd) $(top_distdir) && pwd`; \
+	    (cd $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$top_distdir" \
+	        distdir="$$distdir/$$subdir" \
+	        distdir) \
+	      || exit 1; \
 	  fi; \
 	done
 	$(MAKE) $(AM_MAKEFLAGS) \
@@ -2007,23 +2369,26 @@ distcleancheck: distclean
 	       $(distcleancheck_listfiles) ; \
 	       exit 1; } >&2
 check-am: all-am
-check: check-am
+	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
+	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS)
 install-binPROGRAMS: install-libLTLIBRARIES
 
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
@@ -2037,6 +2402,10 @@ distclean-generic:
 	-rm -f bin-supported/$(am__dirstamp)
 	-rm -f bin-unsupported/$(DEPDIR)/$(am__dirstamp)
 	-rm -f bin-unsupported/$(am__dirstamp)
+	-rm -f cppunit/$(DEPDIR)/$(am__dirstamp)
+	-rm -f cppunit/$(am__dirstamp)
+	-rm -f cppunit/interface/$(DEPDIR)/$(am__dirstamp)
+	-rm -f cppunit/interface/$(am__dirstamp)
 	-rm -f libraries/$(am__dirstamp)
 	-rm -f libraries/cmos/$(DEPDIR)/$(am__dirstamp)
 	-rm -f libraries/cmos/$(am__dirstamp)
@@ -2061,25 +2430,25 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
-clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
-	clean-libtool mostlyclean-am
+clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
+	clean-libLTLIBRARIES clean-libtool mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR) libraries/xml_libxml2/$(DEPDIR)
+	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) cppunit/$(DEPDIR) cppunit/interface/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR) libraries/xml_libxml2/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
-info: info-am
+info: info-recursive
 
 info-am:
 
@@ -2087,50 +2456,56 @@ install-data-am:
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-man:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR) libraries/xml_libxml2/$(DEPDIR)
+	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) cppunit/$(DEPDIR) cppunit/interface/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR) libraries/xml_libxml2/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-info-am \
 	uninstall-libLTLIBRARIES
 
-.PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
-	clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
-	clean-libtool ctags dist dist-all dist-bzip2 dist-gzip \
-	dist-hook dist-shar dist-tarZ dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-libtool \
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am am--refresh check \
+	check-TESTS check-am clean clean-binPROGRAMS \
+	clean-checkPROGRAMS clean-generic clean-libLTLIBRARIES \
+	clean-libtool clean-recursive ctags ctags-recursive dist \
+	dist-all dist-bzip2 dist-gzip dist-hook dist-shar dist-tarZ \
+	dist-zip distcheck distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-recursive \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-binPROGRAMS install-data install-data-am install-exec \
 	install-exec-am install-info install-info-am \
 	install-libLTLIBRARIES install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-binPROGRAMS \
-	uninstall-info-am uninstall-libLTLIBRARIES
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic maintainer-clean-recursive \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool mostlyclean-recursive pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am \
+	uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-libLTLIBRARIES
 
 
 libraries/common/StdSmbiosXml.h: Makefile.am $(top_srcdir)/doc/smbios23.xml $(top_srcdir)/build/scripts/makeXmlHeader.py
