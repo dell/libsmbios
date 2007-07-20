@@ -88,7 +88,7 @@ dist-hook: libraries/common/StdSmbiosXml.h
 	[ ! -e $(top_srcdir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_srcdir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
 	[ ! -e $(top_builddir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_builddir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
 
-$(libraries_libsmbios_la_OBJECTS):  $(top_builddir)/include/smbios/version.h 
-$(libraries_libsmbiosxml_la_OBJECTS):  $(top_builddir)/include/smbios/version.h libraries/common/StdSmbiosXml.h
+$(libraries_libsmbios_la_OBJECTS):
+$(libraries_libsmbiosxml_la_OBJECTS): libraries/common/StdSmbiosXml.h
 
-CLEANFILES+=$(top_builddir)/include/smbios/version.h libraries/common/StdSmbiosXml.h
+CLEANFILES+=libraries/common/StdSmbiosXml.h libraries/.libs
