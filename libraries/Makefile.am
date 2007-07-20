@@ -45,7 +45,6 @@ EXTRA_DIST += \
 	libraries/memory/Memory_Windows.cpp	\
 	libraries/smbios/SmbiosStrategy_Windows.cpp	\
 	libraries/smi/Smi_Windows.cpp	\
-	libraries/rbu/RbuLowLevel.h		\
 	libraries/rbu/RbuImpl.h		\
 	libraries/common/ExceptionImpl.h		\
 	libraries/common/CmosRWImpl.h		\

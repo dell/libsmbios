@@ -116,6 +116,7 @@ EXTRA_DIST += \
  include/smbios/ISmi.h		\
  include/smbios/IToken.h		\
  include/smbios/SmbiosDefs.h		\
+ include/smbios/RbuLowLevel.h		\
  include/smbios/config/abi/msvc_prefix.hpp		\
  include/smbios/config/abi/msvc_suffix.hpp		\
  include/smbios/config/boost_LICENSE_1_0_txt		\
