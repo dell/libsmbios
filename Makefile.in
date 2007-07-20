@@ -678,9 +678,9 @@ LIBSMBIOSXML_LIBTOOL_AGE = @LIBSMBIOSXML_LIBTOOL_AGE@
 CLEANFILES = libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm \
 	_buildtemp doc/reports/code-coverage.txt \
 	doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt \
-	$(top_builddir)/include/smbios/version.h \
-	libraries/common/StdSmbiosXml.h cppunit/testResults.xml \
-	$(EXTRA_PROGRAMS)
+	libraries/common/StdSmbiosXml.h libraries/.libs \
+	bin-supported/.libs bin-unsupported/.libs \
+	cppunit/testResults.xml cppunit/.libs $(EXTRA_PROGRAMS)
 DISTCLEANFILES = *~
 ########## END DOCS ################
 EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
@@ -2521,9 +2521,11 @@ dist-hook: libraries/common/StdSmbiosXml.h
 	[ ! -e $(top_srcdir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_srcdir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
 	[ ! -e $(top_builddir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_builddir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
 
-$(libraries_libsmbios_la_OBJECTS):  $(top_builddir)/include/smbios/version.h 
-$(libraries_libsmbiosxml_la_OBJECTS):  $(top_builddir)/include/smbios/version.h libraries/common/StdSmbiosXml.h
+$(libraries_libsmbios_la_OBJECTS):
+$(libraries_libsmbiosxml_la_OBJECTS): libraries/common/StdSmbiosXml.h
 
+$(bin_PROGRAMS): libraries/libsmbios.la
+$(EXTRA_PROGRAMS): libraries/libsmbios.la
 static: $(EXTRA_PROGRAMS)
 
 rpm: dist
@@ -2549,7 +2551,7 @@ static:
 
 ########## DOCS ################
 clean-generic: clean-docs
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
 clean-docs:
 	rm -rf doc/interface doc/full doc/reports
 
