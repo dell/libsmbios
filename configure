@@ -1521,7 +1521,7 @@ temp_RELEASE_SUBLEVEL=7
 temp_RELEASE_EXTRALEVEL=
 ####################################
 
-for i in RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL
+for i in RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL
 do
     varname=temp_$i
     if ! test -z "${!varname}"; then
