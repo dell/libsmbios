@@ -20,4 +20,6 @@ cd _builddir
 make -e distcheck
 make -e srpm
 
-/var/ftp/pub/yum/dell-repo/testing/_tools/upload_rpm.sh ./${PACKAGE_STRING}-1.src.rpm
+. version
+
+/var/ftp/pub/yum/dell-repo/testing/_tools/upload_rpm.sh ./${PACKAGE_NAME}-${PACKAGE_VERSION}-1.src.rpm
