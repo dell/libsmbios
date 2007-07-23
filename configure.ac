@@ -131,5 +131,6 @@ AC_CONFIG_FILES([
     doc/full-documentation.dox 
     doc/interface-only.dox 
     libsmbios.spec:libsmbios.spec.in:ChangeLog
+    build/mk-rel-rpm.sh
     ])
 AC_OUTPUT
