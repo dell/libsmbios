@@ -17,6 +17,7 @@ set -e
 mkdir _builddir
 cd _builddir
 ../configure
+make -e distcheck
 make -e srpm
 
-PREFIX=testing_ /var/ftp/pub/yum/dell-repo/scripts/upload_rpm.sh ./*.src.rpm
+/var/ftp/pub/yum/dell-repo/testing/_tools/upload_rpm.sh ./${PACKAGE_STRING}-1.src.rpm
