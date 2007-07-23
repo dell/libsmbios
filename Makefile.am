@@ -1,4 +1,4 @@
-# vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:
+# vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
 AUTOMAKE_OPTIONS := subdir-objects
 SUBDIRS = 
@@ -22,7 +22,7 @@ LIBSMBIOSXML_LIBTOOL_CURRENT=@LIBSMBIOSXML_LIBTOOL_CURRENT@
 LIBSMBIOSXML_LIBTOOL_REVISION=@LIBSMBIOSXML_LIBTOOL_REVISION@
 LIBSMBIOSXML_LIBTOOL_AGE=@LIBSMBIOSXML_LIBTOOL_AGE@
 
-CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp doc/reports/code-coverage.txt doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt
+CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp doc/reports/code-coverage.txt doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt version
 DISTCLEANFILES=*~
 
 EXTRA_DIST =
@@ -37,7 +37,7 @@ include cppunit/Makefile.am
 $(bin_PROGRAMS): libraries/libsmbios.la
 $(EXTRA_PROGRAMS): libraries/libsmbios.la
 static: $(EXTRA_PROGRAMS)
-CLEANFILES+=$(EXTRA_PROGRAMS)
+CLEANFILES += $(EXTRA_PROGRAMS)
 
 rpm: dist
 	BLD_DIR=$$(mktemp -d /tmp/rpmbuild-$$$$-XXXXXX); \

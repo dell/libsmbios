@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:
+# vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
@@ -678,7 +678,7 @@ LIBSMBIOSXML_LIBTOOL_AGE = @LIBSMBIOSXML_LIBTOOL_AGE@
 CLEANFILES = libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm \
 	_buildtemp doc/reports/code-coverage.txt \
 	doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt \
-	libraries/common/StdSmbiosXml.h libraries/.libs \
+	version libraries/common/StdSmbiosXml.h libraries/.libs \
 	bin-supported/.libs bin-unsupported/.libs testResults.xml \
 	cppunit/.libs $(EXTRA_PROGRAMS)
 DISTCLEANFILES = *~
