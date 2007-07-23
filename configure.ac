@@ -4,14 +4,15 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[0.13.7])
+AC_INIT([libsmbios],[0.13.8])
 
 temp_RELEASE_NAME=libsmbios
 temp_RELEASE_MAJOR=0
 temp_RELEASE_MINOR=13
-temp_RELEASE_SUBLEVEL=7
+temp_RELEASE_SUBLEVEL=8
 temp_RELEASE_EXTRALEVEL=
 ####################################
+
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([build])
 AM_INIT_AUTOMAKE
