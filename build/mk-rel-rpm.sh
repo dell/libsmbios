@@ -17,6 +17,7 @@ set -e
 mkdir _builddir
 pushd _builddir
 ../configure
+make -e distcheck
 make -e srpm
 
 . version
