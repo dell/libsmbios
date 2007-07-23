@@ -20876,8 +20876,12 @@ _ACEOF
 
 
 
+echo "PACKAGE_NAME='$PACKAGE_NAME'" > version
+echo "PACKAGE_VERSION='$PACKAGE_VERSION'" > version
+echo "PACKAGE_STRING='$PACKAGE_STRING'" > version
+
 # generate files and exit
-                                                            ac_config_files="$ac_config_files Makefile include/smbios/version.h doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog build/mk-rel-rpm.sh"
+                                                  ac_config_files="$ac_config_files Makefile include/smbios/version.h doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -21501,7 +21505,6 @@ do
   "doc/full-documentation.dox" ) CONFIG_FILES="$CONFIG_FILES doc/full-documentation.dox" ;;
   "doc/interface-only.dox" ) CONFIG_FILES="$CONFIG_FILES doc/interface-only.dox" ;;
   "libsmbios.spec" ) CONFIG_FILES="$CONFIG_FILES libsmbios.spec:libsmbios.spec.in:ChangeLog" ;;
-  "build/mk-rel-rpm.sh" ) CONFIG_FILES="$CONFIG_FILES build/mk-rel-rpm.sh" ;;
   "depfiles" ) CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
