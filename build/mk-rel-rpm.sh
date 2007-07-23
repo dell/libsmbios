@@ -13,6 +13,8 @@ umask 002
 
 set -e
 
+chmod -R +w _builddir
+rm -rf _builddir
 
 mkdir _builddir
 pushd _builddir
