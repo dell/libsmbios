@@ -23,7 +23,7 @@ make -e srpm
 . version
 
 popd
-git tag -u libsmbios -m "tag for official release: $PACKAGE_STRING" v${PACKAGE_VERSION})
+git tag -u libsmbios -m "tag for official release: $PACKAGE_STRING" v${PACKAGE_VERSION}
 pushd _builddir
 
 DEST=$LIBSMBIOS_TOPDIR/download/${PACKAGE_NAME}/$PACKAGE_STRING/
