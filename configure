@@ -20879,8 +20879,8 @@ _ACEOF
 
 
 echo "PACKAGE_NAME='$PACKAGE_NAME'" > version
-echo "PACKAGE_VERSION='$PACKAGE_VERSION'" > version
-echo "PACKAGE_STRING='$PACKAGE_STRING'" > version
+echo "PACKAGE_VERSION='$PACKAGE_VERSION'" >> version
+echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 
 # generate files and exit
                                                   ac_config_files="$ac_config_files Makefile include/smbios/version.h doc/full-documentation.dox doc/interface-only.dox libsmbios.spec:libsmbios.spec.in:ChangeLog"
