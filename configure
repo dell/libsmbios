@@ -20828,6 +20828,16 @@ fi
 
 fi
 
+# update 'real' variables from the temp variable names.
+# do this at the end of the file so that they A) are not overwitten by other
+# autoconf stuff, and B) so that user can override on cmdline
+for i in RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL
+do
+    varname=temp_$i
+    if test -z "${!i}"; then
+        eval $i=${!varname}; export $i
+    fi
+done
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
 # If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
@@ -20841,14 +20851,6 @@ LIBSMBIOS_LIBTOOL_AGE=0
 LIBSMBIOSXML_LIBTOOL_CURRENT=$(( $RELEASE_MAJOR + 1 ))
 LIBSMBIOSXML_LIBTOOL_REVISION=$RELEASE_MINOR
 LIBSMBIOSXML_LIBTOOL_AGE=0
-
-for i in RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL
-do
-    varname=temp_$i
-    if test -z "${!i}"; then
-        eval $i=${!varname}; export $i
-    fi
-done
 
 if test -z "$RELEASE_RPM_EXTRALEVEL"; then
     if test -z "$RELEASE_EXTRALEVEL"; then
