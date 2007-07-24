@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libraries/libsmbios.la libraries/libsmbiosxml.la
 libraries_libsmbios_la_LDFLAGS = -version-info $(LIBSMBIOS_LIBTOOL_CURRENT):$(LIBSMBIOS_LIBTOOL_REVISION):$(LIBSMBIOS_LIBTOOL_AGE)
 libraries_libsmbios_la_CXXFLAGS = -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
 
-INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 
 libraries_libsmbios_la_SOURCES = \
     libraries/cmos/CmosRW.cpp                   \
