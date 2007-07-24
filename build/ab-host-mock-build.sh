@@ -1,5 +1,5 @@
 #!/bin/sh
-# vim:et:ai:ts=4:sw=4:filetype=sh:
+# vim:et:ai:ts=4:sw=4:filetype=sh:tw=0:
 
 # the purpose of this script is to hook into git-autobuilder. It is
 # called by autobuild-hook.sh as a host-specific builder. It builds RPMS
@@ -22,4 +22,4 @@ make -e srpm
 
 . version
 
-/var/ftp/pub/yum/dell-repo/testing/_tools/upload_rpm.sh ./${PACKAGE_NAME}-${PACKAGE_VERSION}-1.src.rpm
+/var/ftp/pub/yum/dell-repo/testing/_tools/upload_rpm.sh ./${PACKAGE_NAME}-${PACKAGE_VERSION}-*.src.rpm
