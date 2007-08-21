@@ -85,7 +85,11 @@ namespace smi
         };
         virtual void getResultBuffer(u8 *buffer, size_t size)
         {
-            fread(buffer,1,size,fh);
+            size_t numbytes = fread(buffer,1,size,fh); // only used in unit tests, not critical
+            if (numbytes != size)
+            {
+                throw SmiExceptionImpl("Short read from file.");
+            }
         };
         virtual void finish()
         {}

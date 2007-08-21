@@ -68,7 +68,13 @@ namespace rbu
         }
 
         memset(&header, 0, sizeof(header));
-        fread(&header, 1, sizeof(header), hdrFh);
+        size_t bytesRead = fread(&header, 1, sizeof(header), hdrFh);  // short read handled
+        if (bytesRead != sizeof(header))
+        {
+            fclose(hdrFh);
+            hdrFh=0;
+            throw InvalidHdrFileImpl("Couldnt read full header.");
+        }
         fseek(hdrFh, 0, 0);
         if (
                 header.headerId[0] == '$' &&

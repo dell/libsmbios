@@ -96,9 +96,11 @@ namespace smi
             throw smbios::InternalErrorImpl("Could not open file " SMI_PHYS_ADDR_FILE ". Check that dcdbas driver is properly loaded.");
 
         fseek(fh, 0L, 0);
-        fread(tmpBuf, 1, bufSize, fh);
+        size_t numBytes = fread(tmpBuf, 1, bufSize, fh);
         fclose(fh);
         fh=0;
+        if (!numBytes) // dont care how many bytes as long as we get at least 1.
+            throw smbios::InternalErrorImpl("Short read from physical address file. Driver problem?");
 
         retval = strtoll(tmpBuf, NULL, 16);
 
@@ -134,7 +136,9 @@ namespace smi
     {
         smiLinuxPrivateData *tmpPrivPtr = reinterpret_cast<smiLinuxPrivateData *>(privateData);
         fflush(NULL);
-        fread(buffer,  1,  size,  tmpPrivPtr->fh_data);
+        int numbytes = fread(buffer,  1,  size,  tmpPrivPtr->fh_data);
+        if (!numbytes)
+            throw smbios::InternalErrorImpl("Short read from file handle");
     }
 
 

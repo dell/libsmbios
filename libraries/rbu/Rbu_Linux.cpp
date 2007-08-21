@@ -118,8 +118,8 @@ const int RBU_PACKET_SIZE = 4096;
         {
             ++pkt->pktNum;
             memset(&(pkt->pktData), 0, bufSize - sizeof(rbu_packet) + 1);
-            fread(&(pkt->pktData), 1, bufSize - sizeof(rbu_packet) + 1, hdr_fh);
-            if (ferror(hdr_fh))
+            size_t numBytes = fread(&(pkt->pktData), 1, bufSize - sizeof(rbu_packet) + 1, hdr_fh);
+            if (ferror(hdr_fh) || numBytes != bufSize - sizeof(rbu_packet) + 1)
                 throw HdrFileIOErrorImpl(strerror(errno));
     
             checksumPacket(pkt, bufSize);

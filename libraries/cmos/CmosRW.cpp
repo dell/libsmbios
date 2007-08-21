@@ -122,8 +122,11 @@ namespace cmos
             throw smbios::InternalErrorImpl("Internal Error: could not cmos file for reading.");
 
         fseek (fh, static_cast<long>(realOffset), SEEK_SET);
-        fread (&retval, 1, sizeof (retval), fh);
+        size_t numBytes = fread (&retval, 1, sizeof (retval), fh); // only used in unit tests, so isnt critical
         fclose (fh);
+        if (numBytes != sizeof(retval))
+            throw std::exception(); // short read. there isnt really a good exception to throw here.
+
         return retval;
     }
 
