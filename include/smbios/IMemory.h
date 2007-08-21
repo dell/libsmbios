@@ -114,6 +114,8 @@ namespace memory
         virtual u8 getByte(u64 offset) const = 0;
         virtual void putByte(u64 offset, u8 value) const = 0;
         virtual void fillBuffer(u8 *buffer, u64 offset, unsigned int length) const = 0;
+        virtual int incReopenHint() = 0;
+        virtual int decReopenHint() = 0;
     private:
         void operator =(const IMemory &); ///< not implemented (explicitly disallowed)
         IMemory( const IMemory & ); ///< not implemented (explicitly disallowed)

@@ -34,14 +34,48 @@ using namespace factory;
 
 namespace memory
 {
-
     struct LinuxData
     {
         FILE *fd;
         void *lastMapping;
         unsigned long lastMappedOffset;
         unsigned long mappingSize;
+        int reopenHint;
+        string filename;
     };
+
+    static void condOpenFd(struct LinuxData *data)
+    {
+        if(!data->fd)
+        {
+            data->lastMapping = 0;
+            data->lastMappedOffset = 0;
+            data->fd = fopen( data->filename.c_str(), "rb" );
+            if(!data->fd)
+            {
+                AccessErrorImpl accessError;
+                accessError.setMessageString( _("Unable to open memory. File: %(file)s, OS Error: %(err)s") );
+                accessError.setParameter( "file", data->filename );
+                accessError.setParameter( "err", strerror(errno) );
+                throw accessError;
+            }
+        }
+    }
+
+    static void closeFd(struct LinuxData *data)
+    {
+        if(data->lastMapping)
+        {
+            munmap(data->lastMapping, data->mappingSize);
+            data->lastMapping = 0;
+        }
+        if (data->fd)
+        {
+            fclose(data->fd);
+            data->fd = 0;
+        }
+        data->lastMappedOffset = 0;
+    }
 
     MemoryFactoryImpl::MemoryFactoryImpl()
     {
@@ -52,35 +86,40 @@ namespace memory
             : IMemory()
     {
         LinuxData *data = new LinuxData();
-        data->lastMapping = 0;
-        data->lastMappedOffset = 0;
+        data->fd = 0;
+        data->filename = filename;
         data->mappingSize = getpagesize() * 16;
-        data->fd = fopen( filename.c_str(), "rb" );
-        if(!data->fd)
-        {
-            AccessErrorImpl accessError;
-            accessError.setMessageString( _("Unable to open memory. File: %(file)s, OS Error: %(err)s") );
-            accessError.setParameter( "file", filename );
-            accessError.setParameter( "err", strerror(errno) );
-            throw accessError;
-        }
+        data->reopenHint = 1;
+        condOpenFd(data);
+        closeFd(data);
         osData = static_cast<void *>(data);
     }
 
     MemoryOsSpecific::~MemoryOsSpecific()
     {
         LinuxData *data = static_cast<LinuxData *>(osData);
-        if(data->lastMapping)
-            munmap(data->lastMapping, data->mappingSize);
-        fclose(data->fd);
+        closeFd(data);
         delete data;
         osData = 0;
+    }
+
+    int MemoryOsSpecific::incReopenHint()
+    {
+        LinuxData *data = static_cast<LinuxData *>(osData);
+        return ++(data->reopenHint);
+    }
+    int MemoryOsSpecific::decReopenHint()
+    {
+        LinuxData *data = static_cast<LinuxData *>(osData);
+        return --(data->reopenHint);
     }
 
     void MemoryOsSpecific::fillBuffer( u8 *buffer, u64 offset, unsigned int length) const
     {
         LinuxData *data = static_cast<LinuxData *>(osData);
         unsigned int bytesCopied = 0;
+
+        condOpenFd(data);
 
         while( bytesCopied < length )
         {
@@ -104,6 +143,10 @@ namespace memory
             offset += toCopy;
             bytesCopied += toCopy;
         }
+
+        if(data->reopenHint)
+            closeFd(data);
+
     }
 
     u8 MemoryOsSpecific::getByte( u64 offset ) const
@@ -116,12 +159,14 @@ namespace memory
     void MemoryOsSpecific::putByte( u64 offset, u8 value ) const
     {
         LinuxData *data = static_cast<LinuxData *>(osData);
+        condOpenFd(data);
         int ret = fseek( data->fd, offset, 0 );
         if( 0 != ret )
         {
             OutOfBoundsImpl outOfBounds;
             outOfBounds.setMessageString(_("Seek error trying to seek to memory location. OS Error: %(err)s"));
             outOfBounds.setParameter("err", strerror(errno) );
+            closeFd(data);
             throw outOfBounds;
         }
         ret = fwrite( &value, 1, 1, data->fd );
@@ -130,8 +175,11 @@ namespace memory
             AccessErrorImpl accessError;
             accessError.setMessageString(_("Error trying to write memory. OS Error: %(err)s"));
             accessError.setParameter("err", strerror(errno) );
+            closeFd(data);
             throw accessError;
         }
+        if(data->reopenHint)
+            closeFd(data);
     }
 
 }

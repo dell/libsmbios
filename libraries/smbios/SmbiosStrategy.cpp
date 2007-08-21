@@ -247,6 +247,13 @@ namespace smbios
             parseException.setMessageString(_("SMBIOS Header not found in search."));
         }
 
+        // tell the memory subsystem that it can optimize here and 
+        // keep memory open while we scan rather than open/close/open/close/... 
+        // for each fillBuffer() call
+        // 
+        // this would be safer if we used spiffy c++ raii technique here
+        mem->decReopenHint();
+
         smbios_table_entry_point tempTEP;
         memset(&tempTEP, 0, sizeof(tempTEP));
         while ( (fp + sizeof(tempTEP)) < F_BLOCK_END)
@@ -294,10 +301,17 @@ namespace smbios
             // to be scanning through memory. We didn't find a table,
             // so there is nothing to do but raise an exception.
             if (offset)
+            {
+                // dont need memory optimization anymore
+                mem->incReopenHint();
                 throw parseException; // previously set up.
+            }
 
             fp += 16;
         }
+
+        // dont need memory optimization anymore
+        mem->incReopenHint();
 
         // bad stuff happened if we got to here and fp > 0xFFFFFL
         if ((fp + sizeof(tempTEP)) >= F_BLOCK_END)

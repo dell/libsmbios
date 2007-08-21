@@ -51,11 +51,14 @@ namespace memory
         virtual void fillBuffer(u8 *buffer, u64 offset, unsigned int length) const;
         virtual u8 getByte(u64 offset) const;
         virtual void putByte(u64 offset, u8 value) const;
+        virtual int incReopenHint() {return ++reopenHint;};
+        virtual int decReopenHint() {return --reopenHint;};
 
     private:
         const std::string filename;
         mutable FILE *fd;
         bool rw;
+        int reopenHint;
 
         MemoryFile ();
         MemoryFile (const MemoryFile & source);
@@ -73,6 +76,8 @@ namespace memory
         virtual void fillBuffer(u8 *buffer, u64 offset, unsigned int length) const;
         virtual u8 getByte(u64 offset) const;
         virtual void putByte(u64 offset, u8 value) const;
+        virtual int incReopenHint();
+        virtual int decReopenHint();
 
     private:
         void *osData;

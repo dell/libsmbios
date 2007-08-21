@@ -45,6 +45,7 @@ namespace memory
     GetSystemFirmwareTablePtr GetSystemFirmwareTable = NULL;
     u8 * CBlockBuffer = NULL;
     u8 * EBlockBuffer = NULL;
+    int reopenHint = 1;
 
     int LoadNtdllFuncs(void)
     {
@@ -415,5 +416,16 @@ namespace memory
     void MemoryOsSpecific::putByte( u64 , u8 ) const
     {
         throw smbios::NotImplementedImpl( _("writing to physical memory is not implemented on Windows yet.") );
+    }
+
+
+    // yes, I know these do absolutely nothing right now. 
+    int MemoryOsSpecific::incReopenHint()
+    {
+        return ++reopenHint;
+    }
+    int MemoryOsSpecific::decReopenHint()
+    {
+        return --reopenHint;
     }
 }

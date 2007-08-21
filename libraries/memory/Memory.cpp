@@ -99,7 +99,7 @@ namespace memory
     {}
 
     MemoryFile::MemoryFile( const string initFilename )
-            : IMemory(), filename(initFilename), fd(0), rw(false)
+            : IMemory(), filename(initFilename), fd(0), rw(false), reopenHint(1)
     {
         // workaround MSVC++ bugs...
         if( filename == "" )
@@ -109,7 +109,7 @@ namespace memory
 
         // fopen portable to Windows if "b" is added to mode.
         fd = fopen( filename.c_str(), "rb" ); // open for read to start
-        if(!fd)
+        if (!fd)
         {
             AccessErrorImpl accessError;
             accessError.setMessageString( _("Unable to open memory. File: %(file)s, OS Error: %(err)s") );
@@ -117,11 +117,21 @@ namespace memory
             accessError.setParameter( "err", strerror(errno) );
             throw accessError;
         }
+
+        if (reopenHint>0)
+        {
+            fclose(fd);
+            fd=0;
+        }
     }
 
     MemoryFile::~MemoryFile()
     {
-        fclose(fd);
+        if (fd)
+        {
+            fclose(fd);
+            fd = 0;
+        }
     }
 
     u8 MemoryFile::getByte( u64 offset ) const
@@ -134,6 +144,19 @@ namespace memory
 
     void MemoryFile::fillBuffer(u8 *buffer, u64 offset, unsigned int length) const
     {
+        if (!fd)
+        {
+            // fopen portable to Windows if "b" is added to mode.
+            fd = fopen( filename.c_str(), "rb" ); // open for read to start
+            if (!fd)
+            {
+                AccessErrorImpl accessError;
+                accessError.setMessageString( _("Unable to open memory. File: %(file)s, OS Error: %(err)s") );
+                accessError.setParameter( "file", filename );
+                accessError.setParameter( "err", strerror(errno) );
+                throw accessError;
+            }
+        }
         // FSEEK is a macro defined in config/ for portability
         int ret = FSEEK(fd, offset, 0);
         if (ret)
@@ -141,24 +164,43 @@ namespace memory
             OutOfBoundsImpl outOfBounds;
             outOfBounds.setMessageString(_("Seek error trying to seek to memory location. OS Error: %(err)s"));
             outOfBounds.setParameter("err", strerror(errno) );
+            fclose(fd);
+            fd = 0;
             throw outOfBounds;
         }
         size_t bytesRead = fread( buffer, 1, length, fd );
+
+        if (reopenHint>0)
+        {
+            fclose(fd);
+            fd=0;
+        }
+
         // TODO: handle short reads
         if ((length != bytesRead))
         {
             AccessErrorImpl accessError;
             accessError.setMessageString(_("Read error trying to read memory. OS Error: %(err)s"));
             accessError.setParameter("err", strerror(errno) );
+            if(fd) 
+            {
+                fclose(fd);
+                fd = 0;
+            }
             throw accessError;
         }
     }
 
     void MemoryFile::putByte( u64 offset, u8 byte ) const
     {
-        if(!rw)
+        if(!rw || !fd)
         {
-            fclose(fd);
+            if(fd)
+            {
+                fclose(fd);
+                fd = 0;
+            }
+
             fd = fopen( filename.c_str(), "r+b" ); // reopen for write
             if(!fd)
             {
@@ -176,14 +218,26 @@ namespace memory
             OutOfBoundsImpl outOfBounds;
             outOfBounds.setMessageString(_("Seek error trying to seek to memory location. OS Error: %(err)s"));
             outOfBounds.setParameter("err", strerror(errno) );
+            fclose(fd);
+            fd = 0;
             throw outOfBounds;
         }
         size_t bytesRead = fwrite( &byte, 1, 1, fd );
+        if (reopenHint > 0)
+        {
+            fclose(fd);
+            fd = 0;
+        }
         if( 1 != bytesRead )
         {
             AccessErrorImpl accessError;
             accessError.setMessageString(_("Error trying to write memory. OS Error: %(err)s"));
             accessError.setParameter("err", strerror(errno) );
+            if(fd)
+            {
+                fclose(fd);
+                fd = 0;
+            }
             throw accessError;
         }
     }
