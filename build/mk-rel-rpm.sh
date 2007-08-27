@@ -37,3 +37,5 @@ for i in *.tar.{gz,bz2} *.zip *.src.rpm; do
 done
 
 /var/ftp/pub/yum/dell-repo/software/_tools/upload_rpm.sh ./_builddir/${PACKAGE_NAME}-${PACKAGE_VERSION}-1.src.rpm
+
+git push --tags origin master:master
