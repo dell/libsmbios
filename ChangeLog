@@ -1,3 +1,13 @@
+* Wed Aug 22 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.9
+- Fix a couple of failure-to-check-return on fopen. most were unit-test code
+  only, but two or three were in regular code.
+- Add hinting to the memory class, so that it can intelligently close /dev/mem
+  file handle when it is not needed (which is most of the time). it only
+  leaves it open when it is scanning, so speed is not impacted.
+
+* Tue Aug 6 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.8
+- new upstream
+
 * Tue Apr 3 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.6
 - critical bugfix for dellBiosUpdate utility for packet mode
 - autoconf/automake support for automatically building docs

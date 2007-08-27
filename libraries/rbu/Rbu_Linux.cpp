@@ -119,7 +119,8 @@ const int RBU_PACKET_SIZE = 4096;
             ++pkt->pktNum;
             memset(&(pkt->pktData), 0, bufSize - sizeof(rbu_packet) + 1);
             size_t numBytes = fread(&(pkt->pktData), 1, bufSize - sizeof(rbu_packet) + 1, hdr_fh);
-            if (ferror(hdr_fh) || numBytes != bufSize - sizeof(rbu_packet) + 1)
+            UNREFERENCED_PARAMETER(numBytes);
+            if (ferror(hdr_fh)) // should catch all errored short reads with this
                 throw HdrFileIOErrorImpl(strerror(errno));
     
             checksumPacket(pkt, bufSize);
