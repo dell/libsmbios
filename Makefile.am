@@ -27,6 +27,7 @@ DISTCLEANFILES=*~
 
 EXTRA_DIST =
 bin_PROGRAMS=
+sbin_PROGRAMS=
 EXTRA_PROGRAMS=
 
 include libraries/Makefile.am

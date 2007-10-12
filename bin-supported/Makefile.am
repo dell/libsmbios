@@ -1,6 +1,6 @@
 # vim:tw=0:et:ts=4:sw=4
 
-bin_PROGRAMS += \
+sbin_PROGRAMS += \
     bin-supported/assetTag \
     bin-supported/getSystemId   \
     bin-supported/propertyTag   \

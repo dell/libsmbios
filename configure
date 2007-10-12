@@ -21542,6 +21542,7 @@ _ACEOF
 
 
 
+# this is used by the autobuilder hook to determine the version we built
 echo "PACKAGE_NAME='$PACKAGE_NAME'" > version
 echo "PACKAGE_VERSION='$PACKAGE_VERSION'" >> version
 echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
