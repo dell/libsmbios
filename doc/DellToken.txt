@@ -142,6 +142,10 @@
 
 
 
+0x00ED SpeedStep_Disabled "Disables SpeedStep dynamic clock changes."
+0x00EE SpeedStep_Maximum_Performance "The system is placed in the maximum performance state available."
+0x00EF SpeedStep_Maximum_Battery "The system is placed in the minimum performance state available."
+0x00F0 SpeedStep_Automatic "Allows the BIOS to set either Max Performance, or Max Battery, based on AC presence."
 
 
 
