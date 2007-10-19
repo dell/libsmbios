@@ -36,6 +36,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <string.h>
 
 #include "smbios/IToken.h"
 #include "smbios/IMemory.h"

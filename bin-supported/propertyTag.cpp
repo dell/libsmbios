@@ -23,6 +23,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <string.h>
 
 #include "smbios/ISmi.h"  // only needed if you want to use fake input (memdump.dat)
 #include "smbios/SystemInfo.h" // this is the main header to include to use the C interface

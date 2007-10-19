@@ -21,6 +21,7 @@
 #include "smbios/compat.h"
 
 #include <sstream>
+#include <string.h>
 
 #include "smbios/IMemory.h"
 #include "SmbiosImpl.h"

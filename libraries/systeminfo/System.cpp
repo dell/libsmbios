@@ -17,6 +17,10 @@
  */
 
 #define LIBSMBIOS_SOURCE
+#include "smbios/compat.h"
+
+#include <string.h>
+
 #include "smbios/ISmbios.h"
 #include "smbios/IToken.h"
 #include "smbios/ISmi.h"

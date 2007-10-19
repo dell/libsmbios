@@ -21,6 +21,7 @@
 #include "smbios/compat.h"
 
 #include <iomanip>
+#include <string.h>
 
 #include "SmbiosImpl.h"
 // message.h should be included last.

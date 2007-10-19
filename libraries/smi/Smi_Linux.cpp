@@ -21,6 +21,7 @@
 #include "smbios/compat.h"
 
 #include <sys/file.h>
+#include <string.h>
 
 #include "SmiImpl.h"
 
