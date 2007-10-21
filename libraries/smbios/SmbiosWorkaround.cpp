@@ -17,6 +17,10 @@
  */
 
 #define LIBSMBIOS_SOURCE
+#include "smbios/compat.h"
+
+#include <string.h>
+
 #include "SmbiosWorkaroundImpl.h"
 #include "smbios/SmbiosDefs.h"
 #include "SmbiosImpl.h"

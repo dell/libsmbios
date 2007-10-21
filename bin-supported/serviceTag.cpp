@@ -23,6 +23,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <string.h>
 
 #include "smbios/IMemory.h"  // only needed if you want to use fake input (memdump.dat)
 #include "smbios/ICmosRW.h"  // only needed if you want to use fake input (cmos.dat)
