@@ -2777,6 +2777,7 @@ $(libraries_libsmbios_la_OBJECTS):
 $(libraries_libsmbiosxml_la_OBJECTS): libraries/common/StdSmbiosXml.h
 
 $(bin_PROGRAMS): libraries/libsmbios.la
+$(sbin_PROGRAMS): libraries/libsmbios.la
 $(EXTRA_PROGRAMS): libraries/libsmbios.la
 static: $(EXTRA_PROGRAMS)
 
