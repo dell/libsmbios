@@ -39,33 +39,34 @@ BuildRequires: doxygen
 Libsmbios is a library and utilities that can be used by client programs 
 to get information from standard BIOS tables, such as the SMBIOS table.
 
-%package libs
 Summary: Libsmbios shared libraries
 Group: System Environment/Libraries
 Obsoletes: libsmbiosxml-libs < 0:%{version}-%{release}
 Provides: libsmbiosxml-libs = %{version}-%{release}
+Obsoletes: libsmbios-libs < 0:0.13.11
+Provides: libsmbios-libs = %{version}-%{release}
 
 
-%package bin
+%package -n smbios-utils
 Summary: The "supported" sample binaries that use libsmbios
 Group: Applications/System
-Requires: libsmbios-libs = %{version}-%{release}
-Obsoletes: libsmbiosxml-bin < 0:%{version}-%{release}
+Requires: libsmbios = %{version}-%{release}
+Obsoletes: libsmbiosxml-bin < 0:0.13.11
 Provides: libsmbiosxml-bin = %{version}-%{release}
+Obsoletes: libsmbios-bin < 0:0.13.11
+Provides: libsmbios-bin = %{version}-%{release}
 
-%package unsupported-bin
+%package -n smbios-utils-unsupported
 Summary: Unsupported sample binaries using libsmbios
 Group: Applications/System
 Requires: libsmbios-libs = %{version}-%{release}
+Obsoletes: libsmbios-unsupported-bin < 0.13.11
+Provides: libsmbios-unsupported-bin = %{version}-%{release}
 
 %package devel
 Summary: Development headers and archives
 Group: Development/Libraries
 Requires: libsmbios-libs = %{version}-%{release}
-
-%description libs
-Libsmbios is a library and utilities that can be used by client programs 
-to get information from standard BIOS tables, such as the SMBIOS table.
 
 %description devel
 Libsmbios is a library and utilities that can be used by client programs 
@@ -74,13 +75,13 @@ to get information from standard BIOS tables, such as the SMBIOS table.
 This package contains the headers and .a files necessary to compile new 
 client programs against libsmbios.
 
-%description bin
+%description -n smbios-utils
 Libsmbios is a library and utilities that can be used by client programs 
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 This package contains some sample binaries that use libsmbios.
 
-%description unsupported-bin
+%description -n smbios-utils-unsupported
 Libsmbios is a library and utilities that can be used by client programs 
 to get information from standard BIOS tables, such as the SMBIOS table.
 
@@ -111,14 +112,16 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a include/smbios %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
+find %{buildroot}/usr/include -exec touch -r configure.ac {} +
+find %{buildroot}/usr/share -exec touch -r configure.ac {} +
 
 %clean
 rm -rf %{buildroot}
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
-%files libs
+%files
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios.so.*
@@ -134,7 +137,7 @@ rm -rf %{buildroot}
 %{_libdir}/libsmbiosxml.so
 %doc doc/full/html
 
-%files bin 
+%files -n smbios-utils
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README bin-unsupported/getopts_LICENSE.txt
 %{_sbindir}/assetTag
@@ -148,7 +151,7 @@ rm -rf %{buildroot}
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/dellWirelessCtl
 
-%files unsupported-bin 
+%files -n smbios-utils-unsupported
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README include/smbios/config/boost_LICENSE_1_0_txt bin-unsupported/getopts_LICENSE.txt
 %{_sbindir}/dellLEDCtl
