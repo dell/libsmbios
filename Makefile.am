@@ -35,6 +35,7 @@ include bin-supported/Makefile.am
 include bin-unsupported/Makefile.am
 include cppunit/Makefile.am
 
+$(bin_PROGRAMS): libraries/libsmbios.la
 $(sbin_PROGRAMS): libraries/libsmbios.la
 $(EXTRA_PROGRAMS): libraries/libsmbios.la
 static: $(EXTRA_PROGRAMS)
