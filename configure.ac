@@ -4,12 +4,12 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[0.13.10])
+AC_INIT([libsmbios],[0.13.11])
 
 temp_RELEASE_NAME=libsmbios
 temp_RELEASE_MAJOR=0
 temp_RELEASE_MINOR=13
-temp_RELEASE_SUBLEVEL=10
+temp_RELEASE_SUBLEVEL=11
 temp_RELEASE_EXTRALEVEL=
 ####################################
 
