@@ -13,14 +13,17 @@ License: GPLv2+ or OSL
 Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
-Summary: Open BIOS parsing libs
+Summary: Libsmbios shared libraries
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Obsoletes: libsmbiosxml-libs < 0:%{version}-%{release}
+Provides: libsmbiosxml-libs = %{version}-%{release}
+Obsoletes: libsmbios-libs < 0:0.13.11
+Provides: libsmbios-libs = %{version}-%{release}
+BuildRequires: libxml2-devel
 
 # libsmbios only ever makes sense on intel compatible arches
 # no DMI tables on ppc, s390, etc.
 ExclusiveArch: x86_64 ia64 %{ix86}
-
-BuildRequires: libxml2-devel
 
 #EPEL4/5 dont have cppunit/cppunit-devel, so skip build tests
 # everything else should be able to pull in cppunit to run unit tests
@@ -35,17 +38,10 @@ BuildRequires: cppunit-devel
 BuildRequires: doxygen
 %endif
 
+
 %description
 Libsmbios is a library and utilities that can be used by client programs 
 to get information from standard BIOS tables, such as the SMBIOS table.
-
-Summary: Libsmbios shared libraries
-Group: System Environment/Libraries
-Obsoletes: libsmbiosxml-libs < 0:%{version}-%{release}
-Provides: libsmbiosxml-libs = %{version}-%{release}
-Obsoletes: libsmbios-libs < 0:0.13.11
-Provides: libsmbios-libs = %{version}-%{release}
-
 
 %package -n smbios-utils
 Summary: The "supported" sample binaries that use libsmbios
@@ -113,7 +109,7 @@ mkdir -p %{buildroot}/usr/include
 cp -a include/smbios %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include -exec touch -r configure.ac {} +
-find %{buildroot}/usr/share -exec touch -r configure.ac {} +
+find doc/full -exec touch -r configure.ac {} +
 
 %clean
 rm -rf %{buildroot}
