@@ -51,18 +51,13 @@ Obsoletes: libsmbiosxml-bin < 0:0.13.11
 Provides: libsmbiosxml-bin = %{version}-%{release}
 Obsoletes: libsmbios-bin < 0:0.13.11
 Provides: libsmbios-bin = %{version}-%{release}
-
-%package -n smbios-utils-unsupported
-Summary: Unsupported sample binaries using libsmbios
-Group: Applications/System
-Requires: libsmbios-libs = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0.13.11
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
 
 %package devel
 Summary: Development headers and archives
 Group: Development/Libraries
-Requires: libsmbios-libs = %{version}-%{release}
+Requires: libsmbios = %{version}-%{release}
 
 %description devel
 Libsmbios is a library and utilities that can be used by client programs 
@@ -72,12 +67,6 @@ This package contains the headers and .a files necessary to compile new
 client programs against libsmbios.
 
 %description -n smbios-utils
-Libsmbios is a library and utilities that can be used by client programs 
-to get information from standard BIOS tables, such as the SMBIOS table.
-
-This package contains some sample binaries that use libsmbios.
-
-%description -n smbios-utils-unsupported
 Libsmbios is a library and utilities that can be used by client programs 
 to get information from standard BIOS tables, such as the SMBIOS table.
 
@@ -135,7 +124,8 @@ rm -rf %{buildroot}
 
 %files -n smbios-utils
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README bin-unsupported/getopts_LICENSE.txt
+%doc COPYING-GPL COPYING-OSL README
+%doc bin-unsupported/getopts_LICENSE.txt include/smbios/config/boost_LICENSE_1_0_txt
 %{_sbindir}/assetTag
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/getSystemId
@@ -147,9 +137,8 @@ rm -rf %{buildroot}
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/dellWirelessCtl
 
-%files -n smbios-utils-unsupported
-%defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README include/smbios/config/boost_LICENSE_1_0_txt bin-unsupported/getopts_LICENSE.txt
+# community supported stuff...
+# may or may not work
 %{_sbindir}/dellLEDCtl
 %{_sbindir}/activateCmosToken
 %{_sbindir}/ascii2enUS_scancode
