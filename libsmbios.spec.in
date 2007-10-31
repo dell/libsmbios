@@ -91,7 +91,7 @@ make -e %{?_smp_mflags}
 [ ! -d /usr/include/cppunit ] || make -e check
 
 %install
-[ "%{buildroot}" != "/" ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
 
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
@@ -99,6 +99,9 @@ cp -a include/smbios %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include -exec touch -r configure.ac {} +
 find doc/full -exec touch -r configure.ac {} +
+
+# backwards compatible:
+ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 
 %clean
 rm -rf %{buildroot}
@@ -135,7 +138,10 @@ rm -rf %{buildroot}
 %{_sbindir}/verifySmiPassword
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
+
+# used by HAL in old location, so keep it around until HAL is updated.
 %{_sbindir}/dellWirelessCtl
+%{_bindir}/dellWirelessCtl
 
 # community supported stuff...
 # may or may not work
