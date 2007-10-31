@@ -158,7 +158,6 @@ rm -rf %{buildroot}
 %{_sbindir}/stateByteCtl
 %{_sbindir}/upBootCtl
 %{_sbindir}/dumpSmbios
-#%{_sbindir}/sysid
 
 # ./ChangeLog is appended by configure
 %changelog
