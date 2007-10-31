@@ -23,6 +23,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <string.h>
 
 #include "smbios/ISmi.h"
 #include "smbios/IToken.h"

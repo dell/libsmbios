@@ -20,6 +20,7 @@
 #include "smbios/compat.h"
 
 #include <iostream>
+#include <string.h>
 
 #include "smbios/ISmi.h"
 #include "smbios/SystemInfo.h"

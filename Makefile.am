@@ -22,7 +22,7 @@ LIBSMBIOSXML_LIBTOOL_CURRENT=@LIBSMBIOSXML_LIBTOOL_CURRENT@
 LIBSMBIOSXML_LIBTOOL_REVISION=@LIBSMBIOSXML_LIBTOOL_REVISION@
 LIBSMBIOSXML_LIBTOOL_AGE=@LIBSMBIOSXML_LIBTOOL_AGE@
 
-CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp doc/reports/code-coverage.txt doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt version
+CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp doc/reports/code-coverage.txt doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt version smbios-utils*.rpm
 DISTCLEANFILES=*~
 
 EXTRA_DIST =
@@ -36,6 +36,7 @@ include bin-unsupported/Makefile.am
 include cppunit/Makefile.am
 
 $(bin_PROGRAMS): libraries/libsmbios.la
+$(sbin_PROGRAMS): libraries/libsmbios.la
 $(EXTRA_PROGRAMS): libraries/libsmbios.la
 static: $(EXTRA_PROGRAMS)
 CLEANFILES += $(EXTRA_PROGRAMS)

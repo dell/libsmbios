@@ -30,6 +30,7 @@
     #include <sys/time.h>
 #endif
 #include <time.h>
+#include <string.h>
 
 #include "smbios/ISmi.h"
 #include "smbios/IToken.h"

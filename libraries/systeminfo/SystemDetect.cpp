@@ -30,6 +30,8 @@
 // all our magic numbers
 #include "DellMagic.h"
 
+#include <string.h>
+
 // include this last.
 #include "smbios/message.h"
 

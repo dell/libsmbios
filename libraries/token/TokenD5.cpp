@@ -22,6 +22,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <string.h>
 
 #include "TokenImpl.h"
 

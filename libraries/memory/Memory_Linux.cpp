@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <sys/mman.h>   /* mmap */
 #include <unistd.h>     /* getpagesize */
+#include <string.h>     /* memcpy etc. */
 
 #include "MemoryImpl.h"
 
