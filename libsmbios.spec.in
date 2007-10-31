@@ -97,8 +97,8 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a include/smbios %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
-find %{buildroot}/usr/include -exec touch -r configure.ac {} +
-find doc/full -exec touch -r configure.ac {} +
+find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
+find doc/full -exec touch -r configure.ac {} \;
 
 # backwards compatible:
 ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
