@@ -15,8 +15,6 @@ Source: http://linux.dell.com/libsmbios/download/%{name}/%{name}-%{version}/%{na
 URL: http://linux.dell.com/libsmbios/main
 Summary: Libsmbios shared libraries
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes: libsmbiosxml-libs < 0:%{version}-%{release}
-Provides: libsmbiosxml-libs = %{version}-%{release}
 Obsoletes: libsmbios-libs < 0:0.13.11
 Provides: libsmbios-libs = %{version}-%{release}
 BuildRequires: libxml2-devel
@@ -47,8 +45,6 @@ to get information from standard BIOS tables, such as the SMBIOS table.
 Summary: The "supported" sample binaries that use libsmbios
 Group: Applications/System
 Requires: libsmbios = %{version}-%{release}
-Obsoletes: libsmbiosxml-bin < 0:0.13.11
-Provides: libsmbiosxml-bin = %{version}-%{release}
 Obsoletes: libsmbios-bin < 0:0.13.11
 Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0.13.11
@@ -113,7 +109,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios.so.*
-%{_libdir}/libsmbiosxml.so.*
 
 %files devel
 %defattr(-,root,root,-)
@@ -121,8 +116,6 @@ rm -rf %{buildroot}
 /usr/include/smbios
 %{_libdir}/libsmbios.a
 %{_libdir}/libsmbios.so
-%{_libdir}/libsmbiosxml.a
-%{_libdir}/libsmbiosxml.so
 %doc doc/full/html
 
 %files -n smbios-utils
