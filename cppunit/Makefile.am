@@ -7,6 +7,7 @@ EXTRA_DIST += \
  	cppunit/runtests.sh	\
 	cppunit/platform	\
 	cppunit/outputctl.h	\
+	cppunit/interface/XmlUtils.h	\
 	cppunit/interface/testPlatform.h	\
 	cppunit/interface/testRbu.h	\
 	cppunit/interface/testStandalone.h
