@@ -27,29 +27,14 @@ using namespace std;
 
 namespace smbios
 {
-    ISmbiosItem & SmbiosTableIteratorBase::dereference () const
+    const ISmbiosItem & SmbiosTableIteratorBase::dereference () const
     {
         if (0 == current)
         {
             throw ParameterExceptionImpl (_("Programmer error: attempt to dereference a Null iterator."));
         }
 
-        const SmbiosTable *t = dynamic_cast<const SmbiosTable *>(table);
-
-        if( 0 == t )
-        {
-            throw InternalErrorImpl(_("Smbios table not found or not initialized"));
-        }
-
-        ISmbiosItem *item = t->getCachedItem( current );
-        if ( 0 != item )
-            return *(item);
-
-        ISmbiosItem &newitem = t->makeItem( current );
-
-        t->cacheItem( current, newitem );
-
-        return newitem;
+        return table->getSmbiosItem(current);
     }
 
     void SmbiosTableIteratorBase::incrementIterator ()

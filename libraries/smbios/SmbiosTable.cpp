@@ -42,6 +42,12 @@ using namespace std;
 namespace smbios
 {
 
+    ISmbiosTableBase::ISmbiosTableBase()
+    {}
+
+    ISmbiosTableBase::~ISmbiosTableBase()
+    {}
+
     ISmbiosTable::ISmbiosTable()
     {}
 
@@ -276,6 +282,24 @@ namespace smbios
             dynamic_cast<SmbiosItem*>(item)->fixup( workaround.get() );
         }
         return *item;
+    }
+
+    const ISmbiosItem & SmbiosTable::getSmbiosItem (const void *current) const
+    {
+        if (0 == current)
+        {
+            throw ParameterExceptionImpl (_("Programmer error: attempt to dereference a Null iterator."));
+        }
+
+        ISmbiosItem *item = this->getCachedItem( current );
+        if ( 0 != item )
+            return *(item);
+
+        ISmbiosItem &newitem = this->makeItem( current );
+
+        this->cacheItem( current, newitem );
+
+        return newitem;
     }
 
     const void *SmbiosTable::nextSmbiosStruct (const void* current) const

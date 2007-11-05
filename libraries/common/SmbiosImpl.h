@@ -147,6 +147,8 @@ namespace smbios
         virtual ISmbiosItem *getCachedItem( const void * ) const;
         virtual void cacheItem( const void *, ISmbiosItem &newitem ) const;
         virtual void clearItemCache() const;
+        const ISmbiosItem & getSmbiosItem (const void *) const;
+        const void * nextSmbiosStruct ( const void * current = 0) const;
 
         // friends :-)
         friend class SmbiosTableIteratorBase;
@@ -158,9 +160,6 @@ namespace smbios
         // used by the iterator
         virtual ISmbiosItem &makeItem(
             const void *header = 0) const;
-
-        // used by the iterator
-        const void * nextSmbiosStruct ( const void * current = 0) const;
 
         mutable std::map< const void *, ISmbiosItem *> itemList;
         mutable bool initializing;
@@ -188,7 +187,6 @@ namespace smbios
         virtual ~SmbiosItem ();
 
         virtual std::auto_ptr<const ISmbiosItem> clone() const;
-        virtual std::auto_ptr<ISmbiosItem> clone();
         virtual std::ostream & streamify( std::ostream & cout ) const;
 
         u8 getType() const;
