@@ -88,9 +88,9 @@ EXTRA_PROGRAMS = bin-supported/assetTagS$(EXEEXT) \
 	bin-unsupported/ascii2enUS_scancodeS$(EXEEXT) \
 	bin-unsupported/probesS$(EXEEXT) \
 	bin-unsupported/dellLEDCtlS$(EXEEXT)
-DIST_COMMON = README $(am__configure_deps) $(srcdir)/ChangeLog \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/bin-supported/Makefile.am \
+DIST_COMMON = README $(am__configure_deps) \
+	$(srcdir)/${PACKAGE_NAME}.spec.in $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/bin-supported/Makefile.am \
 	$(srcdir)/bin-unsupported/Makefile.am \
 	$(srcdir)/cppunit/Makefile.am $(srcdir)/libraries/Makefile.am \
 	$(top_srcdir)/configure \
@@ -111,7 +111,8 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/build/mkinstalldirs
 CONFIG_CLEAN_FILES = include/smbios/version.h \
-	doc/full-documentation.dox doc/interface-only.dox
+	doc/full-documentation.dox doc/interface-only.dox \
+	${PACKAGE_NAME}.spec
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -874,12 +875,9 @@ RELEASE_SUBLEVEL = @RELEASE_SUBLEVEL@
 RELEASE_EXTRALEVEL = @RELEASE_EXTRALEVEL@
 RELEASE_VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_SUBLEVEL)$(RELEASE_EXTRALEVEL)
 RELEASE_STRING = $(RELEASE_NAME)-$(RELEASE_VERSION)
-LIBSMBIOS_LIBTOOL_CURRENT = @LIBSMBIOS_LIBTOOL_CURRENT@
-LIBSMBIOS_LIBTOOL_REVISION = @LIBSMBIOS_LIBTOOL_REVISION@
-LIBSMBIOS_LIBTOOL_AGE = @LIBSMBIOS_LIBTOOL_AGE@
-LIBSMBIOSXML_LIBTOOL_CURRENT = @LIBSMBIOSXML_LIBTOOL_CURRENT@
-LIBSMBIOSXML_LIBTOOL_REVISION = @LIBSMBIOSXML_LIBTOOL_REVISION@
-LIBSMBIOSXML_LIBTOOL_AGE = @LIBSMBIOSXML_LIBTOOL_AGE@
+LIBTOOL_CURRENT = @LIBTOOL_CURRENT@
+LIBTOOL_REVISION = @LIBTOOL_REVISION@
+LIBTOOL_AGE = @LIBTOOL_AGE@
 CLEANFILES = libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm \
 	_buildtemp doc/reports/code-coverage.txt \
 	doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt \
@@ -942,7 +940,7 @@ EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
 	doc/installation.txt doc/interface-only.dox doc/mainpage.txt \
 	doc/old_news.txt doc/smbios23.xml doc/visio doc/yum.txt
 lib_LTLIBRARIES = libraries/libsmbios.la
-libraries_libsmbios_la_LDFLAGS = -version-info $(LIBSMBIOS_LIBTOOL_CURRENT):$(LIBSMBIOS_LIBTOOL_REVISION):$(LIBSMBIOS_LIBTOOL_AGE)
+libraries_libsmbios_la_LDFLAGS = -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
 libraries_libsmbios_la_CXXFLAGS = -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 libraries_libsmbios_la_SOURCES = \
@@ -1147,6 +1145,8 @@ include/smbios/version.h: $(top_builddir)/config.status $(top_srcdir)/include/sm
 doc/full-documentation.dox: $(top_builddir)/config.status $(top_srcdir)/doc/full-documentation.dox.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 doc/interface-only.dox: $(top_builddir)/config.status $(top_srcdir)/doc/interface-only.dox.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+${PACKAGE_NAME}.spec: $(top_builddir)/config.status $(srcdir)/${PACKAGE_NAME}.spec.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
