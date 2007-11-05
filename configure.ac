@@ -4,10 +4,10 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[1.0.0])
+AC_INIT([libsmbios],[2.0.0])
 
 temp_RELEASE_NAME=libsmbios
-temp_RELEASE_MAJOR=1
+temp_RELEASE_MAJOR=2
 temp_RELEASE_MINOR=0
 temp_RELEASE_SUBLEVEL=0
 temp_RELEASE_EXTRALEVEL=
@@ -17,9 +17,9 @@ temp_RELEASE_EXTRALEVEL=
 # If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
 # If any interfaces have been added since the last public release, then increment age.
 # If any interfaces have been removed since the last public release, then set age to 0. 
-LIBSMBIOS_LIBTOOL_CURRENT=2
-LIBSMBIOS_LIBTOOL_REVISION=0
-LIBSMBIOS_LIBTOOL_AGE=0
+LIBTOOL_CURRENT=2
+LIBTOOL_REVISION=0
+LIBTOOL_AGE=0
 ####################################
 
 AC_PREREQ(2.61)
@@ -96,10 +96,6 @@ do
     fi
 done
 
-LIBSMBIOSXML_LIBTOOL_CURRENT=$LIBSMBIOS_LIBTOOL_CURRENT
-LIBSMBIOSXML_LIBTOOL_REVISION=$LIBSMBIOS_LIBTOOL_REVISION
-LIBSMBIOSXML_LIBTOOL_AGE=$LIBSMBIOS_LIBTOOL_AGE
-
 if test -z "$RELEASE_RPM_EXTRALEVEL"; then
     if test -z "$RELEASE_EXTRALEVEL"; then
         RELEASE_RPM_EXTRALEVEL=%{nil}
@@ -124,7 +120,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 AC_SUBST([RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL RELEASE_RPM_EXTRALEVEL])
-AC_SUBST([ LIBSMBIOS_LIBTOOL_CURRENT  LIBSMBIOS_LIBTOOL_REVISION LIBSMBIOS_LIBTOOL_AGE  LIBSMBIOSXML_LIBTOOL_CURRENT LIBSMBIOSXML_LIBTOOL_REVISION  LIBSMBIOSXML_LIBTOOL_AGE ])
+AC_SUBST([ LIBTOOL_CURRENT  LIBTOOL_REVISION LIBTOOL_AGE ])
 
 LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)
@@ -141,6 +137,6 @@ AC_CONFIG_FILES([
     include/smbios/version.h 
     doc/full-documentation.dox 
     doc/interface-only.dox 
-    libsmbios.spec:libsmbios.spec.in:ChangeLog
+    $PACKAGE_NAME.spec:$PACKAGE_NAME.spec.in:ChangeLog
     ])
 AC_OUTPUT

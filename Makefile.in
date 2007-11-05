@@ -93,7 +93,7 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/ChangeLog \
 	$(srcdir)/bin-supported/Makefile.am \
 	$(srcdir)/bin-unsupported/Makefile.am \
 	$(srcdir)/cppunit/Makefile.am $(srcdir)/libraries/Makefile.am \
-	$(srcdir)/libsmbios.spec.in $(top_srcdir)/configure \
+	$(top_srcdir)/configure \
 	$(top_srcdir)/doc/full-documentation.dox.in \
 	$(top_srcdir)/doc/interface-only.dox.in \
 	$(top_srcdir)/include/smbios/version.h.in AUTHORS COPYING \
@@ -111,8 +111,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/build/mkinstalldirs
 CONFIG_CLEAN_FILES = include/smbios/version.h \
-	doc/full-documentation.dox doc/interface-only.dox \
-	libsmbios.spec
+	doc/full-documentation.dox doc/interface-only.dox
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -1148,8 +1147,6 @@ include/smbios/version.h: $(top_builddir)/config.status $(top_srcdir)/include/sm
 doc/full-documentation.dox: $(top_builddir)/config.status $(top_srcdir)/doc/full-documentation.dox.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 doc/interface-only.dox: $(top_builddir)/config.status $(top_srcdir)/doc/interface-only.dox.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
-libsmbios.spec: $(top_builddir)/config.status $(srcdir)/libsmbios.spec.in $(srcdir)/ChangeLog
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
