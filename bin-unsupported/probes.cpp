@@ -139,13 +139,13 @@ struct probe_structure
 #pragma pack(pop)
 #endif
 
-smbios::ISmbiosItem *getItemByHandle( u16 handle )
+const smbios::ISmbiosItem *getItemByHandle( u16 handle )
 {
     smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
     smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
     smbios::ISmbiosTable::iterator itemIter;
 
-    smbios::ISmbiosItem *ret = 0;
+    const smbios::ISmbiosItem *ret = 0;
     itemIter = table->begin();
     while( itemIter != table->end() )
     {
@@ -156,22 +156,22 @@ smbios::ISmbiosItem *getItemByHandle( u16 handle )
     return ret;
 }
 
-void displayVoltageInfo(smbios::ISmbiosItem &item)
+void displayVoltageInfo(const smbios::ISmbiosItem &item)
 {
     cout << "  Description: " << getString_FromItem(item, 0x04) << endl;
 }
 
-void displayCurrentInfo(smbios::ISmbiosItem &item)
+void displayCurrentInfo(const smbios::ISmbiosItem &item)
 {
     cout << "  Description: " << getString_FromItem(item, 0x04) << endl;
 }
 
-void displayCoolingDeviceInfo(smbios::ISmbiosItem &item)
+void displayCoolingDeviceInfo(const smbios::ISmbiosItem &item)
 {
     cout << item << endl;
 }
 
-void displayTemperatureInfo(smbios::ISmbiosItem &item)
+void displayTemperatureInfo(const smbios::ISmbiosItem &item)
 {
     cout << "  Description: " << getString_FromItem(item, 0x04) << endl;
     cout << "  Length: " << static_cast<int>(item.getLength()) << endl;
@@ -193,7 +193,7 @@ void displayTemperatureInfo(smbios::ISmbiosItem &item)
     cout << hex;
     cout << "  Probe Customization Structure: " << probe_customization << endl;
 
-    smbios::ISmbiosItem *cust = getItemByHandle( probe_customization );
+    const smbios::ISmbiosItem *cust = getItemByHandle( probe_customization );
     if( cust )
     {
         cout << "    Got customization struct." << endl;
