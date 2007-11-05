@@ -399,11 +399,11 @@ testStandalone::testItemIdentity ()
 
     // grab the first bios block
     smbios::ISmbiosTable::iterator position1 = (*table)[smbios::BIOS_Information];
-    smbios::ISmbiosItem &item1 = *position1; //reference
+    const smbios::ISmbiosItem &item1 = *position1; //reference
 
     // use another iterator and grab another
     smbios::ISmbiosTable::iterator position2 = (*table)[smbios::BIOS_Information];
-    smbios::ISmbiosItem &item2 = *position2; //reference
+    const smbios::ISmbiosItem &item2 = *position2; //reference
 
     // Check that they both gave the same thing
     // The address of each should be equal
@@ -414,7 +414,7 @@ testStandalone::testItemIdentity ()
 
     // use another iterator and grab another _different_ pointer.
     smbios::ISmbiosTable::iterator position3 = (*table)[smbios::System_Information];
-    smbios::ISmbiosItem &item3 = *position3; //reference
+    const smbios::ISmbiosItem &item3 = *position3; //reference
 
     // Check that these are different...
     CPPUNIT_ASSERT( &item1 != &item3 );
