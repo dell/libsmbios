@@ -82,7 +82,7 @@ main (int argc, char **argv)
         printf("System ID:    0x%04X\n", reqInt);
     else
     {
-        printf("Error getting the System ID   : %s\n", SMBIOSGetSysInfoErrorString());
+        printf("Error getting the System ID:    %s\n", SMBIOSGetSysInfoErrorString());
         retval = 1;
     }
 
@@ -95,7 +95,7 @@ main (int argc, char **argv)
     }
     else
     {
-        printf("Error getting the Service Tag : %s\n", SMBIOSGetSysInfoErrorString());
+        printf("Error getting the Service Tag:  %s\n", SMBIOSGetSysInfoErrorString());
         retval = 1;
     }
     SMBIOSFreeMemory(str);
@@ -128,7 +128,7 @@ main (int argc, char **argv)
         printf("Vendor:       %s\n", str);
     else
     {
-        printf("Error getting the Vendor      : %s\n", SMBIOSGetSysInfoErrorString());
+        printf("Error getting the Vendor:       %s\n", SMBIOSGetSysInfoErrorString());
         retval = 1;
     }
     SMBIOSFreeMemory(str);
