@@ -73,7 +73,6 @@ void testPlatform::setUp()
     string programDirname = getCppunitTopDirectory();
     string writeDirectory = getWritableDirectory();
 
-    string xmlFile = programDirname + getXmlFile();
     string testInput = programDirname + getTestDirectory() + "/testInput.xml";
     if(!fileExists(testInput))
         testInput = getTestDirectory() + "/testInput.xml"; 
@@ -97,9 +96,6 @@ void testPlatform::setUp()
     // Smi output file.
     string smiOutput = writeDirectory + "/smi-output.dat";
 
-    // set up XML factory. from here on, we can just say SmbiosFactory.
-    smbios::SmbiosXmlFactory::getFactory();
-
     // normal users of the smbios classes need not
     // set the four parameters below. They should all be set inside the factory
     // properly by default. We override stuff here to have
@@ -118,19 +114,11 @@ void testPlatform::setUp()
     smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
     smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
 
-    // The parameter below will normally need to be set by the client code.
-    smbios::SmbiosFactory::getFactory()->setParameter("xmlFile", xmlFile);
-
     doc = 0;
     parser = 0;
     InitXML();
     parser = xmlutils::getParser();
     compatXmlReadFile(parser, doc, testInput.c_str());
-}
-
-void testPlatform::resetFactoryToBuiltinXml()
-{
-    smbios::SmbiosFactory::getFactory()->setParameter("xmlFile", "");
 }
 
 void testPlatform::tearDown()
@@ -416,12 +404,6 @@ testPlatform::testSystemInfo()
     STD_TEST_END("");
 }
 
-void testPlatform::testSystemInfo_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testPlatform::testSystemInfo();
-}
-
 
 // testInput.xml tests
 string testPlatform::getTestInputString( string toFind, string section )
@@ -672,7 +654,7 @@ void testPlatform::testVariousAccessors()
     smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::iterator item = (*table)["BIOS Information"] ;
+    smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information] ;
 
     string vendorStr="";
     string versionStr="";
@@ -806,7 +788,7 @@ testPlatform::testOutOfBounds()
     smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::iterator item = (*table)["BIOS Information"] ;
+    smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information] ;
 
     // access string '0' should always throw. (string offset start at 1, per
     // spec)

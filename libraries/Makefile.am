@@ -1,6 +1,6 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-lib_LTLIBRARIES = libraries/libsmbios.la libraries/libsmbiosxml.la
+lib_LTLIBRARIES = libraries/libsmbios.la
 libraries_libsmbios_la_LDFLAGS = -version-info $(LIBSMBIOS_LIBTOOL_CURRENT):$(LIBSMBIOS_LIBTOOL_REVISION):$(LIBSMBIOS_LIBTOOL_AGE)
 libraries_libsmbios_la_CXXFLAGS = -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
 
@@ -59,36 +59,7 @@ EXTRA_DIST += \
 	libraries/smi/SmiImpl.h		\
 	libraries/systeminfo/DellMagic.h		\
 	libraries/systeminfo/SystemDetect.h		\
-	libraries/common/TokenImpl.h		\
-	libraries/xml_libxerces/SmbiosXmlImpl.h		\
-	libraries/xml_libxerces/XmlUtils.h		\
-	libraries/xml_libxml2/SmbiosXmlImpl.h		\
-	libraries/xml_libxml2/XmlUtils.h	
+	libraries/common/TokenImpl.h
 
 
-libraries_libsmbiosxml_la_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
-libraries_libsmbiosxml_la_SOURCES = libraries/xml_libxml2/SmbiosXml.cpp libraries/xml_libxml2/XmlUtils.cpp
-libraries_libsmbiosxml_la_LIBADD = -lsmbios
-libraries_libsmbiosxml_la_LDFLAGS = $(shell xml2-config --libs) -Llibraries/ -version-info $(LIBSMBIOSXML_LIBTOOL_CURRENT):$(LIBSMBIOSXML_LIBTOOL_REVISION):$(LIBSMBIOSXML_LIBTOOL_AGE)
-
-# make sure libsmbios is built before libsmbiosxml
-libraries_libsmbiosxml_la_DEPENDENCIES = libraries/libsmbios.la
-
-libraries/common/StdSmbiosXml.h: Makefile.am $(top_srcdir)/doc/smbios23.xml $(top_srcdir)/build/scripts/makeXmlHeader.py
-	@echo Building $@
-	@mkdir -p $(shell dirname $@)
-	@chmod ug+w $$(dirname $@)
-	@python $(top_srcdir)/build/scripts/makeXmlHeader.py $(top_srcdir)/doc/smbios23.xml $@.new
-	@diff -q $@ $@.new >/dev/null 2>&1 || mv -f $@.new $@
-	@rm -f $@.new
-
-
-dist-hook: libraries/common/StdSmbiosXml.h
-	mkdir -p $(distdir)/include/smbios $(distdir)/libraries/common/
-	[ ! -e $(top_srcdir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_srcdir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
-	[ ! -e $(top_builddir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_builddir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
-
-$(libraries_libsmbios_la_OBJECTS):
-$(libraries_libsmbiosxml_la_OBJECTS): libraries/common/StdSmbiosXml.h
-
-CLEANFILES+=libraries/common/StdSmbiosXml.h libraries/.libs
+CLEANFILES+=libraries/.libs

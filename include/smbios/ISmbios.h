@@ -24,7 +24,6 @@
 
 #include <cstdlib>		// Provides size_t and NULL
 #include <iostream>
-#include <string>
 #include <map>
 #include <memory>
 
@@ -253,11 +252,6 @@ namespace smbios
 smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
 smbios::ISmbiosTable::iterator item1 = (*table)[0];
 cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
-
-// XML string indexing example
-smbios::ISmbiosTable *table = smbios::SmbiosXmlFactory::getFactory()->getSingleton();
-smbios::ISmbiosTable::iterator item1 = (*table)["BIOS Information"];
-cout << "The BIOS Version is: " << item1->getString("BIOS Version") << endl;
 \endcode
          * \sa operator[]( const std::string & ) const
          */
@@ -266,25 +260,6 @@ cout << "The BIOS Version is: " << item1->getString("BIOS Version") << endl;
         //! Standard indexed access by integer item type.
          /** \copydoc operator[]( const int ) */
         virtual const_iterator operator[]( const int ) const = 0;
-
-        //! Standard indexed access by string description. XML ENHANCED.
-        /** XML Enhanced indexing operator. You can pass in a string description
-         * of the table and the SmbiosTable class will look up the string in an
-         * XML description file to find out the item number that corresponds
-         * with that text.
-         *
-         * The nice extension that is supplied by the XML interface is that all
-         * Item access to the item returned are type checked against the XML, so
-         * you cannot, for example, access an 8-bit number as a 16-bit number.
-         *
-         * \copydoc operator[](const int)
-         * \sa operator[]( const int )
-         */
-        virtual iterator operator[]( const std::string & ) = 0;
-
-        //! Standard indexed access by string description. XML ENHANCED.
-         /** \copydoc operator[]( const std::string & ) */
-        virtual const_iterator operator[]( const std::string & ) const = 0;
 
     private:
         explicit ISmbiosTable(const ISmbiosTable &); ///< not implemented (explicitly disallowed)

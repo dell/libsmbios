@@ -28,7 +28,7 @@
 // so it is not in testPlatform.h
 #include "smbios/IMemory.h"
 #include "smbios/ISmi.h"
-#include "smbios/ISmbiosXml.h"
+#include "smbios/ISmbios.h"
 #include "smbios/IToken.h"
 
 using namespace std;
@@ -68,8 +68,6 @@ bool fileExists(string fileName)
 
 void testRbu::setUp()
 {
-    string xmlFile = getCppunitTopDirectory() + getXmlFile();
-
     string testInput = getCppunitTopDirectory() + getTestDirectory() + "/testInput.xml";
     if(!fileExists(testInput))
         testInput = getTestDirectory() + "/testInput.xml"; 
@@ -93,9 +91,6 @@ void testRbu::setUp()
     // Smi output file.
     string smiOutput = getWritableDirectory() + "/smi-output.dat";
 
-    // set up XML factory. from here on, we can just say SmbiosFactory.
-    smbios::SmbiosXmlFactory::getFactory();
-
     // normal users of the smbios classes need not
     // set the four parameters below. They should all be set inside the factory
     // properly by default. We override stuff here to have
@@ -113,9 +108,6 @@ void testRbu::setUp()
 
     smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
     smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
-
-    // The parameter below will normally need to be set by the client code.
-    smbios::SmbiosFactory::getFactory()->setParameter("xmlFile", xmlFile);
 
     doc = 0;
     parser = 0;

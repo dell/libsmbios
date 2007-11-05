@@ -24,7 +24,7 @@
 #include <iomanip>
 #include <stdlib.h>
 
-#include "smbios/ISmbiosXml.h"
+#include "smbios/ISmbios.h"
 #include "smbios/IMemory.h"  // only needed if you want to use fake input (memdump.dat)
 #include "smbios/version.h"
 #include "getopts.h"
@@ -78,7 +78,7 @@ main (int argc, char **argv)
             free(args);
         }
 
-        smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosXmlFactory::getFactory();
+        smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
         smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
 
         if(xml)

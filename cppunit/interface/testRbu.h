@@ -55,10 +55,6 @@ protected:
         //return DEFAULT_TEST_DIR;
         return global_argv[4];
     };
-    virtual std::string getXmlFile()
-    {
-        return "/../doc/smbios23.xml";
-    };
 
     std::string getTestInputString( std::string toFind, std::string section="systemInfo" );
 

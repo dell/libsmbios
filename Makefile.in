@@ -163,15 +163,6 @@ libraries_libsmbios_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(libraries_libsmbios_la_CXXFLAGS) $(CXXFLAGS) \
 	$(libraries_libsmbios_la_LDFLAGS) $(LDFLAGS) -o $@
-am_libraries_libsmbiosxml_la_OBJECTS =  \
-	libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo \
-	libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo
-libraries_libsmbiosxml_la_OBJECTS =  \
-	$(am_libraries_libsmbiosxml_la_OBJECTS)
-libraries_libsmbiosxml_la_LINK = $(LIBTOOL) --tag=CXX \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(libraries_libsmbiosxml_la_CXXFLAGS) $(CXXFLAGS) \
-	$(libraries_libsmbiosxml_la_LDFLAGS) $(LDFLAGS) -o $@
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 sbinPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(sbin_PROGRAMS)
@@ -592,6 +583,7 @@ bin_unsupported_upBootCtlS_LINK = $(LIBTOOL) --tag=CXX \
 	$(bin_unsupported_upBootCtlS_LDFLAGS) $(LDFLAGS) -o $@
 am_cppunit_testPlatform_OBJECTS =  \
 	cppunit/cppunit_testPlatform-main.$(OBJEXT) \
+	cppunit/interface/cppunit_testPlatform-XmlUtils.$(OBJEXT) \
 	cppunit/interface/cppunit_testPlatform-testPlatform.$(OBJEXT)
 cppunit_testPlatform_OBJECTS = $(am_cppunit_testPlatform_OBJECTS)
 cppunit_testPlatform_LDADD = $(LDADD)
@@ -600,6 +592,7 @@ cppunit_testPlatform_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) \
 	$(cppunit_testPlatform_LDFLAGS) $(LDFLAGS) -o $@
 am_cppunit_testRbu_OBJECTS = cppunit/cppunit_testRbu-main.$(OBJEXT) \
+	cppunit/interface/cppunit_testRbu-XmlUtils.$(OBJEXT) \
 	cppunit/interface/cppunit_testRbu-testRbu.$(OBJEXT)
 cppunit_testRbu_OBJECTS = $(am_cppunit_testRbu_OBJECTS)
 cppunit_testRbu_LDADD = $(LDADD)
@@ -609,6 +602,7 @@ cppunit_testRbu_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(cppunit_testRbu_LDFLAGS) $(LDFLAGS) -o $@
 am_cppunit_testStandalone_OBJECTS =  \
 	cppunit/cppunit_testStandalone-main.$(OBJEXT) \
+	cppunit/interface/cppunit_testStandalone-XmlUtils.$(OBJEXT) \
 	cppunit/interface/cppunit_testStandalone-testStandalone.$(OBJEXT)
 cppunit_testStandalone_OBJECTS = $(am_cppunit_testStandalone_OBJECTS)
 cppunit_testStandalone_LDADD = $(LDADD)
@@ -638,7 +632,6 @@ CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libraries_libsmbios_la_SOURCES) \
-	$(libraries_libsmbiosxml_la_SOURCES) \
 	$(bin_supported_assetTag_SOURCES) \
 	$(bin_supported_assetTagS_SOURCES) \
 	$(bin_supported_dellBiosUpdate_SOURCES) \
@@ -688,7 +681,6 @@ SOURCES = $(libraries_libsmbios_la_SOURCES) \
 	$(cppunit_testPlatform_SOURCES) $(cppunit_testRbu_SOURCES) \
 	$(cppunit_testStandalone_SOURCES)
 DIST_SOURCES = $(libraries_libsmbios_la_SOURCES) \
-	$(libraries_libsmbiosxml_la_SOURCES) \
 	$(bin_supported_assetTag_SOURCES) \
 	$(bin_supported_assetTagS_SOURCES) \
 	$(bin_supported_dellBiosUpdate_SOURCES) \
@@ -892,9 +884,9 @@ LIBSMBIOSXML_LIBTOOL_AGE = @LIBSMBIOSXML_LIBTOOL_AGE@
 CLEANFILES = libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm \
 	_buildtemp doc/reports/code-coverage.txt \
 	doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt \
-	version smbios-utils*.rpm libraries/common/StdSmbiosXml.h \
-	libraries/.libs bin-supported/.libs bin-unsupported/.libs \
-	testResults.xml cppunit/.libs $(EXTRA_PROGRAMS)
+	version smbios-utils*.rpm libraries/.libs bin-supported/.libs \
+	bin-unsupported/.libs testResults.xml cppunit/.libs \
+	$(EXTRA_PROGRAMS)
 DISTCLEANFILES = *~
 ########## END DOCS ################
 EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
@@ -909,11 +901,7 @@ EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
 	libraries/smbios/StdWorkarounds.h libraries/smi/SmiLowLevel.h \
 	libraries/smi/SmiImpl.h libraries/systeminfo/DellMagic.h \
 	libraries/systeminfo/SystemDetect.h \
-	libraries/common/TokenImpl.h \
-	libraries/xml_libxerces/SmbiosXmlImpl.h \
-	libraries/xml_libxerces/XmlUtils.h \
-	libraries/xml_libxml2/SmbiosXmlImpl.h \
-	libraries/xml_libxml2/XmlUtils.h $(getopts_h) \
+	libraries/common/TokenImpl.h $(getopts_h) \
 	bin-unsupported/getopts.h bin-unsupported/getopts_LICENSE.txt \
 	cppunit/runtests.sh cppunit/platform cppunit/outputctl.h \
 	cppunit/interface/testPlatform.h cppunit/interface/testRbu.h \
@@ -954,7 +942,7 @@ EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
 	doc/exe-serviceTag.txt doc/external-specs doc/getopt \
 	doc/installation.txt doc/interface-only.dox doc/mainpage.txt \
 	doc/old_news.txt doc/smbios23.xml doc/visio doc/yum.txt
-lib_LTLIBRARIES = libraries/libsmbios.la libraries/libsmbiosxml.la
+lib_LTLIBRARIES = libraries/libsmbios.la
 libraries_libsmbios_la_LDFLAGS = -version-info $(LIBSMBIOS_LIBTOOL_CURRENT):$(LIBSMBIOS_LIBTOOL_REVISION):$(LIBSMBIOS_LIBTOOL_AGE)
 libraries_libsmbios_la_CXXFLAGS = -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
@@ -992,13 +980,6 @@ libraries_libsmbios_la_SOURCES = \
     libraries/token/TokenTableFactory.cpp       \
     libraries/token/TokenTableIterator.cpp      
 
-libraries_libsmbiosxml_la_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
-libraries_libsmbiosxml_la_SOURCES = libraries/xml_libxml2/SmbiosXml.cpp libraries/xml_libxml2/XmlUtils.cpp
-libraries_libsmbiosxml_la_LIBADD = -lsmbios
-libraries_libsmbiosxml_la_LDFLAGS = $(shell xml2-config --libs) -Llibraries/ -version-info $(LIBSMBIOSXML_LIBTOOL_CURRENT):$(LIBSMBIOSXML_LIBTOOL_REVISION):$(LIBSMBIOSXML_LIBTOOL_AGE)
-
-# make sure libsmbios is built before libsmbiosxml
-libraries_libsmbiosxml_la_DEPENDENCIES = libraries/libsmbios.la
 getopts_h = bin-supported/getopts.h
 getopts_c = bin-supported/getopts.c
 bin_supported_assetTag_SOURCES = bin-supported/assetTag.cpp $(getopts_c)
@@ -1010,6 +991,7 @@ bin_supported_wakeupCtl_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
 bin_supported_tokenCtl_SOURCES = $(getopts_c) bin-supported/tokenCtl.cpp
 bin_supported_dellLcdBrightness_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtl_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
+bin_supported_dumpSmbios_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
 bin_supported_assetTag_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_getSystemId_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_propertyTag_LDFLAGS = -Llibraries/ -lsmbios
@@ -1019,14 +1001,12 @@ bin_supported_wakeupCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_tokenCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightness_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtl_LDFLAGS = -Llibraries/ -lsmbios
+bin_supported_dumpSmbios_LDFLAGS = -Llibraries/ -lsmbios
+
+# BAD BAD BAD programs....  (uses private headers)
 bin_supported_dellBiosUpdate_SOURCES = $(getopts_c) bin-supported/dellBiosUpdate.cpp
 bin_supported_dellBiosUpdate_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellBiosUpdate_CXXFLAGS = -Ilibraries/common
-
-#libsmbiosxml progs
-bin_supported_dumpSmbios_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
-bin_supported_dumpSmbios_LDFLAGS = -lsmbiosxml -Llibraries/ -lsmbios
-bin_supported_dumpSmbios_DEPENDENCIES = libraries/libsmbiosxml.la
 
 #static versions
 bin_supported_assetTagS_SOURCES = bin-supported/assetTag.cpp $(getopts_c)
@@ -1038,11 +1018,7 @@ bin_supported_wakeupCtlS_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
 bin_supported_tokenCtlS_SOURCES = $(getopts_c) bin-supported/tokenCtl.cpp
 bin_supported_dellLcdBrightnessS_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtlS_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
-
-#libsmbiosxml progs
 bin_supported_dumpSmbiosS_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
-bin_supported_dumpSmbiosS_LDFLAGS = -lsmbiosxml -all-static -Llibraries/ -lsmbios
-bin_supported_dumpSmbiosS_DEPENDENCIES = @top_builddir@/libraries/libsmbiosxml.la
 bin_supported_assetTagS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_getSystemIdS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_propertyTagS_LDFLAGS = -all-static -Llibraries/ -lsmbios
@@ -1052,6 +1028,9 @@ bin_supported_wakeupCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_tokenCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightnessS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
+bin_supported_dumpSmbiosS_LDFLAGS = -all-static -Llibraries/ -lsmbios
+
+# BAD again (uses private includes.)
 bin_supported_dellBiosUpdateS_SOURCES = $(getopts_c) bin-supported/dellBiosUpdate.cpp
 bin_supported_dellBiosUpdateS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellBiosUpdateS_CXXFLAGS = -Ilibraries/common
@@ -1106,22 +1085,25 @@ bin_unsupported_probesS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_unsupported_dellLEDCtlS_SOURCES = $(getopts_c) bin-unsupported/dellLEDCtl.cpp
 bin_unsupported_dellLEDCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 TESTS = cppunit/runtests.sh
-cppunit_testRbu_LDFLAGS = $(shell xml2-config --libs) -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -lsmbiosxml -Llibraries
-cppunit_testRbu_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/libraries/xml_libxml2 -I@top_srcdir@/cppunit/
+cppunit_testRbu_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -Llibraries
+cppunit_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/cppunit/
 cppunit_testRbu_SOURCES = \
     cppunit/main.cpp  \
+    cppunit/interface/XmlUtils.cpp	\
     cppunit/interface/testRbu.cpp
 
-cppunit_testPlatform_LDFLAGS = $(shell xml2-config --libs) -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -lsmbiosxml -Llibraries
-cppunit_testPlatform_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/libraries/xml_libxml2 -I@top_srcdir@/cppunit/
+cppunit_testPlatform_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -Llibraries
+cppunit_testPlatform_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/cppunit/
 cppunit_testPlatform_SOURCES = \
     cppunit/main.cpp  \
+    cppunit/interface/XmlUtils.cpp	\
     cppunit/interface/testPlatform.cpp 
 
-cppunit_testStandalone_LDFLAGS = $(shell xml2-config --libs) -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -lsmbiosxml -Llibraries
-cppunit_testStandalone_CXXFLAGS = $(shell xml2-config --cflags) -DLIBXML2=1 -DLIBXERCES=2 -DXMLUTILS=1 $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/libraries/xml_libxml2 -I@top_srcdir@/cppunit/
+cppunit_testStandalone_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl $(CPPUNIT_LIBS) -lsmbios -Llibraries
+cppunit_testStandalone_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/cppunit/
 cppunit_testStandalone_SOURCES = \
     cppunit/main.cpp  \
+    cppunit/interface/XmlUtils.cpp	\
     cppunit/interface/testStandalone.cpp 
 
 all: all-recursive
@@ -1345,20 +1327,6 @@ libraries/$(am__dirstamp):
 	@: > libraries/$(am__dirstamp)
 libraries/libsmbios.la: $(libraries_libsmbios_la_OBJECTS) $(libraries_libsmbios_la_DEPENDENCIES) libraries/$(am__dirstamp)
 	$(libraries_libsmbios_la_LINK) -rpath $(libdir) $(libraries_libsmbios_la_OBJECTS) $(libraries_libsmbios_la_LIBADD) $(LIBS)
-libraries/xml_libxml2/$(am__dirstamp):
-	@$(MKDIR_P) libraries/xml_libxml2
-	@: > libraries/xml_libxml2/$(am__dirstamp)
-libraries/xml_libxml2/$(DEPDIR)/$(am__dirstamp):
-	@$(MKDIR_P) libraries/xml_libxml2/$(DEPDIR)
-	@: > libraries/xml_libxml2/$(DEPDIR)/$(am__dirstamp)
-libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo:  \
-	libraries/xml_libxml2/$(am__dirstamp) \
-	libraries/xml_libxml2/$(DEPDIR)/$(am__dirstamp)
-libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo:  \
-	libraries/xml_libxml2/$(am__dirstamp) \
-	libraries/xml_libxml2/$(DEPDIR)/$(am__dirstamp)
-libraries/libsmbiosxml.la: $(libraries_libsmbiosxml_la_OBJECTS) $(libraries_libsmbiosxml_la_DEPENDENCIES) libraries/$(am__dirstamp)
-	$(libraries_libsmbiosxml_la_LINK) -rpath $(libdir) $(libraries_libsmbiosxml_la_OBJECTS) $(libraries_libsmbiosxml_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -1648,6 +1616,9 @@ cppunit/interface/$(am__dirstamp):
 cppunit/interface/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) cppunit/interface/$(DEPDIR)
 	@: > cppunit/interface/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/cppunit_testPlatform-XmlUtils.$(OBJEXT):  \
+	cppunit/interface/$(am__dirstamp) \
+	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
 cppunit/interface/cppunit_testPlatform-testPlatform.$(OBJEXT):  \
 	cppunit/interface/$(am__dirstamp) \
 	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
@@ -1656,6 +1627,9 @@ cppunit/testPlatform$(EXEEXT): $(cppunit_testPlatform_OBJECTS) $(cppunit_testPla
 	$(cppunit_testPlatform_LINK) $(cppunit_testPlatform_OBJECTS) $(cppunit_testPlatform_LDADD) $(LIBS)
 cppunit/cppunit_testRbu-main.$(OBJEXT): cppunit/$(am__dirstamp) \
 	cppunit/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/cppunit_testRbu-XmlUtils.$(OBJEXT):  \
+	cppunit/interface/$(am__dirstamp) \
+	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
 cppunit/interface/cppunit_testRbu-testRbu.$(OBJEXT):  \
 	cppunit/interface/$(am__dirstamp) \
 	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
@@ -1664,6 +1638,9 @@ cppunit/testRbu$(EXEEXT): $(cppunit_testRbu_OBJECTS) $(cppunit_testRbu_DEPENDENC
 	$(cppunit_testRbu_LINK) $(cppunit_testRbu_OBJECTS) $(cppunit_testRbu_LDADD) $(LIBS)
 cppunit/cppunit_testStandalone-main.$(OBJEXT):  \
 	cppunit/$(am__dirstamp) cppunit/$(DEPDIR)/$(am__dirstamp)
+cppunit/interface/cppunit_testStandalone-XmlUtils.$(OBJEXT):  \
+	cppunit/interface/$(am__dirstamp) \
+	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
 cppunit/interface/cppunit_testStandalone-testStandalone.$(OBJEXT):  \
 	cppunit/interface/$(am__dirstamp) \
 	cppunit/interface/$(DEPDIR)/$(am__dirstamp)
@@ -1701,8 +1678,11 @@ mostlyclean-compile:
 	-rm -f cppunit/cppunit_testPlatform-main.$(OBJEXT)
 	-rm -f cppunit/cppunit_testRbu-main.$(OBJEXT)
 	-rm -f cppunit/cppunit_testStandalone-main.$(OBJEXT)
+	-rm -f cppunit/interface/cppunit_testPlatform-XmlUtils.$(OBJEXT)
 	-rm -f cppunit/interface/cppunit_testPlatform-testPlatform.$(OBJEXT)
+	-rm -f cppunit/interface/cppunit_testRbu-XmlUtils.$(OBJEXT)
 	-rm -f cppunit/interface/cppunit_testRbu-testRbu.$(OBJEXT)
+	-rm -f cppunit/interface/cppunit_testStandalone-XmlUtils.$(OBJEXT)
 	-rm -f cppunit/interface/cppunit_testStandalone-testStandalone.$(OBJEXT)
 	-rm -f libraries/cmos/libraries_libsmbios_la-CmosRW.$(OBJEXT)
 	-rm -f libraries/cmos/libraries_libsmbios_la-CmosRW.lo
@@ -1768,10 +1748,6 @@ mostlyclean-compile:
 	-rm -f libraries/token/libraries_libsmbios_la-TokenTableIterator.lo
 	-rm -f libraries/token/libraries_libsmbios_la-checksum.$(OBJEXT)
 	-rm -f libraries/token/libraries_libsmbios_la-checksum.lo
-	-rm -f libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.$(OBJEXT)
-	-rm -f libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo
-	-rm -f libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.$(OBJEXT)
-	-rm -f libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -1804,8 +1780,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@cppunit/$(DEPDIR)/cppunit_testPlatform-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@cppunit/$(DEPDIR)/cppunit_testRbu-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@cppunit/$(DEPDIR)/cppunit_testStandalone-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/cmos/$(DEPDIR)/libraries_libsmbios_la-CmosRW.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/cmos/$(DEPDIR)/libraries_libsmbios_la-CmosRWFactory.Plo@am__quote@
@@ -1839,8 +1818,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/token/$(DEPDIR)/libraries_libsmbios_la-TokenTableFactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/token/$(DEPDIR)/libraries_libsmbios_la-TokenTableIterator.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/token/$(DEPDIR)/libraries_libsmbios_la-checksum.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-SmbiosXml.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-XmlUtils.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -2114,20 +2091,6 @@ libraries/token/libraries_libsmbios_la-TokenTableIterator.lo: libraries/token/To
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbios_la_CXXFLAGS) $(CXXFLAGS) -c -o libraries/token/libraries_libsmbios_la-TokenTableIterator.lo `test -f 'libraries/token/TokenTableIterator.cpp' || echo '$(srcdir)/'`libraries/token/TokenTableIterator.cpp
 
-libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo: libraries/xml_libxml2/SmbiosXml.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbiosxml_la_CXXFLAGS) $(CXXFLAGS) -MT libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo -MD -MP -MF libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-SmbiosXml.Tpo -c -o libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo `test -f 'libraries/xml_libxml2/SmbiosXml.cpp' || echo '$(srcdir)/'`libraries/xml_libxml2/SmbiosXml.cpp
-@am__fastdepCXX_TRUE@	mv -f libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-SmbiosXml.Tpo libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-SmbiosXml.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='libraries/xml_libxml2/SmbiosXml.cpp' object='libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbiosxml_la_CXXFLAGS) $(CXXFLAGS) -c -o libraries/xml_libxml2/libraries_libsmbiosxml_la-SmbiosXml.lo `test -f 'libraries/xml_libxml2/SmbiosXml.cpp' || echo '$(srcdir)/'`libraries/xml_libxml2/SmbiosXml.cpp
-
-libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo: libraries/xml_libxml2/XmlUtils.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbiosxml_la_CXXFLAGS) $(CXXFLAGS) -MT libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo -MD -MP -MF libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-XmlUtils.Tpo -c -o libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo `test -f 'libraries/xml_libxml2/XmlUtils.cpp' || echo '$(srcdir)/'`libraries/xml_libxml2/XmlUtils.cpp
-@am__fastdepCXX_TRUE@	mv -f libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-XmlUtils.Tpo libraries/xml_libxml2/$(DEPDIR)/libraries_libsmbiosxml_la-XmlUtils.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='libraries/xml_libxml2/XmlUtils.cpp' object='libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbiosxml_la_CXXFLAGS) $(CXXFLAGS) -c -o libraries/xml_libxml2/libraries_libsmbiosxml_la-XmlUtils.lo `test -f 'libraries/xml_libxml2/XmlUtils.cpp' || echo '$(srcdir)/'`libraries/xml_libxml2/XmlUtils.cpp
-
 bin-supported/bin_supported_dellBiosUpdate-dellBiosUpdate.o: bin-supported/dellBiosUpdate.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(bin_supported_dellBiosUpdate_CXXFLAGS) $(CXXFLAGS) -MT bin-supported/bin_supported_dellBiosUpdate-dellBiosUpdate.o -MD -MP -MF bin-supported/$(DEPDIR)/bin_supported_dellBiosUpdate-dellBiosUpdate.Tpo -c -o bin-supported/bin_supported_dellBiosUpdate-dellBiosUpdate.o `test -f 'bin-supported/dellBiosUpdate.cpp' || echo '$(srcdir)/'`bin-supported/dellBiosUpdate.cpp
 @am__fastdepCXX_TRUE@	mv -f bin-supported/$(DEPDIR)/bin_supported_dellBiosUpdate-dellBiosUpdate.Tpo bin-supported/$(DEPDIR)/bin_supported_dellBiosUpdate-dellBiosUpdate.Po
@@ -2170,6 +2133,20 @@ cppunit/cppunit_testPlatform-main.obj: cppunit/main.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testPlatform-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`
 
+cppunit/interface/cppunit_testPlatform-XmlUtils.o: cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testPlatform-XmlUtils.o -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Tpo -c -o cppunit/interface/cppunit_testPlatform-XmlUtils.o `test -f 'cppunit/interface/XmlUtils.cpp' || echo '$(srcdir)/'`cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Tpo cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/XmlUtils.cpp' object='cppunit/interface/cppunit_testPlatform-XmlUtils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testPlatform-XmlUtils.o `test -f 'cppunit/interface/XmlUtils.cpp' || echo '$(srcdir)/'`cppunit/interface/XmlUtils.cpp
+
+cppunit/interface/cppunit_testPlatform-XmlUtils.obj: cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testPlatform-XmlUtils.obj -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Tpo -c -o cppunit/interface/cppunit_testPlatform-XmlUtils.obj `if test -f 'cppunit/interface/XmlUtils.cpp'; then $(CYGPATH_W) 'cppunit/interface/XmlUtils.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/XmlUtils.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Tpo cppunit/interface/$(DEPDIR)/cppunit_testPlatform-XmlUtils.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/XmlUtils.cpp' object='cppunit/interface/cppunit_testPlatform-XmlUtils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testPlatform-XmlUtils.obj `if test -f 'cppunit/interface/XmlUtils.cpp'; then $(CYGPATH_W) 'cppunit/interface/XmlUtils.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/XmlUtils.cpp'; fi`
+
 cppunit/interface/cppunit_testPlatform-testPlatform.o: cppunit/interface/testPlatform.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testPlatform_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testPlatform-testPlatform.o -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo -c -o cppunit/interface/cppunit_testPlatform-testPlatform.o `test -f 'cppunit/interface/testPlatform.cpp' || echo '$(srcdir)/'`cppunit/interface/testPlatform.cpp
 @am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Tpo cppunit/interface/$(DEPDIR)/cppunit_testPlatform-testPlatform.Po
@@ -2197,6 +2174,20 @@ cppunit/cppunit_testRbu-main.obj: cppunit/main.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/main.cpp' object='cppunit/cppunit_testRbu-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testRbu-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`
+
+cppunit/interface/cppunit_testRbu-XmlUtils.o: cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testRbu-XmlUtils.o -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Tpo -c -o cppunit/interface/cppunit_testRbu-XmlUtils.o `test -f 'cppunit/interface/XmlUtils.cpp' || echo '$(srcdir)/'`cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Tpo cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/XmlUtils.cpp' object='cppunit/interface/cppunit_testRbu-XmlUtils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testRbu-XmlUtils.o `test -f 'cppunit/interface/XmlUtils.cpp' || echo '$(srcdir)/'`cppunit/interface/XmlUtils.cpp
+
+cppunit/interface/cppunit_testRbu-XmlUtils.obj: cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testRbu-XmlUtils.obj -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Tpo -c -o cppunit/interface/cppunit_testRbu-XmlUtils.obj `if test -f 'cppunit/interface/XmlUtils.cpp'; then $(CYGPATH_W) 'cppunit/interface/XmlUtils.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/XmlUtils.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Tpo cppunit/interface/$(DEPDIR)/cppunit_testRbu-XmlUtils.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/XmlUtils.cpp' object='cppunit/interface/cppunit_testRbu-XmlUtils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testRbu-XmlUtils.obj `if test -f 'cppunit/interface/XmlUtils.cpp'; then $(CYGPATH_W) 'cppunit/interface/XmlUtils.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/XmlUtils.cpp'; fi`
 
 cppunit/interface/cppunit_testRbu-testRbu.o: cppunit/interface/testRbu.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testRbu_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testRbu-testRbu.o -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testRbu-testRbu.Tpo -c -o cppunit/interface/cppunit_testRbu-testRbu.o `test -f 'cppunit/interface/testRbu.cpp' || echo '$(srcdir)/'`cppunit/interface/testRbu.cpp
@@ -2226,6 +2217,20 @@ cppunit/cppunit_testStandalone-main.obj: cppunit/main.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/cppunit_testStandalone-main.obj `if test -f 'cppunit/main.cpp'; then $(CYGPATH_W) 'cppunit/main.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/main.cpp'; fi`
 
+cppunit/interface/cppunit_testStandalone-XmlUtils.o: cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testStandalone-XmlUtils.o -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Tpo -c -o cppunit/interface/cppunit_testStandalone-XmlUtils.o `test -f 'cppunit/interface/XmlUtils.cpp' || echo '$(srcdir)/'`cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Tpo cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/XmlUtils.cpp' object='cppunit/interface/cppunit_testStandalone-XmlUtils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testStandalone-XmlUtils.o `test -f 'cppunit/interface/XmlUtils.cpp' || echo '$(srcdir)/'`cppunit/interface/XmlUtils.cpp
+
+cppunit/interface/cppunit_testStandalone-XmlUtils.obj: cppunit/interface/XmlUtils.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testStandalone-XmlUtils.obj -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Tpo -c -o cppunit/interface/cppunit_testStandalone-XmlUtils.obj `if test -f 'cppunit/interface/XmlUtils.cpp'; then $(CYGPATH_W) 'cppunit/interface/XmlUtils.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/XmlUtils.cpp'; fi`
+@am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Tpo cppunit/interface/$(DEPDIR)/cppunit_testStandalone-XmlUtils.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='cppunit/interface/XmlUtils.cpp' object='cppunit/interface/cppunit_testStandalone-XmlUtils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -c -o cppunit/interface/cppunit_testStandalone-XmlUtils.obj `if test -f 'cppunit/interface/XmlUtils.cpp'; then $(CYGPATH_W) 'cppunit/interface/XmlUtils.cpp'; else $(CYGPATH_W) '$(srcdir)/cppunit/interface/XmlUtils.cpp'; fi`
+
 cppunit/interface/cppunit_testStandalone-testStandalone.o: cppunit/interface/testStandalone.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cppunit_testStandalone_CXXFLAGS) $(CXXFLAGS) -MT cppunit/interface/cppunit_testStandalone-testStandalone.o -MD -MP -MF cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo -c -o cppunit/interface/cppunit_testStandalone-testStandalone.o `test -f 'cppunit/interface/testStandalone.cpp' || echo '$(srcdir)/'`cppunit/interface/testStandalone.cpp
 @am__fastdepCXX_TRUE@	mv -f cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Tpo cppunit/interface/$(DEPDIR)/cppunit_testStandalone-testStandalone.Po
@@ -2254,7 +2259,6 @@ clean-libtool:
 	-rm -rf libraries/smi/.libs libraries/smi/_libs
 	-rm -rf libraries/systeminfo/.libs libraries/systeminfo/_libs
 	-rm -rf libraries/token/.libs libraries/token/_libs
-	-rm -rf libraries/xml_libxml2/.libs libraries/xml_libxml2/_libs
 
 distclean-libtool:
 	-rm -f libtool
@@ -2508,9 +2512,6 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
-	$(MAKE) $(AM_MAKEFLAGS) \
-	  top_distdir="$(top_distdir)" distdir="$(distdir)" \
-	  dist-hook
 	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
@@ -2663,8 +2664,6 @@ distclean-generic:
 	-rm -f libraries/systeminfo/$(am__dirstamp)
 	-rm -f libraries/token/$(DEPDIR)/$(am__dirstamp)
 	-rm -f libraries/token/$(am__dirstamp)
-	-rm -f libraries/xml_libxml2/$(DEPDIR)/$(am__dirstamp)
-	-rm -f libraries/xml_libxml2/$(am__dirstamp)
 	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
@@ -2678,7 +2677,7 @@ clean-am: clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) cppunit/$(DEPDIR) cppunit/interface/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR) libraries/xml_libxml2/$(DEPDIR)
+	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) cppunit/$(DEPDIR) cppunit/interface/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
@@ -2715,7 +2714,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) cppunit/$(DEPDIR) cppunit/interface/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR) libraries/xml_libxml2/$(DEPDIR)
+	-rm -rf bin-supported/$(DEPDIR) bin-unsupported/$(DEPDIR) cppunit/$(DEPDIR) cppunit/interface/$(DEPDIR) libraries/cmos/$(DEPDIR) libraries/common/$(DEPDIR) libraries/memory/$(DEPDIR) libraries/rbu/$(DEPDIR) libraries/smbios/$(DEPDIR) libraries/smi/$(DEPDIR) libraries/systeminfo/$(DEPDIR) libraries/token/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -2742,39 +2741,23 @@ uninstall-am: uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	all all-am am--refresh check check-TESTS check-am clean \
 	clean-binPROGRAMS clean-checkPROGRAMS clean-generic \
 	clean-libLTLIBRARIES clean-libtool clean-sbinPROGRAMS ctags \
-	ctags-recursive dist dist-all dist-bzip2 dist-gzip dist-hook \
-	dist-shar dist-tarZ dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distcleancheck distdir distuninstallcheck dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-sbinPROGRAMS install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
+	ctags-recursive dist dist-all dist-bzip2 dist-gzip dist-shar \
+	dist-tarZ dist-zip distcheck distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags \
+	distcleancheck distdir distuninstallcheck dvi dvi-am html \
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-libLTLIBRARIES \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-sbinPROGRAMS install-strip installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am \
 	uninstall-binPROGRAMS uninstall-libLTLIBRARIES \
 	uninstall-sbinPROGRAMS
 
-
-libraries/common/StdSmbiosXml.h: Makefile.am $(top_srcdir)/doc/smbios23.xml $(top_srcdir)/build/scripts/makeXmlHeader.py
-	@echo Building $@
-	@mkdir -p $(shell dirname $@)
-	@chmod ug+w $$(dirname $@)
-	@python $(top_srcdir)/build/scripts/makeXmlHeader.py $(top_srcdir)/doc/smbios23.xml $@.new
-	@diff -q $@ $@.new >/dev/null 2>&1 || mv -f $@.new $@
-	@rm -f $@.new
-
-dist-hook: libraries/common/StdSmbiosXml.h
-	mkdir -p $(distdir)/include/smbios $(distdir)/libraries/common/
-	[ ! -e $(top_srcdir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_srcdir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
-	[ ! -e $(top_builddir)/libraries/common/StdSmbiosXml.h ] || cp -f $(top_builddir)/libraries/common/StdSmbiosXml.h $(distdir)/libraries/common/
-
-$(libraries_libsmbios_la_OBJECTS):
-$(libraries_libsmbiosxml_la_OBJECTS): libraries/common/StdSmbiosXml.h
 
 $(bin_PROGRAMS): libraries/libsmbios.la
 $(sbin_PROGRAMS): libraries/libsmbios.la

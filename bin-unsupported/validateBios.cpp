@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "smbios/IMemory.h"
-#include "smbios/ISmbiosXml.h"
+#include "smbios/ISmbios.h"
 #include "smbios/IToken.h"
 #include "smbios/ICmosRW.h"
 #include "smbios/IObserver.h"
@@ -1231,13 +1231,9 @@ main (int argc, char **argv)
     if( argc > 2 )
         cmosFileName =  argv[2];
 
-    string xmlFileName( "" );
-    if( argc > 3 )
-        xmlFileName = argv[3];
-
     try
     {
-        smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosXmlFactory::getFactory();
+        smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
 
         if( fileName != "" )
         {
@@ -1252,9 +1248,6 @@ main (int argc, char **argv)
             cmosFactory->setParameter("cmosMapFile", cmosFileName);
             cmosFactory->setMode( cmos::CmosRWFactory::UnitTestMode );
         }
-
-        if( xmlFileName != "" )
-            smbiosFactory->setParameter("xmlFile", xmlFileName);
 
         smbios::ISmbiosTable *myTablePtr = smbiosFactory->getSingleton();
         myTablePtr->clearItemCache();

@@ -25,7 +25,7 @@
 #include <typeinfo>
 #include <string>
 
-#include "smbios/ISmbiosXml.h"
+#include "smbios/ISmbios.h"
 #include "smbios/ICmosRW.h"
 #include "smbios/IToken.h"
 #include "smbios/SystemInfo.h"
@@ -61,10 +61,6 @@ protected:
         //return DEFAULT_TEST_DIR;
         return global_argv[4];
     };
-    virtual std::string getXmlFile()
-    {
-        return "/../doc/smbios23.xml";
-    };
 
     std::string getTestInputString( std::string toFind, std::string section="systemInfo" );
 
@@ -82,11 +78,9 @@ protected:
 public:
     virtual void setUp();
     virtual void tearDown();
-    virtual void resetFactoryToBuiltinXml();
 
     // item tests
     void testGetBoundaries();
-    void testGetBoundaries_builtinXml();
 
     // cmos token tests
     void testCmosChecksum();
@@ -94,7 +88,6 @@ public:
 
     // systeminfo tests
     void testSystemInfo();
-    void testSystemInfo_builtinXml();
 
     // testInput.xml tests
     void testIdByte();
@@ -120,7 +113,6 @@ public:
     CPPUNIT_TEST (testCmosWriting);
 
     CPPUNIT_TEST (testSystemInfo);
-    CPPUNIT_TEST (testSystemInfo_builtinXml);
 
     CPPUNIT_TEST (testIdByte);
     CPPUNIT_TEST (testServiceTag);

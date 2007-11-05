@@ -4,13 +4,22 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[0.13.12])
+AC_INIT([libsmbios],[1.0.0])
 
 temp_RELEASE_NAME=libsmbios
-temp_RELEASE_MAJOR=0
-temp_RELEASE_MINOR=13
-temp_RELEASE_SUBLEVEL=12
+temp_RELEASE_MAJOR=1
+temp_RELEASE_MINOR=0
+temp_RELEASE_SUBLEVEL=0
 temp_RELEASE_EXTRALEVEL=
+
+# Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
+# If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
+# If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
+# If any interfaces have been added since the last public release, then increment age.
+# If any interfaces have been removed since the last public release, then set age to 0. 
+LIBSMBIOS_LIBTOOL_CURRENT=2
+LIBSMBIOS_LIBTOOL_REVISION=0
+LIBSMBIOS_LIBTOOL_AGE=0
 ####################################
 
 AC_PREREQ(2.61)
@@ -87,18 +96,9 @@ do
     fi
 done
 
-# Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
-# If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
-# If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
-# If any interfaces have been added since the last public release, then increment age.
-# If any interfaces have been removed since the last public release, then set age to 0. 
-LIBSMBIOS_LIBTOOL_CURRENT=$(( $RELEASE_MAJOR + 1 ))
-LIBSMBIOS_LIBTOOL_REVISION=$RELEASE_MINOR
-LIBSMBIOS_LIBTOOL_AGE=0
-
-LIBSMBIOSXML_LIBTOOL_CURRENT=$(( $RELEASE_MAJOR + 1 ))
-LIBSMBIOSXML_LIBTOOL_REVISION=$RELEASE_MINOR
-LIBSMBIOSXML_LIBTOOL_AGE=0
+LIBSMBIOSXML_LIBTOOL_CURRENT=$LIBSMBIOS_LIBTOOL_CURRENT
+LIBSMBIOSXML_LIBTOOL_REVISION=$LIBSMBIOS_LIBTOOL_REVISION
+LIBSMBIOSXML_LIBTOOL_AGE=$LIBSMBIOS_LIBTOOL_AGE
 
 if test -z "$RELEASE_RPM_EXTRALEVEL"; then
     if test -z "$RELEASE_EXTRALEVEL"; then
@@ -125,6 +125,10 @@ _ACEOF
 
 AC_SUBST([RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL RELEASE_RPM_EXTRALEVEL])
 AC_SUBST([ LIBSMBIOS_LIBTOOL_CURRENT  LIBSMBIOS_LIBTOOL_REVISION LIBSMBIOS_LIBTOOL_AGE  LIBSMBIOSXML_LIBTOOL_CURRENT LIBSMBIOSXML_LIBTOOL_REVISION  LIBSMBIOSXML_LIBTOOL_AGE ])
+
+LIBXML2_LIBS=$(xml2-config --libs)
+LIBXML2_CFLAGS=$(xml2-config --cflags)
+AC_SUBST([ LIBXML2_LIBS LIBXML2_CFLAGS ])
 
 # this is used by the autobuilder hook to determine the version we built
 echo "PACKAGE_NAME='$PACKAGE_NAME'" > version

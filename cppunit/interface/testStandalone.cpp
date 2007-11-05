@@ -72,7 +72,6 @@ void testStandalone::setUp()
 {
     string programDirname = getCppunitTopDirectory();
     string writeDirectory = getWritableDirectory();
-    string xmlFile = programDirname + getXmlFile();
 
     // copy the memdump.dat file. We do not write to it, but rw open will fail
     // if we do not copy it
@@ -93,9 +92,6 @@ void testStandalone::setUp()
     // Smi output file.
     string smiOutput = writeDirectory + "/smi-output.dat";
 
-    // set up XML factory. from here on, we can just say SmbiosFactory.
-    smbios::SmbiosXmlFactory::getFactory();
-
     // normal users of the smbios classes need not
     // set the four parameters below. They should all be set inside the factory
     // properly by default. We override stuff here to have
@@ -113,14 +109,6 @@ void testStandalone::setUp()
 
     smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
     smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
-
-    // The parameter below will normally need to be set by the client code.
-    smbios::SmbiosFactory::getFactory()->setParameter("xmlFile", xmlFile);
-}
-
-void testStandalone::resetFactoryToBuiltinXml()
-{
-    smbios::SmbiosFactory::getFactory()->setParameter("xmlFile", "");
 }
 
 void testStandalone::tearDown()
@@ -162,7 +150,7 @@ void testStandalone::testTable_Subscript()
     smbios::ISmbiosTable::iterator item1;
     smbios::ISmbiosTable::iterator item2;
 
-    item1 = (*table)["BIOS Information"];
+    item1 = (*table)[smbios::BIOS_Information];
     item2 = (*table)[smbios::BIOS_Information];
 
     // Use CPPUNIT_ASSERT_EQUAL when testing equality.
@@ -175,9 +163,8 @@ void testStandalone::testTable_Subscript()
     CPPUNIT_ASSERT_EQUAL( getItemType(*item1)  , item2->getType()   );
 
     CPPUNIT_ASSERT_EQUAL( (*table)[smbios::BIOS_Information]->getType(), item1->getType() );
-    CPPUNIT_ASSERT_EQUAL( (*table)["BIOS Information"]->getType(), item1->getType() );
 
-    item1 = (*table)["System Information"];
+    item1 = (*table)[smbios::System_Information];
     item2 = (*table)[smbios::System_Information];
 
     CPPUNIT_ASSERT_EQUAL( item1->getHandle(),    item2->getHandle() );
@@ -188,16 +175,9 @@ void testStandalone::testTable_Subscript()
     CPPUNIT_ASSERT_EQUAL( getItemType(*item1)  , item2->getType()   );
 
     CPPUNIT_ASSERT_EQUAL( (*table)[smbios::System_Information]->getType(), item1->getType() );
-    CPPUNIT_ASSERT_EQUAL( (*table)["System Information"]->getType(), item1->getType() );
 
 
     STD_TEST_END("");
-}
-
-void testStandalone::testTable_Subscript_builtinXml()
-{
-    resetFactoryToBuiltinXml();
-    testTable_Subscript();
 }
 
 void
@@ -224,12 +204,6 @@ testStandalone::testEntryCount ()
     STD_TEST_END("");
 }
 
-void testStandalone::testEntryCount_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testEntryCount();
-}
-
 void
 testStandalone::testConstIterator ()
 {
@@ -254,12 +228,6 @@ testStandalone::testConstIterator ()
     STD_TEST_END("");
 }
 
-void testStandalone::testConstIterator_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testConstIterator();
-}
-
 void
 testStandalone::testSubscriptOperator1 ()
 {
@@ -279,12 +247,6 @@ testStandalone::testSubscriptOperator1 ()
     }
     CPPUNIT_ASSERT_EQUAL( table->getNumberOfEntries(), tableEntriesCounted );
     STD_TEST_END("");
-}
-
-void testStandalone::testSubscriptOperator1_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testSubscriptOperator1();
 }
 
 void
@@ -312,12 +274,6 @@ testStandalone::testSubscriptOperator2 ()
     STD_TEST_END("");
 }
 
-void testStandalone::testSubscriptOperator2_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testSubscriptOperator2();
-}
-
 void
 testStandalone::testSubscriptOperator3 ()
 {
@@ -342,12 +298,6 @@ testStandalone::testSubscriptOperator3 ()
     }
     CPPUNIT_ASSERT( 1 < tableEntriesCounted );
     STD_TEST_END("");
-}
-
-void testStandalone::testSubscriptOperator3_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testSubscriptOperator3();
 }
 
 
@@ -427,12 +377,6 @@ testStandalone::testItemIdentity ()
     STD_TEST_END("");
 }
 
-void testStandalone::testItemIdentity_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testItemIdentity();
-}
-
 void
 testStandalone::testEachItemAccessors ()
 {
@@ -468,181 +412,6 @@ testStandalone::testEachItemAccessors ()
     STD_TEST_END("");
 }
 
-void testStandalone::testEachItemAccessors_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testStandalone::testEachItemAccessors();
-}
-
-void testStandalone::testItem_GetBiosInfo()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    // Purpose:
-    //      The purpose of this test is to exercise all of the getXX()
-    //      functions that are avalable using std SMBIOS tables that are
-    //      available on all dumps. Do not rely on any specific value in any
-    //      table in these tests as this test will be run against many
-    //      tables.
-    //
-
-    // BEGIN EXAMPLE factory
-    // table should not be deleted when we are finished. It is managed by the
-    // factory. Factory will delete it for us when ->reset() is called.
-    smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-
-    smbios::ISmbiosTable::iterator item1 = (*table)["BIOS Information"];
-
-    //
-    // here is an example XML for BIOS Information Block, which we test below.
-    //
-    //<FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
-    //<FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
-    //<FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
-    //<FIELD offset="4h" name="Vendor" length="BYTE" usage="STRING"/>
-    //<FIELD offset="5h" name="BIOS Version" length="BYTE" usage="STRING"/>
-    //<FIELD offset="6h" name="BIOS Starting Address Segment" length="WORD" usage="ADDRESS"/>
-    //<FIELD offset="8h" name="BIOS Release Date" length="BYTE" usage="STRING"/>
-    //<FIELD offset="9h" name="BIOS ROM Size" length="BYTE" usage="SIZE"/>
-    //<FIELD offset="Ah" name="BIOS Characteristics" length="QWORD" usage="BITFIELD">
-    //
-
-    u64 ull1, ull2;
-    u16 v1, v2, v3;
-    u8  u1, u2, u3;
-    int int1, int2;
-    string str1, str2;
-
-    // Test Philosophy:
-    //      There are multiple ways to access any particular item in the table.
-    //      If you have an XML smbios file, you can access by string name and
-    //      the code will look the name up in the XML.
-    //
-    //      We play the different access modes off each other below to ensure
-    //      that each access mode returns the exact same data.
-    u3=0;
-    u1 = getU8_FromItem(*item1, "Type");
-    u2 = item1->getType();
-    getData(*item1, 0, u3);
-    CPPUNIT_ASSERT_EQUAL (u1, u2);
-    CPPUNIT_ASSERT_EQUAL (u1, u3);
-
-    u3=0;
-    u1 = getU8_FromItem(*item1, "Length");
-    u2 = item1->getLength();
-    getData(*item1, 1, u3);
-    CPPUNIT_ASSERT_EQUAL (u1, u2);
-    CPPUNIT_ASSERT_EQUAL (u1, u3);
-
-    v3=0;
-    v1 = getU16_FromItem(*item1, "Handle");
-    v2 = item1->getHandle();
-    getData(*item1, 2, v3);
-    CPPUNIT_ASSERT_EQUAL (v1, v2);
-    CPPUNIT_ASSERT_EQUAL (v1, v3);
-
-    str1 = getString_FromItem(*item1, "Vendor") ;
-    str2 = getString_FromItem(*item1, 0x4 ) ;
-    CPPUNIT_ASSERT_EQUAL (str1, str2);
-
-    str1 = getString_FromItem(*item1, "BIOS Version") ;
-    str2 = getString_FromItem(*item1, 0x5 ) ;
-    CPPUNIT_ASSERT_EQUAL (str1, str2);
-
-    v3=0;
-    v1 = getU16_FromItem(*item1, "BIOS Starting Address Segment");
-    v2 = getU16_FromItem(*item1, 0x6 );
-    getData(*item1, 0x6, v3);
-    CPPUNIT_ASSERT_EQUAL (v1, v2);
-    CPPUNIT_ASSERT_EQUAL (v1, v3);
-
-    str1 = getString_FromItem(*item1, "BIOS Release Date");
-    str2 = getString_FromItem(*item1, 0x8 );
-    CPPUNIT_ASSERT_EQUAL (str1, str2);
-
-    int1 = getU8_FromItem(*item1, "BIOS ROM Size");
-    int2 = getU8_FromItem(*item1, 0x9);
-    CPPUNIT_ASSERT_EQUAL (int1, int2);
-
-    ull1 = getU64_FromItem(*item1, "BIOS Characteristics");
-    ull2 = getU64_FromItem(*item1, 0xA);
-    // will not compile on VC++
-    //    CPPUNIT_ASSERT_EQUAL (ull1, ull2);
-
-    //First get some bits from the BIOS Characteristics bitfield and compare to U64
-    u32 bitfield = 0;
-    getBits_FromItem(*item1, 0xA, &bitfield, 0, 15);
-    CPPUNIT_ASSERT_EQUAL (static_cast<u32>(ull2 & 0x000000000000FFFFL), bitfield);
-
-    // cannot access bits > 64
-    ASSERT_THROWS( getBits_FromItem(*item1, 0xA, &bitfield, 48, 96 ),  smbios::DataOutOfBounds );
-
-    //Get some bits from the BIOS Characteristics bitfield using the other method
-    //and compare it to the U64
-    u32 tempval=0;
-    bitfield  = 0;
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "Reserved0", &tempval);
-    bitfield  = tempval;
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "Reserved1", &tempval);
-    bitfield |= (tempval << 1);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "Unknown", &tempval);
-    bitfield |= (tempval << 2);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "BIOS Characteristics Not Supported", &tempval);
-    bitfield |= (tempval << 3);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "ISA is supported", &tempval);
-    bitfield |= (tempval << 4);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "MCA is supported", &tempval);
-    bitfield |= (tempval << 5);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "EISA is supported", &tempval);
-    bitfield |= (tempval << 6);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "PCI is supported", &tempval);
-    bitfield |= (tempval << 7);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "PC Card (PCMCIA) is supported", &tempval);
-    bitfield |= (tempval << 8);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "Plug and Play is supported", &tempval);
-    bitfield |= (tempval << 9);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "APM is supported", &tempval);
-    bitfield |= (tempval << 10);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "BIOS is Upgradeable (Flash)", &tempval);
-    bitfield |= (tempval << 11);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "BIOS shadowing is allowed", &tempval);
-    bitfield |= (tempval << 12);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "VL-VESA is supported", &tempval);
-    bitfield |= (tempval << 13);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "ESCD support is available", &tempval);
-    bitfield |= (tempval << 14);
-
-    getBits_FromItem(*item1, "BIOS Characteristics", "Boot from CD is supported", &tempval);
-    bitfield |= (tempval << 15);
-
-    //cout << "BIOS Characteristics Bitfield (0x" << hex << bitfield << ")" << dec << endl;
-    //Compare the lower 15 bits with the bitfield we just retrieved
-    CPPUNIT_ASSERT_EQUAL (static_cast<u32>(ull2 & 0x000000000000FFFFL), bitfield);
-
-    STD_TEST_END("");
-}
-
-void testStandalone::testItem_GetBiosInfo_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testItem_GetBiosInfo();
-}
-
 void testStandalone::testNonXml()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
@@ -663,8 +432,6 @@ void testStandalone::testNonXml()
     // run these tests while we have a handy reference to a NON-XML factory.
     auto_ptr<smbios::ISmbiosTable>p(factory->makeNew());
     auto_ptr<const smbios::ISmbiosTable>q(factory->makeNew());
-    ASSERT_THROWS( (*p)["BIOS Information"], smbios::NotImplemented );
-    ASSERT_THROWS( (*q)["BIOS Information"], smbios::NotImplemented );
 
     smbios::ISmbiosTable::iterator item1 = (*p)[smbios::BIOS_Information];
     smbios::ISmbiosTable::const_iterator item2 = (*q)[smbios::BIOS_Information];
@@ -680,114 +447,8 @@ void testStandalone::testNonXml()
     CPPUNIT_ASSERT_EQUAL( item1->getType()  , item2->getType()   );
     CPPUNIT_ASSERT_EQUAL( item1->getType()  , getU8_FromItem(*item2, 0)   );
 
-    ASSERT_THROWS( getU8_FromItem(*item1, "BIOS Version"), smbios::NotImplemented);
-    ASSERT_THROWS( getU8_FromItem(*item1, "BIOS Version"), smbios::NotImplemented);
-    ASSERT_THROWS( getU8_FromItem(*item1, "BIOS Version"), smbios::NotImplemented);
-    ASSERT_THROWS( getU8_FromItem(*item1, "BIOS Version"), smbios::NotImplemented);
-    ASSERT_THROWS( getString_FromItem(*item1, "BIOS Version"), smbios::NotImplemented);
-
     STD_TEST_END("");
 }
-
-void testStandalone::testItem_GetSystemInfo()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    // PURPOSE:
-    //      Same purpose as testGet_BiosInfo()
-
-    // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-
-    smbios::ISmbiosTable::iterator item1 = ( *table )["System Information"];
-
-    //
-    // here is an example XML for System Information Block, which we test below.
-    //
-    // <FIELD offset="0h" name="Type" length="BYTE" usage="STRUCTURE_TYPE"/>
-    // <FIELD offset="1h" name="Length" length="BYTE" usage="SIZE"/>
-    // <FIELD offset="2h" name="Handle" length="WORD" usage="HANDLE"/>
-    // <FIELD offset="4h" name="Manufacturer" length="BYTE" usage="STRING"/>
-    // <FIELD offset="5h" name="Product Name" length="BYTE" usage="STRING"/>
-    // <FIELD offset="6h" name="Version" length="BYTE" usage="STRING"/>
-    // <FIELD offset="7h" name="Serial Number" length="BYTE" usage="STRING"/>
-    // <FIELD offset="8h" version="2.1" name="UUID" length="BYTE" count="16" usage="NUMBER"/>
-    // <FIELD offset="18h" version="2.1" name="Wake-up Type" length="BYTE" usage="ENUM">
-    //
-    //
-    string str1, str2;
-    int int1, int2;
-
-    int1 = getU8_FromItem(*item1, "Type");
-    int2 = item1->getType();
-    CPPUNIT_ASSERT_EQUAL (int1, int2);
-
-    int1 = getU8_FromItem(*item1, "Length");
-    int2 = item1->getLength();
-    CPPUNIT_ASSERT_EQUAL (int1, int2);
-
-    int1 = getU16_FromItem(*item1, "Handle");
-    int2 = item1->getHandle();
-    CPPUNIT_ASSERT_EQUAL (int1, int2);
-
-    str1 = getString_FromItem(*item1, "Manufacturer") ;
-    str2 = getString_FromItem(*item1, 0x4 ) ;
-    CPPUNIT_ASSERT_EQUAL (str1, str2);
-
-    str1 = getString_FromItem(*item1, "Product Name") ;
-    str2 = getString_FromItem(*item1, 0x5 ) ;
-    CPPUNIT_ASSERT_EQUAL (str1, str2);
-
-#if 0
-    //
-    // This is not a good test case because several
-    // of our BIOSs have a '\0' in the header for this
-    // string, which means this string does not
-    // exist. Lowlevel code will throw an exception.
-    //
-    str1 = getString_FromItem(*item1, "Version") ;
-    str2 = getString_FromItem(*item1, 0x6 ) ;
-    CPPUNIT_ASSERT_EQUAL( str1, str2 );
-#endif
-
-    try
-    {
-        str1 = getString_FromItem(*item1, "Serial Number") ;
-        str2 = getString_FromItem(*item1, 0x7 ) ;
-        CPPUNIT_ASSERT_EQUAL (str1, str2);
-    }
-    catch( const exception & )
-    {
-        // 4G systems do not support Serial Number.
-    }
-
-#if 0
-    //
-    // These are not good test cases because they are SMBIOS 2.3
-    // additions and are not guaranteed to be present.
-    //
-    u8 val1, val2;
-    val1 =  item1->getU8("UUID") ;
-    val2 = item1->getU8( 0x8 ) ;
-    CPPUNIT_ASSERT_EQUAL( val1, val2 );
-
-    val1 = item1->getU8("Wake-up Type") ;
-    val2 = item1->getU8( 0x9 ) ;
-    CPPUNIT_ASSERT_EQUAL( val1, val2 );
-#endif
-
-    STD_TEST_END("");
-}
-
-void testStandalone::testItem_GetSystemInfo_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testItem_GetSystemInfo();
-}
-
-// helper because this isn't external API
-extern const string getStringForType(const XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, const int searchForType );
-#include "SmbiosXmlImpl.h"
 
 void testStandalone::testSmbiosXml()
 {
@@ -796,55 +457,13 @@ void testStandalone::testSmbiosXml()
     smbios::ISmbiosTable *table =
             smbios::SmbiosFactory::getFactory()->getSingleton();
     
-    // test reverse name mapping function
-    string bios = dynamic_cast<smbios::SmbiosTableXml *>(table)->getStringForType(0);
-    string expected = "BIOS Information";
-    CPPUNIT_ASSERT_EQUAL ( bios, expected );
-
     // test if "PCI Supported" bit is set, should always be set.
-    smbios::ISmbiosTable::iterator item = (*table)["BIOS Information"];
+    smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information];
     CPPUNIT_ASSERT_EQUAL( isBitSet( &(*item), 0xA,  0x7 ), true );
     
     STD_TEST_END("");
 }
 
-void testStandalone::testTypeMismatch()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    // PURPOSE:
-    //      The purpose of this test is to test all types of invalid item
-    //      access. The getXX(string) methods all validate that the field
-    //      passed to them is actually of type XX. If a mismatch is found, an
-    //      exception is thrown.
-    //
-    //      Each test validates that an exception is thrown and the type.
-
-    // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-
-    smbios::ISmbiosTable::iterator item1 = (*table)["BIOS Information"];
-
-    //
-    // refer to testGet_BiosInfo() for XML sample for BIOS INFORMATION BLOCK
-    //
-
-    // ASSERT_THROWS is not a CPPUNIT macro, it is our custom macro.
-    ASSERT_THROWS( getU8_FromItem (*item1, "Handle"), smbios::ParseException );
-    ASSERT_THROWS( getU16_FromItem(*item1, "Type"), smbios::ParseException );
-    ASSERT_THROWS( getU32_FromItem(*item1, "Type"), smbios::ParseException );
-    ASSERT_THROWS( getU64_FromItem(*item1, "Type"), smbios::ParseException );
-    ASSERT_THROWS( getString_FromItem(*item1, "Type"), smbios::ParseException );
-    ASSERT_THROWS( getBits_FromItem(*item1, "Type", "foo", NULL), smbios::ParseException );
-
-    STD_TEST_END("");
-}
-
-void testStandalone::testTypeMismatch_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testStandalone::testTypeMismatch();
-}
 
 
 void
@@ -878,11 +497,6 @@ testStandalone::testGetBoundaries()
     STD_TEST_END("");
 }
 
-void testStandalone::testGetBoundaries_builtinXml ()
-{
-    resetFactoryToBuiltinXml();
-    testStandalone::testGetBoundaries();
-}
 
 
 //
