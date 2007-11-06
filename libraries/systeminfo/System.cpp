@@ -241,7 +241,7 @@ static void setTagUsingSMI(const char *newTag, u16 select)
 
 static char *getStringFromTable(unsigned int structure, unsigned int stringNumber)
 {
-    smbios::ISmbiosTable *table = 0;
+    const smbios::ISmbiosTable *table = 0;
     table = smbios::SmbiosFactory::getFactory()->getSingleton();
 
     if (!table)

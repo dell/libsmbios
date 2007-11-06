@@ -27,7 +27,7 @@ using namespace std;
 
 namespace smbios
 {
-    const ISmbiosItem & SmbiosTableIteratorBase::dereference () const
+    const ISmbiosItem & SmbiosTableIterator::dereference () const
     {
         if (0 == current)
         {
@@ -37,7 +37,7 @@ namespace smbios
         return table->getSmbiosItem(current);
     }
 
-    void SmbiosTableIteratorBase::incrementIterator ()
+    void SmbiosTableIterator::incrementIterator ()
     {
         const SmbiosTable *t = dynamic_cast<const SmbiosTable *>(table);
 

@@ -352,7 +352,7 @@ namespace rbu
         try
         {
             smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
-            smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
+            const smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
             const smbios::ISmbiosItem &rbuStructure = *((*table)[RBU_SMBIOS_STRUCT]);
     
             u8 byte = getU8_FromItem(rbuStructure, 0x0F); // Characteristics field

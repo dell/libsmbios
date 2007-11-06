@@ -64,7 +64,7 @@ bool couldBeBayonet ()
     //functionEnter( "%s", "" );
     bool couldBeBayonet = false;
 
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // crappy msvc compiler workaround

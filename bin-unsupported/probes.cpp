@@ -142,7 +142,7 @@ struct probe_structure
 const smbios::ISmbiosItem *getItemByHandle( u16 handle )
 {
     smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
-    smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
+    const smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
     smbios::ISmbiosTable::iterator itemIter;
 
     const smbios::ISmbiosItem *ret = 0;
@@ -294,7 +294,7 @@ main (int argc, char **argv)
         }
 
         smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
-        smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
+        const smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
         smbios::ISmbiosTable::iterator itemIter;
 
         cout << endl;

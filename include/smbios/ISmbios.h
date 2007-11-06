@@ -50,7 +50,6 @@ namespace smbios
     class ISmbiosTable;
     class ISmbiosItem;
     class SmbiosTableIterator;
-    class ConstSmbiosTableIterator;
 
 
     //!AbstractFactory that produces ISmbiosTable objects.
@@ -156,23 +155,6 @@ namespace smbios
          */
         virtual void clearItemCache() const = 0;  
 
-        //! Re-Read the table from memory. Invalidates all existing ISmbiosItems
-        /** <b>Not yet implemented</b>
-         * This API is intended to be used in the instance where SMBIOS data is
-         * not static, ie. BIOS updates SMBIOS information while the system is
-         * running.
-         *
-         * Most systems have static tables that do not change after the system
-         * boots. Systems have been proposed to update this information at
-         * runtime inside system SMI calls. This API is put into place to
-         * prepare for this possibility.
-         * 
-         * \warning All previous references or pointers to ISmbiosItem objects
-         * created from this table become invalid and attempts to access them
-         * will cause undefined behaviour (most likely your code will crash.)
-         */
-        virtual void reReadTable() = 0;
-
         //! Returns the number of table items, per SMBIOS table header
         virtual int getNumberOfEntries () const = 0;  // used by unit-test code
         //! Returns  the table entry point structure
@@ -202,7 +184,7 @@ namespace smbios
         // Std container typedefs. Everybody expects to
         // say 'iterator' or 'const_iterator'
         typedef SmbiosTableIterator iterator;
-        typedef ConstSmbiosTableIterator const_iterator;
+        typedef SmbiosTableIterator const_iterator;
 
         // CONSTRUCTORS, DESTRUCTOR, and ASSIGNMENT
         ISmbiosTable();
@@ -225,14 +207,7 @@ namespace smbios
     }
 \endcode
         */
-        virtual iterator begin () = 0;
-        //! Standard iterator interface. Points to first table item.
-        /** \copydoc begin() */
         virtual const_iterator begin () const = 0;
-
-        //! Standard iterator interface. Points to one-past-the-last table item. 
-        /** \copydoc begin() */
-        virtual iterator end () = 0;
 
         //! Standard iterator interface. Points to one-past-the-last table item. 
         /** Used by const_iterator.
@@ -255,10 +230,6 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
 \endcode
          * \sa operator[]( const std::string & ) const
          */
-        virtual iterator operator[]( const int ) = 0;
-
-        //! Standard indexed access by integer item type.
-         /** \copydoc operator[]( const int ) */
         virtual const_iterator operator[]( const int ) const = 0;
 
     private:
@@ -384,36 +355,8 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
      *
      * This class is stable and should not be modified.
      */
-    class SmbiosTableIteratorBase : 
+    class SmbiosTableIterator: 
         public std::iterator < std::forward_iterator_tag, const ISmbiosItem >
-    {
-    public:
-        explicit SmbiosTableIteratorBase (const ISmbiosTable * initialTable = 0, int typeToMatch = -1 )
-            : matchType(typeToMatch), table(initialTable), current(0)
-            { incrementIterator(); };
-        virtual ~SmbiosTableIteratorBase() throw() {};
-        bool operator == (const SmbiosTableIteratorBase other) const { return current == other.current; };
-        bool operator != (const SmbiosTableIteratorBase other) const { return current != other.current; };
-
-    protected:
-        void incrementIterator ();
-        const ISmbiosItem & dereference () const;
-
-        int matchType;
-        const ISmbiosTable * table;
-        mutable const void * current;
-    };
-    
-    //! Iterator for ISmbiosTable objects.
-    /** In order to properly enforce difference between iterator and
-     * const_iterator, we need to derive them both separately from the base
-     * iterator class. the const_iterator cannot inherit from iterator, or
-     * compiler will automatically convert between the two, which is not good.
-     *
-     * This class is stable. Do not add or remove any members from it.
-     */
-    class SmbiosTableIterator
-        : public SmbiosTableIteratorBase
     {
     public:
         // Make sure you define these, otherwise you can't use
@@ -424,9 +367,14 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
         typedef value_type* pointer;
         typedef std::ptrdiff_t difference_type;
 
+
+        explicit SmbiosTableIterator(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 )
+            : matchType(typeToMatch), table(initialTable), current(0)
+            { incrementIterator(); };
         virtual ~SmbiosTableIterator() throw() {};
-        explicit SmbiosTableIterator (ISmbiosTable * initialTable = 0, int typeToMatch = -1 )
-            : SmbiosTableIteratorBase(initialTable, typeToMatch) {};
+        bool operator == (const SmbiosTableIterator other) const { return current == other.current; };
+        bool operator != (const SmbiosTableIterator other) const { return current != other.current; };
+
         reference operator * () const { return dereference(); };
         pointer   operator -> () const { return &dereference(); };
         SmbiosTableIterator & operator ++ () { incrementIterator(); return *this; }; // ++Prefix
@@ -436,47 +384,20 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
             ++(*this);
             return oldValue;
         };  //Postfix++
+    protected:
+        void incrementIterator ();
+        const ISmbiosItem & dereference () const;
+
+        int matchType;
+        const ISmbiosTable * table;
+        mutable const void * current;
     };
-
-    //! Iterator for const ISmbiosTable objects.
-    /** In order to properly enforce difference between iterator and
-     * const_iterator, we need to derive them both separately from the base
-     * iterator class. the const_iterator cannot inherit from iterator, or
-     * compiler will automatically convert between the two, which is not good.
-     *
-     * This class is stable. Do not add or remove any members from it.
-     */
-    class ConstSmbiosTableIterator:public SmbiosTableIteratorBase
-    {
-    public:
-        // Make sure you define these, otherwise you can't use
-        // iterators in stl algorithms
-        typedef std::forward_iterator_tag iterator_category;
-        typedef const ISmbiosItem value_type;
-        typedef value_type& reference;
-        typedef value_type* pointer;
-        typedef std::ptrdiff_t difference_type;
-
-        virtual ~ConstSmbiosTableIterator() throw() {};
-        explicit ConstSmbiosTableIterator (const ISmbiosTable * initialTable = 0, int typeToMatch = -1 )
-            : SmbiosTableIteratorBase(initialTable, typeToMatch) {};
-        reference operator * () const { return dereference(); };
-        pointer   operator -> () const { return &dereference(); };
-        ConstSmbiosTableIterator & operator ++ () { incrementIterator(); return *this; };	      // ++Prefix
-        const ConstSmbiosTableIterator operator ++ (int)
-        {
-            const ConstSmbiosTableIterator oldValue = *this;
-            ++(*this);
-            return oldValue;
-        };  //Postfix++
-    };
-
+    
     //
     // Non-member functions
     //
     std::ostream & operator << (std::ostream & cout, const ISmbiosTable & item);
     std::ostream & operator << (std::ostream & cout, const ISmbiosItem & item);
-
 }
 
 

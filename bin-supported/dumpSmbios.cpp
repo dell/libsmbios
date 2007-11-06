@@ -79,7 +79,7 @@ main (int argc, char **argv)
         }
 
         smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
-        smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
+        const smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
 
         if(xml)
         {

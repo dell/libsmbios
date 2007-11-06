@@ -651,7 +651,7 @@ void testPlatform::testVariousAccessors()
 
     // table should not be deleted when we are finished. It is managed by the
     // factory. Factory will delete it for us when ->reset() is called.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information] ;
@@ -785,7 +785,7 @@ testPlatform::testOutOfBounds()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information] ;
@@ -845,7 +845,7 @@ testPlatform::testConstructionOffset1()
     }
 
     smbios::SmbiosFactory::getFactory()->setParameter("offset", offset);
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     int tableEntriesCounted = 0;
@@ -894,22 +894,22 @@ testPlatform::testConstructionOffset2()
     //  DO NOT USE ->getSingleton() here... we use ->makeNew() on purpose.
     //  This is an internal test and the parameters of this test mean we should _not_ use a singleton.
     factory->setParameter("offset", 1);
-    ASSERT_THROWS( auto_ptr<smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
+    ASSERT_THROWS( auto_ptr<const smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
 
     factory->setParameter("offset", 1000);
-    ASSERT_THROWS( auto_ptr<smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
+    ASSERT_THROWS( auto_ptr<const smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
 
     factory->setParameter("offset", 0xFFFFFUL ); // F_BLOCK_END (private definition)
-    ASSERT_THROWS( auto_ptr<smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
+    ASSERT_THROWS( auto_ptr<const smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
 
     factory->setParameter("offset", 0xFFFFFUL - 1); // F_BLOCK_END (private definition)
-    ASSERT_THROWS( auto_ptr<smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
+    ASSERT_THROWS( auto_ptr<const smbios::ISmbiosTable>p(factory->makeNew()), smbios::IException );
 
     smbios::SmbiosFactory::getFactory()->setParameter("offset", offset + 1);
-    ASSERT_THROWS( auto_ptr<smbios::ISmbiosTable> table( factory->makeNew() ), smbios::IException );
+    ASSERT_THROWS( auto_ptr<const smbios::ISmbiosTable> table( factory->makeNew() ), smbios::IException );
 
     smbios::SmbiosFactory::getFactory()->setParameter("offset", offset - 1);
-    ASSERT_THROWS( auto_ptr<smbios::ISmbiosTable> table( factory->makeNew() ), smbios::IException );
+    ASSERT_THROWS( auto_ptr<const smbios::ISmbiosTable> table( factory->makeNew() ), smbios::IException );
 
     // should not be able to use no-argument constructor...
     // UNCOMMENT TO CHECK.

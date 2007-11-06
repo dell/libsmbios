@@ -198,7 +198,7 @@ namespace smi
 
     std::auto_ptr<smi::IDellCallingInterfaceSmi> setupCallingInterfaceSmi(u16 smiClass, u16 select, const u32 args[4])
     {
-        smbios::ISmbiosTable *table = 0;
+        const smbios::ISmbiosTable *table = 0;
         table = smbios::SmbiosFactory::getFactory()->getSingleton();
 
         std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);

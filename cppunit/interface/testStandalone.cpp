@@ -144,7 +144,7 @@ void testStandalone::testTable_Subscript()
 
     // table should not be deleted when we are finished. It is managed by the
     // factory. Factory will delete it for us when ->reset() is called.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     smbios::ISmbiosTable::iterator item1;
@@ -186,7 +186,7 @@ testStandalone::testEntryCount ()
     STD_TEST_START(getTestName().c_str() << "  " );
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // test streamify() while we are at it.
@@ -210,7 +210,7 @@ testStandalone::testConstIterator ()
     STD_TEST_START(getTestName().c_str() << "  " );
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     const smbios::ISmbiosTable *constTable = &*table;
@@ -234,7 +234,7 @@ testStandalone::testSubscriptOperator1 ()
     STD_TEST_START(getTestName().c_str() << "  " );
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     int tableEntriesCounted = 0;
@@ -280,7 +280,7 @@ testStandalone::testSubscriptOperator3 ()
     STD_TEST_START(getTestName().c_str() << "  " );
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // There should normally be more than one "Port Connector" block. Check.
@@ -315,7 +315,7 @@ void testStandalone::testStreamify()
     // BEGIN EXAMPLE iterator
     // table should not be deleted when we are finished. It is managed by the
     // factory. Factory will delete it for us when ->reset() is called.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     ostringstream ost;
@@ -344,7 +344,7 @@ testStandalone::testItemIdentity ()
     // a bit easier to read.
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // grab the first bios block
@@ -388,7 +388,7 @@ testStandalone::testEachItemAccessors ()
     // primarily to ensure that getUx_FromItem() has the endianness correct
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     smbios::ISmbiosTable::iterator item = table->begin();
@@ -430,7 +430,7 @@ void testStandalone::testNonXml()
 
     // Ok, none of these are related to construction offset, but it is good to
     // run these tests while we have a handy reference to a NON-XML factory.
-    auto_ptr<smbios::ISmbiosTable>p(factory->makeNew());
+    auto_ptr<const smbios::ISmbiosTable>p(factory->makeNew());
     auto_ptr<const smbios::ISmbiosTable>q(factory->makeNew());
 
     smbios::ISmbiosTable::iterator item1 = (*p)[smbios::BIOS_Information];
@@ -454,7 +454,7 @@ void testStandalone::testSmbiosXml()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
             smbios::SmbiosFactory::getFactory()->getSingleton();
     
     // test if "PCI Supported" bit is set, should always be set.
@@ -472,7 +472,7 @@ testStandalone::testGetBoundaries()
     STD_TEST_START(getTestName().c_str() << "  " );
 
     // do not delete. Factory manages lifetime.
-    smbios::ISmbiosTable *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     for( smbios::ISmbiosTable::iterator item = (*table)[-1] ; item != table->end(); ++item)

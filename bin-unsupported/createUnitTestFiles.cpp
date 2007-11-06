@@ -60,7 +60,7 @@ main (int argc, char **argv)
     {
         // do this first, it will raise an exception on error and prevent creation of zero-len
         // dat files.
-        smbios::ISmbiosTable *table = 
+        const smbios::ISmbiosTable *table = 
             smbios::SmbiosFactory::getFactory()->getSingleton();
 
         FILE *fd;
