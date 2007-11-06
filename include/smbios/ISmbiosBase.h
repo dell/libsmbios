@@ -290,11 +290,13 @@ namespace smbios
     std::ostream & operator << (std::ostream & cout, const ISmbiosTableBase & item);
     std::ostream & operator << (std::ostream & cout, const ISmbiosItem & item);
 
-    void resetIter(const void *&i);
-    bool tableEof(const smbios::ISmbiosTableBase &table, const void *i);
-    const smbios::ISmbiosItem &iterNextItem(const smbios::ISmbiosTableBase &table, const void **i);
-    const smbios::ISmbiosItem &findItemByType(const smbios::ISmbiosTableBase &table, u8 type, const void **i);
-    const smbios::ISmbiosItem &findItemByHandle(const smbios::ISmbiosTableBase &table, u16 handle, const void **i);
+    struct iter { const void *pos; };
+
+    void resetIter(iter &);
+    bool tableEof(const smbios::ISmbiosTableBase &table, const iter &);
+    const smbios::ISmbiosItem &iterNextItem(const smbios::ISmbiosTableBase &table, iter &);
+    const smbios::ISmbiosItem &findItemByType(const smbios::ISmbiosTableBase &table, u8 type, iter &);
+    const smbios::ISmbiosItem &findItemByHandle(const smbios::ISmbiosTableBase &table, u16 handle, iter &);
 }
 
 

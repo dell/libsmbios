@@ -389,38 +389,30 @@ out1:
         return cout;
     }
 
-    void resetIter(const void *&i)
+    void resetIter(iter &i)
     {
-        i=0;
+        i.pos = 0;
     }
 
-    bool tableEof(const smbios::ISmbiosTableBase &table, const void *i)
+    bool tableEof(const smbios::ISmbiosTableBase &table, const iter &i)
     {
         try{
-            table.getSmbiosItem(table.nextSmbiosStruct(i));
+            table.getSmbiosItem(table.nextSmbiosStruct(i.pos));
             return false;
         } catch (const ItemNotFound &e) {
             return true;
         }
     }
 
-    const smbios::ISmbiosItem &iterNextItem(const smbios::ISmbiosTableBase &table, const void **i)
+    const smbios::ISmbiosItem &iterNextItem(const smbios::ISmbiosTableBase &table, iter &i)
     {
-        const void *temp=0;
-        if(!i)
-            i=&temp;
-
-        *i = table.nextSmbiosStruct(*i);
-        return table.getSmbiosItem(*i);
+        i.pos = table.nextSmbiosStruct(i.pos);
+        return table.getSmbiosItem(i.pos);
     }
 
 
-    const smbios::ISmbiosItem &findItemByType(const smbios::ISmbiosTableBase &table, u8 type, const void **i)
+    const smbios::ISmbiosItem &findItemByType(const smbios::ISmbiosTableBase &table, u8 type, iter &i)
     {
-        const void *temp=0;
-        if(!i)
-            i=&temp;
-
         const smbios::ISmbiosItem *item = &iterNextItem(table, i);
         while(item->getType() != type)
             item = &iterNextItem(table, i);
@@ -428,12 +420,8 @@ out1:
         return *item;
     }
 
-    const smbios::ISmbiosItem &findItemByHandle(const smbios::ISmbiosTableBase &table, u16 handle, const void **i)
+    const smbios::ISmbiosItem &findItemByHandle(const smbios::ISmbiosTableBase &table, u16 handle, iter &i)
     {
-        const void *temp=0;
-        if(!i)
-            i=&temp;
-
         const smbios::ISmbiosItem *item = &iterNextItem(table, i);
         while(item->getHandle() != handle)
             item = &iterNextItem(table, i);

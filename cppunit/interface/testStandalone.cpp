@@ -150,7 +150,8 @@ void testStandalone::testSmbiosTableBase()
     CPPUNIT_ASSERT_EQUAL(item1.getType(), (u8)smbios::BIOS_Information);
 
     // do it again the easy way
-    const smbios::ISmbiosItem &item2 = findItemByType(*table, smbios::BIOS_Information, 0);
+    smbios::iter j; j.pos=0;
+    const smbios::ISmbiosItem &item2 = findItemByType(*table, smbios::BIOS_Information, j);
 
     // and some random asserts to be sure they are the same
     CPPUNIT_ASSERT_EQUAL( item1.getHandle(),    item2.getHandle() );
@@ -170,10 +171,10 @@ void testStandalone::testSmbiosTableBase_iterNextItem()
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     int tableEntriesCounted=0;
-    const void *i = 0;
+    smbios::iter i; i.pos=0;
     smbios::resetIter(i);
     do{
-        const smbios::ISmbiosItem &item3 = iterNextItem(*table, &i);
+        const smbios::ISmbiosItem &item3 = iterNextItem(*table, i);
         tableEntriesCounted++;
     } while( !smbios::tableEof(*table, i) );
 
@@ -187,9 +188,11 @@ void testStandalone::testSmbiosTableBase_findItemByHandle()
     const smbios::ISmbiosTableBase *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    ASSERT_THROWS( findItemByHandle (*table, 6666, 0), smbios::ItemNotFound);
+    smbios::iter i; i.pos=0;
+    ASSERT_THROWS( findItemByHandle (*table, 6666, i), smbios::ItemNotFound);
 
-    const smbios::ISmbiosItem &item4 = findItemByHandle(*table, 1024, 0);
+    resetIter(i);
+    const smbios::ISmbiosItem &item4 = findItemByHandle(*table, 1024, i);
     CPPUNIT_ASSERT_EQUAL( (int)getItemType(item4)  , 4 );
     CPPUNIT_ASSERT_EQUAL( (int)getItemHandle(item4)  , 1024 );
     CPPUNIT_ASSERT_EQUAL( (int)getItemLength(item4)  , 32 );
@@ -202,7 +205,8 @@ void testStandalone::testSmbiosTableBase_findItemByType()
     STD_TEST_START(getTestName().c_str() << "  " );
     const smbios::ISmbiosTableBase *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
-    ASSERT_THROWS( findItemByType (*table, 250, 0), smbios::ItemNotFound);
+    smbios::iter i; i.pos=0;
+    ASSERT_THROWS( findItemByType (*table, 250, i), smbios::ItemNotFound);
     STD_TEST_END("");
 }
 
