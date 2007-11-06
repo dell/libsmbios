@@ -288,7 +288,7 @@ namespace smbios
     {
         if (0 == current)
         {
-            throw ParameterExceptionImpl (_("Programmer error: attempt to dereference a Null iterator."));
+            throw ItemNotFoundImpl("Could not de-reference a null item");
         }
 
         ISmbiosItem *item = this->getCachedItem( current );
@@ -309,7 +309,7 @@ namespace smbios
         const u8 *data = 0;
 
         //If we are called on an uninitialized smbiosBuffer, return 0;
-        if (0 == smbiosBuffer)
+        if (0 == smbiosBuffer || (currStruct && 0x7f == currStruct->type))
             goto out1;
 
         data = smbiosBuffer;
@@ -317,14 +317,6 @@ namespace smbios
         // currStruct == 0, that means we return the first struct
         if (0 == currStruct)
             goto out1;
-
-
-        // if currStruct struct is an end-of-table struct, stop.
-        if (0x7f == currStruct->type)
-        {
-            data = 0;
-            goto out1;
-        }
 
         // start out at the end of the currStruct structure.
         // The only things that sits between us and the next struct
@@ -397,4 +389,55 @@ out1:
         return cout;
     }
 
+    void resetIter(const void *&i)
+    {
+        i=0;
+    }
+
+    bool tableEof(const smbios::ISmbiosTableBase &table, const void *i)
+    {
+        try{
+            table.getSmbiosItem(table.nextSmbiosStruct(i));
+            return false;
+        } catch (const ItemNotFound &e) {
+            return true;
+        }
+    }
+
+    const smbios::ISmbiosItem &iterNextItem(const smbios::ISmbiosTableBase &table, const void **i)
+    {
+        const void *temp=0;
+        if(!i)
+            i=&temp;
+
+        *i = table.nextSmbiosStruct(*i);
+        return table.getSmbiosItem(*i);
+    }
+
+
+    const smbios::ISmbiosItem &findItemByType(const smbios::ISmbiosTableBase &table, u8 type, const void **i)
+    {
+        const void *temp=0;
+        if(!i)
+            i=&temp;
+
+        const smbios::ISmbiosItem *item = &iterNextItem(table, i);
+        while(item->getType() != type)
+            item = &iterNextItem(table, i);
+
+        return *item;
+    }
+
+    const smbios::ISmbiosItem &findItemByHandle(const smbios::ISmbiosTableBase &table, u16 handle, const void **i)
+    {
+        const void *temp=0;
+        if(!i)
+            i=&temp;
+
+        const smbios::ISmbiosItem *item = &iterNextItem(table, i);
+        while(item->getHandle() != handle)
+            item = &iterNextItem(table, i);
+
+        return *item;
+    }
 }

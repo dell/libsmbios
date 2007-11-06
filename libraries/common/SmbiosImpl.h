@@ -36,6 +36,7 @@ namespace smbios
     DEFINE_EXCEPTION_EX( ParseExceptionImpl, smbios, ParseException );
     DEFINE_EXCEPTION_EX( StringUnavailableImpl, smbios, StringUnavailable );
     DEFINE_EXCEPTION_EX( DataOutOfBoundsImpl, smbios, DataOutOfBounds );
+    DEFINE_EXCEPTION_EX( ItemNotFoundImpl, smbios, ItemNotFound );
 
     class SmbiosFactoryImpl : public factory::TFactory<SmbiosFactory>
     {
@@ -46,6 +47,17 @@ namespace smbios
         virtual ISmbiosTable *makeNew( ); // not for use
     protected:
         static ISmbiosTable *_tableInstance;
+    };
+
+    class SmbiosBaseFactoryImpl : public factory::TFactory<SmbiosBaseFactory>
+    {
+    public:
+        SmbiosBaseFactoryImpl();
+        virtual ~SmbiosBaseFactoryImpl() throw();
+        virtual ISmbiosTableBase *getSingleton( ); // returns singleton
+        virtual ISmbiosTableBase *makeNew( ); // not for use
+    protected:
+        static ISmbiosTableBase *_tableInstance;
     };
 
     class SmbiosStrategy

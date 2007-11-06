@@ -16,6 +16,7 @@ libraries_libsmbios_la_SOURCES = \
     libraries/memory/Memory_Linux.cpp           \
     libraries/rbu/RbuHdr.cpp                    \
     libraries/rbu/Rbu_Linux.cpp                 \
+    libraries/smbios/SmbiosBaseFactory.cpp      \
     libraries/smbios/SmbiosFactory.cpp          \
     libraries/smbios/SmbiosItem.cpp             \
     libraries/smbios/SmbiosStrategy.cpp         \

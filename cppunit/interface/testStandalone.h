@@ -67,6 +67,12 @@ public:
     virtual void setUp();
     virtual void tearDown();
 
+    // base smbios test
+    void testSmbiosTableBase();
+    void testSmbiosTableBase_iterNextItem();
+    void testSmbiosTableBase_findItemByType();
+    void testSmbiosTableBase_findItemByHandle();
+
     // table tests
     void testTable_Subscript();
     void testEntryCount ();
@@ -106,8 +112,14 @@ public:
     // Exception Tests
     void testNonXml();
 
+
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testStandalone);
+
+    CPPUNIT_TEST (testSmbiosTableBase);
+    CPPUNIT_TEST (testSmbiosTableBase_iterNextItem);
+    CPPUNIT_TEST (testSmbiosTableBase_findItemByType);
+    CPPUNIT_TEST (testSmbiosTableBase_findItemByHandle);
 
     CPPUNIT_TEST (testTable_Subscript);
     CPPUNIT_TEST (testEntryCount);
