@@ -1954,7 +1954,7 @@ temp_RELEASE_NAME=libsmbios
 temp_RELEASE_MAJOR=2
 temp_RELEASE_MINOR=0
 temp_RELEASE_SUBLEVEL=0
-temp_RELEASE_EXTRALEVEL=
+temp_RELEASE_EXTRALEVEL=_BETA_1
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
 # If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
