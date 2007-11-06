@@ -112,6 +112,7 @@ EXTRA_DIST += \
  include/smbios/IFactory.h		\
  include/smbios/IMemory.h		\
  include/smbios/IObserver.h		\
+ include/smbios/ISmbiosBase.h		\
  include/smbios/ISmbios.h		\
  include/smbios/ISmi.h		\
  include/smbios/IToken.h		\

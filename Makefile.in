@@ -909,9 +909,9 @@ EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
 	include/smbios/DellRbu.h include/smbios/ICmosRW.h \
 	include/smbios/IException.h include/smbios/IFactory.h \
 	include/smbios/IMemory.h include/smbios/IObserver.h \
-	include/smbios/ISmbios.h include/smbios/ISmi.h \
-	include/smbios/IToken.h include/smbios/SmbiosDefs.h \
-	include/smbios/RbuLowLevel.h \
+	include/smbios/ISmbiosBase.h include/smbios/ISmbios.h \
+	include/smbios/ISmi.h include/smbios/IToken.h \
+	include/smbios/SmbiosDefs.h include/smbios/RbuLowLevel.h \
 	include/smbios/config/abi/msvc_prefix.hpp \
 	include/smbios/config/abi/msvc_suffix.hpp \
 	include/smbios/config/boost_LICENSE_1_0_txt \
