@@ -141,7 +141,7 @@ void testStandalone::testSmbiosTableBase()
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // try it manually the hard way
-    const void *i = table->nextSmbiosStruct(0);
+    const u8 *i = table->nextSmbiosStruct(0);
     while( i && table->getSmbiosItem(i).getType() != smbios::BIOS_Information )
         i = table->nextSmbiosStruct(i);
 

@@ -245,7 +245,7 @@ namespace smbios
 
     }
 
-    void SmbiosItem::getData(unsigned int offset, void *out, size_t size ) const
+    void SmbiosItem::getData(unsigned int offset, u8 *out, size_t size ) const
     {
         checkItemBounds( header_size, header->length, offset, size );
         memcpy(out, reinterpret_cast<const u8 *>(header)+offset, size);
@@ -364,7 +364,7 @@ namespace smbios
         unsigned int fieldLen = ((msb+1)/8) + (((msb+1)%8)?1:0);
 
         // request data from item
-        item.getData(offset, &bitfield, fieldLen);
+        item.getData(offset, reinterpret_cast<u8 *>(&bitfield), fieldLen);
 
         // mask off everything but requested bits and shift down
         unsigned int bitlen = (msb-lsb) + 1;

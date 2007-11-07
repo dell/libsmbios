@@ -176,7 +176,7 @@ namespace smbios
          * trying to access is actually a U8. 
          */
 
-        virtual void getData( unsigned int offset, void *out, size_t size ) const = 0;
+        virtual void getData( unsigned int offset, u8 *out, size_t size ) const = 0;
 
         //loathe Stroustrup. In his infinite wisdom, he asserts that
         //auto_ptr equivalent for array is _not_necessary_.
@@ -231,9 +231,10 @@ namespace smbios
         ISmbiosTableBase();
         // Interface class: no default or copy constructor
         virtual ~ISmbiosTableBase ();
+        typedef const void * opaque;
 
-        virtual const ISmbiosItem & getSmbiosItem (const void *) const = 0;
-        virtual const void * nextSmbiosStruct ( const void * current = 0) const = 0;
+        virtual const ISmbiosItem & getSmbiosItem (const u8 *current) const = 0;
+        virtual const u8 * nextSmbiosStruct ( const u8 * current = 0) const = 0;
 
         // MEMBERS
         //! Disables all workarounds for _new_ items created by the table.
@@ -303,7 +304,7 @@ namespace smbios
     private:
         table_iterator();
         const smbios::ISmbiosTableBase &table;
-        const void *pos;
+        const u8 *pos;
     };
 }
 

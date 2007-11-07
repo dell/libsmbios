@@ -159,8 +159,8 @@ namespace smbios
         virtual ISmbiosItem *getCachedItem( const void * ) const;
         virtual void cacheItem( const void *, ISmbiosItem &newitem ) const;
         virtual void clearItemCache() const;
-        const ISmbiosItem & getSmbiosItem (const void *) const;
-        const void * nextSmbiosStruct ( const void * current = 0) const;
+        const ISmbiosItem & getSmbiosItem (const u8 *) const;
+        const u8 * nextSmbiosStruct ( const u8 * current = 0) const;
 
         // friends :-)
         friend class SmbiosTableIteratorBase;
@@ -205,7 +205,7 @@ namespace smbios
         u8 getLength() const;
         u16 getHandle() const;
 
-        virtual void getData( unsigned int offset, void *out, size_t size ) const;
+        virtual void getData( unsigned int offset, u8 *out, size_t size ) const;
 
         virtual const u8* getBufferCopy(size_t &length) const;
         virtual const size_t getBufferSize() const;

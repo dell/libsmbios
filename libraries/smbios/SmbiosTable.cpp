@@ -284,7 +284,7 @@ namespace smbios
         return *item;
     }
 
-    const ISmbiosItem & SmbiosTable::getSmbiosItem (const void *current) const
+    const ISmbiosItem & SmbiosTable::getSmbiosItem (const u8 *current) const
     {
         if (0 == current)
         {
@@ -302,7 +302,7 @@ namespace smbios
         return newitem;
     }
 
-    const void *SmbiosTable::nextSmbiosStruct (const void* current) const
+    const u8 *SmbiosTable::nextSmbiosStruct (const u8* current) const
     {
         const smbios_structure_header *currStruct =
             reinterpret_cast<const smbios_structure_header *>(current);
@@ -347,7 +347,7 @@ namespace smbios
         }
 
 out1:
-        return reinterpret_cast<const void *>(data);
+        return data;
     }
 
 

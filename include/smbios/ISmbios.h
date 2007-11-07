@@ -207,7 +207,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
 
         int matchType;
         const ISmbiosTable * table;
-        mutable const void * current;
+        mutable const u8 * current;
     };
     
     //
