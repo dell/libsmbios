@@ -280,7 +280,7 @@ namespace smbios
         virtual std::ostream & streamify(std::ostream & cout ) const = 0;
 
     private:
-        explicit ISmbiosTableBase(const ISmbiosTableBase &); ///< not implemented (explicitly disallowed)
+        ISmbiosTableBase(const ISmbiosTableBase &); ///< not implemented (explicitly disallowed)
         void operator =( const ISmbiosTableBase & ); ///< not implemented (explicitly disallowed)
     };
 
@@ -288,13 +288,14 @@ namespace smbios
     //
     // Non-member functions
     //
-    std::ostream & operator << (std::ostream & cout, const ISmbiosTableBase & item);
+    // implement this sooner or later...
+    //std::ostream & operator << (std::ostream & cout, const ISmbiosTableBase & item);
     std::ostream & operator << (std::ostream & cout, const ISmbiosItem & item);
 
 
     class table_iterator {
     public:
-        table_iterator(const smbios::ISmbiosTableBase &);
+        explicit table_iterator(const smbios::ISmbiosTableBase &);
         virtual ~table_iterator();
         virtual void reset();
         virtual bool eof();
