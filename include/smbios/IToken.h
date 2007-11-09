@@ -193,6 +193,9 @@ namespace smbios
         IToken * dereference ();
         void incrementIterator();
 
+        void reset();
+        bool eof();
+
     protected:
         int matchType;
         const ITokenTable *table;

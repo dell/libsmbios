@@ -41,6 +41,17 @@ namespace smbios
         incrementIterator();
     }
 
+    void TokenTableIteratorBase::reset()
+    { 
+        current=0; 
+        incrementIterator(); 
+    }
+    
+    bool TokenTableIteratorBase::eof()
+    {
+        return (current == 0);
+    }
+
     IToken& TokenTableIterator::operator * () const 
     {
         return *(const_cast<TokenTableIterator *>(this)->dereference());

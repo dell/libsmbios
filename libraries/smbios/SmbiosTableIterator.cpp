@@ -31,16 +31,15 @@ namespace smbios
     SmbiosTableIterator::~SmbiosTableIterator() throw() {}
     ConstSmbiosTableIterator::~ConstSmbiosTableIterator() throw() {}
 
-    void SmbiosTableIteratorBase::reset() { current=0; };
+    void SmbiosTableIteratorBase::reset()
+    { 
+        current=0; 
+        incrementIterator(); 
+    }
     
     bool SmbiosTableIteratorBase::eof()
     {
-        try{
-            table->getSmbiosItem(table->nextSmbiosStruct(current));
-            return false;
-        } catch (const ItemNotFound &e) {
-            return true;
-        }
+        return (current == 0);
     }
 
     SmbiosTableIterator::SmbiosTableIterator(const ISmbiosTable * initialTable, int typeToMatch)
