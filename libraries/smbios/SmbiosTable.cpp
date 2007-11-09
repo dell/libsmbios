@@ -280,6 +280,11 @@ namespace smbios
 
     const ISmbiosItem & SmbiosTable::getSmbiosItem (const u8 *current) const
     {
+        return const_cast<SmbiosTable *>(this)->getSmbiosItem(current);
+    }
+
+    ISmbiosItem & SmbiosTable::getSmbiosItem (const u8 *current)
+    {
         if (0 == current)
         {
             throw ItemNotFoundImpl("Could not de-reference a null item");
@@ -383,42 +388,4 @@ out1:
         return cout;
     }
 
-    table_iterator::~table_iterator() {}
-    table_iterator::table_iterator(const smbios::ISmbiosTable &table) : table(table), pos(0) {};
-    void table_iterator::reset() { pos=0; };
-    
-    bool table_iterator::eof()
-    {
-        try{
-            table.getSmbiosItem(table.nextSmbiosStruct(pos));
-            return false;
-        } catch (const ItemNotFound &e) {
-            return true;
-        }
-    }
-
-    const smbios::ISmbiosItem &table_iterator::iterNextItem()
-    {
-        pos = table.nextSmbiosStruct(pos);
-        return table.getSmbiosItem(pos);
-    }
-
-
-    const smbios::ISmbiosItem &table_iterator::findItemByType(u8 type)
-    {
-        const smbios::ISmbiosItem *item = &iterNextItem();
-        while(item->getType() != type)
-            item = &iterNextItem();
-
-        return *item;
-    }
-
-    const smbios::ISmbiosItem &table_iterator::findItemByHandle(u16 handle)
-    {
-        const smbios::ISmbiosItem *item = &iterNextItem();
-        while(item->getHandle() != handle)
-            item = &iterNextItem();
-
-        return *item;
-    }
 }

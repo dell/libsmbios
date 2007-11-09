@@ -148,11 +148,9 @@ namespace smbios
         virtual ISmbiosItem *getCachedItem( const void * ) const;
         virtual void cacheItem( const void *, ISmbiosItem &newitem ) const;
         virtual void clearItemCache() const;
+        ISmbiosItem & getSmbiosItem (const u8 *);
         const ISmbiosItem & getSmbiosItem (const u8 *) const;
         const u8 * nextSmbiosStruct ( const u8 * current = 0) const;
-
-        // friends :-)
-        friend class SmbiosTableIteratorBase;
 
     protected:
         // No-arg constructor not legal for this class for regular users

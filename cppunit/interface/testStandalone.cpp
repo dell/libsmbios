@@ -135,79 +135,16 @@ void testStandalone::tearDown()
 //
 
 void testStandalone::testSmbiosTableBase()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-
-    // try it manually the hard way
-    const u8 *i = table->nextSmbiosStruct(0);
-    while( i && table->getSmbiosItem(i).getType() != smbios::BIOS_Information )
-        i = table->nextSmbiosStruct(i);
-
-    const smbios::ISmbiosItem &item1 = table->getSmbiosItem(i);
-    CPPUNIT_ASSERT_EQUAL(table->getSmbiosItem(i).getType(), (u8)smbios::BIOS_Information);
-    CPPUNIT_ASSERT_EQUAL(item1.getType(), (u8)smbios::BIOS_Information);
-
-    // do it again the easy way
-    smbios::table_iterator j(*table);
-    const smbios::ISmbiosItem &item2 = j.findItemByType(smbios::BIOS_Information);
-
-    // and some random asserts to be sure they are the same
-    CPPUNIT_ASSERT_EQUAL( item1.getHandle(),    item2.getHandle() );
-    CPPUNIT_ASSERT_EQUAL( getItemHandle(item1), item2.getHandle() );
-    CPPUNIT_ASSERT_EQUAL( item1.getLength(),    item2.getLength() );
-    CPPUNIT_ASSERT_EQUAL( getItemLength(item1), item2.getLength() );
-    CPPUNIT_ASSERT_EQUAL( item1.getType()  ,    item2.getType()   );
-    CPPUNIT_ASSERT_EQUAL( getItemType(item1)  , item2.getType()   );
-
-    STD_TEST_END("");
-}
+{}
 
 void testStandalone::testSmbiosTableBase_iterNextItem()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-
-    int tableEntriesCounted=0;
-    smbios::table_iterator i(*table);
-    do{
-        const smbios::ISmbiosItem &item3 = i.iterNextItem();
-        tableEntriesCounted++;
-    } while(!i.eof());
-
-    CPPUNIT_ASSERT_EQUAL( tableEntriesCounted, table->getNumberOfEntries() );
-    STD_TEST_END("");
-}
+{}
 
 void testStandalone::testSmbiosTableBase_findItemByHandle()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-
-    smbios::table_iterator i(*table);
-    ASSERT_THROWS( i.findItemByHandle(6666), smbios::ItemNotFound);
-
-    i.reset();
-    const smbios::ISmbiosItem &item4 = i.findItemByHandle(1024);
-    CPPUNIT_ASSERT_EQUAL( (int)getItemType(item4)  , 4 );
-    CPPUNIT_ASSERT_EQUAL( (int)getItemHandle(item4)  , 1024 );
-    CPPUNIT_ASSERT_EQUAL( (int)getItemLength(item4)  , 32 );
-
-    STD_TEST_END("");
-}
+{}
 
 void testStandalone::testSmbiosTableBase_findItemByType()
-{
-    STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTable *table =
-        smbios::SmbiosFactory::getFactory()->getSingleton();
-    smbios::table_iterator i(*table);
-    ASSERT_THROWS( i.findItemByType(250), smbios::ItemNotFound);
-    STD_TEST_END("");
-}
+{}
 
 
 void testStandalone::testTable_Subscript()

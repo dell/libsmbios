@@ -31,6 +31,18 @@ namespace smbios
     SmbiosTableIterator::~SmbiosTableIterator() throw() {}
     ConstSmbiosTableIterator::~ConstSmbiosTableIterator() throw() {}
 
+    void SmbiosTableIteratorBase::reset() { current=0; };
+    
+    bool SmbiosTableIteratorBase::eof()
+    {
+        try{
+            table->getSmbiosItem(table->nextSmbiosStruct(current));
+            return false;
+        } catch (const ItemNotFound &e) {
+            return true;
+        }
+    }
+
     SmbiosTableIterator::SmbiosTableIterator(const ISmbiosTable * initialTable, int typeToMatch)
         : SmbiosTableIteratorBase(initialTable, typeToMatch)
     {}
@@ -102,7 +114,12 @@ namespace smbios
 
     ISmbiosItem & SmbiosTableIteratorBase::dereference ()
     {
-        return const_cast<ISmbiosItem &>(const_cast<const SmbiosTableIteratorBase*>(this)->dereference());
+        if (0 == current)
+        {
+            throw ParameterExceptionImpl (_("Programmer error: attempt to dereference a Null iterator."));
+        }
+
+        return const_cast<ISmbiosTable *>(table)->getSmbiosItem(current);
     }
 
     const ISmbiosItem & SmbiosTableIteratorBase::dereference () const
