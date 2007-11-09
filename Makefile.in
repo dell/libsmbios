@@ -135,7 +135,6 @@ am_libraries_libsmbios_la_OBJECTS =  \
 	libraries/memory/libraries_libsmbios_la-Memory_Linux.lo \
 	libraries/rbu/libraries_libsmbios_la-RbuHdr.lo \
 	libraries/rbu/libraries_libsmbios_la-Rbu_Linux.lo \
-	libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo \
 	libraries/smbios/libraries_libsmbios_la-SmbiosFactory.lo \
 	libraries/smbios/libraries_libsmbios_la-SmbiosItem.lo \
 	libraries/smbios/libraries_libsmbios_la-SmbiosStrategy.lo \
@@ -909,9 +908,9 @@ EXTRA_DIST = libraries/cmos/CmosRW_WindowsIO.cpp \
 	include/smbios/DellRbu.h include/smbios/ICmosRW.h \
 	include/smbios/IException.h include/smbios/IFactory.h \
 	include/smbios/IMemory.h include/smbios/IObserver.h \
-	include/smbios/ISmbiosBase.h include/smbios/ISmbios.h \
-	include/smbios/ISmi.h include/smbios/IToken.h \
-	include/smbios/SmbiosDefs.h include/smbios/RbuLowLevel.h \
+	include/smbios/ISmbios.h include/smbios/ISmi.h \
+	include/smbios/IToken.h include/smbios/SmbiosDefs.h \
+	include/smbios/RbuLowLevel.h \
 	include/smbios/config/abi/msvc_prefix.hpp \
 	include/smbios/config/abi/msvc_suffix.hpp \
 	include/smbios/config/boost_LICENSE_1_0_txt \
@@ -954,7 +953,6 @@ libraries_libsmbios_la_SOURCES = \
     libraries/memory/Memory_Linux.cpp           \
     libraries/rbu/RbuHdr.cpp                    \
     libraries/rbu/Rbu_Linux.cpp                 \
-    libraries/smbios/SmbiosBaseFactory.cpp      \
     libraries/smbios/SmbiosFactory.cpp          \
     libraries/smbios/SmbiosItem.cpp             \
     libraries/smbios/SmbiosStrategy.cpp         \
@@ -1234,9 +1232,6 @@ libraries/smbios/$(am__dirstamp):
 libraries/smbios/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) libraries/smbios/$(DEPDIR)
 	@: > libraries/smbios/$(DEPDIR)/$(am__dirstamp)
-libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo:  \
-	libraries/smbios/$(am__dirstamp) \
-	libraries/smbios/$(DEPDIR)/$(am__dirstamp)
 libraries/smbios/libraries_libsmbios_la-SmbiosFactory.lo:  \
 	libraries/smbios/$(am__dirstamp) \
 	libraries/smbios/$(DEPDIR)/$(am__dirstamp)
@@ -1704,8 +1699,6 @@ mostlyclean-compile:
 	-rm -f libraries/rbu/libraries_libsmbios_la-RbuHdr.lo
 	-rm -f libraries/rbu/libraries_libsmbios_la-Rbu_Linux.$(OBJEXT)
 	-rm -f libraries/rbu/libraries_libsmbios_la-Rbu_Linux.lo
-	-rm -f libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.$(OBJEXT)
-	-rm -f libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo
 	-rm -f libraries/smbios/libraries_libsmbios_la-SmbiosFactory.$(OBJEXT)
 	-rm -f libraries/smbios/libraries_libsmbios_la-SmbiosFactory.lo
 	-rm -f libraries/smbios/libraries_libsmbios_la-SmbiosItem.$(OBJEXT)
@@ -1799,7 +1792,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/memory/$(DEPDIR)/libraries_libsmbios_la-Memory_Linux.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/rbu/$(DEPDIR)/libraries_libsmbios_la-RbuHdr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/rbu/$(DEPDIR)/libraries_libsmbios_la-Rbu_Linux.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosBaseFactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosFactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosItem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosStrategy.Plo@am__quote@
@@ -1934,13 +1926,6 @@ libraries/rbu/libraries_libsmbios_la-Rbu_Linux.lo: libraries/rbu/Rbu_Linux.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='libraries/rbu/Rbu_Linux.cpp' object='libraries/rbu/libraries_libsmbios_la-Rbu_Linux.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbios_la_CXXFLAGS) $(CXXFLAGS) -c -o libraries/rbu/libraries_libsmbios_la-Rbu_Linux.lo `test -f 'libraries/rbu/Rbu_Linux.cpp' || echo '$(srcdir)/'`libraries/rbu/Rbu_Linux.cpp
-
-libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo: libraries/smbios/SmbiosBaseFactory.cpp
-@am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbios_la_CXXFLAGS) $(CXXFLAGS) -MT libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo -MD -MP -MF libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosBaseFactory.Tpo -c -o libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo `test -f 'libraries/smbios/SmbiosBaseFactory.cpp' || echo '$(srcdir)/'`libraries/smbios/SmbiosBaseFactory.cpp
-@am__fastdepCXX_TRUE@	mv -f libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosBaseFactory.Tpo libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosBaseFactory.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='libraries/smbios/SmbiosBaseFactory.cpp' object='libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbios_la_CXXFLAGS) $(CXXFLAGS) -c -o libraries/smbios/libraries_libsmbios_la-SmbiosBaseFactory.lo `test -f 'libraries/smbios/SmbiosBaseFactory.cpp' || echo '$(srcdir)/'`libraries/smbios/SmbiosBaseFactory.cpp
 
 libraries/smbios/libraries_libsmbios_la-SmbiosFactory.lo: libraries/smbios/SmbiosFactory.cpp
 @am__fastdepCXX_TRUE@	$(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libraries_libsmbios_la_CXXFLAGS) $(CXXFLAGS) -MT libraries/smbios/libraries_libsmbios_la-SmbiosFactory.lo -MD -MP -MF libraries/smbios/$(DEPDIR)/libraries_libsmbios_la-SmbiosFactory.Tpo -c -o libraries/smbios/libraries_libsmbios_la-SmbiosFactory.lo `test -f 'libraries/smbios/SmbiosFactory.cpp' || echo '$(srcdir)/'`libraries/smbios/SmbiosFactory.cpp
