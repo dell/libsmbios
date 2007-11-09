@@ -182,9 +182,9 @@ testPlatform::testCmosChecksum ()
 
     smbios::TokenTableFactory *ttFactory;
     ttFactory = smbios::TokenTableFactory::getFactory() ;
-    smbios::ITokenTable *tokenTable = ttFactory->getSingleton();
+    const smbios::ITokenTable *tokenTable = ttFactory->getSingleton();
 
-    smbios::ITokenTable::iterator token = tokenTable->begin();
+    smbios::ITokenTable::const_iterator token = tokenTable->begin();
     while( token != tokenTable->end() )
     {
         (void) *token;
@@ -654,7 +654,7 @@ void testPlatform::testVariousAccessors()
     const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information] ;
+    smbios::ISmbiosTable::const_iterator item = (*table)[smbios::BIOS_Information] ;
 
     string vendorStr="";
     string versionStr="";
@@ -788,7 +788,7 @@ testPlatform::testOutOfBounds()
     const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information] ;
+    smbios::ISmbiosTable::const_iterator item = (*table)[smbios::BIOS_Information] ;
 
     // access string '0' should always throw. (string offset start at 1, per
     // spec)
@@ -849,7 +849,7 @@ testPlatform::testConstructionOffset1()
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     int tableEntriesCounted = 0;
-    smbios::ISmbiosTable::iterator item = table->begin();
+    smbios::ISmbiosTable::const_iterator item = table->begin();
     while( item != table->end() )
     {
         tableEntriesCounted++;

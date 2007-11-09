@@ -137,7 +137,7 @@ void testStandalone::tearDown()
 void testStandalone::testSmbiosTableBase()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTableBase *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // try it manually the hard way
@@ -167,7 +167,7 @@ void testStandalone::testSmbiosTableBase()
 void testStandalone::testSmbiosTableBase_iterNextItem()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTableBase *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     int tableEntriesCounted=0;
@@ -184,7 +184,7 @@ void testStandalone::testSmbiosTableBase_iterNextItem()
 void testStandalone::testSmbiosTableBase_findItemByHandle()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTableBase *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     smbios::table_iterator i(*table);
@@ -202,7 +202,7 @@ void testStandalone::testSmbiosTableBase_findItemByHandle()
 void testStandalone::testSmbiosTableBase_findItemByType()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
-    const smbios::ISmbiosTableBase *table =
+    const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
     smbios::table_iterator i(*table);
     ASSERT_THROWS( i.findItemByType(250), smbios::ItemNotFound);
@@ -223,8 +223,8 @@ void testStandalone::testTable_Subscript()
     const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::iterator item1;
-    smbios::ISmbiosTable::iterator item2;
+    smbios::ISmbiosTable::const_iterator item1;
+    smbios::ISmbiosTable::const_iterator item2;
 
     item1 = (*table)[smbios::BIOS_Information];
     item2 = (*table)[smbios::BIOS_Information];
@@ -262,7 +262,7 @@ testStandalone::testEntryCount ()
     STD_TEST_START(getTestName().c_str() << "  " );
 
     // do not delete. Factory manages lifetime.
-    const smbios::ISmbiosTable *table =
+    smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // test streamify() while we are at it.
@@ -316,7 +316,7 @@ testStandalone::testSubscriptOperator1 ()
     int tableEntriesCounted = 0;
     // table[-1] is special, it returns all objects.
     // This test should be identical to testConstIterator (both walk all entries)
-    for( smbios::ISmbiosTable::iterator item = (*table)[-1] ; item != table->end(); ++item)
+    for( smbios::ISmbiosTable::const_iterator item = (*table)[-1] ; item != table->end(); ++item)
     {
         tableEntriesCounted++;
         (void) *item;  // do this to sniff out possible errors with deref iterator.
@@ -367,7 +367,7 @@ testStandalone::testSubscriptOperator3 ()
     //  update this test if it turns out that there are actual systems with <2 Port Connector blocks
     //
     int tableEntriesCounted = 0;
-    for( smbios::ISmbiosTable::iterator item = (*table)[8] ; item != table->end(); ++item)
+    for( smbios::ISmbiosTable::const_iterator item = (*table)[8] ; item != table->end(); ++item)
     {
         (void) *item;  // do this to sniff out possible errors with deref iterator.
         tableEntriesCounted++;
@@ -391,7 +391,7 @@ void testStandalone::testStreamify()
     // BEGIN EXAMPLE iterator
     // table should not be deleted when we are finished. It is managed by the
     // factory. Factory will delete it for us when ->reset() is called.
-    const smbios::ISmbiosTable *table =
+    smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     ostringstream ost;
@@ -424,11 +424,11 @@ testStandalone::testItemIdentity ()
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // grab the first bios block
-    smbios::ISmbiosTable::iterator position1 = (*table)[smbios::BIOS_Information];
+    smbios::ISmbiosTable::const_iterator position1 = (*table)[smbios::BIOS_Information];
     const smbios::ISmbiosItem &item1 = *position1; //reference
 
     // use another iterator and grab another
-    smbios::ISmbiosTable::iterator position2 = (*table)[smbios::BIOS_Information];
+    smbios::ISmbiosTable::const_iterator position2 = (*table)[smbios::BIOS_Information];
     const smbios::ISmbiosItem &item2 = *position2; //reference
 
     // Check that they both gave the same thing
@@ -439,7 +439,7 @@ testStandalone::testItemIdentity ()
     CPPUNIT_ASSERT_EQUAL(  &(*position1), &(*position2) ); // same test, written differently
 
     // use another iterator and grab another _different_ pointer.
-    smbios::ISmbiosTable::iterator position3 = (*table)[smbios::System_Information];
+    smbios::ISmbiosTable::const_iterator position3 = (*table)[smbios::System_Information];
     const smbios::ISmbiosItem &item3 = *position3; //reference
 
     // Check that these are different...
@@ -467,7 +467,7 @@ testStandalone::testEachItemAccessors ()
     const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::iterator item = table->begin();
+    smbios::ISmbiosTable::const_iterator item = table->begin();
     while( item != table->end() )
     {
         u8 type1 = item->getType();
@@ -506,7 +506,7 @@ void testStandalone::testNonXml()
 
     // Ok, none of these are related to construction offset, but it is good to
     // run these tests while we have a handy reference to a NON-XML factory.
-    auto_ptr<const smbios::ISmbiosTable>p(factory->makeNew());
+    auto_ptr<smbios::ISmbiosTable>p(factory->makeNew());
     auto_ptr<const smbios::ISmbiosTable>q(factory->makeNew());
 
     smbios::ISmbiosTable::iterator item1 = (*p)[smbios::BIOS_Information];
@@ -534,7 +534,7 @@ void testStandalone::testSmbiosXml()
             smbios::SmbiosFactory::getFactory()->getSingleton();
     
     // test if "PCI Supported" bit is set, should always be set.
-    smbios::ISmbiosTable::iterator item = (*table)[smbios::BIOS_Information];
+    smbios::ISmbiosTable::const_iterator item = (*table)[smbios::BIOS_Information];
     CPPUNIT_ASSERT_EQUAL( isBitSet( &(*item), 0xA,  0x7 ), true );
     
     STD_TEST_END("");
@@ -551,7 +551,7 @@ testStandalone::testGetBoundaries()
     const smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    for( smbios::ISmbiosTable::iterator item = (*table)[-1] ; item != table->end(); ++item)
+    for( smbios::ISmbiosTable::const_iterator item = (*table)[-1] ; item != table->end(); ++item)
     {
         int len = item->getLength();
 
