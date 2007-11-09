@@ -49,7 +49,7 @@ namespace smbios
     
     bool TokenTableIteratorBase::eof()
     {
-        return (current == 0);
+        return (current < 0);
     }
 
     IToken& TokenTableIterator::operator * () const 
