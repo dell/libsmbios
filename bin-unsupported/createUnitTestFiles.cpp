@@ -72,7 +72,7 @@ main (int argc, char **argv)
         // main code begins...
         set<int> indexPorts;
     
-        for( smbios::ISmbiosTable::iterator item = (*table)[0xD4] ; item != table->end(); ++item)
+        for( smbios::ISmbiosTable::const_iterator item = (*table)[0xD4] ; item != table->end(); ++item)
         {
             const u8 *ptr = 0;
             try  // wrap in try{} to avoid mem leaks on exception

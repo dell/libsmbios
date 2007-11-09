@@ -143,7 +143,7 @@ const smbios::ISmbiosItem *getItemByHandle( u16 handle )
 {
     smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
     const smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
-    smbios::ISmbiosTable::iterator itemIter;
+    smbios::ISmbiosTable::const_iterator itemIter;
 
     const smbios::ISmbiosItem *ret = 0;
     itemIter = table->begin();
@@ -295,7 +295,7 @@ main (int argc, char **argv)
 
         smbios::SmbiosFactory *smbiosFactory = smbios::SmbiosFactory::getFactory();
         const smbios::ISmbiosTable *table = smbiosFactory->getSingleton();
-        smbios::ISmbiosTable::iterator itemIter;
+        smbios::ISmbiosTable::const_iterator itemIter;
 
         cout << endl;
         cout << "NOTE: This is a proof-of-concept demonstration only!" << endl;
