@@ -179,9 +179,12 @@ namespace smbios
     /**
     */
     class TokenTableIteratorBase
-        : public std::iterator < std::forward_iterator_tag, ITokenTable >
+        : public std::iterator < std::forward_iterator_tag, IToken >
     {
     public:
+        typedef std::forward_iterator_tag iterator_category;
+        typedef std::ptrdiff_t difference_type;
+
         virtual ~TokenTableIteratorBase() throw() {};
         explicit TokenTableIteratorBase(const ITokenTable *initialTable, int typeToMatch);
         bool operator == (const TokenTableIteratorBase other) const { return current == other.current; };
@@ -205,11 +208,9 @@ namespace smbios
     public:
         // Make sure you define these, otherwise you can't use
         // iterators in stl algorithms
-        typedef std::forward_iterator_tag iterator_category;
         typedef IToken value_type;
         typedef value_type& reference;
         typedef value_type* pointer;
-        typedef std::ptrdiff_t difference_type;
 
         virtual ~TokenTableIterator() throw() {};
         explicit TokenTableIterator (const ITokenTable *initialTable = 0, int typeToMatch = -1 );
@@ -228,11 +229,9 @@ namespace smbios
     public:
         // Make sure you define these, otherwise you can't use
         // iterators in stl algorithms
-        typedef std::forward_iterator_tag iterator_category;
         typedef const IToken value_type;
         typedef value_type& reference;
         typedef value_type* pointer;
-        typedef std::ptrdiff_t difference_type;
 
         virtual ~ConstTokenTableIterator() throw() {};
         explicit ConstTokenTableIterator (const ITokenTable * initialTable = 0, int typeToMatch = -1 );
