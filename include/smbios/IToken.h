@@ -186,13 +186,14 @@ namespace smbios
         explicit TokenTableIteratorBase(const ITokenTable *initialTable, int typeToMatch);
         bool operator == (const TokenTableIteratorBase other) const { return current == other.current; };
         bool operator != (const TokenTableIteratorBase other) const { return current != other.current; };
-    protected:
-        IToken * dereference () const;
+        const IToken * dereference () const;
+        IToken * dereference ();
         void incrementIterator();
 
+    protected:
         int matchType;
         const ITokenTable *table;
-        mutable int current;
+        int current;
     };
     
     //! Iterator for TokenTable objects
@@ -211,10 +212,9 @@ namespace smbios
         typedef std::ptrdiff_t difference_type;
 
         virtual ~TokenTableIterator() throw() {};
-        explicit TokenTableIterator (const ITokenTable *initialTable = 0, int typeToMatch = -1 )
-            : TokenTableIteratorBase( initialTable, typeToMatch ) {} ;
-        IToken& operator * () const {return *dereference();};
-        IToken* operator -> () const {return dereference();};
+        explicit TokenTableIterator (const ITokenTable *initialTable = 0, int typeToMatch = -1 );
+        reference operator * () const;
+        pointer operator -> () const;
         TokenTableIterator & operator ++ ();	      // ++Prefix
         const TokenTableIterator operator ++ (int);  //Postfix++
     };
@@ -235,10 +235,9 @@ namespace smbios
         typedef std::ptrdiff_t difference_type;
 
         virtual ~ConstTokenTableIterator() throw() {};
-        ConstTokenTableIterator (const ITokenTable * initialTable = 0, int typeToMatch = -1 )
-            : TokenTableIteratorBase( initialTable, typeToMatch ) {} ;
-        reference operator * () const {return *dereference();};
-        pointer   operator -> () const {return dereference();};
+        explicit ConstTokenTableIterator (const ITokenTable * initialTable = 0, int typeToMatch = -1 );
+        reference operator * () const;
+        pointer   operator -> () const;
         ConstTokenTableIterator & operator ++ ();	      // ++Prefix
         const ConstTokenTableIterator operator ++ (int);  //Postfix++
     };

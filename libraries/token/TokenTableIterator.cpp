@@ -23,6 +23,15 @@ using namespace std;
 
 namespace smbios
 {
+    ConstTokenTableIterator::ConstTokenTableIterator (const ITokenTable * initialTable, int typeToMatch)
+                        : TokenTableIteratorBase( initialTable, typeToMatch ) 
+    {}
+
+    TokenTableIterator::TokenTableIterator (const ITokenTable *initialTable, int typeToMatch)
+                          : TokenTableIteratorBase( initialTable, typeToMatch ) 
+    {}
+
+
     TokenTableIteratorBase::TokenTableIteratorBase (const ITokenTable *initialTable, int typeToMatch)
             :matchType(typeToMatch), table(initialTable), current(-1)
     {
@@ -32,8 +41,33 @@ namespace smbios
         incrementIterator();
     }
 
+    IToken& TokenTableIterator::operator * () const 
+    {
+        return *(const_cast<TokenTableIterator *>(this)->dereference());
+    }
 
-    IToken * TokenTableIteratorBase::dereference () const
+    IToken* TokenTableIterator::operator -> () const 
+    {
+        return const_cast<TokenTableIterator *>(this)->dereference();
+    }
+
+    const IToken& ConstTokenTableIterator::operator * () const 
+    {
+        return *dereference();
+    }
+
+    const IToken*   ConstTokenTableIterator::operator -> () const 
+    {
+        return dereference();
+    }
+
+
+    const IToken * TokenTableIteratorBase::dereference () const
+    {
+        return const_cast<TokenTableIteratorBase *>(this)->dereference();
+    }
+
+    IToken * TokenTableIteratorBase::dereference ()
     {
         const TokenTable *CTTable = dynamic_cast<const TokenTable *>(table);
         if( current >= 0 && static_cast<unsigned int>(current) >= CTTable->tokenList.size() )
