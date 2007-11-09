@@ -29,18 +29,251 @@
 
 // types.h should be first user-defined header.
 #include "smbios/types.h"
-#include "smbios/ISmbiosBase.h"
+#include "smbios/IFactory.h"
+#include "smbios/IException.h"
+#include "smbios/SmbiosLowLevel.h"
 
 // abi_prefix should be last header included before declarations
 #include "smbios/config/abi_prefix.hpp"
 
 namespace smbios
 {
+    // Exception Classes
+    DECLARE_EXCEPTION( SmbiosException );
+    DECLARE_EXCEPTION_EX( ParameterException, smbios, SmbiosException );
+    DECLARE_EXCEPTION_EX( ParseException, smbios, SmbiosException );
+    DECLARE_EXCEPTION_EX( StringUnavailable, smbios, SmbiosException );
+    DECLARE_EXCEPTION_EX( DataOutOfBounds, smbios, SmbiosException );
+    DECLARE_EXCEPTION_EX( ItemNotFound, smbios, SmbiosException );
+
 
     //forward declarations... defined 'for real' below...
     class ISmbiosTable;
     class SmbiosTableIterator;
+    class ConstSmbiosTableIterator;
 
+    //!Interface definition for Smbios Item operations.
+    /** 
+     * \copydoc item_theory
+     */
+    class ISmbiosItem
+    {
+    public:
+        /** Destructor */
+        virtual ~ISmbiosItem ();
+        ISmbiosItem();
+
+        virtual std::auto_ptr<const ISmbiosItem> clone() const = 0;
+
+        /** Used by 'std::ostream &smbios::operator <<( std::ostream &, ISmbiosItem&)'
+         * to print out the item info.
+         *
+         * Not particularly useful for clients. Use operator<< instead.
+         */
+        virtual std::ostream & streamify( std::ostream & cout ) const = 0;
+
+        /** Returns the Type field of the SMBIOS Item.
+         * This field is standard for all SMBIOS tables and is defined
+         * in the SMBIOS standard.
+         * \returns The Type value.
+         */
+        virtual u8 getType() const = 0;
+
+        /** Returns the Length field of the SMBIOS Item.
+         * This field is standard for all SMBIOS tables and is defined
+         * in the SMBIOS standard.
+         * \returns The Length value.
+         */
+        virtual u8 getLength() const = 0;
+
+        /** Returns the Handle field of the SMBIOS Item.
+         * This field is standard for all SMBIOS tables and is defined
+         * in the SMBIOS standard.
+         * \returns The Handle value.
+         */
+        virtual u16 getHandle() const = 0;
+
+        /** Set of accessor functions: getU8(), getU16(), getU32(), and getU64()
+         * Returns a (byte|word|dword|qword) field from the Item.
+         *
+         * The \a offset specified is an int representing the a valid offset 
+         * within the table.  Method will return a u8/u16/u32/u64 
+         * (depending on function called).
+         *
+         * These methods all check the offset parameter for out of bounds
+         * conditions. They will throw exceptions on attempts to access data
+         * outside the length of the present item.
+         *
+         * \param offset The offset to the field within the Item.
+         * \param out  void pointer to where to store output data
+         * \param size  size of data to return
+         *
+         * \returns The (byte|word|dword|qword) at \a offset.  Throws 
+         * smbios::SmbiosItemDataOutOfBounds or smbios::SmbiosParseException 
+         * on error.
+         *
+         *
+         * \warning These methods are unchecked access. There is no verification
+         * that (for example) when you use getU8() that the location you are 
+         * trying to access is actually a U8. 
+         */
+
+        virtual void getData( unsigned int offset, u8 *out, size_t size ) const = 0;
+
+        //loathe Stroustrup. In his infinite wisdom, he asserts that
+        //auto_ptr equivalent for array is _not_necessary_.
+        //Here would be a good place for one. :-(
+        virtual const u8* getBufferCopy(size_t &length) const = 0;
+        
+        //! Returns the buffer size of the item.
+        // The validateBios.cpp calls this function.
+        virtual const size_t getBufferSize() const = 0;
+
+        /** Not likely to be useful to regular client code. It is public
+         * mainly to help in writing Unit Tests. Clients should normally 
+         * use getString().
+         */
+        virtual const char *getStringByStringNumber (u8) const = 0;
+
+        enum {
+            FIELD_LEN_BYTE=1,
+            FIELD_LEN_WORD=2,
+            FIELD_LEN_DWORD=4,
+            FIELD_LEN_QWORD=8
+        };
+    };
+
+    u8 getItemType(const ISmbiosItem &item);
+    u8 getItemLength(const ISmbiosItem &item);
+    u16 getItemHandle(const ISmbiosItem &item);
+
+    u8 getU8_FromItem(const ISmbiosItem &item, unsigned int offset);
+    u16 getU16_FromItem(const ISmbiosItem &item, unsigned int offset);
+    u32 getU32_FromItem(const ISmbiosItem &item, unsigned int offset);
+    u64 getU64_FromItem(const ISmbiosItem &item, unsigned int offset);
+    const char *getString_FromItem(const ISmbiosItem &item, unsigned int offset);
+    void *getBits_FromItem(const ISmbiosItem &item, unsigned int offset, void *out, unsigned int lsb=0, unsigned int msb=0 );
+    bool isBitSet(const ISmbiosItem *itemPtr, unsigned int offset, unsigned int bitToTest);
+
+    template <class R> 
+    R &getData(const ISmbiosItem &item, unsigned int offset, R &out)
+    {
+        item.getData(offset, &out, sizeof(R));
+        return out;
+    }
+
+    //!Interface definition for Smbios Table operations.
+    /** 
+     * \copydoc smbios_theory
+     */
+    class ISmbiosTable
+    {
+    public:
+        // Std container typedefs. Everybody expects to
+        // say 'iterator' or 'const_iterator'
+        typedef SmbiosTableIterator iterator;
+        typedef ConstSmbiosTableIterator const_iterator;
+
+        virtual const ISmbiosItem & getSmbiosItem (const u8 *current) const = 0;
+        virtual const u8 * nextSmbiosStruct ( const u8 * current = 0) const = 0;
+
+        // MEMBERS
+        //! Disables all workarounds for _new_ items created by the table.
+        /** Any new item generated by the table will not have workarounds
+         * applied to them. However, any previously-existing items that have had
+         * workarounds applied still exist. If this is not what you want,
+         * recommend calling clearItemCache() prior to calling rawMode().
+         * \param m pass in a bool value to turn raw mode on or off.
+         */
+        virtual void rawMode(bool m = true) const = 0;
+
+        //! Clears out any cached SmbiosItem entries in the cache
+        /** This API is useful for two instances. First, you can use this to
+         * reduce memory usage if you know that you do not need any
+         * ISmbiosItem(s) out of the table for a while. The cached
+         * ISmbiosItem(s) will be deleted and then re-populated on demand when
+         * queries are made for them.
+         *
+         * Next, this API is used internally when reReadTable() is called to
+         * clear out all old ISmbiosItems.
+         *
+         * \warning All previous references or pointers to ISmbiosItem objects
+         * created from this table become invalid and attempts to access them
+         * will cause undefined behaviour (most likely your code will crash.)
+         *
+         * \todo clearItemCache() needs to be made an abstract function and the
+         * definition needs to be moved to the SmbiosItem class. This needs to
+         * happen at the same time that itemList is moved.
+         */
+        virtual void clearItemCache() const = 0;  
+
+        //! Returns the number of table items, per SMBIOS table header
+        virtual int getNumberOfEntries () const = 0;  // used by unit-test code
+        //! Returns  the table entry point structure
+        // Used by the validateBios code.
+        virtual smbiosLowlevel::smbios_table_entry_point getTableEPS() const = 0;
+
+        //! Used by operator << (std::ostream & cout, const ISmbiosTable & ) to
+        //output table information.
+        /** Users normally would not need or want to call this API. The normal
+         * operator<<() has been overloaded to call this function internally.
+         */
+        virtual std::ostream & streamify(std::ostream & cout ) const = 0;
+
+
+        // CONSTRUCTORS, DESTRUCTOR, and ASSIGNMENT
+        ISmbiosTable();
+        // Interface class: no default or copy constructor
+        virtual ~ISmbiosTable ();
+
+        // ITERATORS
+        //
+        //! Standard iterator interface. Points to first table item.
+        /** 
+         * \returns iterator or const_iterator
+         * Example Iterator Usage:
+\code
+    smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
+    smbios::ISmbiosTable::iterator item = table->begin();
+    while( item != table->end() )
+    {
+        cout << "Type of Item: " << item->getType();
+        ++item;
+    }
+\endcode
+        */
+        virtual const_iterator begin () const = 0;
+        virtual iterator begin () = 0;
+
+        //! Standard iterator interface. Points to one-past-the-last table item. 
+        /** Used by const_iterator.
+         * \copydoc begin() */
+        virtual const_iterator end () const = 0;
+        virtual iterator end () = 0;
+
+        //! Standard indexed access by integer item type.
+        /** The operator[] method returns an \a iterator that can be used to
+         * iterator over all items in the table of the supplied \a type. So, for
+         * example, if you want to perform an operation on all SMBIOS type 0x01
+         * (System Information Block) structures, just index the table object
+         * using the [] operator.
+         * \returns iterator or const_iterator
+         * Sample usage:
+\code
+// Integer indexing example
+smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
+smbios::ISmbiosTable::iterator item1 = (*table)[0];
+cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
+\endcode
+         * \sa operator[]( const std::string & ) const
+         */
+        virtual const_iterator operator[]( const int ) const = 0;
+        virtual iterator operator[]( const int ) = 0;
+
+    private:
+        explicit ISmbiosTable(const ISmbiosTable &); ///< not implemented (explicitly disallowed)
+        void operator =( const ISmbiosTable & ); ///< not implemented (explicitly disallowed)
+    };
 
     //!AbstractFactory that produces ISmbiosTable objects.
     /** The SmbiosFactory class is based on the Factory design pattern.
@@ -100,68 +333,22 @@ namespace smbios
     };
 
 
-    //!Interface definition for Smbios Table operations.
-    /** 
-     * \copydoc smbios_theory
-     */
-    class ISmbiosTable : public ISmbiosTableBase
-    {
+
+    class table_iterator {
     public:
-        // Std container typedefs. Everybody expects to
-        // say 'iterator' or 'const_iterator'
-        typedef SmbiosTableIterator iterator;
-        typedef SmbiosTableIterator const_iterator;
-
-        // CONSTRUCTORS, DESTRUCTOR, and ASSIGNMENT
-        ISmbiosTable();
-        // Interface class: no default or copy constructor
-        virtual ~ISmbiosTable ();
-
-        // ITERATORS
-        //
-        //! Standard iterator interface. Points to first table item.
-        /** 
-         * \returns iterator or const_iterator
-         * Example Iterator Usage:
-\code
-    smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
-    smbios::ISmbiosTable::iterator item = table->begin();
-    while( item != table->end() )
-    {
-        cout << "Type of Item: " << item->getType();
-        ++item;
-    }
-\endcode
-        */
-        virtual const_iterator begin () const = 0;
-
-        //! Standard iterator interface. Points to one-past-the-last table item. 
-        /** Used by const_iterator.
-         * \copydoc begin() */
-        virtual const_iterator end () const = 0;
-
-        //! Standard indexed access by integer item type.
-        /** The operator[] method returns an \a iterator that can be used to
-         * iterator over all items in the table of the supplied \a type. So, for
-         * example, if you want to perform an operation on all SMBIOS type 0x01
-         * (System Information Block) structures, just index the table object
-         * using the [] operator.
-         * \returns iterator or const_iterator
-         * Sample usage:
-\code
-// Integer indexing example
-smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
-smbios::ISmbiosTable::iterator item1 = (*table)[0];
-cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
-\endcode
-         * \sa operator[]( const std::string & ) const
-         */
-        virtual const_iterator operator[]( const int ) const = 0;
-
+        explicit table_iterator(const smbios::ISmbiosTable &);
+        virtual ~table_iterator();
+        virtual void reset();
+        virtual bool eof();
+        virtual const smbios::ISmbiosItem &iterNextItem();
+        virtual const smbios::ISmbiosItem &findItemByType(u8 type);
+        virtual const smbios::ISmbiosItem &findItemByHandle(u16 handle);
     private:
-        explicit ISmbiosTable(const ISmbiosTable &); ///< not implemented (explicitly disallowed)
-        void operator =( const ISmbiosTable & ); ///< not implemented (explicitly disallowed)
+        table_iterator();
+        const smbios::ISmbiosTable &table;
+        const u8 *pos;
     };
+
 
 
     //! Iterator base class for ISmbiosTable objects.
@@ -172,48 +359,65 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
      *
      * This class is stable and should not be modified.
      */
-    class SmbiosTableIterator: 
+    class SmbiosTableIteratorBase: 
         public std::iterator < std::forward_iterator_tag, const ISmbiosItem >
     {
     public:
-        // Make sure you define these, otherwise you can't use
-        // iterators in stl algorithms
         typedef std::forward_iterator_tag iterator_category;
-        typedef const ISmbiosItem value_type;
-        typedef value_type& reference;
-        typedef value_type* pointer;
         typedef std::ptrdiff_t difference_type;
 
 
-        explicit SmbiosTableIterator(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 )
-            : matchType(typeToMatch), table(initialTable), current(0)
-            { incrementIterator(); };
-        virtual ~SmbiosTableIterator() throw() {};
-        bool operator == (const SmbiosTableIterator other) const { return current == other.current; };
-        bool operator != (const SmbiosTableIterator other) const { return current != other.current; };
-
-        reference operator * () const { return dereference(); };
-        pointer   operator -> () const { return &dereference(); };
-        SmbiosTableIterator & operator ++ () { incrementIterator(); return *this; }; // ++Prefix
-        const SmbiosTableIterator operator ++ (int)     
-        {
-            const SmbiosTableIterator oldValue = *this;
-            ++(*this);
-            return oldValue;
-        };  //Postfix++
-    protected:
+        explicit SmbiosTableIteratorBase(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
+        virtual ~SmbiosTableIteratorBase() throw();
+        bool operator == (const SmbiosTableIteratorBase &other) const;
+        bool operator != (const SmbiosTableIteratorBase &other) const;
         void incrementIterator ();
         const ISmbiosItem & dereference () const;
+        ISmbiosItem & dereference ();
 
+    protected:
         int matchType;
         const ISmbiosTable * table;
-        mutable const u8 * current;
+        const u8 * current;
+    };
+
+    class SmbiosTableIterator :public SmbiosTableIteratorBase
+    {
+    public:
+        typedef ISmbiosItem value_type;
+        typedef value_type& reference;
+        typedef value_type* pointer;
+
+        virtual ~SmbiosTableIterator() throw();
+        explicit SmbiosTableIterator(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
+        reference operator * () const;
+        pointer   operator -> () const;
+        SmbiosTableIterator & operator ++ (); // ++Prefix
+        const SmbiosTableIterator operator ++ (int);  //Postfix++
+    };
+
+    class ConstSmbiosTableIterator :public SmbiosTableIteratorBase
+    {
+    public:
+        typedef const ISmbiosItem value_type;
+        typedef value_type& reference;
+        typedef value_type* pointer;
+
+        virtual ~ConstSmbiosTableIterator() throw();
+        explicit ConstSmbiosTableIterator(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
+        reference operator * () const;
+        pointer   operator -> () const;
+        ConstSmbiosTableIterator & operator ++ (); // ++Prefix
+        const ConstSmbiosTableIterator operator ++ (int);  //Postfix++
     };
     
     //
     // Non-member functions
     //
     std::ostream & operator << (std::ostream & cout, const ISmbiosTable & item);
+    std::ostream & operator << (std::ostream & cout, const ISmbiosItem & item);
+
+
 }
 
 

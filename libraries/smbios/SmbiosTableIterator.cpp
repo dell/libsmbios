@@ -27,7 +27,85 @@ using namespace std;
 
 namespace smbios
 {
-    const ISmbiosItem & SmbiosTableIterator::dereference () const
+    SmbiosTableIteratorBase::~SmbiosTableIteratorBase() throw() {}
+    SmbiosTableIterator::~SmbiosTableIterator() throw() {}
+    ConstSmbiosTableIterator::~ConstSmbiosTableIterator() throw() {}
+
+    SmbiosTableIterator::SmbiosTableIterator(const ISmbiosTable * initialTable, int typeToMatch)
+        : SmbiosTableIteratorBase(initialTable, typeToMatch)
+    {}
+
+    SmbiosTableIterator::reference SmbiosTableIterator::operator * () const
+    { 
+        return const_cast<SmbiosTableIterator *>(this)->dereference(); 
+    }
+
+    SmbiosTableIterator::pointer   SmbiosTableIterator::operator -> () const
+    { 
+        return &(const_cast<SmbiosTableIterator *>(this)->dereference()); 
+    }
+
+    SmbiosTableIterator & SmbiosTableIterator::operator ++ () // ++Prefix
+    { 
+        incrementIterator(); return *this; 
+    } // ++Prefix
+
+    const SmbiosTableIterator SmbiosTableIterator::operator ++ (int)  //Postfix++
+    {
+        const SmbiosTableIterator oldValue = *this;
+        ++(*this);
+        return oldValue;
+    }  //Postfix++
+
+
+    ConstSmbiosTableIterator::ConstSmbiosTableIterator(const ISmbiosTable * initialTable, int typeToMatch)
+        : SmbiosTableIteratorBase(initialTable, typeToMatch)
+    {}
+
+    SmbiosTableIteratorBase::SmbiosTableIteratorBase(const ISmbiosTable * initialTable, int typeToMatch)
+        : matchType(typeToMatch), table(initialTable), current(0)
+    { 
+        incrementIterator(); 
+    }
+
+    bool SmbiosTableIteratorBase::operator == (const SmbiosTableIteratorBase &other) const 
+    { 
+        return current == other.current; 
+    }
+
+    bool SmbiosTableIteratorBase::operator != (const SmbiosTableIteratorBase &other) const 
+    { 
+        return current != other.current; 
+    }
+
+    ConstSmbiosTableIterator & ConstSmbiosTableIterator::operator ++ ()
+    { 
+        incrementIterator(); return *this; 
+    } // ++Prefix
+
+    const ConstSmbiosTableIterator ConstSmbiosTableIterator::operator ++ (int)     
+    {
+        const ConstSmbiosTableIterator oldValue = *this;
+        ++(*this);
+        return oldValue;
+    }  //Postfix++
+
+    ConstSmbiosTableIterator::reference ConstSmbiosTableIterator::operator * () const
+    { 
+        return dereference(); 
+    }
+
+    ConstSmbiosTableIterator::pointer   ConstSmbiosTableIterator::operator -> () const
+    { 
+        return &dereference(); 
+    }
+
+    ISmbiosItem & SmbiosTableIteratorBase::dereference ()
+    {
+        return const_cast<ISmbiosItem &>(const_cast<const SmbiosTableIteratorBase*>(this)->dereference());
+    }
+
+    const ISmbiosItem & SmbiosTableIteratorBase::dereference () const
     {
         if (0 == current)
         {
@@ -37,7 +115,7 @@ namespace smbios
         return table->getSmbiosItem(current);
     }
 
-    void SmbiosTableIterator::incrementIterator ()
+    void SmbiosTableIteratorBase::incrementIterator ()
     {
         const SmbiosTable *t = dynamic_cast<const SmbiosTable *>(table);
 

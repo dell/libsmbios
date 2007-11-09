@@ -49,17 +49,6 @@ namespace smbios
         static ISmbiosTable *_tableInstance;
     };
 
-    class SmbiosBaseFactoryImpl : public factory::TFactory<SmbiosBaseFactory>
-    {
-    public:
-        SmbiosBaseFactoryImpl();
-        virtual ~SmbiosBaseFactoryImpl() throw();
-        virtual ISmbiosTableBase *getSingleton( ); // returns singleton
-        virtual ISmbiosTableBase *makeNew( ); // not for use
-    protected:
-        static ISmbiosTableBase *_tableInstance;
-    };
-
     class SmbiosStrategy
     {
     public:

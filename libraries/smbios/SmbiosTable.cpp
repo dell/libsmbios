@@ -42,12 +42,6 @@ using namespace std;
 namespace smbios
 {
 
-    ISmbiosTableBase::ISmbiosTableBase()
-    {}
-
-    ISmbiosTableBase::~ISmbiosTableBase()
-    {}
-
     ISmbiosTable::ISmbiosTable()
     {}
 
@@ -390,7 +384,7 @@ out1:
     }
 
     table_iterator::~table_iterator() {}
-    table_iterator::table_iterator(const smbios::ISmbiosTableBase &table) : table(table), pos(0) {};
+    table_iterator::table_iterator(const smbios::ISmbiosTable &table) : table(table), pos(0) {};
     void table_iterator::reset() { pos=0; };
     
     bool table_iterator::eof()
