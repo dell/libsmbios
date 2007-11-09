@@ -125,7 +125,7 @@ static u16 getIdByteFromOEMItem ()
     //functionEnter( "%s", "" );
     u16 idWord = 0;
     const smbios::ISmbiosTable *table = 0;
-    smbios::ISmbiosTable::iterator item;
+    smbios::ISmbiosTable::const_iterator item;
     if (!couldBeBayonet())
         goto out;
 
@@ -157,7 +157,7 @@ static u16 getIdByteFromRevItem ()
     //functionEnter( "%s", "" );
     u16 idWord = 0;
     const smbios::ISmbiosTable *table = 0;
-    smbios::ISmbiosTable::iterator item;
+    smbios::ISmbiosTable::const_iterator item;
 
     table = smbios::SmbiosFactory::getFactory()->getSingleton();
 

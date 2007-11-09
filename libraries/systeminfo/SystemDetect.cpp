@@ -68,7 +68,7 @@ bool couldBeBayonet ()
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
     // crappy msvc compiler workaround
-    smbios::ISmbiosTable::iterator item ;
+    smbios::ISmbiosTable::const_iterator item ;
 
     if (0 == table)
         throw InternalErrorImpl();
