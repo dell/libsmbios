@@ -49,8 +49,189 @@ namespace smbios
 
     //forward declarations... defined 'for real' below...
     class ISmbiosTable;
+    class ISmbiosItem;
     class SmbiosTableIterator;
     class ConstSmbiosTableIterator;
+
+    //!AbstractFactory that produces ISmbiosTable objects.
+    /** The SmbiosFactory class is based on the Factory design pattern.
+    * The SmbiosFactory is the recommended method to create ISmbiosTable 
+    * objects.
+    *
+    * The getSingleton() is the recommended method to call to create
+    * tables. You need not delete the pointer returned by this method, it
+    * will be delete by the factory when it is reset() or destructed.
+    *
+    * Most users of the factory need call nothing more than getFactory()
+    * and then getSingleton() on the returned factory object.
+    *
+    * Advanced users can call setParameter() to set up internal factory 
+    * variables that control creation of tables.
+    */
+    class SmbiosFactory : public virtual factory::IFactory
+    {
+    public:
+        //! Create a factory object that you can use to create ISmbiosTable objects.
+        /** Factory entry point: This is the method to call to get a handle
+         * to the SmbiosFactory. The SmbiosFactory is the recommended method
+         * to create ISmbiosTable objects.
+         *
+         * The getSingleton() is the recommended method to call to create
+         * tables. You need not delete the pointer returned by this method, it
+         * will be deleted by the factory when it is reset() or destructed.
+         * 
+         * \returns Singleton SmbiosFactory object pointer.
+         */
+        static SmbiosFactory *getFactory();
+        virtual ~SmbiosFactory() throw();
+
+        //! Recommended way to get an ISmbiosTable object.
+        /** getSingleton() returns a pointer to a Singleton ISmbiosTable
+         * object. The user need not delete the pointer returned by this method.
+         * The singleton will be deleted when the factory is destructed or 
+         * the reset() method is called
+         * \returns (ISmbiosTable *) -- Factory manages lifetime, do not delete.
+         */
+        virtual ISmbiosTable *getSingleton() = 0;
+
+        //! Create a new ISmbiosTable object that the caller must delete. (NOT RECOMMENDED)
+        /** The makeNew() method returns a pointer to a newly allocated
+         * ISmbiosTable object. The caller is responsible for deleting this 
+         * reference when it is finished with it. It is recommended that the 
+         * caller store the pointer in an std::auto_ptr<ISmbiosTable>.
+         *
+         * The getSingleton() method is preferred over this method.
+         *
+         * \returns (ISmbiosTable *) -- caller must delete
+         */
+        virtual ISmbiosTable *makeNew() = 0;
+    protected:
+        //! Use getFactory() to get a factory.
+        SmbiosFactory();
+    };
+
+    //!Interface definition for Smbios Table operations.
+    /** 
+     * \copydoc smbios_theory
+     */
+    class ISmbiosTable
+    {
+    public:
+        // Std container typedefs. Everybody expects to
+        // say 'iterator' or 'const_iterator'
+        typedef SmbiosTableIterator iterator;
+        typedef ConstSmbiosTableIterator const_iterator;
+
+        // CONSTRUCTORS, DESTRUCTOR, and ASSIGNMENT
+        ISmbiosTable();
+        // Interface class: no default or copy constructor
+        virtual ~ISmbiosTable ();
+
+        // ITERATORS
+        //
+        //! Standard iterator interface. Points to first table item.
+        /** 
+         * \returns iterator or const_iterator
+         * Example Iterator Usage:
+\code
+    smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
+    smbios::ISmbiosTable::iterator item = table->begin();
+    while( item != table->end() )
+    {
+        cout << "Type of Item: " << item->getType();
+        ++item;
+    }
+\endcode
+        */
+        virtual iterator begin () = 0;
+        //! Standard iterator interface. Points to first table item.
+        /** \copydoc begin() */
+        virtual const_iterator begin () const = 0;
+
+        //! Standard iterator interface. Points to one-past-the-last table item. 
+        /** \copydoc begin() */
+        virtual iterator end () = 0;
+
+        //! Standard iterator interface. Points to one-past-the-last table item. 
+        /** Used by const_iterator.
+         * \copydoc begin() */
+        virtual const_iterator end () const = 0;
+
+        //! Standard indexed access by integer item type.
+        /** The operator[] method returns an \a iterator that can be used to
+         * iterator over all items in the table of the supplied \a type. So, for
+         * example, if you want to perform an operation on all SMBIOS type 0x01
+         * (System Information Block) structures, just index the table object
+         * using the [] operator.
+         * \returns iterator or const_iterator
+         * Sample usage:
+\code
+// Integer indexing example
+smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
+smbios::ISmbiosTable::iterator item1 = (*table)[0];
+cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
+\endcode
+         * \sa operator[]( const std::string & ) const
+         */
+        virtual iterator operator[]( const int ) = 0;
+
+        //! Standard indexed access by integer item type.
+         /** \copydoc operator[]( const int ) */
+        virtual const_iterator operator[]( const int ) const = 0;
+
+        // MEMBERS
+        //! Disables all workarounds for _new_ items created by the table.
+        /** Any new item generated by the table will not have workarounds
+         * applied to them. However, any previously-existing items that have had
+         * workarounds applied still exist. If this is not what you want,
+         * recommend calling clearItemCache() prior to calling rawMode().
+         * \param m pass in a bool value to turn raw mode on or off.
+         */
+        virtual void rawMode(bool m = true) const = 0;
+
+        //! Clears out any cached SmbiosItem entries in the cache
+        /** This API is useful for two instances. First, you can use this to
+         * reduce memory usage if you know that you do not need any
+         * ISmbiosItem(s) out of the table for a while. The cached
+         * ISmbiosItem(s) will be deleted and then re-populated on demand when
+         * queries are made for them.
+         *
+         * Next, this API is used internally when reReadTable() is called to
+         * clear out all old ISmbiosItems.
+         *
+         * \warning All previous references or pointers to ISmbiosItem objects
+         * created from this table become invalid and attempts to access them
+         * will cause undefined behaviour (most likely your code will crash.)
+         *
+         * \todo clearItemCache() needs to be made an abstract function and the
+         * definition needs to be moved to the SmbiosItem class. This needs to
+         * happen at the same time that itemList is moved.
+         */
+        virtual void clearItemCache() const = 0;  
+
+        //! Returns the number of table items, per SMBIOS table header
+        virtual int getNumberOfEntries () const = 0;  // used by unit-test code
+        //! Returns  the table entry point structure
+        // Used by the validateBios code.
+        virtual smbiosLowlevel::smbios_table_entry_point getTableEPS() const = 0;
+
+        //! Used by operator << (std::ostream & cout, const ISmbiosTable & ) to
+        //output table information.
+        /** Users normally would not need or want to call this API. The normal
+         * operator<<() has been overloaded to call this function internally.
+         */
+        virtual std::ostream & streamify(std::ostream & cout ) const = 0;
+
+        friend class SmbiosTableIteratorBase;
+    protected:
+        virtual const ISmbiosItem & getSmbiosItem (const u8 *current) const = 0;
+        virtual ISmbiosItem & getSmbiosItem (const u8 *current) = 0;
+        virtual const u8 * nextSmbiosStruct ( const u8 * current = 0) const = 0;
+
+    private:
+        explicit ISmbiosTable(const ISmbiosTable &); ///< not implemented (explicitly disallowed)
+        void operator =( const ISmbiosTable & ); ///< not implemented (explicitly disallowed)
+    };
 
     //!Interface definition for Smbios Item operations.
     /** 
@@ -64,6 +245,7 @@ namespace smbios
         ISmbiosItem();
 
         virtual std::auto_ptr<const ISmbiosItem> clone() const = 0;
+        virtual std::auto_ptr<ISmbiosItem> clone() = 0;
 
         /** Used by 'std::ostream &smbios::operator <<( std::ostream &, ISmbiosItem&)'
          * to print out the item info.
@@ -162,179 +344,6 @@ namespace smbios
         return out;
     }
 
-    //!Interface definition for Smbios Table operations.
-    /** 
-     * \copydoc smbios_theory
-     */
-    class ISmbiosTable
-    {
-    public:
-        // Std container typedefs. Everybody expects to
-        // say 'iterator' or 'const_iterator'
-        typedef SmbiosTableIterator iterator;
-        typedef ConstSmbiosTableIterator const_iterator;
-
-        // MEMBERS
-        //! Disables all workarounds for _new_ items created by the table.
-        /** Any new item generated by the table will not have workarounds
-         * applied to them. However, any previously-existing items that have had
-         * workarounds applied still exist. If this is not what you want,
-         * recommend calling clearItemCache() prior to calling rawMode().
-         * \param m pass in a bool value to turn raw mode on or off.
-         */
-        virtual void rawMode(bool m = true) const = 0;
-
-        //! Clears out any cached SmbiosItem entries in the cache
-        /** This API is useful for two instances. First, you can use this to
-         * reduce memory usage if you know that you do not need any
-         * ISmbiosItem(s) out of the table for a while. The cached
-         * ISmbiosItem(s) will be deleted and then re-populated on demand when
-         * queries are made for them.
-         *
-         * Next, this API is used internally when reReadTable() is called to
-         * clear out all old ISmbiosItems.
-         *
-         * \warning All previous references or pointers to ISmbiosItem objects
-         * created from this table become invalid and attempts to access them
-         * will cause undefined behaviour (most likely your code will crash.)
-         *
-         * \todo clearItemCache() needs to be made an abstract function and the
-         * definition needs to be moved to the SmbiosItem class. This needs to
-         * happen at the same time that itemList is moved.
-         */
-        virtual void clearItemCache() const = 0;  
-
-        //! Returns the number of table items, per SMBIOS table header
-        virtual int getNumberOfEntries () const = 0;  // used by unit-test code
-        //! Returns  the table entry point structure
-        // Used by the validateBios code.
-        virtual smbiosLowlevel::smbios_table_entry_point getTableEPS() const = 0;
-
-        //! Used by operator << (std::ostream & cout, const ISmbiosTable & ) to
-        //output table information.
-        /** Users normally would not need or want to call this API. The normal
-         * operator<<() has been overloaded to call this function internally.
-         */
-        virtual std::ostream & streamify(std::ostream & cout ) const = 0;
-
-
-        // CONSTRUCTORS, DESTRUCTOR, and ASSIGNMENT
-        ISmbiosTable();
-        // Interface class: no default or copy constructor
-        virtual ~ISmbiosTable ();
-
-        // ITERATORS
-        //
-        //! Standard iterator interface. Points to first table item.
-        /** 
-         * \returns iterator or const_iterator
-         * Example Iterator Usage:
-\code
-    smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
-    smbios::ISmbiosTable::iterator item = table->begin();
-    while( item != table->end() )
-    {
-        cout << "Type of Item: " << item->getType();
-        ++item;
-    }
-\endcode
-        */
-        virtual const_iterator begin () const = 0;
-        virtual iterator begin () = 0;
-
-        //! Standard iterator interface. Points to one-past-the-last table item. 
-        /** Used by const_iterator.
-         * \copydoc begin() */
-        virtual const_iterator end () const = 0;
-        virtual iterator end () = 0;
-
-        //! Standard indexed access by integer item type.
-        /** The operator[] method returns an \a iterator that can be used to
-         * iterator over all items in the table of the supplied \a type. So, for
-         * example, if you want to perform an operation on all SMBIOS type 0x01
-         * (System Information Block) structures, just index the table object
-         * using the [] operator.
-         * \returns iterator or const_iterator
-         * Sample usage:
-\code
-// Integer indexing example
-smbios::ISmbiosTable *table = smbios::SmbiosFactory::getFactory()->getSingleton();
-smbios::ISmbiosTable::iterator item1 = (*table)[0];
-cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
-\endcode
-         * \sa operator[]( const std::string & ) const
-         */
-        virtual const_iterator operator[]( const int ) const = 0;
-        virtual iterator operator[]( const int ) = 0;
-
-        friend class SmbiosTableIteratorBase;
-    protected:
-        virtual const ISmbiosItem & getSmbiosItem (const u8 *current) const = 0;
-        virtual ISmbiosItem & getSmbiosItem (const u8 *current) = 0;
-        virtual const u8 * nextSmbiosStruct ( const u8 * current = 0) const = 0;
-
-    private:
-        explicit ISmbiosTable(const ISmbiosTable &); ///< not implemented (explicitly disallowed)
-        void operator =( const ISmbiosTable & ); ///< not implemented (explicitly disallowed)
-    };
-
-    //!AbstractFactory that produces ISmbiosTable objects.
-    /** The SmbiosFactory class is based on the Factory design pattern.
-    * The SmbiosFactory is the recommended method to create ISmbiosTable 
-    * objects.
-    *
-    * The getSingleton() is the recommended method to call to create
-    * tables. You need not delete the pointer returned by this method, it
-    * will be delete by the factory when it is reset() or destructed.
-    *
-    * Most users of the factory need call nothing more than getFactory()
-    * and then getSingleton() on the returned factory object.
-    *
-    * Advanced users can call setParameter() to set up internal factory 
-    * variables that control creation of tables.
-    */
-    class SmbiosFactory : public virtual factory::IFactory
-    {
-    public:
-        //! Create a factory object that you can use to create ISmbiosTable objects.
-        /** Factory entry point: This is the method to call to get a handle
-         * to the SmbiosFactory. The SmbiosFactory is the recommended method
-         * to create ISmbiosTable objects.
-         *
-         * The getSingleton() is the recommended method to call to create
-         * tables. You need not delete the pointer returned by this method, it
-         * will be deleted by the factory when it is reset() or destructed.
-         * 
-         * \returns Singleton SmbiosFactory object pointer.
-         */
-        static SmbiosFactory *getFactory();
-        virtual ~SmbiosFactory() throw();
-
-        //! Recommended way to get an ISmbiosTable object.
-        /** getSingleton() returns a pointer to a Singleton ISmbiosTable
-         * object. The user need not delete the pointer returned by this method.
-         * The singleton will be deleted when the factory is destructed or 
-         * the reset() method is called
-         * \returns (ISmbiosTable *) -- Factory manages lifetime, do not delete.
-         */
-        virtual ISmbiosTable *getSingleton() = 0;
-
-        //! Create a new ISmbiosTable object that the caller must delete. (NOT RECOMMENDED)
-        /** The makeNew() method returns a pointer to a newly allocated
-         * ISmbiosTable object. The caller is responsible for deleting this 
-         * reference when it is finished with it. It is recommended that the 
-         * caller store the pointer in an std::auto_ptr<ISmbiosTable>.
-         *
-         * The getSingleton() method is preferred over this method.
-         *
-         * \returns (ISmbiosTable *) -- caller must delete
-         */
-        virtual ISmbiosTable *makeNew() = 0;
-    protected:
-        //! Use getFactory() to get a factory.
-        SmbiosFactory();
-    };
-
     //! Iterator base class for ISmbiosTable objects.
     /** The base class for iterators over ISmbiosTable. This class has all of
      * the data items to keep track of the position. There is no good way to
@@ -343,8 +352,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
      *
      * This class is stable and should not be modified.
      */
-    class SmbiosTableIteratorBase: 
-        public std::iterator < std::forward_iterator_tag, const ISmbiosItem >
+    class SmbiosTableIteratorBase
     {
     public:
         typedef std::forward_iterator_tag iterator_category;
@@ -368,7 +376,9 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
         const u8 * current;
     };
 
-    class SmbiosTableIterator :public SmbiosTableIteratorBase
+    class SmbiosTableIterator:
+        public SmbiosTableIteratorBase,
+        public std::iterator < std::forward_iterator_tag, ISmbiosItem >
     {
     public:
         typedef ISmbiosItem value_type;
@@ -376,14 +386,16 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
         typedef value_type* pointer;
 
         virtual ~SmbiosTableIterator() throw();
-        explicit SmbiosTableIterator(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
-        reference operator * () const;
-        pointer   operator -> () const;
+        explicit SmbiosTableIterator(ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
+        reference operator * ();
+        pointer   operator -> ();
         SmbiosTableIterator & operator ++ (); // ++Prefix
         const SmbiosTableIterator operator ++ (int);  //Postfix++
     };
 
-    class ConstSmbiosTableIterator :public SmbiosTableIteratorBase
+    class ConstSmbiosTableIterator:
+        public SmbiosTableIteratorBase,
+        public std::iterator < std::forward_iterator_tag, const ISmbiosItem >
     {
     public:
         typedef const ISmbiosItem value_type;
@@ -403,7 +415,6 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
     //
     std::ostream & operator << (std::ostream & cout, const ISmbiosTable & item);
     std::ostream & operator << (std::ostream & cout, const ISmbiosItem & item);
-
 
 }
 

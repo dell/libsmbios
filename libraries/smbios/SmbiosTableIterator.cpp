@@ -42,18 +42,18 @@ namespace smbios
         return (current == 0);
     }
 
-    SmbiosTableIterator::SmbiosTableIterator(const ISmbiosTable * initialTable, int typeToMatch)
+    SmbiosTableIterator::SmbiosTableIterator(ISmbiosTable * initialTable, int typeToMatch)
         : SmbiosTableIteratorBase(initialTable, typeToMatch)
     {}
 
-    SmbiosTableIterator::reference SmbiosTableIterator::operator * () const
+    SmbiosTableIterator::reference SmbiosTableIterator::operator * ()
     { 
-        return const_cast<SmbiosTableIterator *>(this)->dereference(); 
+        return dereference(); 
     }
 
-    SmbiosTableIterator::pointer   SmbiosTableIterator::operator -> () const
+    SmbiosTableIterator::pointer   SmbiosTableIterator::operator -> ()
     { 
-        return &(const_cast<SmbiosTableIterator *>(this)->dereference()); 
+        return &dereference(); 
     }
 
     SmbiosTableIterator & SmbiosTableIterator::operator ++ () // ++Prefix

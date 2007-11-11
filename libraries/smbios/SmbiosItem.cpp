@@ -188,6 +188,11 @@ namespace smbios
         return string_pointer;
     }
 
+    std::auto_ptr<ISmbiosItem> SmbiosItem::clone()
+    {
+        return auto_ptr<ISmbiosItem>(new SmbiosItem (*this));
+    }
+
     std::auto_ptr<const ISmbiosItem> SmbiosItem::clone() const
     {
         return auto_ptr<const ISmbiosItem>(new SmbiosItem (*this));

@@ -186,6 +186,7 @@ namespace smbios
         virtual ~SmbiosItem ();
 
         virtual std::auto_ptr<const ISmbiosItem> clone() const;
+        virtual std::auto_ptr<ISmbiosItem> clone();
         virtual std::ostream & streamify( std::ostream & cout ) const;
 
         u8 getType() const;
