@@ -16,7 +16,10 @@
  * See the GNU General Public License for more details.
  */
 
+// compat header should always be first header if including system headers
 #define LIBSMBIOS_SOURCE
+#include "smbios/compat.h"
+#include <errno.h>
 #include "CmosRWImpl.h"
 
 using namespace std;
@@ -116,10 +119,11 @@ namespace cmos
         u8 retval = 0xFF;
         u32 realOffset = indexPort * 256 + offset;
         (void) dataPort; // unused
+        string errMessage("Could not open CMOS file(" + fileName + ") for reading: ");
 
         FILE *fh = fopen (fileName.c_str (), "rb");
         if( !fh )
-            throw smbios::InternalErrorImpl("Internal Error: could not cmos file for reading.");
+            throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
         fseek (fh, static_cast<long>(realOffset), SEEK_SET);
         size_t numBytes = fread (&retval, 1, sizeof (retval), fh); // only used in unit tests, so isnt critical
@@ -137,10 +141,11 @@ namespace cmos
         //cout << "w(" << offset << ")";
         u32 realOffset = indexPort * 256 + offset;
         (void) dataPort; // unused
+        string errMessage("Could not open CMOS file(" + fileName + ") for writing: ");
 
         FILE *fh = fopen (fileName.c_str (), "r+b");
         if( !fh )
-            throw smbios::InternalErrorImpl("Internal Error: could not cmos file for writing.");
+            throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
         fseek (fh, static_cast<long>(realOffset), SEEK_SET);
         fwrite (&byte, 1, sizeof (byte), fh);
