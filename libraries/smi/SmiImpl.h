@@ -122,7 +122,7 @@ namespace smi
     class DellCallingInterfaceSmiImpl : virtual public IDellCallingInterfaceSmi
     {
     public:
-        DellCallingInterfaceSmiImpl(SmiStrategy *);
+        DellCallingInterfaceSmiImpl(SmiStrategy *, u16 address, u8 code );
         virtual ~DellCallingInterfaceSmiImpl();
 
         virtual void execute();
@@ -131,9 +131,9 @@ namespace smi
         virtual void setArg( u8 argNumber, u32 argValue );
         virtual u32  getRes( u8 resNumber ) const;
         virtual void setArgAsPhysicalAddress( u8 argNumber, u32 bufferOffset );
-        virtual u8 *getBufferPtr();
+        virtual const u8 *getBufferPtr();
         virtual void setBufferSize(size_t newSize);
-        virtual void setCommandIOMagic( u16 address, u8 code );
+        virtual void setBufferContents(const u8 *, size_t size);
 
     protected:
         struct calling_interface_command_buffer smi_buf;
@@ -143,7 +143,6 @@ namespace smi
         u8                                      *buffer;
         size_t                                  bufferSize;
         std::auto_ptr<SmiStrategy>              smiStrategy;
-
 
     private:
         DellCallingInterfaceSmiImpl();

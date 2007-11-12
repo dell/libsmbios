@@ -595,19 +595,17 @@ testStandalone::testSmi_callingInterface()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
 
-    std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI_RAW);
-    smi->setCommandIOMagic( 0x1234, 0x56 );
+    std::auto_ptr<smi::IDellCallingInterfaceSmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
 
-    smi::IDellCallingInterfaceSmi *ci = dynamic_cast<smi::IDellCallingInterfaceSmi *>(&*smi);
-    ci->setClass( 0xAABB );
-    ci->setSelect( 0xCCDD );
-    ci->setArg( 0, 0xA1A2A3A4 );
-    ci->setArg( 1, 0xB1B2B3B4 );
-    ci->setArg( 2, 0xC1C2C3C4 );
-    ci->setArg( 3, 0xD1D2D3D4 );
+    smi->setClass( 0xAABB );
+    smi->setSelect( 0xCCDD );
+    smi->setArg( 0, 0xA1A2A3A4 );
+    smi->setArg( 1, 0xB1B2B3B4 );
+    smi->setArg( 2, 0xC1C2C3C4 );
+    smi->setArg( 3, 0xD1D2D3D4 );
     try
     {   /* This is expected to fail in unit test, no good way to simulate them*/
-        ci->execute();
+        smi->execute();
     }
     catch( const smi::UnhandledSmi & ) {}
 
@@ -619,19 +617,16 @@ testStandalone::testSmi_callingInterface_physaddr ()
 {
     STD_TEST_START(getTestName().c_str() << "  " );
 
-    std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI_RAW);
-    smi->setCommandIOMagic( 0x1234, 0x56 );
-
-    smi::IDellCallingInterfaceSmi *ci = dynamic_cast<smi::IDellCallingInterfaceSmi *>(&*smi);
-    ci->setClass( 0xAABB );
-    ci->setSelect( 0xCCDD );
-    ci->setArgAsPhysicalAddress(0, 0);
-    ci->setArgAsPhysicalAddress(1, 1);
-    ci->setArgAsPhysicalAddress(2, 2);
-    ci->setArgAsPhysicalAddress(3, 3);
+    std::auto_ptr<smi::IDellCallingInterfaceSmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
+    smi->setClass( 0xAABB );
+    smi->setSelect( 0xCCDD );
+    smi->setArgAsPhysicalAddress(0, 0);
+    smi->setArgAsPhysicalAddress(1, 1);
+    smi->setArgAsPhysicalAddress(2, 2);
+    smi->setArgAsPhysicalAddress(3, 3);
     try
     {   /* This is expected to fail in unit test, no good way to simulate them*/
-        ci->execute();
+        smi->execute();
     }
     catch( const smi::UnhandledSmi & ) {}
 

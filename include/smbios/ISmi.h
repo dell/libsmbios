@@ -49,48 +49,38 @@ namespace smi
     DECLARE_EXCEPTION_EX( PasswordVerificationFailed, smi, SmiException );
     DECLARE_EXCEPTION_EX( ConfigError, smi, SmiException );
 
-    // forward declarations.
-    class ISmi;
-
-    // NOTE: does not hand out singletons
-    class SmiFactory : public virtual factory::IFactory
+    class IDellCallingInterfaceSmi
     {
     public:
-        enum { RAW_SMI, DELL_CALLING_INTERFACE_SMI_RAW, DELL_CALLING_INTERFACE_SMI,};
-    
-        static SmiFactory *getFactory();
-        virtual ~SmiFactory() throw();
-        virtual std::auto_ptr<ISmi> makeNew(u8 type) = 0; // not for use
-    protected:
-        SmiFactory();
-    };
-
-    class ISmi  
-    {
-    public:
-        explicit ISmi();
+        virtual ~IDellCallingInterfaceSmi();
         // compiler-generated copy and operator = are good for now, I think.
-
-        virtual void execute() = 0;
-        virtual u8 *getBufferPtr() = 0;
-        virtual void setBufferSize(size_t newSize) = 0;
-        virtual void setCommandIOMagic( u16 address, u8 code ) = 0;
-
-        virtual ~ISmi();
-    };
-
-    class IDellCallingInterfaceSmi  : virtual public ISmi
-    {
-    public:
-        explicit IDellCallingInterfaceSmi();
-        // compiler-generated copy and operator = are good for now, I think.
+        
         virtual void setClass( u16 newClass ) = 0;
         virtual void setSelect( u16 newSelect ) = 0;
         virtual void setArg( u8 argNumber, u32 argValue ) = 0;
         virtual u32  getRes( u8 resNumber ) const = 0;
         virtual void setArgAsPhysicalAddress( u8 argNumber, u32 bufferOffset ) = 0;
+        virtual void setBufferSize(size_t size) = 0;
+        virtual void setBufferContents(const u8 *, size_t size) = 0;
+        virtual const u8 *getBufferPtr() = 0;
 
-        virtual ~IDellCallingInterfaceSmi();
+        virtual void execute() = 0;
+
+    protected:
+        explicit IDellCallingInterfaceSmi();
+    };
+
+    // NOTE: does not hand out singletons
+    class SmiFactory : public virtual factory::IFactory
+    {
+    public:
+        enum { DELL_CALLING_INTERFACE_SMI_RAW, DELL_CALLING_INTERFACE_SMI,};
+    
+        static SmiFactory *getFactory();
+        virtual ~SmiFactory() throw();
+        virtual std::auto_ptr<IDellCallingInterfaceSmi> makeNew(u8 type) = 0; // not for use
+    protected:
+        SmiFactory();
     };
 
     enum {cbARG1 = 0, cbARG2 = 1, cbARG3 = 2, cbARG4 = 3};

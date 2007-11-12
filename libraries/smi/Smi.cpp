@@ -48,20 +48,14 @@ namespace smi
     //
     // ISmi functions
     //
-    ISmi::ISmi()
-    {}
-
-    ISmi::~ISmi()
-    {}
-
     IDellCallingInterfaceSmi::IDellCallingInterfaceSmi()
     {}
 
     IDellCallingInterfaceSmi::~IDellCallingInterfaceSmi()
     {}
 
-    DellCallingInterfaceSmiImpl::DellCallingInterfaceSmiImpl(SmiStrategy *initStrategy)
-            :  ISmi(), IDellCallingInterfaceSmi(), buffer(0), bufferSize(0), smiStrategy(initStrategy)
+    DellCallingInterfaceSmiImpl::DellCallingInterfaceSmiImpl(SmiStrategy *initStrategy, u16 address, u8 code )
+            :  buffer(0), bufferSize(0), smiStrategy(initStrategy)
     {
         // this is the only place where we use 'real' sizeof(kernel_buf), 
         // everywhere else should use SIZEOF_KERNELBUF
@@ -74,8 +68,8 @@ namespace smi
         kernel_buf.magic = KERNEL_SMI_MAGIC_NUMBER;
         kernel_buf.ebx = 0;
         kernel_buf.ecx   = DELL_CALLINTF_SMI_MAGIC_NUMBER;
-        kernel_buf.command_address = 0;
-        kernel_buf.command_code = 0;
+        kernel_buf.command_address = address;
+        kernel_buf.command_code = code;
 
         /* default to "not handled" */
         smi_buf.cbRES1 = -3;
@@ -91,13 +85,7 @@ namespace smi
         }
     }
 
-    void DellCallingInterfaceSmiImpl::setCommandIOMagic( u16 address, u8 code )
-    {
-        kernel_buf.command_address = address;
-        kernel_buf.command_code = code;
-    }
-
-    u8 *DellCallingInterfaceSmiImpl::getBufferPtr()
+    const u8 *DellCallingInterfaceSmiImpl::getBufferPtr()
     {
         return buffer;
     }
@@ -114,10 +102,17 @@ namespace smi
         }
     }
 
+    void DellCallingInterfaceSmiImpl::setBufferContents(const u8 *src, size_t size)
+    {
+        if(!bufferSize)
+            throw SmiExceptionImpl("Output buffer not large enough.");
+
+        memcpy(buffer, src, bufferSize<size?bufferSize:size);
+    }
+
     void DellCallingInterfaceSmiImpl::execute()
     {
-        smiStrategy->lock()
-        ;
+        smiStrategy->lock() ;
         smiStrategy->setSize( SIZEOF_KERNELBUF + sizeof(smi_buf) + bufferSize );
 
         size_t baseAddr = smiStrategy->getPhysicalBufferBaseAddress();
@@ -201,21 +196,16 @@ namespace smi
         const smbios::ISmbiosTable *table = 0;
         table = smbios::SmbiosFactory::getFactory()->getSingleton();
 
-        std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
-        smi::IDellCallingInterfaceSmi *ci = dynamic_cast<smi::IDellCallingInterfaceSmi *>(smi.get());
+        std::auto_ptr<smi::IDellCallingInterfaceSmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
 
-        ci->setClass( smiClass );
-        ci->setSelect( select );
-        ci->setArg(0, args[0]);
-        ci->setArg(1, args[1]);
-        ci->setArg(2, args[2]);
-        ci->setArg(3, args[3]);
+        smi->setClass( smiClass );
+        smi->setSelect( select );
+        smi->setArg(0, args[0]);
+        smi->setArg(1, args[1]);
+        smi->setArg(2, args[2]);
+        smi->setArg(3, args[3]);
 
-        std::auto_ptr<smi::IDellCallingInterfaceSmi> retval(
-            dynamic_cast<smi::IDellCallingInterfaceSmi *>(smi.get())
-        );
-        smi.release();
-        return retval;
+        return smi;
     }
 
     void doSimpleCallingInterfaceSmi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
@@ -312,8 +302,7 @@ out:
             u32 args[4] = {0,};
             // select 4 == verify password
             std::auto_ptr<smi::IDellCallingInterfaceSmi> smi(setupCallingInterfaceSmi(toCheck[i], 4, args));
-            smi->setBufferSize(maxLen);
-            strncpy( reinterpret_cast<char*>(smi->getBufferPtr()), password.c_str(), maxLen);
+            smi->setBufferContents(reinterpret_cast<const u8*>(password.c_str()), strnlen(password.c_str(), maxLen));
             smi->setArgAsPhysicalAddress( 0, 0 );
             smi->execute();
 
@@ -572,10 +561,11 @@ out:
         u32 args[4] = {0,};
         // class 20 == property tag
         std::auto_ptr<smi::IDellCallingInterfaceSmi> smi(setupCallingInterfaceSmi(20, 0, args));
-        smi->setBufferSize(120); // 80 is max len, making sure it doesn't overflow now. :-)
+        smi->setBufferSize(80); // 80 is max len, making sure it doesn't overflow now. :-)
         smi->setArgAsPhysicalAddress( 0, 0 );
         smi->execute();
-        strncpy( tagBuf, reinterpret_cast<char*>(smi->getBufferPtr()), size < 80? size:80);
+        strncpy( tagBuf, reinterpret_cast<const char*>(smi->getBufferPtr()), size < 80? size:80);
+        tagBuf[size-1] = '\0';
     }
 
     void setPropertyOwnershipTag(const string password, const char *newTag, size_t size)
@@ -589,7 +579,7 @@ out:
                 // class 20 == property tag
                 std::auto_ptr<smi::IDellCallingInterfaceSmi> smi(setupCallingInterfaceSmi(20, 1, args));
                 smi->setBufferSize(120); // 80 is max len, making sure it doesn't overflow now. :-)
-                strncpy( reinterpret_cast<char*>(smi->getBufferPtr()), newTag, size < 80? size:80);
+                smi->setBufferContents(reinterpret_cast<const u8*>(newTag), strnlen(newTag, 80));
                 smi->setArgAsPhysicalAddress( 0, 0 );
                 smi->execute();
                 break;
@@ -671,10 +661,9 @@ out:
 
     static void switchControl(u32 whichConfig, u32 whichSwitch, bool enable)
     {
-        std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
-        smi::IDellCallingInterfaceSmi *ci = dynamic_cast<smi::IDellCallingInterfaceSmi *>(smi.get());
-        ci->setClass( 17 );  /* ? */
-        ci->setSelect( 11 );  /* WiFi Control */
+        std::auto_ptr<smi::IDellCallingInterfaceSmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
+        smi->setClass( 17 );  /* ? */
+        smi->setSelect( 11 );  /* WiFi Control */
     
         // 0x2 = Wireless Switch Configuration
         //  cbARG1, byte1   Subcommand:
@@ -699,18 +688,18 @@ out:
         //      9-14 Reserved (0)
         //      15 WiFi locator setting locked (1)
         //      16-31 Reserved (0)
-        ci->setArg(smi::cbARG1, 0x2);
-        ci->execute();
+        smi->setArg(smi::cbARG1, 0x2);
+        smi->execute();
     
-        u32 oldConfig = ci->getRes(smi::cbRES2);
+        u32 oldConfig = smi->getRes(smi::cbRES2);
         if (whichConfig == 1)
             oldConfig &= 0xFF;
         else if (whichConfig == 2)
             oldConfig = ((oldConfig>>8) & 0xFF);
     
         u32 newConfig = (oldConfig & ~whichSwitch) | ((enable?1:0) * whichSwitch);
-        ci->setArg(smi::cbARG1, (0x2 | (whichConfig << 8) | (newConfig << 16)));
-        ci->execute();
+        smi->setArg(smi::cbARG1, (0x2 | (whichConfig << 8) | (newConfig << 16)));
+        smi->execute();
     }
     
     void wirelessSwitchControl(bool enable, bool boot, bool runtime, int enable_token, int disable_token, int switchNum, std::string password)

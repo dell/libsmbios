@@ -33,9 +33,7 @@ namespace smi
     public:
         SmiFactoryImpl() { setParameter("smiFile", ""); };
         virtual ~SmiFactoryImpl() throw() {};
-        virtual std::auto_ptr<ISmi> makeNew(u8 type); // use me
-    protected:
-        static ISmi *_cmosPtr;
+        virtual std::auto_ptr<IDellCallingInterfaceSmi> makeNew(u8 type); // use me
     };
 
     //
@@ -52,9 +50,9 @@ namespace smi
         return SmiFactoryImpl::getFactory(reinterpret_cast<SmiFactoryImpl *>(0));
     }
 
-    std::auto_ptr<ISmi> SmiFactoryImpl::makeNew( u8 type )
+    std::auto_ptr<IDellCallingInterfaceSmi> SmiFactoryImpl::makeNew( u8 type )
     {
-        ISmi *ret = 0;
+        IDellCallingInterfaceSmi *ret = 0;
         SmiStrategy *strategyPtr = 0;
 
         if (mode == AutoDetectMode )
@@ -67,43 +65,25 @@ namespace smi
         // used for automatic setup of magic io stuff 
         u16 cmdIOAddress = 0;
         u8  cmdIOCode = 0;
-        smbios::TokenTableFactory *ttFactory = 0;
-        smbios::ITokenTable *tokenTable = 0;
+        const smbios::ISmbiosTable *table = 0;
 
         switch( type )
         {
         case DELL_CALLING_INTERFACE_SMI_RAW:
-            ret = new DellCallingInterfaceSmiImpl(strategyPtr);
+            ret = new DellCallingInterfaceSmiImpl(strategyPtr, 0, 0);
             break;
 
         case DELL_CALLING_INTERFACE_SMI:
-            ret = new DellCallingInterfaceSmiImpl(strategyPtr);
-            // automatically set up cmd io port/magic
-            // step 1: get token table
-            ttFactory = smbios::TokenTableFactory::getFactory() ;
-            tokenTable = ttFactory->getSingleton();
-            // step 2: iterate through token table
-            for(
-                smbios::ITokenTable::iterator token = tokenTable->begin();
-                token != tokenTable->end();
-                ++token )
-            {
-                // Step 3: go until we get to the first one that will dynamic cast 
-                //         into a TokenDA
-                try{
-                    if( token->getTokenClass() != "TokenDA" )
-                        continue;
-
-                    // Step 4: then set cmd io stuff
-                    dynamic_cast<smbios::ISmiToken *>(&*token)->getSmiDetails(&cmdIOAddress, &cmdIOCode, static_cast<u8*>(0));
-                    ret->setCommandIOMagic( cmdIOAddress, cmdIOCode );
-                    break;
-                } catch(...){
-                }
-            }
-
-            if( ! (cmdIOAddress && cmdIOCode))
+            // would be better to just get a 0xDA type from smbios table and get code/io
+            try {
+                table = smbios::SmbiosFactory::getFactory()->getSingleton();
+                smbios::ISmbiosTable::const_iterator item = (*table)[0xDA];
+                cmdIOAddress = getU16_FromItem(*item, 4);
+                cmdIOCode = getU8_FromItem(*item, 6);
+                ret = new DellCallingInterfaceSmiImpl(strategyPtr, cmdIOAddress, cmdIOCode);
+            } catch(...) {
                 throw SmiExceptionImpl(_("Could not automatically setup up magic io"));
+            }
 
             break;
         default:
@@ -114,7 +94,7 @@ namespace smi
         if( ! ret )
             throw InvalidSmiModeImpl(_("Could not allocate SMI object"));
 
-        std::auto_ptr<ISmi> foo(ret);
+        std::auto_ptr<IDellCallingInterfaceSmi> foo(ret);
         return foo;
     }
 

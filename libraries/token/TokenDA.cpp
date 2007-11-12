@@ -143,8 +143,7 @@ namespace smbios
 
     const string SmiTokenDA::getString(u8 *byteArray, unsigned int size ) const
     {
-        std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI_RAW);
-        smi->setCommandIOMagic( structure.cmdIOAddress, structure.cmdIOCode );
+        std::auto_ptr<smi::IDellCallingInterfaceSmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
 
         smi::IDellCallingInterfaceSmi *ci = dynamic_cast<smi::IDellCallingInterfaceSmi *>(smi.get());
         ci->setClass( 0x0 );  /* Read Non-Volatile Storage class code */
@@ -172,8 +171,7 @@ namespace smbios
         if( size < 2 )
             return;
 
-        std::auto_ptr<smi::ISmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI_RAW);
-        smi->setCommandIOMagic( structure.cmdIOAddress, structure.cmdIOCode );
+        std::auto_ptr<smi::IDellCallingInterfaceSmi> smi = smi::SmiFactory::getFactory()->makeNew(smi::SmiFactory::DELL_CALLING_INTERFACE_SMI);
 
         smi::IDellCallingInterfaceSmi *ci = dynamic_cast<smi::IDellCallingInterfaceSmi *>(smi.get());
         ci->setClass( 0x1 );  /* Read Non-Volatile Storage class code */
