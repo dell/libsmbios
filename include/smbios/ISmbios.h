@@ -215,18 +215,19 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
         // Used by the validateBios code.
         virtual smbiosLowlevel::smbios_table_entry_point getTableEPS() const = 0;
 
+        friend class SmbiosTableIteratorBase;
+    protected:
+        virtual const ISmbiosItem & getSmbiosItem (const u8 *current) const = 0;
+        virtual ISmbiosItem & getSmbiosItem (const u8 *current) = 0;
+        virtual const u8 * nextSmbiosStruct ( const u8 * current = 0) const = 0;
+
         //! Used by operator << (std::ostream & cout, const ISmbiosTable & ) to
         //output table information.
         /** Users normally would not need or want to call this API. The normal
          * operator<<() has been overloaded to call this function internally.
          */
         virtual std::ostream & streamify(std::ostream & cout ) const = 0;
-
-        friend class SmbiosTableIteratorBase;
-    protected:
-        virtual const ISmbiosItem & getSmbiosItem (const u8 *current) const = 0;
-        virtual ISmbiosItem & getSmbiosItem (const u8 *current) = 0;
-        virtual const u8 * nextSmbiosStruct ( const u8 * current = 0) const = 0;
+        friend std::ostream & operator << (std::ostream & cout, const ISmbiosTable & item);
 
     private:
         explicit ISmbiosTable(const ISmbiosTable &); ///< not implemented (explicitly disallowed)
@@ -246,13 +247,6 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
 
         virtual std::auto_ptr<const ISmbiosItem> clone() const = 0;
         virtual std::auto_ptr<ISmbiosItem> clone() = 0;
-
-        /** Used by 'std::ostream &smbios::operator <<( std::ostream &, ISmbiosItem&)'
-         * to print out the item info.
-         *
-         * Not particularly useful for clients. Use operator<< instead.
-         */
-        virtual std::ostream & streamify( std::ostream & cout ) const = 0;
 
         /** Returns the Type field of the SMBIOS Item.
          * This field is standard for all SMBIOS tables and is defined
@@ -323,6 +317,15 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
             FIELD_LEN_DWORD=4,
             FIELD_LEN_QWORD=8
         };
+
+    protected:
+        /** Used by 'std::ostream &smbios::operator <<( std::ostream &, ISmbiosItem&)'
+         * to print out the item info.
+         *
+         * Not particularly useful for clients. Use operator<< instead.
+         */
+        virtual std::ostream & streamify( std::ostream & cout ) const = 0;
+        friend std::ostream & operator << (std::ostream & cout, const ISmbiosItem & item);
     };
 
     u8 getItemType(const ISmbiosItem &item);
