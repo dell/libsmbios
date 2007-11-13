@@ -96,10 +96,13 @@ namespace smi
     enum password_format_enum { PW_FORMAT_UNKNOWN, PW_FORMAT_SCAN_CODE, PW_FORMAT_ASCII };
     password_format_enum getPasswordFormat();
 
+#if 0
+    // not yet implemented
     std::string getServiceTag();
     void setServiceTag(const std::string &password, const std::string &newTag);
     std::string getAssetTag();
     void setAssetTag(const std::string &password, const std::string &newTag);
+#endif 
     
     u32 readNVStorage         (u32 location, u32 *minValue, u32 *maxValue);
     u32 readBatteryModeSetting(u32 location, u32 *minValue, u32 *maxValue);
