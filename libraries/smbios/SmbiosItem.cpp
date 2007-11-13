@@ -265,7 +265,7 @@ namespace smbios
         return newBuffer;
     }
 
-    const size_t SmbiosItem::getBufferSize() const
+    size_t SmbiosItem::getBufferSize() const
     {
         return header_size;
     }

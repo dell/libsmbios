@@ -293,17 +293,13 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
          * that (for example) when you use getU8() that the location you are 
          * trying to access is actually a U8. 
          */
-
         virtual void getData( unsigned int offset, u8 *out, size_t size ) const = 0;
 
-        //loathe Stroustrup. In his infinite wisdom, he asserts that
-        //auto_ptr equivalent for array is _not_necessary_.
-        //Here would be a good place for one. :-(
         virtual const u8* getBufferCopy(size_t &length) const = 0;
         
         //! Returns the buffer size of the item.
         // The validateBios.cpp calls this function.
-        virtual const size_t getBufferSize() const = 0;
+        virtual size_t getBufferSize() const = 0;
 
         /** Not likely to be useful to regular client code. It is public
          * mainly to help in writing Unit Tests. Clients should normally 

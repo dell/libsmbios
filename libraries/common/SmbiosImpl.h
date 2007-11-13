@@ -196,7 +196,7 @@ namespace smbios
         virtual void getData( unsigned int offset, u8 *out, size_t size ) const;
 
         virtual const u8* getBufferCopy(size_t &length) const;
-        virtual const size_t getBufferSize() const;
+        virtual size_t getBufferSize() const;
 
         virtual const char *getStringByStringNumber (u8) const;
 
