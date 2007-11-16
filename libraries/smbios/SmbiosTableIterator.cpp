@@ -73,6 +73,20 @@ namespace smbios
         : SmbiosTableIteratorBase(initialTable, typeToMatch)
     {}
 
+    SmbiosTableIteratorBase &SmbiosTableIteratorBase::operator =(const SmbiosTableIteratorBase &rhs)
+    {
+        table = rhs.table; 
+        matchType = rhs.matchType;
+        current = rhs.current;
+        return *this;
+    }
+
+    ConstSmbiosTableIterator &ConstSmbiosTableIterator::operator =(const SmbiosTableIteratorBase &rhs)
+    {
+        SmbiosTableIteratorBase::operator=(rhs);
+        return *this;
+    }
+
     SmbiosTableIteratorBase::SmbiosTableIteratorBase(const ISmbiosTable * initialTable, int typeToMatch)
         : matchType(typeToMatch), table(initialTable), current(0)
     { 
@@ -133,15 +147,11 @@ namespace smbios
 
     void SmbiosTableIteratorBase::incrementIterator ()
     {
-        const SmbiosTable *t = dynamic_cast<const SmbiosTable *>(table);
-
-        while ((0 != t))
-        {
-            current = t->nextSmbiosStruct (current);
-            if ((-1 == matchType) || (0 == current)
-                    || ( reinterpret_cast<const smbios_structure_header *>(current)->type == matchType))
-                break;
-        }
+        if(!table) return;
+        do {
+            current = table->nextSmbiosStruct (current);
+        } while ((-1 != matchType) && 
+                (0 != current) && 
+                (reinterpret_cast<const smbios_structure_header *>(current)->type != matchType));
     }
-
 }
