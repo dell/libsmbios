@@ -48,7 +48,6 @@ sbin_PROGRAMS = bin-supported/assetTag$(EXEEXT) \
 	bin-supported/serviceTag$(EXEEXT) \
 	bin-supported/verifySmiPassword$(EXEEXT) \
 	bin-supported/wakeupCtl$(EXEEXT) \
-	bin-supported/tokenCtl$(EXEEXT) \
 	bin-supported/dellBiosUpdate$(EXEEXT) \
 	bin-supported/dellLcdBrightness$(EXEEXT) \
 	bin-supported/dumpSmbios$(EXEEXT) \
@@ -71,7 +70,6 @@ EXTRA_PROGRAMS = bin-supported/assetTagS$(EXEEXT) \
 	bin-supported/serviceTagS$(EXEEXT) \
 	bin-supported/verifySmiPasswordS$(EXEEXT) \
 	bin-supported/wakeupCtlS$(EXEEXT) \
-	bin-supported/tokenCtlS$(EXEEXT) \
 	bin-supported/dellBiosUpdateS$(EXEEXT) \
 	bin-supported/dellLcdBrightnessS$(EXEEXT) \
 	bin-supported/dumpSmbiosS$(EXEEXT) \
@@ -309,22 +307,6 @@ bin_supported_serviceTagS_LINK = $(LIBTOOL) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(AM_CXXFLAGS) $(CXXFLAGS) \
 	$(bin_supported_serviceTagS_LDFLAGS) $(LDFLAGS) -o $@
-am_bin_supported_tokenCtl_OBJECTS = $(am__objects_1) \
-	bin-supported/tokenCtl.$(OBJEXT)
-bin_supported_tokenCtl_OBJECTS = $(am_bin_supported_tokenCtl_OBJECTS)
-bin_supported_tokenCtl_LDADD = $(LDADD)
-bin_supported_tokenCtl_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(bin_supported_tokenCtl_LDFLAGS) $(LDFLAGS) -o $@
-am_bin_supported_tokenCtlS_OBJECTS = $(am__objects_1) \
-	bin-supported/tokenCtl.$(OBJEXT)
-bin_supported_tokenCtlS_OBJECTS =  \
-	$(am_bin_supported_tokenCtlS_OBJECTS)
-bin_supported_tokenCtlS_LDADD = $(LDADD)
-bin_supported_tokenCtlS_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
-	$(CXXFLAGS) $(bin_supported_tokenCtlS_LDFLAGS) $(LDFLAGS) -o \
-	$@
 am_bin_supported_verifySmiPassword_OBJECTS = $(am__objects_1) \
 	bin-supported/verifySmiPassword.$(OBJEXT)
 bin_supported_verifySmiPassword_OBJECTS =  \
@@ -648,8 +630,6 @@ SOURCES = $(libraries_libsmbios_la_SOURCES) \
 	$(bin_supported_propertyTagS_SOURCES) \
 	$(bin_supported_serviceTag_SOURCES) \
 	$(bin_supported_serviceTagS_SOURCES) \
-	$(bin_supported_tokenCtl_SOURCES) \
-	$(bin_supported_tokenCtlS_SOURCES) \
 	$(bin_supported_verifySmiPassword_SOURCES) \
 	$(bin_supported_verifySmiPasswordS_SOURCES) \
 	$(bin_supported_wakeupCtl_SOURCES) \
@@ -697,8 +677,6 @@ DIST_SOURCES = $(libraries_libsmbios_la_SOURCES) \
 	$(bin_supported_propertyTagS_SOURCES) \
 	$(bin_supported_serviceTag_SOURCES) \
 	$(bin_supported_serviceTagS_SOURCES) \
-	$(bin_supported_tokenCtl_SOURCES) \
-	$(bin_supported_tokenCtlS_SOURCES) \
 	$(bin_supported_verifySmiPassword_SOURCES) \
 	$(bin_supported_verifySmiPasswordS_SOURCES) \
 	$(bin_supported_wakeupCtl_SOURCES) \
@@ -985,7 +963,6 @@ bin_supported_propertyTag_SOURCES = $(getopts_c) bin-supported/propertyTag.cpp
 bin_supported_serviceTag_SOURCES = $(getopts_c) bin-supported/serviceTag.cpp
 bin_supported_verifySmiPassword_SOURCES = $(getopts_c) bin-supported/verifySmiPassword.cpp
 bin_supported_wakeupCtl_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
-bin_supported_tokenCtl_SOURCES = $(getopts_c) bin-supported/tokenCtl.cpp
 bin_supported_dellLcdBrightness_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtl_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
 bin_supported_dumpSmbios_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
@@ -995,7 +972,6 @@ bin_supported_propertyTag_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_serviceTag_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_verifySmiPassword_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_wakeupCtl_LDFLAGS = -Llibraries/ -lsmbios
-bin_supported_tokenCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightness_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dumpSmbios_LDFLAGS = -Llibraries/ -lsmbios
@@ -1012,7 +988,6 @@ bin_supported_propertyTagS_SOURCES = $(getopts_c) bin-supported/propertyTag.cpp
 bin_supported_serviceTagS_SOURCES = $(getopts_c) bin-supported/serviceTag.cpp
 bin_supported_verifySmiPasswordS_SOURCES = $(getopts_c) bin-supported/verifySmiPassword.cpp
 bin_supported_wakeupCtlS_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
-bin_supported_tokenCtlS_SOURCES = $(getopts_c) bin-supported/tokenCtl.cpp
 bin_supported_dellLcdBrightnessS_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtlS_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
 bin_supported_dumpSmbiosS_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
@@ -1022,7 +997,6 @@ bin_supported_propertyTagS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_serviceTagS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_verifySmiPasswordS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_wakeupCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
-bin_supported_tokenCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightnessS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtlS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dumpSmbiosS_LDFLAGS = -all-static -Llibraries/ -lsmbios
@@ -1465,14 +1439,6 @@ bin-supported/serviceTag$(EXEEXT): $(bin_supported_serviceTag_OBJECTS) $(bin_sup
 bin-supported/serviceTagS$(EXEEXT): $(bin_supported_serviceTagS_OBJECTS) $(bin_supported_serviceTagS_DEPENDENCIES) bin-supported/$(am__dirstamp)
 	@rm -f bin-supported/serviceTagS$(EXEEXT)
 	$(bin_supported_serviceTagS_LINK) $(bin_supported_serviceTagS_OBJECTS) $(bin_supported_serviceTagS_LDADD) $(LIBS)
-bin-supported/tokenCtl.$(OBJEXT): bin-supported/$(am__dirstamp) \
-	bin-supported/$(DEPDIR)/$(am__dirstamp)
-bin-supported/tokenCtl$(EXEEXT): $(bin_supported_tokenCtl_OBJECTS) $(bin_supported_tokenCtl_DEPENDENCIES) bin-supported/$(am__dirstamp)
-	@rm -f bin-supported/tokenCtl$(EXEEXT)
-	$(bin_supported_tokenCtl_LINK) $(bin_supported_tokenCtl_OBJECTS) $(bin_supported_tokenCtl_LDADD) $(LIBS)
-bin-supported/tokenCtlS$(EXEEXT): $(bin_supported_tokenCtlS_OBJECTS) $(bin_supported_tokenCtlS_DEPENDENCIES) bin-supported/$(am__dirstamp)
-	@rm -f bin-supported/tokenCtlS$(EXEEXT)
-	$(bin_supported_tokenCtlS_LINK) $(bin_supported_tokenCtlS_OBJECTS) $(bin_supported_tokenCtlS_LDADD) $(LIBS)
 bin-supported/verifySmiPassword.$(OBJEXT):  \
 	bin-supported/$(am__dirstamp) \
 	bin-supported/$(DEPDIR)/$(am__dirstamp)
@@ -1657,7 +1623,6 @@ mostlyclean-compile:
 	-rm -f bin-supported/getopts.$(OBJEXT)
 	-rm -f bin-supported/propertyTag.$(OBJEXT)
 	-rm -f bin-supported/serviceTag.$(OBJEXT)
-	-rm -f bin-supported/tokenCtl.$(OBJEXT)
 	-rm -f bin-supported/verifySmiPassword.$(OBJEXT)
 	-rm -f bin-supported/wakeupCtl.$(OBJEXT)
 	-rm -f bin-unsupported/activateCmosToken.$(OBJEXT)
@@ -1759,7 +1724,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@bin-supported/$(DEPDIR)/getopts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-supported/$(DEPDIR)/propertyTag.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-supported/$(DEPDIR)/serviceTag.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@bin-supported/$(DEPDIR)/tokenCtl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-supported/$(DEPDIR)/verifySmiPassword.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-supported/$(DEPDIR)/wakeupCtl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@bin-unsupported/$(DEPDIR)/activateCmosToken.Po@am__quote@
