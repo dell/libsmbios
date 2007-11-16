@@ -126,7 +126,6 @@ rm -rf %{buildroot}
 %{_sbindir}/getSystemId
 %{_sbindir}/propertyTag
 %{_sbindir}/serviceTag
-%{_sbindir}/tokenCtl
 %{_sbindir}/verifySmiPassword
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
