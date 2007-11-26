@@ -43,6 +43,7 @@ to get information from standard BIOS tables, such as the SMBIOS table.
 Summary: Libsmbios shared libraries
 Group: System Environment/Libraries
 Obsoletes: libsmbiosxml-libs < 0:%{version}-%{release}
+Obsoletes: libsmbios < 0:%{version}-%{release}
 Provides: libsmbiosxml-libs = %{version}-%{release}
 
 
@@ -52,6 +53,7 @@ Group: Applications/System
 Requires: libsmbios-libs = %{version}-%{release}
 Obsoletes: libsmbiosxml-bin < 0:%{version}-%{release}
 Provides: libsmbiosxml-bin = %{version}-%{release}
+Obsoletes: smbios-utils < 0:%{version}-%{release}
 
 %package unsupported-bin
 Summary: Unsupported sample binaries using libsmbios
