@@ -359,6 +359,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
 
 
         explicit SmbiosTableIteratorBase(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
+        SmbiosTableIteratorBase &operator=(const SmbiosTableIteratorBase&);
         virtual ~SmbiosTableIteratorBase() throw();
         bool operator == (const SmbiosTableIteratorBase &other) const;
         bool operator != (const SmbiosTableIteratorBase &other) const;
@@ -403,6 +404,8 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
 
         virtual ~ConstSmbiosTableIterator() throw();
         explicit ConstSmbiosTableIterator(const ISmbiosTable * initialTable = 0, int typeToMatch = -1 );
+        ConstSmbiosTableIterator &operator=(const SmbiosTableIteratorBase&);
+
         reference operator * () const;
         pointer   operator -> () const;
         ConstSmbiosTableIterator & operator ++ (); // ++Prefix

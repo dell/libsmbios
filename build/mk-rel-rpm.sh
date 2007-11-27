@@ -24,9 +24,7 @@ make -e srpm
 
 . version
 
-popd
 git tag -u libsmbios -m "tag for official release: $PACKAGE_STRING" v${PACKAGE_VERSION}
-pushd _builddir
 
 DEST=$LIBSMBIOS_TOPDIR/download/${PACKAGE_NAME}/$PACKAGE_NAME-$PACKAGE_VERSION/
 mkdir -p $DEST
@@ -36,6 +34,6 @@ for i in *.tar.{gz,bz2} *.zip *.src.rpm; do
     cp $i $DEST
 done
 
-/var/ftp/pub/yum/dell-repo/software/_tools/upload_rpm.sh ./_builddir/${PACKAGE_NAME}-${PACKAGE_VERSION}-1*.src.rpm
+/var/ftp/pub/yum/dell-repo/software/_tools/upload_rpm.sh ${PACKAGE_NAME}-${PACKAGE_VERSION}-1*.src.rpm
 
 git push --tags origin master:master

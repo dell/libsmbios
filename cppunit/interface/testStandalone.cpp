@@ -157,10 +157,10 @@ void testStandalone::testTable_Subscript()
 
     // table should not be deleted when we are finished. It is managed by the
     // factory. Factory will delete it for us when ->reset() is called.
-    const smbios::ISmbiosTable *table =
+    smbios::ISmbiosTable *table =
         smbios::SmbiosFactory::getFactory()->getSingleton();
 
-    smbios::ISmbiosTable::const_iterator item1;
+    smbios::ISmbiosTable::iterator item1;
     smbios::ISmbiosTable::const_iterator item2;
 
     item1 = (*table)[smbios::BIOS_Information];

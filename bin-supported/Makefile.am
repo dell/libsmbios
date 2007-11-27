@@ -7,7 +7,6 @@ sbin_PROGRAMS += \
     bin-supported/serviceTag    \
     bin-supported/verifySmiPassword     \
     bin-supported/wakeupCtl     \
-    bin-supported/tokenCtl      \
     bin-supported/dellBiosUpdate    \
     bin-supported/dellLcdBrightness     \
     bin-supported/dumpSmbios    \
@@ -20,7 +19,6 @@ EXTRA_PROGRAMS += \
     bin-supported/serviceTagS    \
     bin-supported/verifySmiPasswordS     \
     bin-supported/wakeupCtlS     \
-    bin-supported/tokenCtlS      \
     bin-supported/dellBiosUpdateS    \
     bin-supported/dellLcdBrightnessS     \
     bin-supported/dumpSmbiosS    \
@@ -38,7 +36,6 @@ bin_supported_propertyTag_SOURCES = $(getopts_c) bin-supported/propertyTag.cpp
 bin_supported_serviceTag_SOURCES = $(getopts_c) bin-supported/serviceTag.cpp
 bin_supported_verifySmiPassword_SOURCES = $(getopts_c) bin-supported/verifySmiPassword.cpp
 bin_supported_wakeupCtl_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
-bin_supported_tokenCtl_SOURCES = $(getopts_c) bin-supported/tokenCtl.cpp
 bin_supported_dellLcdBrightness_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtl_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
 bin_supported_dumpSmbios_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
@@ -49,7 +46,6 @@ bin_supported_propertyTag_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_serviceTag_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_verifySmiPassword_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_wakeupCtl_LDFLAGS = -Llibraries/ -lsmbios
-bin_supported_tokenCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightness_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dumpSmbios_LDFLAGS = -Llibraries/ -lsmbios
@@ -68,7 +64,6 @@ bin_supported_propertyTagS_SOURCES = $(getopts_c) bin-supported/propertyTag.cpp
 bin_supported_serviceTagS_SOURCES = $(getopts_c) bin-supported/serviceTag.cpp
 bin_supported_verifySmiPasswordS_SOURCES = $(getopts_c) bin-supported/verifySmiPassword.cpp
 bin_supported_wakeupCtlS_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
-bin_supported_tokenCtlS_SOURCES = $(getopts_c) bin-supported/tokenCtl.cpp
 bin_supported_dellLcdBrightnessS_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtlS_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
 bin_supported_dumpSmbiosS_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
@@ -79,7 +74,6 @@ bin_supported_propertyTagS_LDFLAGS       = -all-static -Llibraries/ -lsmbios
 bin_supported_serviceTagS_LDFLAGS        = -all-static -Llibraries/ -lsmbios
 bin_supported_verifySmiPasswordS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_wakeupCtlS_LDFLAGS         = -all-static -Llibraries/ -lsmbios
-bin_supported_tokenCtlS_LDFLAGS          = -all-static -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightnessS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtlS_LDFLAGS   = -all-static -Llibraries/ -lsmbios
 bin_supported_dumpSmbiosS_LDFLAGS        = -all-static -Llibraries/ -lsmbios
