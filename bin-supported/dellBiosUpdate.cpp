@@ -249,7 +249,7 @@ main (int argc, char **argv)
         cerr << endl;
         cerr << "    -- dell_rbu device driver not loaded." << endl;
         cerr << "       Try loading the dell_rbu driver" << endl;
-        cerr << "          Linux  : insmod dell_rbu" << endl;
+        cerr << "          Linux  : modprobe dell_rbu" << endl;
         cerr << "          Windows: dell_rbu driver not yet available." << endl;
         cerr << endl;
 
