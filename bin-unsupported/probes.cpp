@@ -356,7 +356,7 @@ main (int argc, char **argv)
         cerr << endl;
         cerr << "    -- dcdbas device driver not loaded." << endl;
         cerr << "       Try loading the dcdbas driver" << endl;
-        cerr << "          Linux  : insmod dcdbas" << endl;
+        cerr << "          Linux  : modprobe dcdbas" << endl;
         cerr << "          Windows: dcdbas driver not yet available." << endl;
         cerr << endl;
 
