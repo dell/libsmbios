@@ -14,6 +14,7 @@ umask 002
 
 set -e
 
+./autogen.sh
 mkdir _builddir
 cd _builddir
 ../configure
