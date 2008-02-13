@@ -137,6 +137,6 @@ AC_CONFIG_FILES([
     include/smbios/version.h 
     doc/full-documentation.dox 
     doc/interface-only.dox 
-    ${PACKAGE_NAME}.spec
+    ${PACKAGE_NAME}.spec:${PACKAGE_NAME}.spec.in:ChangeLog
     ])
 AC_OUTPUT

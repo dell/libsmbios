@@ -1,3 +1,11 @@
+* Wed Jan 9 2008 Michael E Brown <michael_e_brown at dell.com> - 2.0.0
+- ABI incompatible, minor API changes
+- sync up libsmbios soname with version #
+- move binaries to /usr/sbin as they are only runnable by root
+- drop libsmbiosxml lib as it was mostly unused.
+- drop autotools generated files out of git and add autogen.sh
+- drop tokenCtl binary-- pysmbios has a *much* improved version
+
 * Wed Aug 22 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.9
 - Fix a couple of failure-to-check-return on fopen. most were unit-test code
   only, but two or three were in regular code.
