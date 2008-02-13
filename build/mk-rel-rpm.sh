@@ -16,6 +16,8 @@ set -e
 chmod -R +w _builddir ||:
 rm -rf _builddir
 
+./autogen.sh
+
 mkdir _builddir
 pushd _builddir
 ../configure
