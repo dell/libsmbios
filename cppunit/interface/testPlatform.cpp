@@ -21,6 +21,7 @@
 
 #include <iomanip>
 #include <fstream>
+#include <string.h>
 
 #include "testPlatform.h"
 #include "smbios/SmbiosDefs.h"
