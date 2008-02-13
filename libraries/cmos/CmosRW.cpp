@@ -20,6 +20,7 @@
 #define LIBSMBIOS_SOURCE
 #include "smbios/compat.h"
 #include <errno.h>
+#include <string.h>
 #include "CmosRWImpl.h"
 
 using namespace std;
