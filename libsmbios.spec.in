@@ -45,9 +45,9 @@ to get information from standard BIOS tables, such as the SMBIOS table.
 Summary: The "supported" sample binaries that use libsmbios
 Group: Applications/System
 Requires: libsmbios = %{version}-%{release}
-Obsoletes: libsmbios-bin < 2.0.0
+Obsoletes: libsmbios-bin < 0:2.0.0
 Provides: libsmbios-bin = %{version}-%{release}
-Obsoletes: libsmbios-unsupported-bin < 2.0.0
+Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
 
 %package devel
