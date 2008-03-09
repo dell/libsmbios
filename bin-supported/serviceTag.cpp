@@ -42,7 +42,7 @@ struct options opts[] =
             254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1
         },
         { 253, "cmos_file", "Debug: CMOS dump file to use instead of physical cmos", "c", 1 },
-        { 250, "set", "Set Dell Asset Tag", "s", 1 },
+        { 250, "set", "Set Dell Service Tag", "s", 1 },
         { 252, "password", "BIOS setup password", "p", 1 },
         { 249, "rawpassword", "Do not auto-convert password to scancodes", NULL, 0 },
         { 255, "version", "Display libsmbios version information", "v", 0 },
