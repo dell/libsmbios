@@ -25,6 +25,8 @@ DISTCLEANFILES=*~
 EXTRA_DIST =
 bin_PROGRAMS=
 sbin_PROGRAMS=
+dist_sbin_SCRIPTS=
+dist_bin_SCRIPTS=
 EXTRA_PROGRAMS=
 
 include libraries/Makefile.am
@@ -160,4 +162,5 @@ EXTRA_DIST += \
  doc/old_news.txt	\
  doc/smbios23.xml	\
  doc/visio	\
- doc/yum.txt
+ doc/yum.txt	\
+ doc/pkgheader.sh
