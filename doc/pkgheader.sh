@@ -25,6 +25,7 @@ ShowHelp()
         echo "  --help                  Print this text."
         echo "  --version               Print package versions."
         echo "  --update                Update the bios."
+        echo "  --extract PATH          Extract the package to PATH"
         echo
 }
 
@@ -54,10 +55,11 @@ Update()
         echo
         echo "BIOS Update Failed."
         echo
+    else
+        echo "You must now reboot your system!"
+        echo
     fi
     popd >/dev/null 2>&1
-    echo
-    echo "You must now reboot your system!"
 }
 
 checkroot()
@@ -110,7 +112,7 @@ do
                     mkdir -p $2
                     tmpdir=$2
                 else
-                    tmpdir=$(mktemp -d /tmp/biosupdate-XXXXXX)
+                    tmpdir=$(mktemp -d ./UpdatePackage-XXXXXX)
                 fi
                 Extract
                 exit 0
@@ -139,5 +141,6 @@ do
     esac
 done
 
+ShowHelp
 exit 0
 __ARC__
