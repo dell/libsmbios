@@ -57,7 +57,7 @@ do
 done
 
 echo "======================"
-echo SRPM List:
+echo "SRPM List:"
 cat $tmpdir/srpms.txt | sort | uniq > $tmpdir/srpms.txt2
 mv $tmpdir/srpms.txt2 $tmpdir/srpms.txt
 cat $tmpdir/srpms.txt
@@ -67,8 +67,11 @@ echo
 cp $binary $libs $tmpdir/
 cp $biosHdr $tmpdir/bios.hdr
 
-tar cvjf $tempTgz -C $tmpdir .
+tar cjf $tempTgz -C $tmpdir .
 
 cp $pkgHeader $output
 cat $tempTgz >> $output
+
+echo "Successfully Created $output"
+echo
 
