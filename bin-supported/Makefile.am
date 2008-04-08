@@ -1,5 +1,7 @@
 # vim:tw=0:et:ts=4:sw=4
 
+dist_sbin_SCRIPTS += bin-supported/mkbiospkg.sh
+
 sbin_PROGRAMS += \
     bin-supported/assetTag \
     bin-supported/getSystemId   \

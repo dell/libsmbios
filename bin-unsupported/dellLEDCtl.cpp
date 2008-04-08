@@ -278,7 +278,7 @@ static void setAllLEDs( int level, DELL_LED_COLOR zone[], bool preserve )
 
         p2[0] = preserve ? 1 : 0;
     
-        p3[0] = u8(zone[4]);
+        p3[0] = u8(zone[3]);
 
         smi::doSimpleCallingInterfaceSmi(4, 6, args, res);
     }

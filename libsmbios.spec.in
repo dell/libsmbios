@@ -121,6 +121,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %doc bin-unsupported/getopts_LICENSE.txt include/smbios/config/boost_LICENSE_1_0_txt
+%doc doc/pkgheader.sh
 %{_sbindir}/assetTag
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/getSystemId
@@ -129,6 +130,7 @@ rm -rf %{buildroot}
 %{_sbindir}/verifySmiPassword
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
+%{_sbindir}/mkbiospkg.sh
 
 # used by HAL in old location, so keep it around until HAL is updated.
 %{_sbindir}/dellWirelessCtl
