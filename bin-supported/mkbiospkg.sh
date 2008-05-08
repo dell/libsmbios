@@ -67,7 +67,7 @@ echo
 cp $binary $libs $tmpdir/
 cp $biosHdr $tmpdir/bios.hdr
 
-tar cjf $tempTgz -C $tmpdir .
+tar czf $tempTgz -C $tmpdir .
 
 cp $pkgHeader $output
 cat $tempTgz >> $output

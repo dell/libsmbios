@@ -32,7 +32,7 @@ ShowHelp()
 Extract()
 {
     END=$(awk '/^__ARC__/ { print NR + 1; exit 0; }' $_THIS_BIN )
-    tail -n +$END $_THIS_BIN | tar xjf - -C $tmpdir
+    tail -n +$END $_THIS_BIN | tar xzf - -C $tmpdir
     [ $? = 0 ] || \
     {
         echo "$0: The archive cannot be extracted."
@@ -114,6 +114,7 @@ do
                 else
                     tmpdir=$(mktemp -d ./UpdatePackage-XXXXXX)
                 fi
+                trap - HUP INT QUIT EXIT BUS SEGV PIPE TERM #1 2 3 10 11 13 15
                 Extract
                 exit 0
                 ;;
