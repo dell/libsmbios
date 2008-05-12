@@ -12,7 +12,8 @@ sbin_PROGRAMS += \
     bin-supported/dellBiosUpdate    \
     bin-supported/dellLcdBrightness     \
     bin-supported/dumpSmbios    \
-    bin-supported/dellWirelessCtl 
+    bin-supported/dellWirelessCtl \
+    bin-supported/dellMediaDirectCtl
 
 EXTRA_PROGRAMS += \
     bin-supported/assetTagS \
@@ -24,7 +25,8 @@ EXTRA_PROGRAMS += \
     bin-supported/dellBiosUpdateS    \
     bin-supported/dellLcdBrightnessS     \
     bin-supported/dumpSmbiosS    \
-    bin-supported/dellWirelessCtlS 
+    bin-supported/dellWirelessCtlS \
+    bin-supported/dellMediaDirectCtlS
 
 
 getopts_h=bin-supported/getopts.h
@@ -40,6 +42,7 @@ bin_supported_verifySmiPassword_SOURCES = $(getopts_c) bin-supported/verifySmiPa
 bin_supported_wakeupCtl_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
 bin_supported_dellLcdBrightness_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtl_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
+bin_supported_dellMediaDirectCtl_SOURCES = $(getopts_c) bin-supported/dellMediaDirectCtl.cpp
 bin_supported_dumpSmbios_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
 
 bin_supported_assetTag_LDFLAGS = -Llibraries/ -lsmbios
@@ -50,6 +53,7 @@ bin_supported_verifySmiPassword_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_wakeupCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightness_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtl_LDFLAGS = -Llibraries/ -lsmbios
+bin_supported_dellMediaDirectCtl_LDFLAGS = -Llibraries/ -lsmbios
 bin_supported_dumpSmbios_LDFLAGS = -Llibraries/ -lsmbios
 
 # BAD BAD BAD programs....  (uses private headers)
@@ -68,6 +72,7 @@ bin_supported_verifySmiPasswordS_SOURCES = $(getopts_c) bin-supported/verifySmiP
 bin_supported_wakeupCtlS_SOURCES = $(getopts_c) bin-supported/wakeupCtl.cpp
 bin_supported_dellLcdBrightnessS_SOURCES = $(getopts_c) bin-supported/dellLcdBrightness.cpp
 bin_supported_dellWirelessCtlS_SOURCES = $(getopts_c) bin-supported/dellWirelessCtl.cpp
+bin_supported_dellMediaDirectCtlS_SOURCES = $(getopts_c) bin-supported/dellMediaDirectCtl.cpp
 bin_supported_dumpSmbiosS_SOURCES = $(getopts_c) bin-supported/dumpSmbios.cpp
 
 bin_supported_assetTagS_LDFLAGS          = -all-static -Llibraries/ -lsmbios
@@ -78,6 +83,7 @@ bin_supported_verifySmiPasswordS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_wakeupCtlS_LDFLAGS         = -all-static -Llibraries/ -lsmbios
 bin_supported_dellLcdBrightnessS_LDFLAGS = -all-static -Llibraries/ -lsmbios
 bin_supported_dellWirelessCtlS_LDFLAGS   = -all-static -Llibraries/ -lsmbios
+bin_supported_dellMediaDirectCtlS_LDFLAGS   = -all-static -Llibraries/ -lsmbios
 bin_supported_dumpSmbiosS_LDFLAGS        = -all-static -Llibraries/ -lsmbios
 
 # BAD again (uses private includes.)
