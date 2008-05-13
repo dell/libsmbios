@@ -47,6 +47,7 @@ using namespace std;
 struct options opts[] =
     {
         { 1, "info", "Display Media Direct Info", "i", 0 },
+        { 2, "remove", "Remove Media Direct Xloader BIOS Support", "r", 0 },
         { 254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1 },
         { 255, "version", "Display libsmbios version information", "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
@@ -73,6 +74,7 @@ struct smiRegs
 {
     u32 eax; // output only
     u32 ebx; // output only
+    u32 ecx; // output only
     u32 esi; // input/output
     u32 edi; // input/output
 };
@@ -85,6 +87,7 @@ enum {
 
 void getMediaDirectTable(mediaDirectTable *mdTable);
 void printMDInfo(mediaDirectTable *mdTable);
+void removeXloader(mediaDirectTable *mdTable);
 
 int
 main (int argc, char **argv)
@@ -107,6 +110,11 @@ main (int argc, char **argv)
             case 1:
                 getMediaDirectTable(&mdTable);
                 printMDInfo(&mdTable);
+                break;
+            case 2:
+                getMediaDirectTable(&mdTable);
+                printMDInfo(&mdTable);
+                removeXloader(&mdTable);
                 break;
             case 254:
                 // This is for unit testing. You can specify a file that
@@ -161,13 +169,15 @@ void _callSmi(smiRegs *r, u8 port)
         : /* output args */
           "=a" (r->eax),
           "=b" (r->ebx),
+          "=c" (r->ecx),
           "=S" (r->esi),
           "=D" (r->edi)
         : /* input args */ 
           "0" (r->eax),
           "1" (r->ebx),
-          "2" (r->esi),
-          "3" (r->edi),
+          "2" (r->ecx),
+          "3" (r->esi),
+          "4" (r->edi),
           "d" (port)
         : /* clobber */ 
     );
@@ -226,7 +236,29 @@ void printMDInfo(mediaDirectTable *mdTable)
     //        = 1 -BIOS supports the xloader extended functions 
     cout << "\tBIOS Supports extended xloader : " <<  (BIT_SET(4, r.ebx) ?  "yes" : "no") << endl;
 
+    callSmi(mdTable, &r, 0x02 ,0);
+    cout << "\tBIOS Configuration Changed     : " <<  (BIT_SET(0, r.ebx) ?  "yes" : "no") << endl;
 
+    callSmi(mdTable, &r, 0x04 ,0);
+
+    cout << "\tXloader Configured             : " <<  (BIT_SET(0, r.ebx) ?  "yes" : "no") << endl;
+    //if (BIT_SET(0, r.ebx)) {
+	cout << hex;
+	cout << "\tXloader Revision               : " <<  r.ecx << endl;
+	cout << "\tXloader Low 32-bit LBA         : " <<  r.esi << endl;
+	cout << "\tXloader High 32-bit LBA        : " <<  r.edi << endl;
+        cout << dec; 
+    //} else {
+    //}
+
+    cout << "DONE." << endl;
+}
+
+void removeXloader(mediaDirectTable *mdTable)
+{
+    smiRegs r = {0,};
+    cout << "Removing Xloader sector information from BIOS" << endl;
+    callSmi(mdTable, &r, 0x04 ,2);
     cout << "DONE." << endl;
 }
 
