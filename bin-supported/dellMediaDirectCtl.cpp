@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- 
+
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -107,23 +107,23 @@ main (int argc, char **argv)
         {
             switch(c)
             {
-            case 1:
+            case 1:  // -i, --info
                 getMediaDirectTable(&mdTable);
                 printMDInfo(&mdTable);
                 break;
-            case 2:
+            case 2:  // -r, --remove
                 getMediaDirectTable(&mdTable);
                 printMDInfo(&mdTable);
                 removeXloader(&mdTable);
                 break;
-            case 254:
+            case 254: // -m FILE, --memory FILE
                 // This is for unit testing. You can specify a file that
                 // contains a dump of memory to use instead of writing
                 // directly to RAM.
                 memoryFactory->setParameter("memFile", args);
                 memoryFactory->setMode( memory::MemoryFactory::UnitTestMode );
                 break;
-            case 255:
+            case 255: // -v, --version
                 cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
                 exit(0);
                 break;
@@ -161,7 +161,7 @@ class MyError : public std::exception
 void _callSmi(smiRegs *r, u8 port)
 {
     iopl(3);
-    
+
     asm volatile (
            //   magic    port
         "outb   %%al,    %%dx     \n\t"
@@ -172,38 +172,41 @@ void _callSmi(smiRegs *r, u8 port)
           "=c" (r->ecx),
           "=S" (r->esi),
           "=D" (r->edi)
-        : /* input args */ 
+        : /* input args */
           "0" (r->eax),
           "1" (r->ebx),
           "2" (r->ecx),
           "3" (r->esi),
           "4" (r->edi),
           "d" (port)
-        : /* clobber */ 
+        : /* clobber */
     );
 }
 
 void callSmi(mediaDirectTable *md, smiRegs *r, u8 function, u8 subFunction)
 {
-    r->eax = function << 8 | md->portValue;  // set AH = function
-					     // set AL = smi port
-    r->ebx = subFunction;                    // set BL = subfunction
+	// set AL = smi port
+    // set AH = function
+    r->eax = function << 8 | md->portValue;
+
+    // set BL = subfunction
+    r->ebx = subFunction;
 
     _callSmi(r, md->portIndex);
 
-    if (r->eax == 0){ 
+    if (r->eax == 0){
         // success
     } else if( r->eax == -1 ) {
         // failure
         DCERR("smi failure" << endl);
-        throw "smi failure";
+        throw "smi failure";  // TODO: make this a regular class-based exception
     } else {
         DCERR("SMI NOT SUPPORTED" << endl);
-        throw "SMI NOT SUPPORTED";
+        throw "SMI NOT SUPPORTED";  // TODO: make this a regular class-based exception
     }
 }
 
-#define BIT_SET(bit, value)  ( (value) & (1<<bit) )
+#define BIT_IS_SET(bit, value)  ( (value) & (1<<bit) )
 
 void printMDInfo(mediaDirectTable *mdTable)
 {
@@ -218,38 +221,37 @@ void printMDInfo(mediaDirectTable *mdTable)
     //BX[16-5]=   - RESERVED FOR FUTURE USE
     //BX[0]   = 0 - system is NOT “Media Direct” capable
     //        = 1 - system is “Media Direct” capable
-    cout << "\tMedia Direct Capable           : " <<  (BIT_SET(0, r.ebx) ?  "yes" : "no") << endl;
+    cout << "\tMedia Direct Capable           : " <<  (BIT_IS_SET(0, r.ebx) ?  "yes" : "no") << endl;
 
     //BX[1]   = 0 - user did NOT press the MD button to start the system
     //        = 1 - user pressed the MD button to start the system
-    cout << "\tSystem Start via MD Button     : " <<  (BIT_SET(1, r.ebx) ?  "yes" : "no") << endl;
+    cout << "\tSystem Start via MD Button     : " <<  (BIT_IS_SET(1, r.ebx) ?  "yes" : "no") << endl;
 
     //BX[2]   = 0 - BIOS does NOT support the Vista HotStart feature
     //        = 1 - BIOS supports the Vista HotStart feature
-    cout << "\tBIOS Support for Vista HotStart: " <<  (BIT_SET(2, r.ebx) ?  "yes" : "no") << endl;
+    cout << "\tBIOS Support for Vista HotStart: " <<  (BIT_IS_SET(2, r.ebx) ?  "yes" : "no") << endl;
 
     //BX[3]   = 0 - Pretty Boot mode is NOT active
     //        = 1 - Pretty Boot mode is active
-    cout << "\tPretty Boot Active             : " <<  (BIT_SET(3, r.ebx) ?  "yes" : "no") << endl;
+    cout << "\tPretty Boot Active             : " <<  (BIT_IS_SET(3, r.ebx) ?  "yes" : "no") << endl;
 
     //BX[4]   = 0 - BIOS does NOT support xloder extended functions
-    //        = 1 -BIOS supports the xloader extended functions 
-    cout << "\tBIOS Supports extended xloader : " <<  (BIT_SET(4, r.ebx) ?  "yes" : "no") << endl;
+    //        = 1 -BIOS supports the xloader extended functions
+    cout << "\tBIOS Supports extended xloader : " <<  (BIT_IS_SET(4, r.ebx) ?  "yes" : "no") << endl;
 
     callSmi(mdTable, &r, 0x02 ,0);
-    cout << "\tBIOS Configuration Changed     : " <<  (BIT_SET(0, r.ebx) ?  "yes" : "no") << endl;
+    cout << "\tBIOS Configuration Changed     : " <<  (BIT_IS_SET(0, r.ebx) ?  "yes" : "no") << endl;
 
     callSmi(mdTable, &r, 0x04 ,0);
 
-    cout << "\tXloader Configured             : " <<  (BIT_SET(0, r.ebx) ?  "yes" : "no") << endl;
-    //if (BIT_SET(0, r.ebx)) {
+    cout << "\tXloader Configured             : " <<  (BIT_IS_SET(0, r.ebx) ?  "yes" : "no") << endl;
+
 	cout << hex;
+    // following info is only valid if "Xloader Configured", above, is yes.
 	cout << "\tXloader Revision               : " <<  r.ecx << endl;
 	cout << "\tXloader Low 32-bit LBA         : " <<  r.esi << endl;
 	cout << "\tXloader High 32-bit LBA        : " <<  r.edi << endl;
-        cout << dec; 
-    //} else {
-    //}
+    cout << dec;
 
     cout << "DONE." << endl;
 }
@@ -269,10 +271,10 @@ void getMediaDirectTable(mediaDirectTable *mdTable)
 
     DCERR("getMediaDirectTable() Memory scan for Media Direct table." << endl);
 
-    // tell the memory subsystem that it can optimize here and 
-    // keep memory open while we scan rather than open/close/open/close/... 
+    // tell the memory subsystem that it can optimize here and
+    // keep memory open while we scan rather than open/close/open/close/...
     // for each fillBuffer() call
-    // 
+    //
     // this would be safer if we used spiffy c++ raii technique here
     mem->decReopenHint();
 
