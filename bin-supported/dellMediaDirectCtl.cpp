@@ -193,29 +193,39 @@ void callSmi(mediaDirectTable *md, smiRegs *r, u8 function, u8 subFunction)
     }
 }
 
+#define BIT_SET(bit, value)  ( (value) & (1<<bit) )
+
 void printMDInfo(mediaDirectTable *mdTable)
 {
     smiRegs r = {0,};
 
     cout << "Media Direct Info:" << endl;
-    cout << "    BIOS MD Version: " << (int)mdTable->versionMajor << "." << (int)mdTable->versionMinor << endl;
+    cout << "\tBIOS MD Version: " << (int)mdTable->versionMajor << "." << (int)mdTable->versionMinor << endl;
 
     // call info smi
     callSmi(mdTable, &r, 0x01 ,0);
 
-    /*
-        BX[0]   = 0 - system is NOT “Media Direct” capable
-                = 1 - system is “Media Direct” capable
-        BX[1]   = 0 - user did NOT press the MD button to start the system
-                = 1 - user pressed the MD button to start the system
-        BX[2]   = 0 - BIOS does NOT support the Vista HotStart feature
-                = 1 - BIOS supports the Vista HotStart feature
-        BX[3]   = 0 - Pretty Boot mode is NOT active
-                = 1 - Pretty Boot mode is active
-        BX[4]   = 0 - BIOS does NOT support xloder extended functions
-                = 1 -BIOS supports the xloader extended functions 
-        BX[16-5]=   - RESERVED FOR FUTURE USE
-    */
+    //BX[16-5]=   - RESERVED FOR FUTURE USE
+    //BX[0]   = 0 - system is NOT “Media Direct” capable
+    //        = 1 - system is “Media Direct” capable
+    cout << "\tMedia Direct Capable           : " <<  (BIT_SET(0, r.ebx) ?  "yes" : "no") << endl;
+
+    //BX[1]   = 0 - user did NOT press the MD button to start the system
+    //        = 1 - user pressed the MD button to start the system
+    cout << "\tSystem Start via MD Button     : " <<  (BIT_SET(1, r.ebx) ?  "yes" : "no") << endl;
+
+    //BX[2]   = 0 - BIOS does NOT support the Vista HotStart feature
+    //        = 1 - BIOS supports the Vista HotStart feature
+    cout << "\tBIOS Support for Vista HotStart: " <<  (BIT_SET(2, r.ebx) ?  "yes" : "no") << endl;
+
+    //BX[3]   = 0 - Pretty Boot mode is NOT active
+    //        = 1 - Pretty Boot mode is active
+    cout << "\tPretty Boot Active             : " <<  (BIT_SET(3, r.ebx) ?  "yes" : "no") << endl;
+
+    //BX[4]   = 0 - BIOS does NOT support xloder extended functions
+    //        = 1 -BIOS supports the xloader extended functions 
+    cout << "\tBIOS Supports extended xloader : " <<  (BIT_SET(4, r.ebx) ?  "yes" : "no") << endl;
+
 
     cout << "DONE." << endl;
 }
