@@ -23,6 +23,7 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <sys/io.h>
 
 #include "smbios/ISmbios.h"
 #include "smbios/IMemory.h"  // only needed if you want to use fake input (memdump.dat)
@@ -44,6 +45,7 @@ using namespace std;
 
 struct options opts[] =
     {
+        { 1, "info", "Display Media Direct Info", "i", 0 },
         { 254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1 },
         { 255, "version", "Display libsmbios version information", "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
@@ -55,8 +57,8 @@ struct options opts[] =
 #endif
 struct mediaDirectTable {
     u8 signature[4];
-    u8 versionMajor;
     u8 versionMinor;
+    u8 versionMajor;
     u8 checksum;
     u8 portIndex;
     u8 portValue;
@@ -66,6 +68,14 @@ LIBSMBIOS_PACKED_ATTR;
 #pragma pack(pop)
 #endif
 
+struct smiRegs
+{
+    u32 eax; // output only
+    u32 ebx; // output only
+    u32 esi; // input/output
+    u32 edi; // input/output
+};
+
 enum {
     E_BLOCK_START = 0xE0000UL,
     F_BLOCK_START = 0xF0000UL,
@@ -73,6 +83,7 @@ enum {
 };
 
 void getMediaDirectTable(mediaDirectTable *mdTable);
+void printMDInfo(mediaDirectTable *mdTable);
 
 int
 main (int argc, char **argv)
@@ -92,6 +103,10 @@ main (int argc, char **argv)
         {
             switch(c)
             {
+            case 1:
+                getMediaDirectTable(&mdTable);
+                printMDInfo(&mdTable);
+                break;
             case 254:
                 // This is for unit testing. You can specify a file that
                 // contains a dump of memory to use instead of writing
@@ -108,10 +123,6 @@ main (int argc, char **argv)
             }
             free(args);
         }
-
-        DCOUT("Hello World" << endl);
-        getMediaDirectTable(&mdTable);
-
     }
     catch( const exception &e )
     {
@@ -138,29 +149,73 @@ class MyError : public std::exception
 };
 
 
-struct smiRegs
+void _callSmi(smiRegs *r, u8 port)
 {
-    u32 eax;
-    u32 ebx;
-    u32 ecx;
-    u32 edx;
-    u8  port;
-    u8  magic;
-};
-
-void callSmi(smiRegs *r)
-{
+    iopl(3);
+    
+    DCERR("about to SMI"<<endl);
     asm volatile (
-        ""
-        "outb %b0,%w1"
-        ""
-        : /* no output args */
-        : "a" (r->magic),
-          "d" (r->port),
-          "b" (r->ebx),
-          "c" (r->ecx)
-        : "memory"
+           //   magic    port
+        "outb   %%al,    %%dx     \n\t"
+
+        : /* output args */
+          "=a" (r->eax),
+          "=b" (r->ebx),
+          "=S" (r->esi),
+          "=D" (r->edi)
+        : /* input args */ 
+          "0" (r->eax),
+          "1" (r->ebx),
+          "2" (r->esi),
+          "3" (r->edi),
+          "d" (port)
+        : /* clobber */ 
     );
+    DCERR("SMI complete"<<endl);
+}
+
+void callSmi(mediaDirectTable *md, smiRegs *r, u8 function, u8 subFunction)
+{
+    r->eax = function << 8 || md->portValue;  // set AH = function
+    r->ebx = subFunction;                     // set BL = subfunction
+
+    _callSmi(r, md->portIndex);
+
+    if (r->eax == 0){ 
+        // success
+    } else if( r->eax == -1 ) {
+        // failure
+        throw "smi failure";
+    } else {
+        throw "SMI NOT SUPPORTED";
+    }
+}
+
+void printMDInfo(mediaDirectTable *mdTable)
+{
+    smiRegs r = {0,};
+
+    cout << "Media Direct Info:" << endl;
+    cout << "    BIOS MD Version: " << (int)mdTable->versionMajor << "." << (int)mdTable->versionMinor << endl;
+
+    // call info smi
+    callSmi(mdTable, &r, 0x01 ,0);
+
+    /*
+        BX[0]   = 0 - system is NOT “Media Direct” capable
+                = 1 - system is “Media Direct” capable
+        BX[1]   = 0 - user did NOT press the MD button to start the system
+                = 1 - user pressed the MD button to start the system
+        BX[2]   = 0 - BIOS does NOT support the Vista HotStart feature
+                = 1 - BIOS supports the Vista HotStart feature
+        BX[3]   = 0 - Pretty Boot mode is NOT active
+                = 1 - Pretty Boot mode is active
+        BX[4]   = 0 - BIOS does NOT support xloder extended functions
+                = 1 -BIOS supports the xloader extended functions 
+        BX[16-5]=   - RESERVED FOR FUTURE USE
+    */
+
+    cout << "DONE." << endl;
 }
 
 void getMediaDirectTable(mediaDirectTable *mdTable)
