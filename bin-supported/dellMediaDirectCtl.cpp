@@ -22,6 +22,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <string.h> // memset
 #include <stdlib.h>
 #include <sys/io.h>
 
