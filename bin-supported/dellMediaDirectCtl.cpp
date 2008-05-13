@@ -154,7 +154,6 @@ void _callSmi(smiRegs *r, u8 port)
 {
     iopl(3);
     
-    DCERR("about to SMI"<<endl);
     asm volatile (
            //   magic    port
         "outb   %%al,    %%dx     \n\t"
@@ -172,13 +171,13 @@ void _callSmi(smiRegs *r, u8 port)
           "d" (port)
         : /* clobber */ 
     );
-    DCERR("SMI complete"<<endl);
 }
 
 void callSmi(mediaDirectTable *md, smiRegs *r, u8 function, u8 subFunction)
 {
-    r->eax = function << 8 || md->portValue;  // set AH = function
-    r->ebx = subFunction;                     // set BL = subfunction
+    r->eax = function << 8 | md->portValue;  // set AH = function
+					     // set AL = smi port
+    r->ebx = subFunction;                    // set BL = subfunction
 
     _callSmi(r, md->portIndex);
 
@@ -186,8 +185,10 @@ void callSmi(mediaDirectTable *md, smiRegs *r, u8 function, u8 subFunction)
         // success
     } else if( r->eax == -1 ) {
         // failure
+        DCERR("smi failure" << endl);
         throw "smi failure";
     } else {
+        DCERR("SMI NOT SUPPORTED" << endl);
         throw "SMI NOT SUPPORTED";
     }
 }
