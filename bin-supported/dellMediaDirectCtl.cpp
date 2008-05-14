@@ -48,6 +48,9 @@ struct options opts[] =
     {
         { 1, "info", "Display Media Direct Info", "i", 0 },
         { 2, "remove", "Remove Media Direct Xloader BIOS Support", "r", 0 },
+        { 3, 0, "Install Xloader Blocks", "b", 0 },
+        { 4, "lowlba", "Low 32-bits of LBA for Xloader blocks", 0, 0 },
+        { 5, "highlba", "High 32-bits of LBA for Xloader blocks", 0, 0 },
         { 254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1 },
         { 255, "version", "Display libsmbios version information", "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
@@ -88,6 +91,7 @@ enum {
 void getMediaDirectTable(mediaDirectTable *mdTable);
 void printMDInfo(mediaDirectTable *mdTable);
 void removeXloader(mediaDirectTable *mdTable);
+void installXloader(mediaDirectTable *mdTable, u32 highLba, u32 lowLba);
 
 int
 main (int argc, char **argv)
@@ -99,6 +103,8 @@ main (int argc, char **argv)
         char *args = 0;
         memory::MemoryFactory *memoryFactory = 0;
         bool xml = false;
+        bool lowInit = false, highInit = false;
+        u32 lowLba = 0, highLba = 0;
 
         memoryFactory = memory::MemoryFactory::getFactory();
         mediaDirectTable mdTable;
@@ -115,6 +121,23 @@ main (int argc, char **argv)
                 getMediaDirectTable(&mdTable);
                 printMDInfo(&mdTable);
                 removeXloader(&mdTable);
+                break;
+            case 3: // -b, --break-my-machine
+                if( ! (lowInit && highInit )) {
+                    cerr << "Need low/high LBA. (cmdline order matters)" << endl;
+                    break;
+                }
+                getMediaDirectTable(&mdTable);
+                installXloader(&mdTable, lowLba, highLba);
+                printMDInfo(&mdTable);
+                break;
+            case 4: // --lowlba
+                lowInit = 1;
+                lowLba = strtol(args, 0, 0);
+                break;
+            case 5: // --highlba
+                highInit = 1;
+                highLba = strtol(args, 0, 0);
                 break;
             case 254: // -m FILE, --memory FILE
                 // This is for unit testing. You can specify a file that
@@ -253,6 +276,18 @@ void printMDInfo(mediaDirectTable *mdTable)
 	cout << "\tXloader High 32-bit LBA        : " <<  r.edi << endl;
     cout << dec;
 
+    cout << "DONE." << endl;
+}
+
+void installXloader(mediaDirectTable *mdTable, u32 lowLba, u32 highLba)
+{
+    smiRegs r = {0,};
+    r.esi = lowLba;
+    r.edi = highLba;
+    cout << "Installing Xloader sector information" << endl;
+	cout << "\tXloader Low 32-bit LBA         : " <<  r.esi << endl;
+	cout << "\tXloader High 32-bit LBA        : " <<  r.edi << endl;
+    callSmi(mdTable, &r, 0x04 ,1);
     cout << "DONE." << endl;
 }
 
