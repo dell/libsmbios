@@ -1,0 +1,13 @@
+Media Direct Info:
+	BIOS MD Version: 1.0
+	Media Direct Capable           : yes
+	System Start via MD Button     : no
+	BIOS Support for Vista HotStart: yes
+	Pretty Boot Active             : no
+	BIOS Supports extended xloader : yes
+	BIOS Configuration Changed     : yes
+	Xloader Configured             : yes
+	Xloader Revision               : 100
+	Xloader Low 32-bit LBA         : 1709a489
+	Xloader High 32-bit LBA        : 0
+DONE.
