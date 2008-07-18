@@ -246,8 +246,10 @@ namespace smi
         // select 3 == get properties
         doSimpleCallingInterfaceSmi(which, 3, args, res);
 
-        // byte 1 of res[1] shows password status. 0==password installed
-        if( res[1] & 0xFF )
+        // byte 0 of res[1] shows password status
+        // 2 = password not installed
+        // 3 = password disabled by jumper
+        if ( (res[1] & 0xFF)==2 || (res[1] & 0xFF)==3 )
             goto out;
 
         DCERR( "getPasswordPropertiesII()" << hex << endl ); 
