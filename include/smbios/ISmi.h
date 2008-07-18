@@ -102,8 +102,10 @@ namespace smi
     void setServiceTag(const std::string &password, const std::string &newTag);
     std::string getAssetTag();
     void setAssetTag(const std::string &password, const std::string &newTag);
-#endif 
-    
+#endif
+
+    bool getPasswordStatus(u16 which);
+
     u32 readNVStorage         (u32 location, u32 *minValue, u32 *maxValue);
     u32 readBatteryModeSetting(u32 location, u32 *minValue, u32 *maxValue);
     u32 readACModeSetting     (u32 location, u32 *minValue, u32 *maxValue);

@@ -265,6 +265,27 @@ out:
         return hasPw;
     }
 
+    bool getPasswordStatus(u16 which)
+    {
+        if( which != 9 && which != 10 )
+            throw ParameterErrorImpl("Internal programming error. Argument must be either 9 or 10.");
+        try
+        {
+            u32 args[4] = {0,}, res[4] = {0,};
+            doSimpleCallingInterfaceSmi(which, 0, args, res);
+            //1 = pass not installed, 3 = pass not installed, and only setable by an admin
+            if( (res[0] & 0xFF) == 1 || ( res[0] & 0xFF ) == 3)
+                return false;
+            return true;
+        }
+        catch(const exception &)
+        {
+            //if we caught any exceptions, try the next method
+        }
+        u8 max,min,props;
+        return getPasswordPropertiesII(which,max,min,props);
+    }
+
     static u32 getAuthenticationKeyII(const string &password)
     {
         u32 authKey = 0;
