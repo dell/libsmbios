@@ -17,11 +17,11 @@
  */
 
 
-#ifndef LIBSMBIOS_COMPAT_HPP_INCLUDED
-#define LIBSMBIOS_COMPAT_HPP_INCLUDED
+#ifndef LIBSMBIOS_COMPAT_H_INCLUDED
+#define LIBSMBIOS_COMPAT_H_INCLUDED
 
-#include "smbios/config.hpp"
-#include "smbios/config/auto_link.hpp"
+#include "smbios_c/config.h"
+#include "smbios_c/config/auto_link.h"
 
 /*
  * CHANGES TO THIS FILE CAUSE A WHOLE-PROJECT REBUILD!
@@ -40,6 +40,13 @@
 #   define DLL_SPEC
 #endif
 
+#ifdef __cplusplus
+#define EXTERN_C_BEGIN extern "C" {
+#define EXTERN_C_END   }
+#else
+#define EXTERN_C_BEGIN
+#define EXTERN_C_END
+#endif
 
 #ifdef LIBSMBIOS_PLATFORM_WIN32
 #   define WIN32_LEAN_AND_MEAN		/* Exclude rarely-used stuff from Windows headers */
@@ -48,4 +55,4 @@
 #   define _snprintf    snprintf
 
 #endif /* LIBSMBIOS_PLATFORM_WIN32 */
-#endif /* COMPAT_HPP */
+#endif /* COMPAT_H */

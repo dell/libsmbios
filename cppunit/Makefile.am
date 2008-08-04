@@ -13,7 +13,7 @@ EXTRA_DIST += \
 	cppunit/interface/testStandalone.h
 
 TESTS = cppunit/runtests.sh
-check_PROGRAMS = cppunit/testRbu cppunit/testPlatform cppunit/testStandalone
+check_PROGRAMS = cppunit/testRbu cppunit/testPlatform cppunit/testStandalone cppunit/testCInterface
 
 cppunit_testRbu_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -lsmbios -Llibraries $(CPPUNIT_LIBS)
 cppunit_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/cppunit/
@@ -27,12 +27,18 @@ cppunit_testPlatform_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_buil
 cppunit_testPlatform_SOURCES = \
     cppunit/main.cpp  \
     cppunit/interface/XmlUtils.cpp	\
-    cppunit/interface/testPlatform.cpp 
+    cppunit/interface/testPlatform.cpp
 
 cppunit_testStandalone_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -lsmbios -Llibraries $(CPPUNIT_LIBS)
 cppunit_testStandalone_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/libraries/common -I@top_srcdir@/include -I@top_srcdir@/libraries/common -I@top_srcdir@/cppunit/
 cppunit_testStandalone_SOURCES = \
     cppunit/main.cpp  \
     cppunit/interface/XmlUtils.cpp	\
-    cppunit/interface/testStandalone.cpp 
+    cppunit/interface/testStandalone.cpp
+
+cppunit_testCInterface_LDFLAGS = -lcppunit -ldl -lsmbios_c -Llibraries $(CPPUNIT_LIBS)
+cppunit_testCInterface_CXXFLAGS = $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_srcdir@/include -I@top_srcdir@/cppunit/
+cppunit_testCInterface_SOURCES = \
+    cppunit/main.cpp  \
+    cppunit/interface/testCInterface.cpp
 

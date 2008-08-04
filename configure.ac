@@ -16,7 +16,7 @@ temp_RELEASE_EXTRALEVEL=
 # If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
 # If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
 # If any interfaces have been added since the last public release, then increment age.
-# If any interfaces have been removed since the last public release, then set age to 0. 
+# If any interfaces have been removed since the last public release, then set age to 0.
 LIBTOOL_CURRENT=2
 LIBTOOL_REVISION=0
 LIBTOOL_AGE=0
@@ -27,6 +27,8 @@ AC_CONFIG_AUX_DIR([build])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AM_PATH_CPPUNIT(1.9.6)
+
+AC_GNU_SOURCE
 
 #AC_CONFIG_SRCDIR([.])
 #AC_CONFIG_HEADER([config.h])
@@ -113,7 +115,7 @@ cat confdefs.h |
     grep -v 'define PACKAGE_VERSION ' |
     grep -v 'define PACKAGE_STRING '  > confdefs.new
 mv confdefs.new confdefs.h
-cat >>confdefs.h <<_ACEOF 
+cat >>confdefs.h <<_ACEOF
 #define VERSION "$VERSION"
 #define PACKAGE_VERSION "$PACKAGE_VERSION"
 #define PACKAGE_STRING "$PACKAGE_STRING"
@@ -133,10 +135,11 @@ echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 
 # generate files and exit
 AC_CONFIG_FILES([
-    Makefile 
-    include/smbios/version.h 
-    doc/full-documentation.dox 
-    doc/interface-only.dox 
+    Makefile
+    include/smbios/version.h
+    include/smbios_c/version.h
+    doc/full-documentation.dox
+    doc/interface-only.dox
     ${PACKAGE_NAME}.spec
     ])
 AC_OUTPUT

@@ -1,10 +1,17 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-lib_LTLIBRARIES = libraries/libsmbios.la
+lib_LTLIBRARIES = libraries/libsmbios.la libraries/libsmbios_c.la
 libraries_libsmbios_la_LDFLAGS = -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
-libraries_libsmbios_la_CXXFLAGS = -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common 
+libraries_libsmbios_la_CXXFLAGS = -I$(top_srcdir)/libraries/common -I$(top_builddir)/libraries/common
+
+libraries_libsmbios_c_la_LDFLAGS = -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
+libraries_libsmbios_c_la_CXXFLAGS =
 
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
+
+libraries_libsmbios_c_la_SOURCES = \
+    libraries/memory_c/memory_impl.h		\
+    libraries/memory_c/memory.c
 
 libraries_libsmbios_la_SOURCES = \
     libraries/cmos/CmosRW.cpp                   \
@@ -38,7 +45,7 @@ libraries_libsmbios_la_SOURCES = \
     libraries/token/TokenDA.cpp                 \
     libraries/token/TokenTable.cpp              \
     libraries/token/TokenTableFactory.cpp       \
-    libraries/token/TokenTableIterator.cpp      
+    libraries/token/TokenTableIterator.cpp
 
 EXTRA_DIST += \
 	libraries/cmos/CmosRW_WindowsIO.cpp	\

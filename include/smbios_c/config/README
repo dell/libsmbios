@@ -1,0 +1,10 @@
+
+We have decided to use a boost-style configuration system for libsmbios. The
+headers in and below this directory are mostly imported from boost with all
+"BOOST" prefixes changed to LIBSMBIOS.
+
+Please ensure that all copyright information from boost.org is retained. Add a
+message about libsmbios modifying it and importing it. Boost has a BSD-Style
+license, so there should be no problem using portions of their code. Please
+ensure that boost code is contained under this directory, though.
+
