@@ -37,7 +37,7 @@ int  memory_read(struct memory *, u8 *buffer, u64 offset, size_t length);
 int  memory_write(struct memory *, u8 *buffer, u64 offset, size_t length);
 void memory_free(struct memory *);
 s64  memory_search(struct memory *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
-// void memory_strerr(struct memory *);
+const char * memory_strerr(struct memory *);
 
 EXTERN_C_END;
 
