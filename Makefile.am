@@ -1,5 +1,6 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
+ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = subdir-objects
 SUBDIRS = 
 
@@ -164,3 +165,4 @@ EXTRA_DIST += \
  doc/visio	\
  doc/yum.txt	\
  doc/pkgheader.sh
+

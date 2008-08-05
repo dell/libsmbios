@@ -27,6 +27,8 @@ AC_CONFIG_AUX_DIR([build])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AM_PATH_CPPUNIT(1.9.6)
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.16.1])
 
 AC_GNU_SOURCE
 
@@ -141,5 +143,6 @@ AC_CONFIG_FILES([
     doc/full-documentation.dox
     doc/interface-only.dox
     ${PACKAGE_NAME}.spec
+    po/Makefile.in
     ])
 AC_OUTPUT
