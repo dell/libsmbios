@@ -162,3 +162,28 @@ void testCInterface::testMemoryReadMultipage()
 
     STD_TEST_END("");
 }
+
+
+
+void testCInterface::testMemorySearch()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+    struct memory *m = memory_factory(MEMORY_GET_SINGLETON);
+    s64 ret;
+
+    ret = memory_search(m, "abc", 3, 0, 4096, 1);
+    CPPUNIT_ASSERT_EQUAL( (s64)0, ret );
+
+    ret = memory_search(m, "de", 2, 0, 4096, 1);
+    CPPUNIT_ASSERT_EQUAL( (s64)3, ret );
+
+    ret = memory_search(m, "nonexistent", 11, 0, 4096, 1);
+    CPPUNIT_ASSERT_EQUAL( (s64)-1, ret );
+
+    ret = memory_search(m, "00000000", 8, 0, 4096, 1);
+    CPPUNIT_ASSERT_EQUAL( (s64)26, ret );
+
+    STD_TEST_END("");
+}
+
+

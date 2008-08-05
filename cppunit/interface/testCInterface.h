@@ -52,6 +52,7 @@ public:
     void testMemoryRead();
     void testMemoryWrite();
     void testMemoryReadMultipage();
+    void testMemorySearch();
 
 
     // make sure to put this at the end...
@@ -60,6 +61,7 @@ public:
     CPPUNIT_TEST (testMemoryRead);
     CPPUNIT_TEST (testMemoryWrite);
     CPPUNIT_TEST (testMemoryReadMultipage);
+    CPPUNIT_TEST (testMemorySearch);
 
     CPPUNIT_TEST_SUITE_END ();
 };

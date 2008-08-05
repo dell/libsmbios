@@ -95,6 +95,34 @@ void memory_free(struct memory *m)
         m->cleanup(m);
 }
 
+s64  memory_search(struct memory *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
+{
+    u8 *buf = calloc(1, patlen);
+    u64 cur = start;
+    m->close = m->close - 1;
+
+    memset(buf, 0, patlen);
+
+    while ( (cur + patlen) < end)
+    {
+        memory_read(m, buf, cur, patlen);
+        
+        if (memcmp (buf, pat, patlen) == 0)
+            goto out;
+
+        cur += stride;
+    }
+
+    // bad stuff happened if we got to here and cur > end
+    if ((cur + patlen) >= end)
+        cur = -1;
+
+out:
+    m->close = m->close + 1;
+    free(buf);
+    return cur;
+}
+
 
 // UNIT TEST
 
@@ -106,7 +134,7 @@ struct ut_data
     int rw;
 };
 
-static __internal int UT_read_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int UT_read_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -142,7 +170,7 @@ err_out:
 
 out:
     // close on error, or if close hint
-    if (private_data->fd && (this->close || retval))
+    if (private_data->fd && ((this->close>0) || retval))
     {
         fflush(private_data->fd);
         fclose(private_data->fd);
@@ -151,7 +179,7 @@ out:
     return retval;
 }
 
-static __internal int UT_write_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int UT_write_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -186,7 +214,7 @@ err_out:
 
 out:
     // close on error, or if close hint
-    if (private_data->fd && (this->close || retval))
+    if (private_data->fd && ((this->close>0) || retval))
     {
         fflush(private_data->fd);
         fclose(private_data->fd);
@@ -195,7 +223,7 @@ out:
     return retval;
 }
 
-static __internal void UT_free(struct memory *this)
+static void UT_free(struct memory *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->filename)
@@ -212,7 +240,7 @@ static __internal void UT_free(struct memory *this)
     this->private_data = 0;
 }
 
-static __internal void UT_cleanup(struct memory *this)
+static void UT_cleanup(struct memory *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->fd)
