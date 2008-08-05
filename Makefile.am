@@ -101,6 +101,14 @@ doc/reports/valgrind_output.txt:
 	@echo "</pre>*/" >> doc/reports/valgrind_output.txt
 ########## END DOCS ################
 
+dist: ChangeLog AUTHORS
+ChangeLog:
+	(GIT_DIR=.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+
+AUTHORS:
+	(GIT_DIR=.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
+
+
 
 EXTRA_DIST += \
  libsmbios.spec \
