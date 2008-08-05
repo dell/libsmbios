@@ -178,6 +178,7 @@ static __internal void linux_free(struct memory *this)
     }
     free(private_data);
     this->private_data = 0;
+    this->initialized=0;
 }
 
 
