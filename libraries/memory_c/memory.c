@@ -16,25 +16,34 @@
  * See the GNU General Public License for more details.
  */
 
-// compat header should always be first header if including system headers
 #define LIBSMBIOS_SOURCE
 
-// C-header files do not include compat.h
-// Instead, they should include auto_link.hpp, which sets up automatic
-// library selection on MSVC
+// Include compat.h first, then system headers, then public, then private
 #include "smbios_c/compat.h"
-#include "smbios_c/memory.h"
-#include "smbios_c/types.h"
 
+// system
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 
+// public
+#include "smbios_c/memory.h"
+#include "smbios_c/types.h"
+
+// private
 #include "memory_impl.h"
 
-static void init_mem_struct(struct memory *m);
-static void init_mem_struct_unit_test(struct memory *m, const char *fn);
+#if !LIBSMBIOS_C_USE_MEMORY_MMAP
+#define MEM_INIT_FUNCTION init_mem_struct_filename
+#endif
+
+#define __hidden __attribute__((visibility("hidden")))
+#define __internal __attribute__((visibility("internal")))
+
+void __internal init_mem_struct(struct memory *m);
+void __internal MEM_INIT_FUNCTION(struct memory *m, const char *fn);
 
 struct memory singleton; // auto-init to 0
 
@@ -57,7 +66,7 @@ struct memory *memory_factory(int flags, ...)
     if (flags & MEMORY_UNIT_TEST_MODE)
     {
         va_start(ap, flags);
-        init_mem_struct_unit_test(toReturn, va_arg(ap, const char *));
+        init_mem_struct_filename(toReturn, va_arg(ap, const char *));
         va_end(ap);
     } else 
     {
@@ -87,23 +96,17 @@ void memory_free(struct memory *m)
 }
 
 
-static void init_mem_struct(struct memory *m)
-{
-    printf("SHOULDNT GET HERE YET\n");
-}
-
-
 // UNIT TEST
 
 struct ut_data
 {
-    const char *filename;
+    char *filename;
     FILE *fd;
     int mem_errno;
     int rw;
 };
 
-static int UT_read_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static __internal int UT_read_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -148,7 +151,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static __internal int UT_write_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -192,9 +195,7 @@ out:
     return retval;
 }
 
-
-
-static void UT_free(struct memory *this)
+static __internal void UT_free(struct memory *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->filename)
@@ -211,8 +212,7 @@ static void UT_free(struct memory *this)
     this->private_data = 0;
 }
 
-
-static void UT_cleanup(struct memory *this)
+static __internal void UT_cleanup(struct memory *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->fd)
@@ -226,7 +226,7 @@ static void UT_cleanup(struct memory *this)
 }
 
 
-static void init_mem_struct_unit_test(struct memory *m, const char *fn)
+void MEM_INIT_FUNCTION(struct memory *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);

@@ -11,6 +11,7 @@ AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 
 libraries_libsmbios_c_la_SOURCES = \
     libraries/memory_c/memory_impl.h		\
+    libraries/memory_c/memory_linux.c		\
     libraries/memory_c/memory.c
 
 libraries_libsmbios_la_SOURCES = \

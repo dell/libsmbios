@@ -67,6 +67,7 @@ void testCInterface::setUp()
 {
     string writeDirectory = getWritableDirectory();
     string testFile = writeDirectory + "/testmem.dat";
+    string testFile2 = writeDirectory + "/testmem2.dat";
 
     FILE *fd = fopen(testFile.c_str(), "w+");
     for (int i=0; i<26; i++)
@@ -74,6 +75,14 @@ void testCInterface::setUp()
         char w = 'a' + i;
         fwrite(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
     }
+
+    for (int i=0; i<3; i++)
+        for (int j=0; j<65536; j++)
+            {
+                char w = '0' + i;
+                fwrite(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
+            }
+
     fflush(fd);
     fclose(fd);
 
@@ -90,7 +99,7 @@ void testCInterface::testMemoryRead()
     u8 buf;
     struct memory *m = 0;
     int ret;
-    for (int i=0; i<6; ++i){
+    for (int i=0; i<26; ++i){
         m = memory_factory(MEMORY_GET_SINGLETON);
         buf = '9';
         ret = memory_read(m, &buf, i, 1);
@@ -135,3 +144,21 @@ void testCInterface::testMemoryWrite()
     STD_TEST_END("");
 }
 
+void testCInterface::testMemoryReadMultipage()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+    struct memory *m = memory_factory(MEMORY_GET_SINGLETON);
+    int ret=0;
+    u8 buf[65536*3 + 1] = {0,};
+
+    // 26 == start after alphabet in test file
+    ret = memory_read(m, buf, 26, 65536*3);
+    CPPUNIT_ASSERT_EQUAL( 0, ret );
+    memory_free(m);
+
+    for (int i=0; i<3; i++)
+        for (int j=0; j<65536; j++)
+            CPPUNIT_ASSERT_EQUAL( (u8)('0' + i) , buf[j+i*65536] );
+
+    STD_TEST_END("");
+}

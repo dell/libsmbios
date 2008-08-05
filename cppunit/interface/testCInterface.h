@@ -51,6 +51,7 @@ public:
     // base smbios test
     void testMemoryRead();
     void testMemoryWrite();
+    void testMemoryReadMultipage();
 
 
     // make sure to put this at the end...
@@ -58,6 +59,7 @@ public:
 
     CPPUNIT_TEST (testMemoryRead);
     CPPUNIT_TEST (testMemoryWrite);
+    CPPUNIT_TEST (testMemoryReadMultipage);
 
     CPPUNIT_TEST_SUITE_END ();
 };
