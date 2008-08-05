@@ -2,7 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = subdir-objects
-SUBDIRS = 
+SUBDIRS = po
 
 # dont move these 5 lines, as this is how we override the autoconf version and package name
 RELEASE_NAME=@RELEASE_NAME@
@@ -108,51 +108,12 @@ ChangeLog:
 AUTHORS:
 	(GIT_DIR=.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
-
-
 EXTRA_DIST += \
  libsmbios.spec \
  build/scripts 		\
  build/VC.2005 		\
  COPYING-GPL		\
  COPYING-OSL				\
- include/smbios/SmbiosLowLevel.h		\
- include/smbios/DellRbu.h		\
- include/smbios/ICmosRW.h		\
- include/smbios/IException.h		\
- include/smbios/IFactory.h		\
- include/smbios/IMemory.h		\
- include/smbios/IObserver.h		\
- include/smbios/ISmbios.h		\
- include/smbios/ISmi.h		\
- include/smbios/IToken.h		\
- include/smbios/SmbiosDefs.h		\
- include/smbios/RbuLowLevel.h		\
- include/smbios/config/abi/msvc_prefix.hpp		\
- include/smbios/config/abi/msvc_suffix.hpp		\
- include/smbios/config/boost_LICENSE_1_0_txt		\
- include/smbios/config/abi_prefix.hpp		\
- include/smbios/config/abi_suffix.hpp		\
- include/smbios/config/auto_link.hpp		\
- include/smbios/config/compiler/gcc.hpp		\
- include/smbios/config/compiler/visualc.hpp		\
- include/smbios/config/platform/linux.hpp		\
- include/smbios/config/platform/win32.hpp		\
- include/smbios/config/platform/win64.hpp		\
- include/smbios/config/select_compiler_config.hpp		\
- include/smbios/config/posix_features.hpp		\
- include/smbios/config/stdlib/libstdcpp2.hpp		\
- include/smbios/config/stdlib/libstdcpp3.hpp		\
- include/smbios/config/README		\
- include/smbios/config/suffix.hpp		\
- include/smbios/config/user.hpp		\
- include/smbios/config/select_stdlib_config.hpp		\
- include/smbios/config/select_platform_config.hpp		\
- include/smbios/config.hpp		\
- include/smbios/compat.h		\
- include/smbios/SystemInfo.h		\
- include/smbios/types.h		\
- include/smbios/message.h	\
  doc/bios_hdr_file.txt	\
  doc/coding	\
  doc/dell_drivers.txt	\

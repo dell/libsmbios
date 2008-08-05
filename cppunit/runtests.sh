@@ -22,6 +22,5 @@ done
 
 echo -e "\n\nRunning CInterface tests."
 #cppunit/testCInterface $DIR/cppunit $TMPDIR standalone $DIR/platform/opti
-mkdir -p $DIR/tmp ||:
-cppunit/testCInterface $DIR/cppunit $DIR/tmp cinterface $DIR/platform/opti
+cppunit/testCInterface $DIR/cppunit $TMPDIR cinterface $DIR/platform/opti
 

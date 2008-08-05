@@ -9,6 +9,31 @@ libraries_libsmbios_c_la_CXXFLAGS =
 
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include
 
+include_HEADERS = \
+    include/smbios_c/config  			\
+    include/smbios_c/compat.h  			\
+    include/smbios_c/config.h  			\
+    include/smbios_c/memory.h  			\
+    include/smbios_c/types.h  			\
+ include/smbios/config  			\
+ include/smbios/config.hpp		\
+ include/smbios/SmbiosLowLevel.h		\
+ include/smbios/DellRbu.h		\
+ include/smbios/ICmosRW.h		\
+ include/smbios/IException.h		\
+ include/smbios/IFactory.h		\
+ include/smbios/IMemory.h		\
+ include/smbios/IObserver.h		\
+ include/smbios/ISmbios.h		\
+ include/smbios/ISmi.h		\
+ include/smbios/IToken.h		\
+ include/smbios/SmbiosDefs.h		\
+ include/smbios/RbuLowLevel.h		\
+ include/smbios/compat.h		\
+ include/smbios/SystemInfo.h		\
+ include/smbios/types.h		\
+ include/smbios/message.h	
+
 libraries_libsmbios_c_la_SOURCES = \
     libraries/memory_c/memory_impl.h		\
     libraries/memory_c/memory_linux.c		\
@@ -20,10 +45,12 @@ libraries_libsmbios_la_SOURCES = \
     libraries/cmos/CmosRW_LinuxIO.cpp           \
     libraries/common/ascii2enUS_scancode.cpp    \
     libraries/common/Observer.cpp               \
+    libraries/memory/MemoryImpl.h		\
     libraries/memory/Memory.cpp                 \
     libraries/memory/Memory_Linux.cpp           \
     libraries/rbu/RbuHdr.cpp                    \
     libraries/rbu/Rbu_Linux.cpp                 \
+    libraries/rbu/RbuImpl.h			\
     libraries/smbios/SmbiosFactory.cpp          \
     libraries/smbios/SmbiosItem.cpp             \
     libraries/smbios/SmbiosStrategy.cpp         \
@@ -31,13 +58,18 @@ libraries_libsmbios_la_SOURCES = \
     libraries/smbios/SmbiosTable.cpp            \
     libraries/smbios/SmbiosTableIterator.cpp    \
     libraries/smbios/SmbiosWorkaround.cpp       \
+    libraries/smbios/StdWorkarounds.h		\
     libraries/smi/Smi.cpp                       \
     libraries/smi/SmiFactory.cpp                \
     libraries/smi/Smi_Linux.cpp                 \
+    libraries/smi/SmiLowLevel.h			\
+    libraries/smi/SmiImpl.h			\
     libraries/systeminfo/IdByte.cpp             \
     libraries/systeminfo/SysInfoError.cpp       \
     libraries/systeminfo/System.cpp             \
     libraries/systeminfo/SystemDetect.cpp       \
+    libraries/systeminfo/DellMagic.h		\
+    libraries/systeminfo/SystemDetect.h		\
     libraries/token/checksum.cpp                \
     libraries/token/Token.cpp                   \
     libraries/token/TokenD4.cpp                 \
@@ -46,28 +78,20 @@ libraries_libsmbios_la_SOURCES = \
     libraries/token/TokenDA.cpp                 \
     libraries/token/TokenTable.cpp              \
     libraries/token/TokenTableFactory.cpp       \
-    libraries/token/TokenTableIterator.cpp
+    libraries/token/TokenTableIterator.cpp	\
+    libraries/common/ExceptionImpl.h		\
+    libraries/common/CmosRWImpl.h		\
+    libraries/common/SmbiosWorkaroundImpl.h	\
+    libraries/common/FactoryImpl2.h		\
+    libraries/common/SmbiosImpl.h		\
+    libraries/common/TokenLowLevel.h		\
+    libraries/common/miniddk.h			\
+    libraries/common/TokenImpl.h
 
 EXTRA_DIST += \
-	libraries/cmos/CmosRW_WindowsIO.cpp	\
-	libraries/memory/Memory_Windows.cpp	\
-	libraries/smbios/SmbiosStrategy_Windows.cpp	\
-	libraries/smi/Smi_Windows.cpp	\
-	libraries/rbu/RbuImpl.h		\
-	libraries/common/ExceptionImpl.h		\
-	libraries/common/CmosRWImpl.h		\
-	libraries/common/SmbiosWorkaroundImpl.h		\
-	libraries/common/FactoryImpl2.h		\
-	libraries/common/SmbiosImpl.h		\
-	libraries/common/TokenLowLevel.h		\
-	libraries/common/miniddk.h		\
-	libraries/memory/MemoryImpl.h		\
-	libraries/smbios/StdWorkarounds.h		\
-	libraries/smi/SmiLowLevel.h		\
-	libraries/smi/SmiImpl.h		\
-	libraries/systeminfo/DellMagic.h		\
-	libraries/systeminfo/SystemDetect.h		\
-	libraries/common/TokenImpl.h
-
+    libraries/cmos/CmosRW_WindowsIO.cpp		\
+    libraries/memory/Memory_Windows.cpp		\
+    libraries/smbios/SmbiosStrategy_Windows.cpp	\
+    libraries/smi/Smi_Windows.cpp	
 
 CLEANFILES+=libraries/.libs
