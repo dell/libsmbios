@@ -33,7 +33,7 @@
 #include "smbios/ISmbios.h"
 
 // fix this... this is a namespace violation
-#include "../libraries/common/TokenLowLevel.h"
+#include "../libsmbios/common/TokenLowLevel.h"
 
 using namespace std;
 using namespace smbios;

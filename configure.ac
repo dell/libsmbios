@@ -138,8 +138,8 @@ echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 # generate files and exit
 AC_CONFIG_FILES([
     Makefile
-    include/smbios/version.h
-    include/smbios_c/version.h
+    src/include/smbios/version.h
+    src/include/smbios_c/version.h
     doc/full-documentation.dox
     doc/interface-only.dox
     ${PACKAGE_NAME}.spec

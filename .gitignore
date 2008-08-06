@@ -5,7 +5,7 @@
 *.la
 .libs
 .deps
-.*.swp
+#.*.swp
 
 # AUTOTOOL FILES
 build/compile
@@ -18,29 +18,29 @@ build/missing
 libtool
 
 # BINARIES
-bin-supported/assetTag
-bin-supported/dellBiosUpdate
-bin-supported/dellLcdBrightness
-bin-supported/dellMediaDirectCtl
-bin-supported/dellWirelessCtl
-bin-supported/dumpSmbios
-bin-supported/getSystemId
-bin-supported/propertyTag
-bin-supported/serviceTag
-bin-supported/verifySmiPassword
-bin-supported/wakeupCtl
-bin-unsupported/activateCmosToken
-bin-unsupported/ascii2enUS_scancode
-bin-unsupported/createUnitTestFiles
-bin-unsupported/dellLEDCtl
-bin-unsupported/disable_console_redir
-bin-unsupported/dumpCmos
-bin-unsupported/getPasswordFormat
-bin-unsupported/isCmosTokenActive
-bin-unsupported/probes
-bin-unsupported/smitest
-bin-unsupported/stateByteCtl
-bin-unsupported/upBootCtl
+src/assetTag
+src/dellBiosUpdate
+src/dellLcdBrightness
+src/dellMediaDirectCtl
+src/dellWirelessCtl
+src/dumpSmbios
+src/getSystemId
+src/propertyTag
+src/serviceTag
+src/verifySmiPassword
+src/wakeupCtl
+src/activateCmosToken
+src/ascii2enUS_scancode
+src/createUnitTestFiles
+src/dellLEDCtl
+src/disable_console_redir
+src/dumpCmos
+src/getPasswordFormat
+src/isCmosTokenActive
+src/probes
+src/smitest
+src/stateByteCtl
+src/upBootCtl
 cppunit/testCInterface
 cppunit/testPlatform
 cppunit/testRbu

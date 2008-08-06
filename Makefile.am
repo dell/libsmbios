@@ -30,14 +30,14 @@ dist_sbin_SCRIPTS=
 dist_bin_SCRIPTS=
 EXTRA_PROGRAMS=
 
-include libraries/Makefile.am
-include bin-supported/Makefile.am
-include bin-unsupported/Makefile.am
-include cppunit/Makefile.am
+include src/Makefile.am
+include src/bin-supported/Makefile.am
+include src/bin-unsupported/Makefile.am
+include src/cppunit/Makefile.am
 
-$(bin_PROGRAMS): libraries/libsmbios.la
-$(sbin_PROGRAMS): libraries/libsmbios.la
-$(EXTRA_PROGRAMS): libraries/libsmbios.la
+$(bin_PROGRAMS): src/libsmbios.la
+$(sbin_PROGRAMS): src/libsmbios.la
+$(EXTRA_PROGRAMS): src/libsmbios.la
 static: $(EXTRA_PROGRAMS)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
