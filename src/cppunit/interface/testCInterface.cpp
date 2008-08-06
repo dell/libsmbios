@@ -63,6 +63,15 @@ bool fileExists(string fileName)
     return true;
 }
 
+size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+    size_t written = fwrite(ptr, size, nmemb, stream); 
+    // TODO: handle short write
+    if (written < (size * nmemb))
+        throw std::exception();
+    return written;
+}
+
 void testCInterface::setUp()
 {
     string writeDirectory = getWritableDirectory();
@@ -73,14 +82,14 @@ void testCInterface::setUp()
     for (int i=0; i<26; i++)
     {
         char w = 'a' + i;
-        fwrite(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
+        FWRITE(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
     }
 
     for (int i=0; i<3; i++)
         for (int j=0; j<65536; j++)
             {
                 char w = '0' + i;
-                fwrite(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
+                FWRITE(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
             }
 
     fflush(fd);
