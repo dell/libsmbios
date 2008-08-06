@@ -1,45 +1,12 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-lib_LTLIBRARIES := src/libsmbios.la src/libsmbios_c.la
-src_libsmbios_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
-src_libsmbios_la_CXXFLAGS := -I$(top_srcdir)/src/libsmbios/common -I$(top_builddir)/src/libsmbios/common
+lib_LTLIBRARIES += out/libsmbios.la
+out_libsmbios_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
+out_libsmbios_la_CXXFLAGS := $(AM_CXXFLAGS) -I$(top_srcdir)/src/libsmbios/common
 
-src_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
-src_libsmbios_c_la_CXXFLAGS :=
+EXTRA_DIST += src/include/smbios
 
-AM_CPPFLAGS = -I$(top_builddir)/src/include -I$(top_srcdir)/src/include
-
-include_HEADERS = \
- src/include/smbios_c/config  		\
- src/include/smbios_c/compat.h  		\
- src/include/smbios_c/config.h  		\
- src/include/smbios_c/memory.h  		\
- src/include/smbios_c/types.h  		\
- src/include/smbios/config  		\
- src/include/smbios/config.hpp		\
- src/include/smbios/SmbiosLowLevel.h	\
- src/include/smbios/DellRbu.h		\
- src/include/smbios/ICmosRW.h		\
- src/include/smbios/IException.h		\
- src/include/smbios/IFactory.h		\
- src/include/smbios/IMemory.h		\
- src/include/smbios/IObserver.h		\
- src/include/smbios/ISmbios.h		\
- src/include/smbios/ISmi.h		\
- src/include/smbios/IToken.h		\
- src/include/smbios/SmbiosDefs.h		\
- src/include/smbios/RbuLowLevel.h		\
- src/include/smbios/compat.h		\
- src/include/smbios/SystemInfo.h		\
- src/include/smbios/types.h		\
- src/include/smbios/message.h	
-
-src_libsmbios_c_la_SOURCES = \
-    src/libsmbios_c/memory/memory_impl.h		\
-    src/libsmbios_c/memory/memory_linux.c		\
-    src/libsmbios_c/memory/memory.c
-
-src_libsmbios_la_SOURCES = \
+out_libsmbios_la_SOURCES = \
     src/libsmbios/cmos/CmosRW.cpp                   \
     src/libsmbios/cmos/CmosRWFactory.cpp            \
     src/libsmbios/cmos/CmosRW_LinuxIO.cpp           \
@@ -93,5 +60,3 @@ EXTRA_DIST += \
     src/libsmbios/memory/Memory_Windows.cpp		\
     src/libsmbios/smbios/SmbiosStrategy_Windows.cpp	\
     src/libsmbios/smi/Smi_Windows.cpp	
-
-CLEANFILES+=src/libsmbios/.libs

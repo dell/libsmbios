@@ -7,7 +7,7 @@ DIR=$(cd $(dirname $0); pwd)
 TMPDIR=$(mktemp -d  /tmp/unittest-$$-$RANDOM-XXXXXX)
 trap "rm -rf $TMPDIR" EXIT QUIT HUP TERM INT
 
-TST=src
+TST=out
 
 echo -e "\n\nRunning test for RBU"
 $TST/testRbu        $DIR/cppunit $TMPDIR rbu        $DIR/platform/rbu

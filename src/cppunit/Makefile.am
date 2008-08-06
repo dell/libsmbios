@@ -8,11 +8,11 @@ EXTRA_DIST += \
 	src/cppunit/platform
 
 TESTS = src/cppunit/runtests.sh
-check_PROGRAMS = src/testRbu src/testPlatform src/testStandalone src/testCInterface
+check_PROGRAMS = out/testRbu out/testPlatform out/testStandalone out/testCInterface
 
-src_testRbu_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lsrc -lsmbios $(CPPUNIT_LIBS)
-src_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/src/libsmbios/common -I@top_srcdir@/include -I@top_srcdir@/src/libsmbios/common -I@top_srcdir@/src/cppunit/
-src_testRbu_SOURCES = \
+out_testRbu_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lout -lsmbios $(CPPUNIT_LIBS)
+out_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/libsmbios/common  -I@top_srcdir@/src/cppunit/
+out_testRbu_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
     src/cppunit/interface/XmlUtils.cpp	\
@@ -20,9 +20,9 @@ src_testRbu_SOURCES = \
     src/cppunit/interface/testRbu.h	\
     src/cppunit/interface/testRbu.cpp
 
-src_testPlatform_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lsrc -lsmbios $(CPPUNIT_LIBS)
-src_testPlatform_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/src/libsmbios/common -I@top_srcdir@/include -I@top_srcdir@/src/libsmbios/common -I@top_srcdir@/src/cppunit/
-src_testPlatform_SOURCES = \
+out_testPlatform_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lout -lsmbios $(CPPUNIT_LIBS)
+out_testPlatform_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/libsmbios/common  -I@top_srcdir@/src/cppunit/
+out_testPlatform_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
     src/cppunit/interface/XmlUtils.cpp	\
@@ -30,9 +30,9 @@ src_testPlatform_SOURCES = \
     src/cppunit/interface/testPlatform.h	\
     src/cppunit/interface/testPlatform.cpp
 
-src_testStandalone_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lsrc -lsmbios $(CPPUNIT_LIBS)
-src_testStandalone_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_builddir@/src/libsmbios/common -I@top_srcdir@/include -I@top_srcdir@/src/libsmbios/common -I@top_srcdir@/src/cppunit/
-src_testStandalone_SOURCES = \
+out_testStandalone_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lout -lsmbios $(CPPUNIT_LIBS)
+out_testStandalone_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/libsmbios/common  -I@top_srcdir@/src/cppunit/
+out_testStandalone_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
     src/cppunit/interface/XmlUtils.cpp	\
@@ -40,9 +40,9 @@ src_testStandalone_SOURCES = \
     src/cppunit/interface/testStandalone.h	\
     src/cppunit/interface/testStandalone.cpp
 
-src_testCInterface_LDFLAGS = -lcppunit -ldl -Lsrc/.libs -lsmbios_c $(CPPUNIT_LIBS)
-src_testCInterface_CXXFLAGS = $(CPPUNIT_CXXFLAGS) -I@top_builddir@/include -I@top_srcdir@/include -I@top_srcdir@/src/cppunit/
-src_testCInterface_SOURCES = \
+out_testCInterface_LDFLAGS = -lcppunit -ldl -Lout -lsmbios_c $(CPPUNIT_LIBS)
+out_testCInterface_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/cppunit/
+out_testCInterface_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
     src/cppunit/interface/testCInterface.h	\

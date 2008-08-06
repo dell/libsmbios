@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = "SMBIOS Library"
 PROJECT_NUMBER         = 
-OUTPUT_DIRECTORY       = @top_builddir@/doc/full/
+OUTPUT_DIRECTORY       = @top_builddir@/out/full/
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = NO
 BRIEF_MEMBER_DESC      = YES
@@ -75,8 +75,8 @@ FILE_PATTERNS          = *.c \
                          *.hpp \
                          *.txt
 RECURSIVE              = YES
-EXCLUDE                = @top_builddir@/doc/full \
-                         @top_builddir@/doc/interface
+EXCLUDE                = @top_builddir@/out/full \
+                         @top_builddir@/out/interface
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 

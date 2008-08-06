@@ -20,7 +20,7 @@ LIBTOOL_CURRENT=@LIBTOOL_CURRENT@
 LIBTOOL_REVISION=@LIBTOOL_REVISION@
 LIBTOOL_AGE=@LIBTOOL_AGE@
 
-CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp doc/reports/code-coverage.txt doc/reports/valgrind_output.txt doc/*.log doc/reports/*.txt version smbios-utils*.rpm
+CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp version smbios-utils*.rpm out
 DISTCLEANFILES=*~
 
 EXTRA_DIST =
@@ -29,15 +29,22 @@ sbin_PROGRAMS=
 dist_sbin_SCRIPTS=
 dist_bin_SCRIPTS=
 EXTRA_PROGRAMS=
+lib_LTLIBRARIES=
+include_HEADERS=
 
-include src/Makefile.am
+AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror
+AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror
+
+include src/libsmbios/Makefile.am
+include src/libsmbios_c/Makefile.am
 include src/bin-supported/Makefile.am
 include src/bin-unsupported/Makefile.am
 include src/cppunit/Makefile.am
 
-$(bin_PROGRAMS): src/libsmbios.la
-$(sbin_PROGRAMS): src/libsmbios.la
-$(EXTRA_PROGRAMS): src/libsmbios.la
+$(bin_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
+$(sbin_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
+$(EXTRA_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
+$(check_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
 static: $(EXTRA_PROGRAMS)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
@@ -57,48 +64,44 @@ srpm: dist
 	cp $$BLD_DIR/SRPMS/*rpm .       ;\
 	rm -rf $$BLD_DIR
 
-unit_test:
-
 static:
 	make -C bin-supported static
 	make -C bin-unsupported static
 
 ########## DOCS ################
-clean-generic: clean-docs
+clean-generic:
 	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
-clean-docs:
-	rm -rf doc/interface doc/full doc/reports
 
 if HAS_DOXYGEN
-all: doc/full/html/index.html doc/interface/html/index.html
+all: out/full/html/index.html out/interface/html/index.html
 endif
 
-doxygen: doc/full/html/index.html doc/interface/html/index.html
-doc/full/html/index.html: doc/reports/code-coverage.txt doc/reports/valgrind_output.txt $(shell find doc -name \*.txt)
-	cd doc/; doxygen full-documentation.dox > doxygen-full.log
+doxygen: out/full/html/index.html out/interface/html/index.html
+out/full/html/index.html: out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find doc -name \*.txt)
+	cd out/; doxygen full-documentation.dox > doxygen-full.log
 
-doc/interface/html/index.html: doc/interface-only.dox doc/reports/code-coverage.txt doc/reports/valgrind_output.txt $(shell find doc -name \*.txt)
-	cd doc/; doxygen interface-only.dox > doxygen-int.log
+out/interface/html/index.html: out/interface-only.dox out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find doc -name \*.txt)
+	cd out/; doxygen interface-only.dox > doxygen-int.log
 
-doc/reports/code-coverage.txt:
-	[ -e doc/reports ] || mkdir -p doc/reports
-	@echo '/** \page code_coverage Automatically generated code coverage report' > doc/reports/code-coverage.txt
-	@echo '<pre>' >> doc/reports/code-coverage.txt
-	@echo 'CODE COVERAGE REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> doc/reports/code-coverage.txt
-	@echo "</pre>*/" >> doc/reports/code-coverage.txt
+out/reports/code-coverage.txt:
+	[ -e out/reports ] || mkdir -p out/reports
+	@echo '/** \page code_coverage Automatically generated code coverage report' > out/reports/code-coverage.txt
+	@echo '<pre>' >> out/reports/code-coverage.txt
+	@echo 'CODE COVERAGE REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/code-coverage.txt
+	@echo "</pre>*/" >> out/reports/code-coverage.txt
 
-doc/reports/valgrind_output.txt:
-	[ -e doc/reports ] || mkdir -p doc/reports
-	@echo '/** \page leak_detect Automatically generated leak detection report' > doc/reports/valgrind_output.txt
-	@echo '\section leaks Leak detection report' >> doc/reports/valgrind_output.txt
-	@echo "Generated for $$(whoami) on $$(date)" >> doc/reports/valgrind_output.txt
-	@echo '<pre>' >> doc/reports/valgrind_output.txt
-	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> doc/reports/valgrind_output.txt
-	@echo "</pre>*/" >> doc/reports/valgrind_output.txt
-	@echo '/** \section leak_time Time to run leak detection report.' >> doc/reports/valgrind_output.txt
-	@echo '<pre>' >> doc/reports/valgrind_output.txt
-	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> doc/reports/valgrind_output.txt
-	@echo "</pre>*/" >> doc/reports/valgrind_output.txt
+out/reports/valgrind_output.txt:
+	[ -e out/reports ] || mkdir -p out/reports
+	@echo '/** \page leak_detect Automatically generated leak detection report' > out/reports/valgrind_output.txt
+	@echo '\section leaks Leak detection report' >> out/reports/valgrind_output.txt
+	@echo "Generated for $$(whoami) on $$(date)" >> out/reports/valgrind_output.txt
+	@echo '<pre>' >> out/reports/valgrind_output.txt
+	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/valgrind_output.txt
+	@echo "</pre>*/" >> out/reports/valgrind_output.txt
+	@echo '/** \section leak_time Time to run leak detection report.' >> out/reports/valgrind_output.txt
+	@echo '<pre>' >> out/reports/valgrind_output.txt
+	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/valgrind_output.txt
+	@echo "</pre>*/" >> out/reports/valgrind_output.txt
 ########## END DOCS ################
 
 dist: ChangeLog AUTHORS
@@ -109,29 +112,10 @@ AUTHORS:
 	(GIT_DIR=.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
 EXTRA_DIST += \
- libsmbios.spec \
+ build/libsmbios.spec 	\
  build/scripts 		\
  build/VC.2005 		\
  COPYING-GPL		\
- COPYING-OSL				\
- doc/bios_hdr_file.txt	\
- doc/coding	\
- doc/dell_drivers.txt	\
- doc/DellToken.txt	\
- doc/design	\
- doc/exe-assetTag.txt	\
- doc/exe-dellBiosUpdate.txt	\
- doc/exe-getSystemId.txt	\
- doc/exe-propertyTag.txt	\
- doc/exe-serviceTag.txt	\
- doc/external-specs	\
- doc/getopt	\
- doc/installation.txt	\
- doc/interface-only.dox	\
- doc/mainpage.txt	\
- doc/old_news.txt	\
- doc/smbios23.xml	\
- doc/visio	\
- doc/yum.txt	\
- doc/pkgheader.sh
+ COPYING-OSL		\
+ doc/
 
