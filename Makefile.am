@@ -120,5 +120,5 @@ EXTRA_DIST += \
  build/VC.2005 		\
  COPYING-GPL		\
  COPYING-OSL		\
- doc/
+ doc
 
