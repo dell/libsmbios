@@ -32,8 +32,11 @@ EXTRA_PROGRAMS=
 lib_LTLIBRARIES=
 include_HEADERS=
 
-AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror
-AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror
+#-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
+AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall 
+
+#-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fexceptions
+AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall 
 
 include src/libsmbios/Makefile.am
 include src/libsmbios_c/Makefile.am
