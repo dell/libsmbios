@@ -77,7 +77,9 @@ namespace smi
         };
         virtual void addInputBuffer(u8 *buffer, size_t size)
         {
-            fwrite(buffer, 1, size, fh);
+            size_t written = fwrite(buffer, 1, size, fh);
+            if (written < size)
+                throw std::exception();
         };
         virtual void execute()
         {

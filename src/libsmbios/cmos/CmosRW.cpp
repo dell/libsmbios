@@ -149,9 +149,12 @@ namespace cmos
             throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
         fseek (fh, static_cast<long>(realOffset), SEEK_SET);
-        fwrite (&byte, 1, sizeof (byte), fh);
+        size_t written = fwrite (&byte, 1, sizeof (byte), fh);
         fclose (fh);
         fflush(NULL);
+
+        if (written < sizeof(byte))
+            throw std::exception(); // short write. there isnt really a good exception to throw here.
 
         if(! isNotifySuppressed() )
         {

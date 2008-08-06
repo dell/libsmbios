@@ -44,6 +44,15 @@ struct smiLinuxPrivateData
 
 namespace smi
 {
+    size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+    {
+        size_t written = fwrite(ptr, size, nmemb, stream); 
+        // TODO: handle short write
+        if (written < (size * nmemb))
+            throw smbios::InternalErrorImpl("Short write to file handle");
+        return written;
+    }
+
     SmiArchStrategy::SmiArchStrategy()
     {
         privateData = new smiLinuxPrivateData;
@@ -80,7 +89,7 @@ namespace smi
         flock( fileno(tmpPrivPtr->fh_data), LOCK_EX );
 
         fseek(tmpPrivPtr->fh_doReq, 0L, 0);
-        fwrite("0", 1, 1, tmpPrivPtr->fh_doReq);
+        FWRITE("0", 1, 1, tmpPrivPtr->fh_doReq);
         fseek(tmpPrivPtr->fh_doReq, 0L, 0);
     }
 
@@ -120,7 +129,7 @@ namespace smi
             throw smbios::InternalErrorImpl("Could not open file " SMI_BUF_SIZE_FILE ". Check that dcdbas driver is properly loaded.");
 
         snprintf(tmpBuf, bufSize, "%d", newSize);
-        fwrite(tmpBuf, 1, bufSize, fh);
+        FWRITE(tmpBuf, 1, bufSize, fh);
         fclose(fh);
 
         fflush(NULL);
@@ -130,7 +139,7 @@ namespace smi
     void SmiArchStrategy::addInputBuffer(u8 *buffer, size_t size)
     {
         smiLinuxPrivateData *tmpPrivPtr = reinterpret_cast<smiLinuxPrivateData *>(privateData);
-        fwrite(buffer,  1,  size,  tmpPrivPtr->fh_data);
+        FWRITE(buffer,  1,  size,  tmpPrivPtr->fh_data);
     }
 
     void SmiArchStrategy::getResultBuffer(u8 *buffer, size_t size)
@@ -147,7 +156,7 @@ namespace smi
     {
         smiLinuxPrivateData *tmpPrivPtr = reinterpret_cast<smiLinuxPrivateData *>(privateData);
         fflush(NULL);
-        fwrite("1", 1, 1, tmpPrivPtr->fh_doReq);
+        FWRITE("1", 1, 1, tmpPrivPtr->fh_doReq);
         fflush(NULL);
         fseek(tmpPrivPtr->fh_data, 0L, 0);
     }

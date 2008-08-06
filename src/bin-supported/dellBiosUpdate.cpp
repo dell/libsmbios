@@ -133,10 +133,10 @@ main (int argc, char **argv)
         if (action == update_bios || action == test)
         {
 
+#if 0
             rbu::driver_type dt = rbu::getDriverType();
             rbu::packet_type supported_pt = rbu::getSupportedPacketType();
-            //if ((force_type == rbu::pt_packet || (force_type == rbu::pt_any && supported_pt == rbu::pt_packet)))
-            if (0)
+            if ((force_type == rbu::pt_packet || (force_type == rbu::pt_any && supported_pt == rbu::pt_packet)))
             {
                 cout << endl;
                 cout << "WARNING: packet updates are not fully tested yet." << endl;
@@ -151,6 +151,7 @@ main (int argc, char **argv)
                     force_type = rbu::pt_mono;
                 }
             }
+#endif
 
             // check system id in HDR against this system ID
             //          --override_sysid_check to override

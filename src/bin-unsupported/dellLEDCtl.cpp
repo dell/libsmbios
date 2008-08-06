@@ -300,7 +300,7 @@ static void setLEDs( int level, DELL_LED_COLOR zone[], bool preserve )
         smi::doSimpleCallingInterfaceSmi(4, 7, args, res);
 
         u8 *p2 = (u8 *)&res[smi::cbRES2];
-        u8 *p3 = (u8 *)&res[smi::cbRES3];
+        //u8 *p3 = (u8 *)&res[smi::cbRES3];
         u8 *p4 = (u8 *)&res[smi::cbRES4];
 
         if (!zoneIsSet( zone[0] )) zone[0] = DELL_LED_COLOR(p2[0]);
@@ -335,7 +335,7 @@ static void strobeLEDs()
         smi::doSimpleCallingInterfaceSmi(4, 7, args, res);
 
         u8 *p2 = (u8 *)&res[smi::cbRES2];
-        u8 *p3 = (u8 *)&res[smi::cbRES3];
+        //u8 *p3 = (u8 *)&res[smi::cbRES3];
         u8 *p4 = (u8 *)&res[smi::cbRES4];
 
         zone[0] = DELL_LED_COLOR(p2[0]);

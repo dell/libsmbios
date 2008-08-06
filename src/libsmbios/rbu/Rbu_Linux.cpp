@@ -55,6 +55,15 @@ const char *rbu_v2_pkt_size_file = "/sys/devices/platform/dell_rbu/packet_size";
 
 const int RBU_PACKET_SIZE = 4096;
 
+    size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+    {
+        size_t written = fwrite(ptr, size, nmemb, stream); 
+        // TODO: handle short write
+        if (written < (size * nmemb))
+            throw RbuDriverIOErrorImpl("short write");
+        return written;
+    }
+
     driver_type getDriverType()
     {
         if (!access(rbu_v1_mono_data_file, F_OK))
@@ -78,10 +87,10 @@ const int RBU_PACKET_SIZE = 4096;
     
         try
         {
-            fwrite(buffer, 1, bufSize, data_fh);
+            FWRITE(buffer, 1, bufSize, data_fh);
             if (ferror(data_fh))
                 throw RbuDriverIOErrorImpl(strerror(errno));
-    
+
             if(openclose)
             {
                 fclose(data_fh);
@@ -152,7 +161,7 @@ const int RBU_PACKET_SIZE = 4096;
             if (ferror(hdr_fh))
                 throw HdrFileIOErrorImpl(strerror(errno));
     
-            fwrite(buffer, 1, readSz, data_fh);
+            FWRITE(buffer, 1, readSz, data_fh);
             if (ferror(data_fh))
                 throw RbuDriverIOErrorImpl(strerror(errno));
             cout << "." << flush;
@@ -173,7 +182,7 @@ const int RBU_PACKET_SIZE = 4096;
         ostringstream ost("");
         ost << sz;
         cout << "writing (" << sz << ") to file: " << fn << endl;
-        fwrite(ost.str().c_str(), 1, ost.str().length(), size_fh);
+        FWRITE(ost.str().c_str(), 1, ost.str().length(), size_fh);
         if (ferror(size_fh))
             throw RbuDriverIOErrorImpl(strerror(errno));
         fclose(size_fh);
@@ -272,16 +281,16 @@ const int RBU_PACKET_SIZE = 4096;
         switch(type)
         {
         case pt_mono:
-            fwrite("mono\0", 1, 5, type_fh);
+            FWRITE("mono\0", 1, 5, type_fh);
             break;
         case pt_packet:
-            fwrite("packet\0", 1, 7, type_fh);
+            FWRITE("packet\0", 1, 7, type_fh);
             break;
         case pt_any:  /*fall thru*/
         case pt_init:  /*fall thru*/
         default:
             // not really a packet type, but causes driver to free its memory
-            fwrite("init\0", 1, 7, type_fh);
+            FWRITE("init\0", 1, 7, type_fh);
             break;
         }
     
@@ -309,7 +318,7 @@ const int RBU_PACKET_SIZE = 4096;
         if (!load_fh)
             throw RbuDriverIOErrorImpl(strerror(errno));
     
-        fwrite(&val, 1, 1, load_fh);
+        FWRITE(&val, 1, 1, load_fh);
         if (ferror(load_fh))
             throw RbuDriverIOErrorImpl(strerror(errno));
         fclose(load_fh);

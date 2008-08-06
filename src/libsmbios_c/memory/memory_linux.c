@@ -125,6 +125,7 @@ static int copy_mmap(struct memory *this, u8 *buffer, u64 offset, size_t length,
     }
 
     retval = 0;
+    goto out;
 
 err_out:
     private_data->mem_errno = errno;
@@ -220,7 +221,7 @@ __internal void MEM_INIT_FUNCTION(struct memory *m, const char *fn)
 
 __internal void init_mem_struct(struct memory *m)
 {
-   init_mem_struct_filename(m, "/dev/mem"); 
+   MEM_INIT_FUNCTION(m, "/dev/mem"); 
 }
 
 

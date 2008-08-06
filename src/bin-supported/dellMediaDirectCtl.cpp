@@ -102,7 +102,6 @@ main (int argc, char **argv)
         int c=0;
         char *args = 0;
         memory::MemoryFactory *memoryFactory = 0;
-        bool xml = false;
         bool lowInit = false, highInit = false;
         u32 lowLba = 0, highLba = 0;
 
@@ -219,7 +218,7 @@ void callSmi(mediaDirectTable *md, smiRegs *r, u8 function, u8 subFunction)
 
     if (r->eax == 0){
         // success
-    } else if( r->eax == -1 ) {
+    } else if( (s32)r->eax == -1 ) {
         // failure
         DCERR("smi failure" << endl);
         throw "smi failure";  // TODO: make this a regular class-based exception
@@ -328,7 +327,7 @@ void getMediaDirectTable(mediaDirectTable *mdTable)
         {
             DCERR("Found MD20 anchor. Trying to parse legacy DMI structure." << endl);
             u8 checksum=0;
-            for(int i=0; i<sizeof(*mdTable); ++i){
+            for(unsigned int i=0; i<sizeof(*mdTable); ++i){
                 u8 byte = reinterpret_cast<u8*>(mdTable)[i];
                 checksum += byte;
                 DCERR("byte " << dec << i << " = " << hex << (int)byte << endl);
