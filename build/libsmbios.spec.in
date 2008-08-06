@@ -38,7 +38,7 @@ BuildRequires: doxygen
 
 
 %description
-Libsmbios is a library and utilities that can be used by client programs 
+Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 %package -n smbios-utils
@@ -56,34 +56,34 @@ Group: Development/Libraries
 Requires: libsmbios = %{version}-%{release}
 
 %description devel
-Libsmbios is a library and utilities that can be used by client programs 
+Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
-This package contains the headers and .a files necessary to compile new 
+This package contains the headers and .a files necessary to compile new
 client programs against libsmbios.
 
 %description -n smbios-utils
-Libsmbios is a library and utilities that can be used by client programs 
+Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 This package contains some sample binaries that use libsmbios.
 
 %prep
-%setup -q 
+%setup -q
 find . -type d -exec chmod -f 755 {} \;
-find doc include libraries bin-unsupported build bin-supported cppunit -type f -exec chmod -f 644 {} \;
-chmod 755 cppunit/*.sh
+find doc src build -type f -exec chmod -f 644 {} \;
+chmod 755 src/cppunit/*.sh
 
 %build
-export EXTRA_CXXFLAGS="%{optflags}" 
-export EXTRA_CFLAGS="%{optflags}" 
-export RELEASE_MAJOR=%{major} 
-export RELEASE_MINOR=%{minor} 
-export RELEASE_SUBLEVEL=%{sub} 
+export EXTRA_CXXFLAGS="%{optflags}"
+export EXTRA_CFLAGS="%{optflags}"
+export RELEASE_MAJOR=%{major}
+export RELEASE_MINOR=%{minor}
+export RELEASE_SUBLEVEL=%{sub}
 export RELEASE_EXTRALEVEL=%{extralevel}
 %configure
-mkdir -p doc/full/html 
-make -e %{?_smp_mflags} 
+mkdir -p out/full/html
+make -e %{?_smp_mflags}
 [ ! -d /usr/include/cppunit ] || make -e check
 
 %install
@@ -91,10 +91,12 @@ rm -rf %{buildroot}
 
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
-cp -a include/smbios %{buildroot}/usr/include/
+cp -a src/include/*  %{buildroot}/usr/include/
+cp out/include/smbios/version.h %{buildroot}/usr/include/smbios/
+cp out/include/smbios_c/version.h %{buildroot}/usr/include/smbios_c/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
-find doc/full -exec touch -r configure.ac {} \;
+find out/full -exec touch -r configure.ac {} \;
 
 # backwards compatible:
 ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
@@ -109,19 +111,22 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios.so.*
+%{_libdir}/libsmbios_c.so.*
 
 %files devel
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README bin-unsupported/getopts_LICENSE.txt
-/usr/include/smbios
+%doc COPYING-GPL COPYING-OSL README src/bin-unsupported/getopts_LICENSE.txt
+/usr/include/*
 %{_libdir}/libsmbios.a
 %{_libdir}/libsmbios.so
-%doc doc/full/html
+%{_libdir}/libsmbios_c.a
+%{_libdir}/libsmbios_c.so
+%doc out/full/html
 
 %files -n smbios-utils
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
-%doc bin-unsupported/getopts_LICENSE.txt include/smbios/config/boost_LICENSE_1_0_txt
+%doc src/bin-unsupported/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 %doc doc/pkgheader.sh
 %{_sbindir}/assetTag
 %{_sbindir}/dellBiosUpdate
@@ -132,6 +137,7 @@ rm -rf %{buildroot}
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/mkbiospkg.sh
+%{_sbindir}/dellMediaDirectCtl
 
 # used by HAL in old location, so keep it around until HAL is updated.
 %{_sbindir}/dellWirelessCtl
