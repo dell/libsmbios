@@ -4,12 +4,12 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[2.0.2])
+AC_INIT([libsmbios],[2.1.0])
 
 temp_RELEASE_NAME=libsmbios
 temp_RELEASE_MAJOR=2
-temp_RELEASE_MINOR=0
-temp_RELEASE_SUBLEVEL=2
+temp_RELEASE_MINOR=1
+temp_RELEASE_SUBLEVEL=0
 temp_RELEASE_EXTRALEVEL=
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
