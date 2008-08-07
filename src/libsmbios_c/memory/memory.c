@@ -45,7 +45,7 @@
 void __internal init_mem_struct(struct memory *m);
 void __internal MEM_INIT_FUNCTION(struct memory *m, const char *fn);
 
-struct memory singleton; // auto-init to 0
+static struct memory singleton; // auto-init to 0
 
 struct memory *memory_factory(int flags, ...)
 {
