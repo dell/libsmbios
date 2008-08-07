@@ -55,7 +55,7 @@ const char *rbu_v2_pkt_size_file = "/sys/devices/platform/dell_rbu/packet_size";
 
 const int RBU_PACKET_SIZE = 4096;
 
-    size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+    static size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
     {
         size_t written = fwrite(ptr, size, nmemb, stream); 
         // TODO: handle short write
