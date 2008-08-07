@@ -24,6 +24,7 @@
 
 #include "testCInterface.h"
 #include "smbios_c/memory.h"
+#include "smbios_c/cmos.h"
 #include "smbios_c/version.h"
 
 #include "outputctl.h"
@@ -63,7 +64,7 @@ bool fileExists(string fileName)
     return true;
 }
 
-size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+static size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
     size_t written = fwrite(ptr, size, nmemb, stream); 
     // TODO: handle short write
@@ -96,6 +97,7 @@ void testCInterface::setUp()
     fclose(fd);
 
     memory_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, testFile.c_str());
+    cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, testFile.c_str());
 }
 
 void testCInterface::tearDown()
@@ -191,6 +193,66 @@ void testCInterface::testMemorySearch()
 
     ret = memory_search(m, "00000000", 8, 0, 4096, 1);
     CPPUNIT_ASSERT_EQUAL( (s64)26, ret );
+
+    STD_TEST_END("");
+}
+
+
+void testCInterface::testCmosRead()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+
+    u8 buf;
+    struct cmos *c = 0;
+    int ret;
+    for (int i=0; i<26; ++i){
+        c = cmos_factory(CMOS_GET_SINGLETON);
+        buf = '9';
+        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        CPPUNIT_ASSERT_EQUAL( 0, ret );
+        CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
+        cmos_free(c);
+    }
+
+    STD_TEST_END("");
+}
+
+
+void testCInterface::testCmosWrite()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+    struct cmos *c = cmos_factory(CMOS_GET_SINGLETON);
+    u8 buf;
+    int ret;
+
+    for (int i=0; i<26; ++i){
+        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        CPPUNIT_ASSERT_EQUAL( 0, ret );
+        CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
+    }
+
+    for (int i=0; i<26; ++i){
+        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        CPPUNIT_ASSERT_EQUAL( 0, ret );
+        buf = buf + 'A' - 'a';
+        ret = cmos_write_byte(c, 0, 0, i, buf);
+        CPPUNIT_ASSERT_EQUAL( 0, ret );
+    }
+
+    for (int i=0; i<26; ++i){
+        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        CPPUNIT_ASSERT_EQUAL( 0, ret );
+        CPPUNIT_ASSERT_EQUAL( buf, (u8)('A' + i) );
+    }
+
+    // index port 1 (offset 512 + i) should be '0'
+    for (int i=0; i<26; ++i){
+        ret = cmos_read_byte(c, 1, 0, i, &buf);
+        CPPUNIT_ASSERT_EQUAL( 0, ret );
+        CPPUNIT_ASSERT_EQUAL( buf, (u8)('0') );
+    }
+
+    cmos_free(c);
 
     STD_TEST_END("");
 }
