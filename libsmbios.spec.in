@@ -9,7 +9,7 @@
 Name: %{release_name}
 Version: %{release_version}
 Release: 1%{?dist}
-License: GPLv2+ or OSL
+License: GPLv2+ or OSL 2.1
 Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
@@ -38,7 +38,7 @@ BuildRequires: doxygen
 
 
 %description
-Libsmbios is a library and utilities that can be used by client programs 
+Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 %package -n smbios-utils
@@ -56,34 +56,34 @@ Group: Development/Libraries
 Requires: libsmbios = %{version}-%{release}
 
 %description devel
-Libsmbios is a library and utilities that can be used by client programs 
+Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
-This package contains the headers and .a files necessary to compile new 
+This package contains the headers and .a files necessary to compile new
 client programs against libsmbios.
 
 %description -n smbios-utils
-Libsmbios is a library and utilities that can be used by client programs 
+Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 This package contains some sample binaries that use libsmbios.
 
 %prep
-%setup -q 
+%setup -q
 find . -type d -exec chmod -f 755 {} \;
 find doc include libraries bin-unsupported build bin-supported cppunit -type f -exec chmod -f 644 {} \;
 chmod 755 cppunit/*.sh
 
 %build
-export EXTRA_CXXFLAGS="%{optflags}" 
-export EXTRA_CFLAGS="%{optflags}" 
-export RELEASE_MAJOR=%{major} 
-export RELEASE_MINOR=%{minor} 
-export RELEASE_SUBLEVEL=%{sub} 
+export EXTRA_CXXFLAGS="%{optflags}"
+export EXTRA_CFLAGS="%{optflags}"
+export RELEASE_MAJOR=%{major}
+export RELEASE_MINOR=%{minor}
+export RELEASE_SUBLEVEL=%{sub}
 export RELEASE_EXTRALEVEL=%{extralevel}
 %configure
-mkdir -p doc/full/html 
-make -e %{?_smp_mflags} 
+mkdir -p doc/full/html
+make -e %{?_smp_mflags}
 [ ! -d /usr/include/cppunit ] || make -e check
 
 %install
