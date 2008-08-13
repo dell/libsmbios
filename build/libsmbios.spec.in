@@ -75,8 +75,8 @@ find doc src build -type f -exec chmod -f 644 {} \;
 chmod 755 src/cppunit/*.sh
 
 %build
-export EXTRA_CXXFLAGS="%{optflags}"
-export EXTRA_CFLAGS="%{optflags}"
+export CXXFLAGS="%{optflags}"
+export CFLAGS="%{optflags}"
 export RELEASE_MAJOR=%{major}
 export RELEASE_MINOR=%{minor}
 export RELEASE_SUBLEVEL=%{sub}
