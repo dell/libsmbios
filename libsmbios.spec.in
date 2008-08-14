@@ -132,6 +132,7 @@ rm -rf %{buildroot}
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/mkbiospkg.sh
+%{_sbindir}/dellMediaDirectCtl
 
 # used by HAL in old location, so keep it around until HAL is updated.
 %{_sbindir}/dellWirelessCtl
