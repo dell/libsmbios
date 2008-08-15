@@ -21,6 +21,7 @@
 
 #include <iomanip>
 #include <fstream>
+#include <iostream>
 
 #include "testCInterface.h"
 #include "smbios_c/memory.h"
