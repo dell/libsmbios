@@ -44,20 +44,20 @@ out_dellWirelessCtl_SOURCES = $(getopts_c) src/bin-supported/dellWirelessCtl.cpp
 out_dellMediaDirectCtl_SOURCES = $(getopts_c) src/bin-supported/dellMediaDirectCtl.cpp
 out_dumpSmbios_SOURCES = $(getopts_c) src/bin-supported/dumpSmbios.cpp
 
-out_assetTag_LDFLAGS = -lsmbios
-out_getSystemId_LDFLAGS = -lsmbios
-out_propertyTag_LDFLAGS = -lsmbios
-out_serviceTag_LDFLAGS = -lsmbios
-out_verifySmiPassword_LDFLAGS = -lsmbios
-out_wakeupCtl_LDFLAGS = -lsmbios
-out_dellLcdBrightness_LDFLAGS = -lsmbios
-out_dellWirelessCtl_LDFLAGS = -lsmbios
-out_dellMediaDirectCtl_LDFLAGS = -lsmbios
-out_dumpSmbios_LDFLAGS = -lsmbios
+out_assetTag_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_getSystemId_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_propertyTag_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_serviceTag_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_verifySmiPassword_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_wakeupCtl_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_dellLcdBrightness_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_dellWirelessCtl_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_dellMediaDirectCtl_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_dumpSmbios_LDFLAGS = $(AM_LDFLAGS) -lsmbios
 
 # BAD BAD BAD programs....  (uses private headers)
 out_dellBiosUpdate_SOURCES = $(getopts_c) src/bin-supported/dellBiosUpdate.cpp
-out_dellBiosUpdate_LDFLAGS = -lsmbios
+out_dellBiosUpdate_LDFLAGS = $(AM_LDFLAGS) -lsmbios
 out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios/common
 
 
@@ -74,18 +74,18 @@ out_dellWirelessCtlS_SOURCES = $(getopts_c) src/bin-supported/dellWirelessCtl.cp
 out_dellMediaDirectCtlS_SOURCES = $(getopts_c) src/bin-supported/dellMediaDirectCtl.cpp
 out_dumpSmbiosS_SOURCES = $(getopts_c) src/bin-supported/dumpSmbios.cpp
 
-out_assetTagS_LDFLAGS          = -all-static -lsmbios
-out_getSystemIdS_LDFLAGS       = -all-static -lsmbios
-out_propertyTagS_LDFLAGS       = -all-static -lsmbios
-out_serviceTagS_LDFLAGS        = -all-static -lsmbios
-out_verifySmiPasswordS_LDFLAGS = -all-static -lsmbios
-out_wakeupCtlS_LDFLAGS         = -all-static -lsmbios
-out_dellLcdBrightnessS_LDFLAGS = -all-static -lsmbios
-out_dellWirelessCtlS_LDFLAGS   = -all-static -lsmbios
-out_dellMediaDirectCtlS_LDFLAGS   = -all-static -lsmbios
-out_dumpSmbiosS_LDFLAGS        = -all-static -lsmbios
+out_assetTagS_LDFLAGS          = $(AM_LDFLAGS) -all-static -lsmbios
+out_getSystemIdS_LDFLAGS       = $(AM_LDFLAGS) -all-static -lsmbios
+out_propertyTagS_LDFLAGS       = $(AM_LDFLAGS) -all-static -lsmbios
+out_serviceTagS_LDFLAGS        = $(AM_LDFLAGS) -all-static -lsmbios
+out_verifySmiPasswordS_LDFLAGS = $(AM_LDFLAGS) -all-static -lsmbios
+out_wakeupCtlS_LDFLAGS         = $(AM_LDFLAGS) -all-static -lsmbios
+out_dellLcdBrightnessS_LDFLAGS = $(AM_LDFLAGS) -all-static -lsmbios
+out_dellWirelessCtlS_LDFLAGS   = $(AM_LDFLAGS) -all-static -lsmbios
+out_dellMediaDirectCtlS_LDFLAGS   = $(AM_LDFLAGS) -all-static -lsmbios
+out_dumpSmbiosS_LDFLAGS        = $(AM_LDFLAGS) -all-static -lsmbios
 
 # BAD again (uses private includes.)
 out_dellBiosUpdateS_SOURCES = $(getopts_c) src/bin-supported/dellBiosUpdate.cpp
-out_dellBiosUpdateS_LDFLAGS    = -all-static -lsmbios
+out_dellBiosUpdateS_LDFLAGS    = $(AM_LDFLAGS) -all-static -lsmbios
 out_dellBiosUpdateS_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios/common

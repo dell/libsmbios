@@ -32,6 +32,8 @@ EXTRA_PROGRAMS=
 lib_LTLIBRARIES=
 include_HEADERS=
 
+AM_LDFLAGS = -L$(top_builddir)/out/
+
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
 AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall 
 
@@ -44,10 +46,10 @@ include src/bin-supported/Makefile.am
 include src/bin-unsupported/Makefile.am
 include src/cppunit/Makefile.am
 
-$(bin_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
-$(sbin_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
-$(EXTRA_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
-$(check_PROGRAMS): out/libsmbios.la out/libsmbios_c.la
+$(bin_PROGRAMS): $(lib_LTLIBRARIES)
+$(sbin_PROGRAMS): $(lib_LTLIBRARIES)
+$(EXTRA_PROGRAMS): $(lib_LTLIBRARIES)
+$(check_PROGRAMS): $(lib_LTLIBRARIES)
 static: $(EXTRA_PROGRAMS)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
