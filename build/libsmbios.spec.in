@@ -90,6 +90,9 @@ find doc src build -type f -exec chmod -f 644 {} \;
 chmod 755 src/cppunit/*.sh
 
 %build
+# this line lets us build an RPM directly from a git tarball
+[ -e ./configure ] || ./autogen.sh
+
 export CXXFLAGS="%{optflags}"
 export CFLAGS="%{optflags}"
 export RELEASE_MAJOR=%{major}
