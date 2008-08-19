@@ -1,0 +1,181 @@
+# these are all substituted by autoconf
+%define major @RELEASE_MAJOR@
+%define minor @RELEASE_MINOR@
+%define sub @RELEASE_SUBLEVEL@
+%define extralevel @RELEASE_RPM_EXTRALEVEL@
+%define release_name libsmbios
+%define release_version %{major}.%{minor}.%{sub}%{extralevel}
+
+
+%define cppunit_BR %{nil}
+%define doxygen_BR %{nil}
+# Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
+# SUSE: fedora_version  suse_version rhel_version centos_version sles_version
+# Fedora: fedora dist fc8 fc9
+%if 0%{?fedora_version} || 0%{?fedora}
+    %define doxygen_BR doxygen
+    # no cppunit in suse build service for fedora, so disable for now
+%endif
+
+%if 0%{?suse_version}
+    %define cppunit_BR cppunit-devel
+    # no doxygen in most suse versions base
+%endif
+
+%if 0%{?sles_version}
+    %define cppunit_BR cppunit-devel
+%endif
+
+%if 0%{?rhel_version}
+    %define doxygen_BR doxygen
+%endif
+
+%if 0%{?centos_version}
+    %define doxygen_BR doxygen
+%endif
+
+Name: %{release_name}
+Version: %{release_version}
+Release: 1%{?dist}
+License: GPLv2+ or OSL 2.1
+Group: System Environment/Libraries
+Source: http://linux.dell.com/libsmbios/download/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
+URL: http://linux.dell.com/libsmbios/main
+Summary: Libsmbios shared libraries
+Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Obsoletes: libsmbios-libs < 2.0.0
+Provides: libsmbios-libs = %{version}-%{release}
+BuildRequires: libxml2-devel
+BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
+
+# libsmbios only ever makes sense on intel compatible arches
+# no DMI tables on ppc, s390, etc.
+ExclusiveArch: x86_64 ia64 %{ix86}
+
+%description
+Libsmbios is a library and utilities that can be used by client programs
+to get information from standard BIOS tables, such as the SMBIOS table.
+
+%package -n smbios-utils
+Summary: The "supported" sample binaries that use libsmbios
+Group: Applications/System
+Requires: libsmbios = %{version}-%{release}
+Obsoletes: libsmbios-bin < 0:2.0.0
+Provides: libsmbios-bin = %{version}-%{release}
+Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
+Provides: libsmbios-unsupported-bin = %{version}-%{release}
+
+%package devel
+Summary: Development headers and archives
+Group: Development/Libraries
+Requires: libsmbios = %{version}-%{release}
+
+%description devel
+Libsmbios is a library and utilities that can be used by client programs
+to get information from standard BIOS tables, such as the SMBIOS table.
+
+This package contains the headers and .a files necessary to compile new
+client programs against libsmbios.
+
+%description -n smbios-utils
+Libsmbios is a library and utilities that can be used by client programs
+to get information from standard BIOS tables, such as the SMBIOS table.
+
+This package contains some sample binaries that use libsmbios.
+
+%prep
+%setup -q
+find . -type d -exec chmod -f 755 {} \;
+find doc src build -type f -exec chmod -f 644 {} \;
+chmod 755 src/cppunit/*.sh
+
+%build
+# this line lets us build an RPM directly from a git tarball
+[ -e ./configure ] || ./autogen.sh
+
+export CXXFLAGS="%{optflags}"
+export CFLAGS="%{optflags}"
+export RELEASE_MAJOR=%{major}
+export RELEASE_MINOR=%{minor}
+export RELEASE_SUBLEVEL=%{sub}
+export RELEASE_EXTRALEVEL=%{extralevel}
+%configure
+mkdir -p out/full/html
+make -e %{?_smp_mflags}
+[ ! -d /usr/include/cppunit ] || make -e check
+
+%install
+rm -rf %{buildroot}
+
+make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
+mkdir -p %{buildroot}/usr/include
+cp -a src/include/*  %{buildroot}/usr/include/
+cp out/include/smbios/version.h %{buildroot}/usr/include/smbios/
+cp out/include/smbios_c/version.h %{buildroot}/usr/include/smbios_c/
+rm -f %{buildroot}/%{_libdir}/lib*.la
+find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
+find out/full -exec touch -r configure.ac {} \;
+
+# backwards compatible:
+ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
+
+%clean
+rm -rf %{buildroot}
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
+%{_libdir}/libsmbios.so.*
+%{_libdir}/libsmbios_c.so.*
+
+%files devel
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README src/bin-unsupported/getopts_LICENSE.txt
+/usr/include/*
+%{_libdir}/libsmbios.a
+%{_libdir}/libsmbios.so
+%{_libdir}/libsmbios_c.a
+%{_libdir}/libsmbios_c.so
+%doc out/full/html
+
+%files -n smbios-utils
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
+%doc src/bin-unsupported/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+%doc doc/pkgheader.sh
+%{_sbindir}/assetTag
+%{_sbindir}/dellBiosUpdate
+%{_sbindir}/getSystemId
+%{_sbindir}/propertyTag
+%{_sbindir}/serviceTag
+%{_sbindir}/verifySmiPassword
+%{_sbindir}/wakeupCtl
+%{_sbindir}/dellLcdBrightness
+%{_sbindir}/mkbiospkg.sh
+%{_sbindir}/dellMediaDirectCtl
+
+# used by HAL in old location, so keep it around until HAL is updated.
+%{_sbindir}/dellWirelessCtl
+%{_bindir}/dellWirelessCtl
+
+# community supported stuff...
+# may or may not work
+%{_sbindir}/dellLEDCtl
+%{_sbindir}/activateCmosToken
+%{_sbindir}/ascii2enUS_scancode
+%{_sbindir}/createUnitTestFiles
+%{_sbindir}/disable_console_redir
+%{_sbindir}/dumpCmos
+%{_sbindir}/getPasswordFormat
+%{_sbindir}/isCmosTokenActive
+%{_sbindir}/probes
+%{_sbindir}/smitest
+%{_sbindir}/stateByteCtl
+%{_sbindir}/upBootCtl
+%{_sbindir}/dumpSmbios
+
+# ./ChangeLog is appended by configure
+%changelog

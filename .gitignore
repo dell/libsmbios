@@ -1,0 +1,64 @@
+# BUILD OUTPUT
+*.o
+*.lo
+.dirstamp
+*.la
+.libs
+.deps
+#.*.swp
+
+# AUTOTOOL FILES
+build/compile
+build/config.guess
+build/config.sub
+build/depcomp
+build/install-sh
+build/ltmain.sh
+build/missing
+libtool
+
+# BINARIES
+src/assetTag
+src/dellBiosUpdate
+src/dellLcdBrightness
+src/dellMediaDirectCtl
+src/dellWirelessCtl
+src/dumpSmbios
+src/getSystemId
+src/propertyTag
+src/serviceTag
+src/verifySmiPassword
+src/wakeupCtl
+src/activateCmosToken
+src/ascii2enUS_scancode
+src/createUnitTestFiles
+src/dellLEDCtl
+src/disable_console_redir
+src/dumpCmos
+src/getPasswordFormat
+src/isCmosTokenActive
+src/probes
+src/smitest
+src/stateByteCtl
+src/upBootCtl
+cppunit/testCInterface
+cppunit/testPlatform
+cppunit/testRbu
+cppunit/testStandalone
+
+# GENERATED FILES
+doc/full-documentation.dox
+doc/interface-only.dox
+include/smbios/version.h
+include/smbios_c/version.h
+libsmbios.spec
+version
+Makefile
+Makefile.in
+aclocal.m4
+config.log
+config.status
+configure
+
+# UNIT TEST
+testResults.xml

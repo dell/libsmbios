@@ -4,19 +4,19 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[2.0.2])
+AC_INIT([libsmbios],[2.1.0])
 
 temp_RELEASE_NAME=libsmbios
 temp_RELEASE_MAJOR=2
-temp_RELEASE_MINOR=0
-temp_RELEASE_SUBLEVEL=2
+temp_RELEASE_MINOR=1
+temp_RELEASE_SUBLEVEL=0
 temp_RELEASE_EXTRALEVEL=
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
 # If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
 # If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
 # If any interfaces have been added since the last public release, then increment age.
-# If any interfaces have been removed since the last public release, then set age to 0. 
+# If any interfaces have been removed since the last public release, then set age to 0.
 LIBTOOL_CURRENT=2
 LIBTOOL_REVISION=0
 LIBTOOL_AGE=0
@@ -27,6 +27,10 @@ AC_CONFIG_AUX_DIR([build])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AM_PATH_CPPUNIT(1.9.6)
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.16.1])
+
+AC_GNU_SOURCE
 
 #AC_CONFIG_SRCDIR([.])
 #AC_CONFIG_HEADER([config.h])
@@ -113,7 +117,7 @@ cat confdefs.h |
     grep -v 'define PACKAGE_VERSION ' |
     grep -v 'define PACKAGE_STRING '  > confdefs.new
 mv confdefs.new confdefs.h
-cat >>confdefs.h <<_ACEOF 
+cat >>confdefs.h <<_ACEOF
 #define VERSION "$VERSION"
 #define PACKAGE_VERSION "$PACKAGE_VERSION"
 #define PACKAGE_STRING "$PACKAGE_STRING"
@@ -133,10 +137,12 @@ echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 
 # generate files and exit
 AC_CONFIG_FILES([
-    Makefile 
-    include/smbios/version.h 
-    doc/full-documentation.dox 
-    doc/interface-only.dox 
-    ${PACKAGE_NAME}.spec:${PACKAGE_NAME}.spec.in:ChangeLog
+    Makefile
+    out/include/smbios/version.h:build/version.h.in
+    out/include/smbios_c/version.h:build/version.h.in
+    out/full-documentation.dox:build/full-documentation.dox.in
+    out/interface-only.dox:build/interface-only.dox.in
+    build/${PACKAGE_NAME}.spec:build/${PACKAGE_NAME}.spec.in
+    po/Makefile.in
     ])
 AC_OUTPUT
