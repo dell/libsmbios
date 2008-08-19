@@ -14,10 +14,12 @@
 # Fedora: fedora dist fc8 fc9
 %if 0%{?fedora_version} || 0%{?fedora}
     %define doxygen_BR doxygen
+    # no cppunit in suse build service for fedora, so disable for now
 %endif
 
 %if 0%{?suse_version}
     %define cppunit_BR cppunit-devel
+    # no doxygen in most suse versions base
 %endif
 
 %if 0%{?sles_version}
@@ -88,6 +90,9 @@ find doc src build -type f -exec chmod -f 644 {} \;
 chmod 755 src/cppunit/*.sh
 
 %build
+# this line lets us build an RPM directly from a git tarball
+[ -e ./configure ] || ./autogen.sh
+
 export CXXFLAGS="%{optflags}"
 export CFLAGS="%{optflags}"
 export RELEASE_MAJOR=%{major}
