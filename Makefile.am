@@ -1,34 +1,13 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-ACLOCAL_AMFLAGS = -I m4
-AUTOMAKE_OPTIONS = subdir-objects
-SUBDIRS = po
-
-# dont move these 5 lines, as this is how we override the autoconf version and package name
-RELEASE_NAME=@RELEASE_NAME@
-RELEASE_MAJOR=@RELEASE_MAJOR@
-RELEASE_MINOR=@RELEASE_MINOR@
-RELEASE_SUBLEVEL=@RELEASE_SUBLEVEL@
-RELEASE_EXTRALEVEL=@RELEASE_EXTRALEVEL@
-
-RELEASE_VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_SUBLEVEL)$(RELEASE_EXTRALEVEL)
-RELEASE_STRING = $(RELEASE_NAME)-$(RELEASE_VERSION)
-VERSION = $(RELEASE_VERSION)
-PACKAGE = $(RELEASE_NAME)
-
 LIBTOOL_CURRENT=@LIBTOOL_CURRENT@
 LIBTOOL_REVISION=@LIBTOOL_REVISION@
 LIBTOOL_AGE=@LIBTOOL_AGE@
 
-CLEANFILES=libsmbios-*.tar.gz libsmbios-*.tar.bz2 libsmbios-*.rpm _buildtemp version smbios-utils*.rpm out
-DISTCLEANFILES=*~
-
-EXTRA_DIST =
 bin_PROGRAMS=
 sbin_PROGRAMS=
 dist_sbin_SCRIPTS=
 dist_bin_SCRIPTS=
-EXTRA_PROGRAMS=
 lib_LTLIBRARIES=
 include_HEADERS=
 
@@ -40,11 +19,16 @@ AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -W
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fexceptions
 AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall 
 
+include Makefile-std
 include src/libsmbios/Makefile.am
 include src/libsmbios_c/Makefile.am
 include src/bin-supported/Makefile.am
 include src/bin-unsupported/Makefile.am
 include src/cppunit/Makefile.am
+
+CLEANFILES+=_buildtemp smbios-utils*.rpm out
+SUBDIRS += po
+ACLOCAL_AMFLAGS = -I m4
 
 $(bin_PROGRAMS): $(lib_LTLIBRARIES)
 $(sbin_PROGRAMS): $(lib_LTLIBRARIES)
@@ -52,22 +36,6 @@ $(EXTRA_PROGRAMS): $(lib_LTLIBRARIES)
 $(check_PROGRAMS): $(lib_LTLIBRARIES)
 static: $(EXTRA_PROGRAMS)
 CLEANFILES += $(EXTRA_PROGRAMS)
-
-rpm: dist
-	BLD_DIR=$$(mktemp -d /tmp/rpmbuild-$$$$-XXXXXX); \
-	mkdir -p $$BLD_DIR/SOURCES $$BLD_DIR/BUILD $$BLD_DIR/RPMS $$BLD_DIR/RPMS/i386 $$BLD_DIR/RPMS/noarch $$BLD_DIR/SRPMS $$BLD_DIR/SPECS ;\
-	rpmbuild --define "_topdir $$BLD_DIR" -ta --nodeps $(RELEASE_STRING).tar.gz  ;\
-	cp $$BLD_DIR/SRPMS/*rpm .       ;\
-	cp $$BLD_DIR/RPMS/*/*rpm .       ;\
-	rm -rf $$BLD_DIR
-
-
-srpm: dist
-	BLD_DIR=$$(mktemp -d /tmp/rpmbuild-$$$$-XXXXXX); \
-	mkdir -p $$BLD_DIR/SOURCES $$BLD_DIR/BUILD $$BLD_DIR/RPMS $$BLD_DIR/RPMS/i386 $$BLD_DIR/RPMS/noarch $$BLD_DIR/SRPMS $$BLD_DIR/SPECS ;\
-	rpmbuild --define "_topdir $$BLD_DIR" -ts --nodeps $(RELEASE_STRING).tar.gz  ;\
-	cp $$BLD_DIR/SRPMS/*rpm .       ;\
-	rm -rf $$BLD_DIR
 
 static:
 	make -C bin-supported static
@@ -108,13 +76,6 @@ out/reports/valgrind_output.txt:
 	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/valgrind_output.txt
 	@echo "</pre>*/" >> out/reports/valgrind_output.txt
 ########## END DOCS ################
-
-dist: ChangeLog AUTHORS
-ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
-
-AUTHORS:
-	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
 EXTRA_DIST += \
  pkg/libsmbios.spec 	\

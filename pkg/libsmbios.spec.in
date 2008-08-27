@@ -86,7 +86,7 @@ This package contains some sample binaries that use libsmbios.
 %prep
 %setup -q
 find . -type d -exec chmod -f 755 {} \;
-find doc src build -type f -exec chmod -f 644 {} \;
+find doc src pkg -type f -exec chmod -f 644 {} \;
 chmod 755 src/cppunit/*.sh
 
 %build
