@@ -117,9 +117,9 @@ AUTHORS:
 	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
 EXTRA_DIST += \
- build/libsmbios.spec 	\
- build/scripts 		\
- build/VC.2005 		\
+ pkg/libsmbios.spec 	\
+ pkg/scripts 		\
+ pkg/VC.2005 		\
  COPYING-GPL		\
  COPYING-OSL		\
  doc

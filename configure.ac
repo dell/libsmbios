@@ -23,7 +23,7 @@ LIBTOOL_AGE=0
 ####################################
 
 AC_PREREQ(2.61)
-AC_CONFIG_AUX_DIR([build])
+AC_CONFIG_AUX_DIR([pkg])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AM_PATH_CPPUNIT(1.9.6)
@@ -138,11 +138,11 @@ echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 # generate files and exit
 AC_CONFIG_FILES([
     Makefile
-    out/include/smbios/version.h:build/version.h.in
-    out/include/smbios_c/version.h:build/version.h.in
-    out/full-documentation.dox:build/full-documentation.dox.in
-    out/interface-only.dox:build/interface-only.dox.in
-    build/${PACKAGE_NAME}.spec:build/${PACKAGE_NAME}.spec.in
+    out/include/smbios/version.h:pkg/version.h.in
+    out/include/smbios_c/version.h:pkg/version.h.in
+    out/full-documentation.dox:pkg/full-documentation.dox.in
+    out/interface-only.dox:pkg/interface-only.dox.in
+    pkg/${PACKAGE_NAME}.spec:pkg/${PACKAGE_NAME}.spec.in
     po/Makefile.in
     ])
 AC_OUTPUT
