@@ -34,12 +34,20 @@ EXTERN_C_BEGIN;
 
 struct memory;
 
+// construct
 struct memory *memory_factory(int flags, ...);
+
+// destruct
+void memory_free(struct memory *);
+
 int  memory_read(struct memory *, u8 *buffer, u64 offset, size_t length);
 int  memory_write(struct memory *, u8 *buffer, u64 offset, size_t length);
-void memory_free(struct memory *);
+
+// format error string
+size_t memory_fmt_err(struct memory *, char *buf, size_t len);
+
+// helper
 s64  memory_search(struct memory *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
-const char * memory_strerr(struct memory *);
 
 // Following calls must be properly nested in equal pairs
 void  memory_suggest_leave_open(struct memory *);
