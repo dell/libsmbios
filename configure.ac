@@ -58,7 +58,6 @@ AC_PROG_INSTALL
 
 # Checks for header files.
 AC_HEADER_STDC
-ACX_HEADER_STDBOOL
 AC_CHECK_HEADERS([libintl.h limits.h stdlib.h string.h sys/file.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
