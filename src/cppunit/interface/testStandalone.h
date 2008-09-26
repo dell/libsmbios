@@ -32,8 +32,6 @@
 
 #include "XmlUtils.h"
 
-#include "outputctl.h"
-
 extern int global_argc;
 extern char ** global_argv;
 

@@ -62,3 +62,36 @@ main (int argc, char **argv)
     // need to use _reverse_ logic here because the shell is backwards!
     return !wasSuccessful;
 }
+
+void copyFile( string dstFile, string srcFile )
+{
+    ifstream src(srcFile.c_str(), ios_base::binary);
+    ofstream dst(dstFile.c_str(), ios_base::out | ios_base::binary | ios_base::trunc);
+
+    char ch;
+    while( src.get(ch)) dst.put(ch);
+
+    if( !src.eof() || !dst ) throw exception();
+}
+
+bool fileExists(string fileName)
+{
+    FILE *fh=0;
+    fh=fopen(fileName.c_str(), "rb");
+    if(!fh)
+        return false;
+
+    fclose(fh);
+    return true;
+}
+
+size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+    size_t written = fwrite(ptr, size, nmemb, stream); 
+    // TODO: handle short write
+    if (written < (size * nmemb))
+        throw std::exception();
+    return written;
+}
+
+

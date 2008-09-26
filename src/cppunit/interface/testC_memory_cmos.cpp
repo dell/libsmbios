@@ -29,6 +29,7 @@
 #include "smbios_c/version.h"
 
 #include "outputctl.h"
+#include "main.h"
 
 using namespace std;
 
@@ -42,37 +43,6 @@ using namespace std;
 
 // Register the test
 CPPUNIT_TEST_SUITE_REGISTRATION (testCInterface);
-
-void copyFile( string dstFile, string srcFile )
-{
-    ifstream src(srcFile.c_str(), ios_base::binary);
-    ofstream dst(dstFile.c_str(), ios_base::out | ios_base::binary | ios_base::trunc);
-
-    char ch;
-    while( src.get(ch)) dst.put(ch);
-
-    if( !src.eof() || !dst ) throw exception();
-}
-
-bool fileExists(string fileName)
-{
-    FILE *fh=0;
-    fh=fopen(fileName.c_str(), "rb");
-    if(!fh)
-        return false;
-
-    fclose(fh);
-    return true;
-}
-
-static size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
-{
-    size_t written = fwrite(ptr, size, nmemb, stream); 
-    // TODO: handle short write
-    if (written < (size * nmemb))
-        throw std::exception();
-    return written;
-}
 
 void testCInterface::setUp()
 {

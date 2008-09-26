@@ -30,6 +30,7 @@
 #include "smbios_c/version.h"
 
 #include "outputctl.h"
+#include "main.h"
 
 using namespace std;
 
@@ -43,28 +44,6 @@ using namespace std;
 
 // Register the test
 CPPUNIT_TEST_SUITE_REGISTRATION (testCsmbios);
-
-void copyFile( string dstFile, string srcFile )
-{
-    ifstream src(srcFile.c_str(), ios_base::binary);
-    ofstream dst(dstFile.c_str(), ios_base::out | ios_base::binary | ios_base::trunc);
-
-    char ch;
-    while( src.get(ch)) dst.put(ch);
-
-    if( !src.eof() || !dst ) throw exception();
-}
-
-bool fileExists(string fileName)
-{
-    FILE *fh=0;
-    fh=fopen(fileName.c_str(), "rb");
-    if(!fh)
-        return false;
-
-    fclose(fh);
-    return true;
-}
 
 void testCsmbios::setUp()
 {
