@@ -15,7 +15,7 @@ sbin_PROGRAMS += \
     out/dellWirelessCtl \
     out/dellMediaDirectCtl
 
-EXTRA_PROGRAMS += \
+noinst_PROGRAMS += \
     out/assetTagS \
     out/getSystemIdS   \
     out/propertyTagS   \

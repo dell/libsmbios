@@ -10,6 +10,7 @@ dist_sbin_SCRIPTS=
 dist_bin_SCRIPTS=
 lib_LTLIBRARIES=
 include_HEADERS=
+noinst_PROGRAMS=
 
 AM_LDFLAGS = -L$(top_builddir)/out/
 
@@ -34,12 +35,8 @@ $(bin_PROGRAMS): $(lib_LTLIBRARIES)
 $(sbin_PROGRAMS): $(lib_LTLIBRARIES)
 $(EXTRA_PROGRAMS): $(lib_LTLIBRARIES)
 $(check_PROGRAMS): $(lib_LTLIBRARIES)
-static: $(EXTRA_PROGRAMS)
+$(noinst_PROGRAMS): $(lib_LTLIBRARIES)
 CLEANFILES += $(EXTRA_PROGRAMS)
-
-static:
-	make -C bin-supported static
-	make -C bin-unsupported static
 
 ########## DOCS ################
 clean-generic:
