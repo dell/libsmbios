@@ -32,10 +32,6 @@ using namespace std;
 
 int global_argc;
 char ** global_argv;
-std::string global_programDirname;
-std::string global_writeDirectory;
-std::string global_testName;
-std::string global_testDirectory;
 int global_DebugLevel = 9;
 
 int
@@ -43,27 +39,6 @@ main (int argc, char **argv)
 {
     global_argc = argc;
     global_argv = argv;
-
-    if( argc < 5 )
-    {
-        cout <<
-            "\nusage:\n"
-            "   <program> <cppunit_directory> <writeable_directory>\n"
-            "   Where both directory names are required arguments.\n"
-            "      cppunit_directory  - location where platform/ directory is located.\n"
-            "      writeable_directory- location of a writeable dir for unit test.\n"
-            "      test_name          - name of test.\n"
-            "      test_dir           - location of unit test data files.\n"
-            "\n"
-        << endl;
-        exit(1);
-    }
-
-    // set up this global var. enough stuff uses it to make it a global...
-    global_programDirname = argv[1];
-    global_writeDirectory = argv[2];
-    global_testName = argv[3];
-    global_testDirectory = argv[4];
 
     std::ofstream outputFile("testResults.xml");
     CppUnit::TextUi::TestRunner runner;

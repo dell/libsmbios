@@ -34,14 +34,14 @@ protected:
     virtual std::string getWritableDirectory()
     {
         //return DEFAULT_TEST_DIR;
-        return global_argv[2];
+        return global_argv[1];
     };
 
 
     virtual std::string getTestName()
     {
         //return TEST_DIR;
-        return global_argv[3];
+        return "testC_memory_cmos";
     }
 
 public:

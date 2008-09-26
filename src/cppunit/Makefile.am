@@ -8,7 +8,7 @@ EXTRA_DIST += \
 	src/cppunit/platform
 
 TESTS = src/cppunit/runtests.sh
-check_PROGRAMS = out/testRbu out/testPlatform out/testStandalone out/testCInterface
+check_PROGRAMS = out/testRbu out/testPlatform out/testStandalone out/testC_memory_cmos
 
 out_testRbu_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lout -lsmbios $(CPPUNIT_LIBS) $(AM_LDFLAGS)
 out_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/libsmbios/common  -I@top_srcdir@/src/cppunit/
@@ -40,11 +40,11 @@ out_testStandalone_SOURCES = \
     src/cppunit/interface/testStandalone.h	\
     src/cppunit/interface/testStandalone.cpp
 
-out_testCInterface_LDFLAGS = -lcppunit -ldl -Lout -lsmbios_c $(CPPUNIT_LIBS) $(AM_LDFLAGS)
-out_testCInterface_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/cppunit/
-out_testCInterface_SOURCES = \
+out_testC_memory_cmos_LDFLAGS = -lcppunit -ldl -Lout -lsmbios_c $(CPPUNIT_LIBS) $(AM_LDFLAGS)
+out_testC_memory_cmos_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/cppunit/
+out_testC_memory_cmos_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
-    src/cppunit/interface/testCInterface.h	\
-    src/cppunit/interface/testCInterface.cpp
+    src/cppunit/interface/testC_memory_cmos.h	\
+    src/cppunit/interface/testC_memory_cmos.cpp
 

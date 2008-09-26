@@ -40,26 +40,21 @@ extern char ** global_argv;
 class testPlatform  : public CppUnit::TestFixture
 {
 protected:
-    virtual std::string getCppunitTopDirectory()
-    {
-        //return TEST_DIR;
-        return global_argv[1];
-    }
     virtual std::string getWritableDirectory()
     {
         //return DEFAULT_TEST_DIR;
-        return global_argv[2];
+        return global_argv[1];
     };
 
     virtual std::string getTestName()
     {
         //return TEST_DIR;
-        return global_argv[3];
+        return global_argv[2];
     }
     virtual std::string getTestDirectory()
     {
         //return DEFAULT_TEST_DIR;
-        return global_argv[4];
+        return global_argv[3];
     };
 
     std::string getTestInputString( std::string toFind, std::string section="systemInfo" );

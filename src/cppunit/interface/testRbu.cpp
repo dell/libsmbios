@@ -68,23 +68,17 @@ bool fileExists(string fileName)
 
 void testRbu::setUp()
 {
-    string testInput = getCppunitTopDirectory() + getTestDirectory() + "/testInput.xml";
-    if(!fileExists(testInput))
-        testInput = getTestDirectory() + "/testInput.xml"; 
+    string testInput = getTestDirectory() + "/testInput.xml"; 
 
     // copy the memdump.dat file. We do not write to it, but rw open will fail
     // if we do not copy it
-    string memdumpOrigFile = getCppunitTopDirectory() + getTestDirectory() + "/memdump.dat";
-    if(!fileExists(memdumpOrigFile))
-        memdumpOrigFile = getTestDirectory() + "/memdump.dat";
+    string memdumpOrigFile = getTestDirectory() + "/memdump.dat";
     string memdumpCopyFile = getWritableDirectory() + "/memdump-copy.dat";
     copyFile( memdumpCopyFile, memdumpOrigFile );
 
     // copy the CMOS file. We are going to write to it and do not wan to mess up
     // the pristine unit test version
-    string cmosOrigFile = getCppunitTopDirectory() + getTestDirectory() + "/cmos.dat";
-    if(!fileExists(cmosOrigFile))
-        cmosOrigFile = getTestDirectory() + "/cmos.dat";
+    string cmosOrigFile = getTestDirectory() + "/cmos.dat";
     string cmosCopyFile = getWritableDirectory() + "/cmos-copy.dat";
     copyFile( cmosCopyFile, cmosOrigFile );
 
@@ -187,9 +181,7 @@ void testRbu::testRbuBadData()
 
     ASSERT_THROWS( rbu::RbuFactory::getFactory()->makeNew("nonexistent_file"), rbu::HdrFileIOError );
 
-    string bad_hdr_filename = getCppunitTopDirectory() + getTestDirectory() + "/bad_hdr.hdr";
-    if(!fileExists(bad_hdr_filename))
-        bad_hdr_filename = getTestDirectory() + "/bad_hdr.hdr";
+    string bad_hdr_filename = getTestDirectory() + "/bad_hdr.hdr";
 
     ASSERT_THROWS( rbu::RbuFactory::getFactory()->makeNew(bad_hdr_filename), rbu::InvalidHdrFile );
 
@@ -198,9 +190,7 @@ void testRbu::testRbuBadData()
 
 auto_ptr<rbu::IRbuHdr> testRbu::checkHdrInfo(string name)
 {
-    string hdr_a_name = getCppunitTopDirectory() + getTestDirectory() + "/" + getTestInputString("filename", name);
-    if(!fileExists(hdr_a_name))
-        hdr_a_name = getTestDirectory() + "/" + getTestInputString("filename", name);
+    string hdr_a_name = getTestDirectory() + "/" + getTestInputString("filename", name);
 
     auto_ptr<rbu::IRbuHdr> hdrA (rbu::RbuFactory::getFactory()->makeNew(hdr_a_name));
     string expectedBiosVer = getTestInputString("biosver", name);

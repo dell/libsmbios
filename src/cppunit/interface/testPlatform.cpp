@@ -71,26 +71,19 @@ bool fileExists(string fileName)
 
 void testPlatform::setUp()
 {
-    string programDirname = getCppunitTopDirectory();
     string writeDirectory = getWritableDirectory();
 
-    string testInput = programDirname + getTestDirectory() + "/testInput.xml";
-    if(!fileExists(testInput))
-        testInput = getTestDirectory() + "/testInput.xml"; 
+    string testInput = getTestDirectory() + "/testInput.xml"; 
 
     // copy the memdump.dat file. We do not write to it, but rw open will fail
     // if we do not copy it
-    string memdumpOrigFile = programDirname + getTestDirectory() + "/memdump.dat";
-    if(!fileExists(memdumpOrigFile))
-        memdumpOrigFile = getTestDirectory() + "/memdump.dat";
+    string memdumpOrigFile = getTestDirectory() + "/memdump.dat";
     string memdumpCopyFile = writeDirectory + "/memdump-copy.dat";
     copyFile( memdumpCopyFile, memdumpOrigFile );
 
     // copy the CMOS file. We are going to write to it and do not wan to mess up
     // the pristine unit test version
-    string cmosOrigFile = programDirname + getTestDirectory() + "/cmos.dat";
-    if(!fileExists(cmosOrigFile))
-        cmosOrigFile = getTestDirectory() + "/cmos.dat";
+    string cmosOrigFile = getTestDirectory() + "/cmos.dat";
     string cmosCopyFile = writeDirectory + "/cmos-copy.dat";
     copyFile( cmosCopyFile, cmosOrigFile );
 

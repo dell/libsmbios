@@ -23,7 +23,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "testCInterface.h"
+#include "testC_memory_cmos.h"
 #include "smbios_c/memory.h"
 #include "smbios_c/cmos.h"
 #include "smbios_c/version.h"
@@ -78,7 +78,6 @@ void testCInterface::setUp()
 {
     string writeDirectory = getWritableDirectory();
     string testFile = writeDirectory + "/testmem.dat";
-    string testFile2 = writeDirectory + "/testmem2.dat";
 
     FILE *fd = fopen(testFile.c_str(), "w+");
     for (int i=0; i<26; i++)
