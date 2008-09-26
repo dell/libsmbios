@@ -19,6 +19,8 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include <stdbool.h>
+
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"
@@ -38,6 +40,11 @@ int  memory_write(struct memory *, u8 *buffer, u64 offset, size_t length);
 void memory_free(struct memory *);
 s64  memory_search(struct memory *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 const char * memory_strerr(struct memory *);
+
+// Following calls must be properly nested in equal pairs
+bool  memory_should_close(struct memory *);
+void  memory_suggest_leave_open(struct memory *);
+void  memory_suggest_close(struct memory *);
 
 EXTERN_C_END;
 

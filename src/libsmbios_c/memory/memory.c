@@ -54,7 +54,7 @@ struct memory *memory_factory(int flags, ...)
 
     if (flags==MEMORY_DEFAULTS)
         flags = MEMORY_GET_SINGLETON;
-            
+
     if (flags & MEMORY_GET_SINGLETON)
         toReturn = &singleton;
     else
@@ -68,13 +68,28 @@ struct memory *memory_factory(int flags, ...)
         va_start(ap, flags);
         init_mem_struct_filename(toReturn, va_arg(ap, const char *));
         va_end(ap);
-    } else 
+    } else
     {
         init_mem_struct(toReturn);
     }
 
 out:
     return toReturn;
+}
+
+void  memory_suggest_leave_open(struct memory *this)
+{
+    this->close--;
+}
+
+void  memory_suggest_close(struct memory *this)
+{
+    this->close++;
+}
+
+bool  memory_should_close(struct memory *this)
+{
+    return this->close > 0;
 }
 
 int  memory_read(struct memory *m, u8 *buffer, u64 offset, size_t length)
@@ -99,14 +114,14 @@ s64  memory_search(struct memory *m, const char *pat, size_t patlen, u64 start, 
 {
     u8 *buf = calloc(1, patlen);
     u64 cur = start;
-    m->close = m->close - 1;
+    memory_suggest_leave_open(m);
 
     memset(buf, 0, patlen);
 
     while ( (cur + patlen) < end)
     {
         memory_read(m, buf, cur, patlen);
-        
+
         if (memcmp (buf, pat, patlen) == 0)
             goto out;
 
@@ -118,7 +133,7 @@ s64  memory_search(struct memory *m, const char *pat, size_t patlen, u64 start, 
         cur = -1;
 
 out:
-    m->close = m->close + 1;
+    memory_suggest_close(m);
     free(buf);
     return cur;
 }
@@ -170,7 +185,7 @@ err_out:
 
 out:
     // close on error, or if close hint
-    if (private_data->fd && ((this->close>0) || retval))
+    if (private_data->fd && (memory_should_close(this) || retval))
     {
         fflush(private_data->fd);
         fclose(private_data->fd);
@@ -214,7 +229,7 @@ err_out:
 
 out:
     // close on error, or if close hint
-    if (private_data->fd && ((this->close>0) || retval))
+    if (private_data->fd && (memory_should_close(this) || retval))
     {
         fflush(private_data->fd);
         fclose(private_data->fd);

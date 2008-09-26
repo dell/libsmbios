@@ -134,7 +134,7 @@ err_out:
 
 out:
     // close on error, or if close hint
-    if (private_data->fd && (this->close || retval))
+    if (private_data->fd && (memory_should_close(this) || retval))
     {
         if (private_data->lastMapping)
             munmap(private_data->lastMapping, private_data->mappingSize);
@@ -215,7 +215,7 @@ __internal void MEM_INIT_FUNCTION(struct memory *m, const char *fn)
     m->read_fn = linux_read_fn;
     m->write_fn = linux_write_fn;
     m->cleanup = linux_cleanup;
-    m->close = 0;
+    m->close = 1;
     m->initialized = 1;
 }
 
