@@ -47,10 +47,10 @@ all: out/full/html/index.html out/interface/html/index.html
 endif
 
 doxygen: out/full/html/index.html out/interface/html/index.html
-out/full/html/index.html: out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find doc -name \*.txt)
+out/full/html/index.html: out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find $(top_srcdir)/doc -name \*.txt)
 	cd out/; doxygen full-documentation.dox > doxygen-full.log
 
-out/interface/html/index.html: out/interface-only.dox out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find doc -name \*.txt)
+out/interface/html/index.html: out/interface-only.dox out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find $(top_srcdir)/doc -name \*.txt)
 	cd out/; doxygen interface-only.dox > doxygen-int.log
 
 out/reports/code-coverage.txt:
