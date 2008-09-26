@@ -42,9 +42,11 @@ s64  memory_search(struct memory *, const char *pat, size_t patlen, u64 start, u
 const char * memory_strerr(struct memory *);
 
 // Following calls must be properly nested in equal pairs
-bool  memory_should_close(struct memory *);
 void  memory_suggest_leave_open(struct memory *);
 void  memory_suggest_close(struct memory *);
+
+// ask if close flag is set
+bool  memory_should_close(struct memory *);
 
 EXTERN_C_END;
 
