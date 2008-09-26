@@ -11,4 +11,7 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/cmos/cmos.c				\
     src/libsmbios_c/memory/memory_impl.h		\
     src/libsmbios_c/memory/memory_linux.c		\
-    src/libsmbios_c/memory/memory.c
+    src/libsmbios_c/memory/memory.c			\
+    src/libsmbios_c/smbios/smbios_impl.h		\
+    src/libsmbios_c/smbios/smbios_linux.c		\
+    src/libsmbios_c/smbios/smbios.c
