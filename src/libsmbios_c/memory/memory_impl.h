@@ -26,8 +26,8 @@ EXTERN_C_BEGIN;
 struct memory
 {
     int initialized;
-    int (*read_fn)(struct memory *this, u8 *buffer, u64 offset, size_t length);
-    int (*write_fn)(struct memory *this, u8 *buffer, u64 offset, size_t length);
+    int (*read_fn)(const struct memory *this, u8 *buffer, u64 offset, size_t length);
+    int (*write_fn)(const struct memory *this, u8 *buffer, u64 offset, size_t length);
     void (*free)(struct memory *this);
     void (*cleanup)(struct memory *this); // called instead of ->free for singleton
     void *private_data;

@@ -60,7 +60,10 @@ struct ut_data
     u64 mappingSize;
 };
 
-static int copy_mmap(struct memory *this, u8 *buffer, u64 offset, size_t length, int fromMem)
+#define READ_MMAP 1
+#define WRITE_MMAP 0
+
+static int copy_mmap(const struct memory *this, u8 *buffer, u64 offset, size_t length, int fromMem)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -148,14 +151,14 @@ out:
     return retval;
 }
 
-static int linux_read_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int linux_read_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
-    return copy_mmap(this, buffer, offset, length, 1);
+    return copy_mmap(this, buffer, offset, length, READ_MMAP);
 }
 
-static int linux_write_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int linux_write_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
-    return copy_mmap(this, buffer, offset, length, 0);
+    return copy_mmap(this, buffer, offset, length, WRITE_MMAP);
 }
 
 static void linux_free(struct memory *this)

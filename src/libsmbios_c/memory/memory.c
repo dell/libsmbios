@@ -87,19 +87,19 @@ void  memory_suggest_close(struct memory *this)
     this->close++;
 }
 
-bool  memory_should_close(struct memory *this)
+bool  memory_should_close(const struct memory *this)
 {
     return this->close > 0;
 }
 
-int  memory_read(struct memory *m, u8 *buffer, u64 offset, size_t length)
+int  memory_read(const struct memory *m, void *buffer, u64 offset, size_t length)
 {
-    return m->read_fn(m, buffer, offset, length);
+    return m->read_fn(m, (u8 *)buffer, offset, length);
 }
 
-int  memory_write(struct memory *m, u8 *buffer, u64 offset, size_t length)
+int  memory_write(const struct memory *m, void *buffer, u64 offset, size_t length)
 {
-    return m->write_fn(m, buffer, offset, length);
+    return m->write_fn(m, (u8 *)buffer, offset, length);
 }
 
 void memory_free(struct memory *m)
@@ -110,11 +110,11 @@ void memory_free(struct memory *m)
         m->cleanup(m);
 }
 
-s64  memory_search(struct memory *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
+s64  memory_search(const struct memory *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
 {
     u8 *buf = calloc(1, patlen);
     u64 cur = start;
-    memory_suggest_leave_open(m);
+    memory_suggest_leave_open((struct memory *)m);
 
     memset(buf, 0, patlen);
 
@@ -133,7 +133,7 @@ s64  memory_search(struct memory *m, const char *pat, size_t patlen, u64 start, 
         cur = -1;
 
 out:
-    memory_suggest_close(m);
+    memory_suggest_close((struct memory *)m);
     free(buf);
     return cur;
 }
@@ -149,7 +149,7 @@ struct ut_data
     int rw;
 };
 
-static int UT_read_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int UT_read_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -194,7 +194,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int UT_write_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
