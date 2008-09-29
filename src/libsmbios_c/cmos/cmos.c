@@ -73,12 +73,12 @@ out:
     return toReturn;
 }
 
-int  cmos_read_byte(struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+int  cmos_read_byte(const struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
 {
     return m->read_fn(m, indexPort, dataPort, offset, byte);
 }
 
-int  cmos_write_byte(struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+int  cmos_write_byte(const struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
 {
     return m->write_fn(m, indexPort, dataPort, offset, byte);
 }
@@ -102,7 +102,7 @@ struct ut_data
     int rw;
 };
 
-static int UT_read_fn(struct cmos *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+static int UT_read_fn(const struct cmos *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;
@@ -149,7 +149,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(struct cmos *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+static int UT_write_fn(const struct cmos *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;

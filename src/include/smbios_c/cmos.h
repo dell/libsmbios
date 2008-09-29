@@ -33,10 +33,11 @@ EXTERN_C_BEGIN;
 struct cmos;
 
 struct cmos *cmos_factory(int flags, ...);
-int     cmos_read_byte(struct cmos *, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
-int    cmos_write_byte(struct cmos *, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
 void   cmos_free(struct cmos *);
-const char * cmos_strerr(struct cmos *);
+
+int     cmos_read_byte(const struct cmos *, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
+int    cmos_write_byte(const struct cmos *, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
+size_t cmos_fmt_err(const struct cmos *, char *buf, size_t len);
 
 // useful for checksums, etc
 typedef void (*cmos_write_callback)(struct cmos *, void *);

@@ -26,8 +26,8 @@ EXTERN_C_BEGIN;
 struct cmos
 {
     int initialized;
-    int (*read_fn)(struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
-    int (*write_fn)(struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
+    int (*read_fn)(const struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
+    int (*write_fn)(const struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
     void (*free)(struct cmos *this);
     void (*cleanup)(struct cmos *this); // called instead of ->free for singleton
     void *private_data;
