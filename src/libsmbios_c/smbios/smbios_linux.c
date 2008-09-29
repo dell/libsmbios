@@ -28,15 +28,6 @@
 #include <errno.h>
 #include <sys/mman.h>   // mmap
 
-
 #include "smbios_c/memory.h"
 #include "smbios_c/types.h"
 #include "smbios_impl.h"
-
-#if defined(DEBUG_MEMORY_C)
-#   define dprintf(format, args...) do { fprintf(stdout , format , ## args);  } while(0)
-#else
-#   define dprintf(format, args...) do {} while(0)
-#endif
-
-

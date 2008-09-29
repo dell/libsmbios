@@ -19,17 +19,42 @@
 #define SMBIOS_IMPL_H
 
 #include "smbios_c/compat.h"
+#include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
 
 EXTERN_C_BEGIN;
 
+#define __internal __attribute__((visibility("internal")))
+#define __hidden __attribute__((visibility("hidden")))
+
+#if defined(DEBUG_SMBIOS_C)
+#   define dprintf(format, args...) do { fprintf(stdout , format , ## args);  } while(0)
+#else
+#   define dprintf(format, args...) do {} while(0)
+#endif
+
+#define E_BLOCK_START 0xE0000UL
+#define F_BLOCK_START 0xF0000UL
+#define F_BLOCK_END   0xFFFFFUL
+
 struct smbios_table
 {
     int initialized;
-    void (*free)(struct smbios_table *this);
-    void (*cleanup)(struct smbios_table *this); // called instead of ->free for singleton
-    void *private_data;
+    struct smbios_table_entry_point tep;
+    struct table *table;
 };
+
+int __internal smbios_get_table_memory(struct smbios_table *m);
+
+#if 0
+int __internal smbios_get_table_efi(struct smbios_table *m);
+int __internal smbios_get_table_wmi(struct smbios_table *m);
+int __internal smbios_get_table_firm_tables(struct smbios_table *m);
+#else
+#define smbios_get_table_efi(m)         (-1)
+#define smbios_get_table_wmi(m)         (-1)
+#define smbios_get_table_firm_tables(m) (-1)
+#endif
 
 EXTERN_C_END;
 

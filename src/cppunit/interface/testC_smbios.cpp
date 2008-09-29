@@ -73,17 +73,8 @@ void testCsmbios::testSmbiosConstruct()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
 
-    u8 buf;
-    struct memory *m = 0;
-    int ret;
-    for (int i=0; i<26; ++i){
-        m = memory_factory(MEMORY_GET_SINGLETON);
-        buf = '9';
-        ret = memory_read(m, &buf, i, 1);
-        CPPUNIT_ASSERT_EQUAL( 0, ret );
-        CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
-        memory_free(m);
-    }
+    struct smbios_table *m = smbios_factory(SMBIOS_GET_SINGLETON);
+    smbios_free(m);
 
     STD_TEST_END("");
 }

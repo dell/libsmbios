@@ -23,6 +23,9 @@
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"
 
+// abi_prefix should be last header included before declarations
+#include "smbios/config/abi_prefix.hpp"
+
 EXTERN_C_BEGIN;
 
 #define SMBIOS_DEFAULTS       0x0000
@@ -40,12 +43,12 @@ struct smbios_table *smbios_factory(int flags, ...);
 void smbios_free(struct smbios_table *);
 
 // format error string
-size_t memory_fmt_err(struct memory *, char *buf, size_t len);
+size_t smbios_fmt_err(struct memory *, char *buf, size_t len);
 
 // for looping/searching
-struct smbios_struct *smbios_get_next_struct(struct smbios_struct *cur);
-struct smbios_struct *smbios_get_next_struct_bytype(struct smbios_struct *cur, u8 type);
-struct smbios_struct *smbios_get_next_struct_byhandle(struct smbios_struct *cur, u16 handle);
+const struct smbios_struct *smbios_get_next_struct(const struct smbios_struct *cur);
+const struct smbios_struct *smbios_get_next_struct_bytype(const struct smbios_struct *cur, u8 type);
+const struct smbios_struct *smbios_get_next_struct_byhandle(const struct smbios_struct *cur, u16 handle);
 
 // visitor pattern
 typedef void (smbios_walk_fn)(struct smbios_struct *);
@@ -57,6 +60,53 @@ u16 smbios_struct_get_handle(struct smbios_struct *);
 int smbios_struct_get_data(struct smbios_struct *s, void *dest, u8 offset, size_t len);
 const char *smbios_get_string(struct smbios_struct *s, u8 offset);
 
+
+#if defined(_MSC_VER)
+#pragma pack(push,1)
+#endif
+struct smbios_structure_header
+{
+    u8 type;
+    u8 length;
+    u16 handle;
+}
+LIBSMBIOS_PACKED_ATTR;
+
+struct dmi_table_entry_point
+{
+    u8 anchor[5];
+    u8 checksum;
+    u16 table_length;
+    u32 table_address;
+    u16 table_num_structs;
+    u8 smbios_bcd_revision;
+}
+LIBSMBIOS_PACKED_ATTR;
+
+struct smbios_table_entry_point
+{
+    u8 anchor[4];
+    u8 checksum;
+    u8 eps_length;
+    u8 major_ver;
+    u8 minor_ver;
+    u16 max_struct_size;
+    u8 revision;
+    u8 formatted_area[5];
+    struct dmi_table_entry_point dmi;
+    u8 padding_for_Intel_BIOS_bugs;
+} LIBSMBIOS_PACKED_ATTR;
+
+#if defined(_MSC_VER)
+#pragma pack(pop)
+#endif
+
+
+
+
 EXTERN_C_END;
+
+// always should be last thing in header file
+#include "smbios/config/abi_suffix.hpp"
 
 #endif  /* SMBIOS_H */

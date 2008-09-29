@@ -19,6 +19,9 @@ $TST/testRbu  $TMPDIR  $DIR/platform/rbu
 echo -e "\n\nRunning Standalone tests."
 $TST/testStandalone $TMPDIR $DIR/platform/opti
 
+echo -e "\n\nRunning Standalone tests."
+$TST/testC_smbios $TMPDIR $DIR/platform/opti
+
 for i in $DIR/platform/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i/autotest_flag ] || continue
     echo -e "\n\nRunning test for $i"
