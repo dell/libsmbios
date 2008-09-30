@@ -111,7 +111,6 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a src/include/*  %{buildroot}/usr/include/
 cp out/include/smbios/version.h %{buildroot}/usr/include/smbios/
-cp out/include/smbios_c/version.h %{buildroot}/usr/include/smbios_c/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
 find out/full -exec touch -r configure.ac {} \;
