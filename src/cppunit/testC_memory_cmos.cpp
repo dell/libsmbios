@@ -173,7 +173,7 @@ void testCInterface::testCmosRead()
     STD_TEST_START(getTestName().c_str() << "  ");
 
     u8 buf;
-    struct cmos *c = 0;
+    struct cmos_obj *c = 0;
     int ret;
     for (int i=0; i<26; ++i){
         c = cmos_factory(CMOS_GET_SINGLETON);
@@ -181,7 +181,7 @@ void testCInterface::testCmosRead()
         ret = cmos_read_byte(c, 0, 0, i, &buf);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
-        cmos_free(c);
+        cmos_obj_free(c);
     }
 
     STD_TEST_END("");
@@ -191,7 +191,7 @@ void testCInterface::testCmosRead()
 void testCInterface::testCmosWrite()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct cmos *c = cmos_factory(CMOS_GET_SINGLETON);
+    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
     u8 buf;
     int ret;
 
@@ -222,7 +222,7 @@ void testCInterface::testCmosWrite()
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('0') );
     }
 
-    cmos_free(c);
+    cmos_obj_free(c);
 
     STD_TEST_END("");
 }

@@ -38,15 +38,15 @@
 #define __hidden __attribute__((visibility("hidden")))
 #define __internal __attribute__((visibility("internal")))
 
-void __internal init_cmos_struct(struct cmos *m);
-void __internal init_cmos_struct_filename(struct cmos *m, const char *fn);
+void __internal init_cmos_struct(struct cmos_obj *m);
+void __internal init_cmos_struct_filename(struct cmos_obj *m, const char *fn);
 
-struct cmos singleton; // auto-init to 0
+struct cmos_obj singleton; // auto-init to 0
 
-struct cmos *cmos_factory(int flags, ...)
+struct cmos_obj *cmos_factory(int flags, ...)
 {
     va_list ap;
-    struct cmos *toReturn = 0;
+    struct cmos_obj *toReturn = 0;
 
     if (flags==CMOS_DEFAULTS)
         flags = CMOS_GET_SINGLETON;
@@ -54,7 +54,7 @@ struct cmos *cmos_factory(int flags, ...)
     if (flags & CMOS_GET_SINGLETON)
         toReturn = &singleton;
     else
-        toReturn = (struct cmos *)calloc(1, sizeof(struct cmos));
+        toReturn = (struct cmos_obj *)calloc(1, sizeof(struct cmos_obj));
 
     if (toReturn->initialized)
         goto out;
@@ -73,17 +73,17 @@ out:
     return toReturn;
 }
 
-int  cmos_read_byte(const struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+int  cmos_read_byte(const struct cmos_obj *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
 {
     return m->read_fn(m, indexPort, dataPort, offset, byte);
 }
 
-int  cmos_write_byte(const struct cmos *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+int  cmos_write_byte(const struct cmos_obj *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
 {
     return m->write_fn(m, indexPort, dataPort, offset, byte);
 }
 
-void cmos_free(struct cmos *m)
+void cmos_obj_free(struct cmos_obj *m)
 {
     if (m != &singleton)
         m->free(m);
@@ -102,7 +102,7 @@ struct ut_data
     int rw;
 };
 
-static int UT_read_fn(const struct cmos *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+static int UT_read_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;
@@ -149,7 +149,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(const struct cmos *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+static int UT_write_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;
@@ -195,7 +195,7 @@ out:
     return retval;
 }
 
-static void UT_free(struct cmos *this)
+static void UT_free(struct cmos_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->filename)
@@ -211,7 +211,7 @@ static void UT_free(struct cmos *this)
     this->private_data = 0;
 }
 
-static void UT_cleanup(struct cmos *this)
+static void UT_cleanup(struct cmos_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->fd)
@@ -224,7 +224,7 @@ static void UT_cleanup(struct cmos *this)
 }
 
 
-void init_cmos_struct_filename(struct cmos *m, const char *fn)
+void init_cmos_struct_filename(struct cmos_obj *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);
@@ -240,6 +240,6 @@ void init_cmos_struct_filename(struct cmos *m, const char *fn)
 }
 
 
-void init_cmos_struct(struct cmos *m)
+void init_cmos_struct(struct cmos_obj *m)
 {
 }

@@ -30,17 +30,17 @@ EXTERN_C_BEGIN;
 #define CMOS_GET_NEW        0x0002
 #define CMOS_UNIT_TEST_MODE 0x0004
 
-struct cmos;
+struct cmos_obj;
 
-struct cmos *cmos_factory(int flags, ...);
-void   cmos_free(struct cmos *);
+struct cmos_obj *cmos_factory(int flags, ...);
+void   cmos_obj_free(struct cmos_obj *);
 
-int     cmos_read_byte(const struct cmos *, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
-int    cmos_write_byte(const struct cmos *, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
-size_t cmos_fmt_err(const struct cmos *, char *buf, size_t len);
+int     cmos_read_byte(const struct cmos_obj *, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
+int    cmos_write_byte(const struct cmos_obj *, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
+size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
 
 // useful for checksums, etc
-typedef void (*cmos_write_callback)(struct cmos *, void *);
+typedef void (*cmos_write_callback)(struct cmos_obj *, void *);
 void register_write_callback(cmos_write_callback, void *);
 
 EXTERN_C_END;
