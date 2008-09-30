@@ -177,9 +177,8 @@ static void linux_free(struct memory_obj *this)
     }
 
     if (private_data->fd)
-    {
         fclose(private_data->fd);
-    }
+
     free(private_data);
     this->private_data = 0;
     this->initialized=0;
