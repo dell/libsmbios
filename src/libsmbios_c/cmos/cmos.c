@@ -84,3 +84,35 @@ void cmos_obj_free(struct cmos_obj *m)
     else
         m->cleanup(m);
 }
+
+void register_write_callback(struct cmos_obj *m, cmos_write_callback cb_fn, void *userdata)
+{
+    struct callback *ptr = &(m->cb_list_head);
+    struct callback *new = 0;
+
+    while(ptr->next)
+    {
+        // dont add duplicates
+        if (ptr->cb_fn == cb_fn && ptr->userdata == userdata)
+            goto out;
+
+        ptr = ptr->next;
+    }
+
+    new = calloc(1, sizeof(struct callback));
+    new->cb_fn = cb_fn;
+    new->userdata = userdata;
+    new->next = 0;
+    ptr->next = new;
+
+out:
+    return;
+}
+
+void __internal _init_cmos_std_stuff(struct cmos_obj *m)
+{
+    m->initialized = 1;
+    m->cb_list_head.cb_fn = 0;
+    m->cb_list_head.userdata = 0;
+    m->cb_list_head.next = 0;
+}

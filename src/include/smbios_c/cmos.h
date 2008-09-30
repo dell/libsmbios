@@ -41,7 +41,7 @@ size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
 
 // useful for checksums, etc
 typedef void (*cmos_write_callback)(struct cmos_obj *, void *);
-void register_write_callback(cmos_write_callback, void *);
+void register_write_callback(struct cmos_obj *, cmos_write_callback, void *);
 
 EXTERN_C_END;
 

@@ -177,5 +177,6 @@ void init_cmos_struct_filename(struct cmos_obj *m, const char *fn)
     m->read_fn = UT_read_fn;
     m->write_fn = UT_write_fn;
     m->cleanup = UT_cleanup;
-    m->initialized = 1;
+
+    _init_cmos_std_stuff(m);
 }

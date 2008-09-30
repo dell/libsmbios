@@ -65,5 +65,6 @@ void __internal init_cmos_struct(struct cmos_obj *m)
     m->write_fn = linux_write_fn;
     m->free = linux_free;
     m->cleanup = linux_cleanup;
-    m->initialized = 1;
+
+    _init_cmos_std_stuff(m);
 }
