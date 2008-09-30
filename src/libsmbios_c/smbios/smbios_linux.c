@@ -21,13 +21,9 @@
 // Include compat.h first, then system headers, then public, then private
 #include "smbios_c/compat.h"
 
-#include <stdarg.h>     // va_list
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>     // memcpy
-#include <errno.h>
-#include <sys/mman.h>   // mmap
+// system
 
+// footer
 #include "smbios_c/memory.h"
 #include "smbios_c/types.h"
 #include "smbios_impl.h"

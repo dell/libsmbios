@@ -22,11 +22,8 @@
 #include "smbios_c/compat.h"
 
 // system
-#include <stdarg.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
-#include <errno.h>
 
 // public
 #include "smbios_c/memory.h"
