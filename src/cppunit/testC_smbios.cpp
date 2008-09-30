@@ -27,6 +27,7 @@
 #include "smbios_c/smbios.h"
 #include "smbios_c/memory.h"
 #include "smbios_c/cmos.h"
+#include "smbios_c/system_info.h"
 #include "smbios_c/version.h"
 
 #include "outputctl.h"
@@ -145,8 +146,7 @@ void testCsmbios::testSmbiosConstruct()
     struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
 
     u32 structure_count = 0;
-    const struct smbios_struct *s = smbios_get_next_struct(table, 0);
-    do {
+    smbios_for_each_struct(table, s) {
         u32 data=0;
         smbios_struct_get_data(s, &data, 0, sizeof(u8));
         CPPUNIT_ASSERT_EQUAL( (u32)smbios_struct_get_type(s), data );
@@ -159,9 +159,8 @@ void testCsmbios::testSmbiosConstruct()
         smbios_struct_get_data(s, &data, 2, sizeof(u16));
         CPPUNIT_ASSERT_EQUAL( (u32)smbios_struct_get_handle(s), data );
 
-        s = smbios_get_next_struct(table, s);
         structure_count ++;
-    }while(s);
+    }
 
     smbios_free(table);
 
@@ -225,3 +224,20 @@ void testCsmbios::testVariousAccessors()
 
     STD_TEST_END("");
 }
+
+
+void
+testCsmbios::testIdByte()
+{
+    STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
+
+    int   systemId   = smbios_get_dell_system_id  ();
+
+    string idStr = getTestInputString("idByte");
+    int id  = strtol( idStr.c_str(), 0, 0);
+
+    CPPUNIT_ASSERT_EQUAL ( id, systemId );
+
+    STD_TEST_END("");
+}
+

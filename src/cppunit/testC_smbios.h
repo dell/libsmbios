@@ -73,13 +73,14 @@ public:
     // base smbios test
     void testSmbiosConstruct();
     void testVariousAccessors();
-
+    void testIdByte();
 
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testCsmbios);
 
     CPPUNIT_TEST (testSmbiosConstruct);
     CPPUNIT_TEST (testVariousAccessors);
+    CPPUNIT_TEST (testIdByte);
 
     CPPUNIT_TEST_SUITE_END ();
 };
