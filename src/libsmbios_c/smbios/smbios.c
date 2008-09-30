@@ -47,6 +47,8 @@ struct smbios_table *smbios_factory(int flags, ...)
 {
     struct smbios_table *toReturn = 0;
 
+    dprintf("DEBUG: smbios_factory()\n");
+
     if (flags==SMBIOS_DEFAULTS)
         flags = SMBIOS_GET_SINGLETON;
 
@@ -74,58 +76,174 @@ void smbios_free(struct smbios_table *m)
 }
 
 
-const struct smbios_struct *smbios_get_next_struct(const struct smbios_struct *cur)
+const struct smbios_struct *smbios_get_next_struct(const struct smbios_table *table, const struct smbios_struct *cur)
 {
-#if 0
-        const smbios_structure_header *currStruct = (const smbios_structure_header *)(current);
-        const u8 *data = 0;
+    const u8 *data = 0;
 
-        //If we are called on an uninitialized smbiosBuffer, return 0;
-        if (0 == smbiosBuffer || (currStruct && 0x7f == currStruct->type))
-            goto out1;
+    //If we are called on an uninitialized smbiosBuffer, return 0;
+    if (0 == table->table || (cur && 0x7f == cur->type))
+        goto out1;
 
-        data = smbiosBuffer;
+    data = (u8*)table->table;
 
-        // currStruct == 0, that means we return the first struct
-        if (0 == currStruct)
-            goto out1;
+    // cur == 0, that means we return the first struct
+    if (0 == cur)
+        goto out1;
 
-        // start out at the end of the currStruct structure.
-        // The only things that sits between us and the next struct
-        // are the strings for the currStruct structure.
-        data = reinterpret_cast<const u8 *>(currStruct) + currStruct->length;
+    // start out at the end of the cur structure.
+    // The only things that sits between us and the next struct
+    // are the strings for the cur structure.
+    data = (const u8 *)(cur) + smbios_struct_get_length(cur);
 
-        // skip past strings at the end of the formatted structure,
-        // go until we hit double NULL "\0"
-        // add a check to make sure we don't walk off the buffer end
-        // for broken BIOSen.
-        // The (3) is to take into account the deref at the end "data[0] ||
-        // data[1]", and to take into account the "data += 2" on the next line.
-        while (((data - smbiosBuffer) < (table_header.dmi.table_length - 3)) && (*data || data[1]))
-            data++;
+    // skip past strings at the end of the formatted structure,
+    // go until we hit double NULL "\0"
+    // add a check to make sure we don't walk off the buffer end
+    // for broken BIOSen.
+    // The (3) is to take into account the deref at the end "data[0] ||
+    // data[1]", and to take into account the "data += 2" on the next line.
+    while (((data - (u8*)table->table) < (table->tep.dmi.table_length - 3)) && (*data || data[1]))
+        data++;
 
-        // ok, skip past the actual double null.
-        data += 2;
+    // ok, skip past the actual double null.
+    data += 2;
 
-        // add code specifically to work around crap bios implementations
-        // that do not have the _required_ 0x7f end-of-table entry
-        //   note: (4) == sizeof a std header.
-        if ( (data - smbiosBuffer) > (table_header.dmi.table_length - 4))
-        {
-            // really should output some nasty message here... This is very
-            // broken
-            data = 0;
-            goto out1;
-        }
-
-out1:
-        return data;
-#endif
-        return 0;
+    // add code specifically to work around crap bios implementations
+    // that do not have the _required_ 0x7f end-of-table entry
+    //   note: (4) == sizeof a std header.
+    if ( (data - (u8*)table->table) > (table->tep.dmi.table_length - 4))
+    {
+        // really should output some nasty message here... This is very
+        // broken
+        data = 0;
+        goto out1;
     }
 
-const struct smbios_struct *smbios_get_next_struct_bytype(const struct smbios_struct *cur, u8 type) { return 0;}
-const struct smbios_struct *smbios_get_next_struct_byhandle(const struct smbios_struct *cur, u16 handle) { return 0;}
+out1:
+    return (const struct smbios_struct *)data;
+}
+
+const struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_table *table, const struct smbios_struct *cur, u8 type)
+{
+    do {
+        cur = smbios_get_next_struct(table, cur);
+        if (cur->type == type)
+            return cur;
+    } while ( cur );
+    return 0;
+}
+
+const struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_table *table, const struct smbios_struct *cur, u16 handle)
+{
+    do {
+        cur = smbios_get_next_struct(table, cur);
+        if (cur->handle == handle)
+            return cur;
+    } while ( cur );
+    return 0;
+}
+
+
+u8 smbios_struct_get_type(const struct smbios_struct *s)
+{
+    return s->type;
+}
+
+u8 smbios_struct_get_length(const struct smbios_struct *s)
+{
+    return s->length;
+}
+
+u16 smbios_struct_get_handle(const struct smbios_struct *s)
+{
+    return s->handle;
+}
+
+int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len)
+{
+    int retval = -1;
+
+    dprintf("smbios_struct_get_data(%p, %p, %d, %ld)\n", s, dest, offset, len);
+
+    if (offset > smbios_struct_get_length(s))
+        goto out;
+
+    if( offset + len < offset ) // attempt to wraparound... :(
+        goto out;
+
+    if( offset + len > smbios_struct_get_length(s) )
+        goto out;
+
+    retval = 0;
+    dprintf("memcpy\n");
+    memcpy(dest, (const u8 *)(s)+offset, len);
+    dprintf("done memcpy\n");
+
+out:
+    return retval;
+}
+
+const char *smbios_get_string_from_offset(const struct smbios_struct *s, u8 offset)
+{
+    u8 strnum = 0;
+    const char *retval = 0;
+
+    dprintf("smbios_get_string_from_offset()\n");
+
+    if (smbios_struct_get_data(s, &strnum, offset, sizeof(strnum)) >= 0)
+    {
+        dprintf("string offset: %d  which: %d\n", offset, strnum);
+        retval = smbios_get_string_number(s, strnum);
+    }
+
+    dprintf("string: %s\n", retval);
+    return retval;
+}
+
+const char *smbios_get_string_number(const struct smbios_struct *s, u8 which)
+{
+    const char *string_pointer = 0;
+    const char *retval = 0;
+
+    dprintf("smbios_get_string_number()\n");
+
+    if (!which)     //strings are numbered beginning with 1
+        goto out;
+
+    string_pointer = (const char *)(s);
+
+    // start out at the end of the header. This is where
+    // the first string starts
+    string_pointer += smbios_struct_get_length(s);
+
+    for (; which > 1; which--)
+    {
+        string_pointer += strlen (string_pointer);
+        string_pointer++;  // skip past '\0'
+
+        // if it is still '\0', that means we are
+        // at the end of this item and should stop.
+        // user gave us a bad index
+        if( ! *string_pointer )
+            goto out;
+    }
+
+    retval = string_pointer;
+
+out:
+    return string_pointer;
+    }
+
+// visitor pattern
+void smbios_walk(smbios_walk_fn fn, void *userdata)
+{
+    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
+    const struct smbios_struct *s = smbios_get_next_struct(table, 0);
+    do {
+        fn(s, userdata);
+        s = smbios_get_next_struct(table, s);
+    }while(s);
+    smbios_free(table);
+}
 
 
 /**************************************************
@@ -150,20 +268,22 @@ void __internal init_smbios_struct(struct smbios_table *m)
 {
     m->initialized = 1;
 
+    dprintf("DEBUG: smbios_factory()\n");
+
     // smbios efi strategy
-    if (smbios_get_table_efi(m) < 0)
+    if (smbios_get_table_efi(m) >= 0)
         return;
 
     // smbios memory strategy
-    if (smbios_get_table_memory(m) < 0)
+    if (smbios_get_table_memory(m) >= 0)
         return;
 
     // smbios WMI strategy (windows only)
-    if (smbios_get_table_wmi(m) < 0)
+    if (smbios_get_table_wmi(m) >= 0)
         return;
 
     // smbios firmware tables strategy (windows only)
-    if (smbios_get_table_firm_tables(m) < 0)
+    if (smbios_get_table_firm_tables(m) >= 0)
         return;
 }
 
@@ -267,6 +387,7 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
         // first, look for old-style DMI header
         if (memcmp (&tempTEP, "_DMI_", 5) == 0)
         {
+            dprintf("Found _DMI_ anchor. Trying to parse legacy DMI structure.\n");
             struct dmi_table_entry_point *dmiTEP = (struct dmi_table_entry_point *)(&tempTEP);
             memmove(&(tempTEP.dmi), &dmiTEP, sizeof(struct dmi_table_entry_point));
             // fake the rest of the smbios table entry point...
@@ -280,6 +401,7 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
         // occur before _DMI_ in memory
         if ((memcmp (&tempTEP, "_SM_", 4) == 0))
         {
+            dprintf("Found _SM_ anchor. Trying to parse legacy DMI structure.\n");
             if(validate_smbios_tep(&tempTEP, strict))
                 break;
         }
@@ -308,6 +430,8 @@ int __internal smbios_get_table_memory(struct smbios_table *m)
 {
     struct memory *mem = memory_factory(MEMORY_GET_SINGLETON);
     int retval = -1; //fail
+
+    dprintf("DEBUG: smbios_get_table_memory()\n");
 
     if (!smbios_get_tep_memory(m, false))
         goto out;

@@ -31,6 +31,7 @@
 
 #include "outputctl.h"
 #include "main.h"
+#include "XmlUtils.h"
 
 using namespace std;
 
@@ -48,6 +49,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testCsmbios);
 void testCsmbios::setUp()
 {
     string writeDirectory = getWritableDirectory();
+    string testInput = getTestDirectory() + "/testInput.xml";
 
     // copy the memdump.dat file. We do not write to it, but rw open will fail
     // if we do not copy it
@@ -63,22 +65,163 @@ void testCsmbios::setUp()
 
     memory_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
     cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
+
+    doc = 0;
+    parser = 0;
+    InitXML();
+    parser = xmlutils::getParser();
+    compatXmlReadFile(parser, doc, testInput.c_str());
 }
 
 void testCsmbios::tearDown()
-{ 
+{
+    if (parser)
+        xmlFreeParser(parser);
+
+    if (doc)
+        xmlFreeDoc(doc);
+
+    FiniXML();
+}
+
+
+// checkSkipTest for Skipping known BIOS Bugs.
+void
+testCsmbios::checkSkipTest(string testName)
+{
+    if(!doc)
+        return;
+
+    try
+    {
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *testsToSkip = xmlutils::findElement(xmlDocGetRootElement(doc),"testsToSkip","","");
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *test = xmlutils::findElement(testsToSkip,"test","name",testName);
+
+        if(test)
+            throw skip_test();
+    }
+    catch (const skip_test &)
+    {
+        throw;
+    }
+    catch (const exception &)
+    {
+        //Do Nothing
+    }
+}
+
+
+// testInput.xml tests
+string testCsmbios::getTestInputString( string toFind, string section )
+{
+    if (!doc)
+        throw skip_test();
+
+    string foundString = "";
+
+    try
+    {
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *systeminfo = xmlutils::findElement( xmlDocGetRootElement(doc), section, "", "" );
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *sysName = xmlutils::findElement( systeminfo, toFind, "", "" );
+        foundString = xmlutils::getNodeText( sysName );
+    }
+    catch( const exception & )
+    {
+        throw skip_test();
+    }
+
+    return foundString;
+}
+
+void test_walk_fn(const struct smbios_struct *s, void *userdata)
+{
+    (*(u32 *)userdata)++;
 }
 
 void testCsmbios::testSmbiosConstruct()
 {
-    STD_TEST_START(getTestName().c_str() << "  ");
+    STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    struct smbios_table *m = smbios_factory(SMBIOS_GET_SINGLETON);
-    smbios_free(m);
+    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
+
+    u32 structure_count = 0;
+    const struct smbios_struct *s = smbios_get_next_struct(table, 0);
+    do {
+        u32 data=0;
+        smbios_struct_get_data(s, &data, 0, sizeof(u8));
+        CPPUNIT_ASSERT_EQUAL( (u32)smbios_struct_get_type(s), data );
+
+        data = 0;
+        smbios_struct_get_data(s, &data, 1, sizeof(u8));
+        CPPUNIT_ASSERT_EQUAL( (u32)smbios_struct_get_length(s), data );
+
+        data = 0;
+        smbios_struct_get_data(s, &data, 2, sizeof(u16));
+        CPPUNIT_ASSERT_EQUAL( (u32)smbios_struct_get_handle(s), data );
+
+        s = smbios_get_next_struct(table, s);
+        structure_count ++;
+    }while(s);
+
+    smbios_free(table);
+
+    u32 alt_count = 0;
+    smbios_walk(test_walk_fn, &alt_count);
+
+    CPPUNIT_ASSERT_EQUAL(alt_count, structure_count);
 
     STD_TEST_END("");
 }
 
 
 
+void testCsmbios::testVariousAccessors()
+{
+    STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
+    const struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
+
+    const struct smbios_struct *s = smbios_get_next_struct_by_type(table, 0, 0x00); // 0x00 == BIOS structure
+
+    string vendorStr="";
+    string versionStr="";
+    string releaseStr="";
+
+    if (!doc)
+        throw skip_test();
+
+    // pull info out of xml
+    try
+    {
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *smbios = xmlutils::findElement( xmlDocGetRootElement(doc), "smbios", "", "" );
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *biosInfo = xmlutils::findElement( smbios, "biosInformation", "", "" );
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *vendor = xmlutils::findElement( biosInfo, "vendor", "", "" );
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *version = xmlutils::findElement( biosInfo, "version", "", "" );
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *release = xmlutils::findElement( biosInfo, "release", "", "" );
+        vendorStr = xmlutils::getNodeText( vendor );
+        versionStr = xmlutils::getNodeText( version );
+        releaseStr = xmlutils::getNodeText( release );
+    }
+    catch( const exception & )
+    {
+        throw skip_test();
+    }
+
+    const string string1( smbios_get_string_from_offset(s, 4) ); // BIOS VENDOR
+    const string string2( smbios_get_string_from_offset(s, 5) ); // BIOS VERSION
+    const string string3( smbios_get_string_from_offset(s, 8) ); // RELEASE DATE
+
+    const string string4( smbios_get_string_number(s, 1) ); //BIOS VENDOR
+    const string string5( smbios_get_string_number(s, 2) ); //BIOS VERSION
+    const string string6( smbios_get_string_number(s, 3) ); //RELEASE DATE
+
+    CPPUNIT_ASSERT_EQUAL( vendorStr, string1 );
+    CPPUNIT_ASSERT_EQUAL( versionStr, string2 );
+    CPPUNIT_ASSERT_EQUAL( releaseStr, string3 );
+
+    CPPUNIT_ASSERT_EQUAL( string1, string4 );
+    CPPUNIT_ASSERT_EQUAL( string2, string5 );
+    CPPUNIT_ASSERT_EQUAL( string3, string6 );
+
+    STD_TEST_END("");
+}

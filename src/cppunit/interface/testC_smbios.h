@@ -25,6 +25,8 @@
 #include <typeinfo>
 #include <string>
 
+#include "XmlUtils.h"
+
 extern int global_argc;
 extern char ** global_argv;
 
@@ -41,14 +43,28 @@ protected:
     virtual std::string getTestName()
     {
         //return TEST_DIR;
-        return "testC_smbios";
+        return global_argv[2];
     }
 
     virtual std::string getTestDirectory()
     {
         //return DEFAULT_TEST_DIR;
-        return global_argv[2];
+        return global_argv[3];
     };
+
+    std::string getTestInputString( std::string toFind, std::string section="systemInfo" );
+
+    void checkSkipTest( std::string testName);
+
+    // parser owns all XML entities. When it is deleted, everything
+    // goes with it.
+    XML_NAMESPACE DOMBuilder *parser;
+
+    // The doc is owned by the parser. We do not have to clean it up
+    // it is deleted when the parser is released. We keep a ref
+    // here for speed purposes
+    XML_NAMESPACE DOMDocument *doc;
+
 
 public:
     virtual void setUp();
@@ -56,12 +72,14 @@ public:
 
     // base smbios test
     void testSmbiosConstruct();
+    void testVariousAccessors();
 
 
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testCsmbios);
 
     CPPUNIT_TEST (testSmbiosConstruct);
+    CPPUNIT_TEST (testVariousAccessors);
 
     CPPUNIT_TEST_SUITE_END ();
 };

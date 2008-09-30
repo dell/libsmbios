@@ -28,7 +28,7 @@ EXTERN_C_BEGIN;
 #define __hidden __attribute__((visibility("hidden")))
 
 #if defined(DEBUG_SMBIOS_C)
-#   define dprintf(format, args...) do { fprintf(stdout , format , ## args);  } while(0)
+#   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
 #else
 #   define dprintf(format, args...) do {} while(0)
 #endif
@@ -36,6 +36,47 @@ EXTERN_C_BEGIN;
 #define E_BLOCK_START 0xE0000UL
 #define F_BLOCK_START 0xF0000UL
 #define F_BLOCK_END   0xFFFFFUL
+
+#if defined(_MSC_VER)
+#pragma pack(push,1)
+#endif
+struct smbios_struct
+{
+    u8 type;
+    u8 length;
+    u16 handle;
+}
+LIBSMBIOS_PACKED_ATTR;
+
+struct dmi_table_entry_point
+{
+    u8 anchor[5];
+    u8 checksum;
+    u16 table_length;
+    u32 table_address;
+    u16 table_num_structs;
+    u8 smbios_bcd_revision;
+}
+LIBSMBIOS_PACKED_ATTR;
+
+struct smbios_table_entry_point
+{
+    u8 anchor[4];
+    u8 checksum;
+    u8 eps_length;
+    u8 major_ver;
+    u8 minor_ver;
+    u16 max_struct_size;
+    u8 revision;
+    u8 formatted_area[5];
+    struct dmi_table_entry_point dmi;
+    u8 padding_for_Intel_BIOS_bugs;
+} LIBSMBIOS_PACKED_ATTR;
+
+#if defined(_MSC_VER)
+#pragma pack(pop)
+#endif
+
 
 struct smbios_table
 {
