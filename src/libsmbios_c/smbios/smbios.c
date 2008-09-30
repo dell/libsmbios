@@ -126,7 +126,7 @@ const struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_t
 {
     do {
         cur = smbios_get_next_struct(table, cur);
-        if (cur->type == type)
+        if (cur && cur->type == type)
             return cur;
     } while ( cur );
     return 0;
@@ -136,7 +136,7 @@ const struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios
 {
     do {
         cur = smbios_get_next_struct(table, cur);
-        if (cur->handle == handle)
+        if (cur && cur->handle == handle)
             return cur;
     } while ( cur );
     return 0;
@@ -174,9 +174,7 @@ int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset,
         goto out;
 
     retval = 0;
-    dprintf("memcpy\n");
     memcpy(dest, (const u8 *)(s)+offset, len);
-    dprintf("done memcpy\n");
 
 out:
     return retval;
@@ -204,7 +202,7 @@ const char *smbios_get_string_number(const struct smbios_struct *s, u8 which)
     const char *string_pointer = 0;
     const char *retval = 0;
 
-    dprintf("smbios_get_string_number()\n");
+    dprintf("smbios_get_string_number(%p, %d)\n", s, which);
 
     if (!which)     //strings are numbered beginning with 1
         goto out;
@@ -217,8 +215,7 @@ const char *smbios_get_string_number(const struct smbios_struct *s, u8 which)
 
     for (; which > 1; which--)
     {
-        string_pointer += strlen (string_pointer);
-        string_pointer++;  // skip past '\0'
+        string_pointer += strlen (string_pointer) + 1;
 
         // if it is still '\0', that means we are
         // at the end of this item and should stop.
@@ -229,9 +226,10 @@ const char *smbios_get_string_number(const struct smbios_struct *s, u8 which)
 
     retval = string_pointer;
 
+
 out:
-    return string_pointer;
-    }
+    return retval;
+}
 
 // visitor pattern
 void smbios_walk(smbios_walk_fn fn, void *userdata)
@@ -368,7 +366,7 @@ bool __internal validate_smbios_tep( const struct smbios_table_entry_point *temp
 int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
 {
     int retval = 1;
-    struct memory *mem = memory_factory(MEMORY_GET_SINGLETON);
+    struct memory_obj *mem = memory_factory(MEMORY_GET_SINGLETON);
 
     unsigned long fp = E_BLOCK_START;
 
@@ -428,7 +426,7 @@ out:
 
 int __internal smbios_get_table_memory(struct smbios_table *m)
 {
-    struct memory *mem = memory_factory(MEMORY_GET_SINGLETON);
+    struct memory_obj *mem = memory_factory(MEMORY_GET_SINGLETON);
     int retval = -1; //fail
 
     dprintf("DEBUG: smbios_get_table_memory()\n");

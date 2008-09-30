@@ -78,7 +78,7 @@ void testCInterface::testMemoryRead()
     STD_TEST_START(getTestName().c_str() << "  ");
 
     u8 buf;
-    struct memory *m = 0;
+    struct memory_obj *m = 0;
     int ret;
     for (int i=0; i<26; ++i){
         m = memory_factory(MEMORY_GET_SINGLETON);
@@ -96,7 +96,7 @@ void testCInterface::testMemoryRead()
 void testCInterface::testMemoryWrite()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct memory *m = memory_factory(MEMORY_GET_SINGLETON);
+    struct memory_obj *m = memory_factory(MEMORY_GET_SINGLETON);
     u8 buf;
     int ret;
 
@@ -128,7 +128,7 @@ void testCInterface::testMemoryWrite()
 void testCInterface::testMemoryReadMultipage()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct memory *m = memory_factory(MEMORY_GET_SINGLETON);
+    struct memory_obj *m = memory_factory(MEMORY_GET_SINGLETON);
     int ret=0;
     u8 buf[65536*3 + 1] = {0,};
 
@@ -149,7 +149,7 @@ void testCInterface::testMemoryReadMultipage()
 void testCInterface::testMemorySearch()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct memory *m = memory_factory(MEMORY_GET_SINGLETON);
+    struct memory_obj *m = memory_factory(MEMORY_GET_SINGLETON);
     s64 ret;
 
     ret = memory_search(m, "abc", 3, 0, 4096, 1);

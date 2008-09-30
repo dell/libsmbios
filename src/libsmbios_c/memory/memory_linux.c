@@ -46,8 +46,8 @@
 #define __hidden __attribute__((visibility("hidden")))
 #define __internal __attribute__((visibility("internal")))
 
-void __internal init_mem_struct(struct memory *m);
-void __internal MEM_INIT_FUNCTION(struct memory *m, const char *fn);
+void __internal init_mem_struct(struct memory_obj *m);
+void __internal MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn);
 
 struct ut_data
 {
@@ -63,7 +63,7 @@ struct ut_data
 #define READ_MMAP 1
 #define WRITE_MMAP 0
 
-static int copy_mmap(const struct memory *this, u8 *buffer, u64 offset, size_t length, int fromMem)
+static int copy_mmap(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length, int fromMem)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -151,17 +151,17 @@ out:
     return retval;
 }
 
-static int linux_read_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int linux_read_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
 {
     return copy_mmap(this, buffer, offset, length, READ_MMAP);
 }
 
-static int linux_write_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int linux_write_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
 {
     return copy_mmap(this, buffer, offset, length, WRITE_MMAP);
 }
 
-static void linux_free(struct memory *this)
+static void linux_free(struct memory_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->filename)
@@ -186,7 +186,7 @@ static void linux_free(struct memory *this)
 }
 
 
-static void linux_cleanup(struct memory *this)
+static void linux_cleanup(struct memory_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
 
@@ -205,7 +205,7 @@ static void linux_cleanup(struct memory *this)
     private_data->rw = 0;
 }
 
-__internal void MEM_INIT_FUNCTION(struct memory *m, const char *fn)
+__internal void MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
     priv_ut->mappingSize = getpagesize() * 16;;
@@ -222,7 +222,7 @@ __internal void MEM_INIT_FUNCTION(struct memory *m, const char *fn)
     m->initialized = 1;
 }
 
-__internal void init_mem_struct(struct memory *m)
+__internal void init_mem_struct(struct memory_obj *m)
 {
    MEM_INIT_FUNCTION(m, "/dev/mem"); 
 }

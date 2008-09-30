@@ -23,13 +23,13 @@
 
 EXTERN_C_BEGIN;
 
-struct memory
+struct memory_obj
 {
     int initialized;
-    int (*read_fn)(const struct memory *this, u8 *buffer, u64 offset, size_t length);
-    int (*write_fn)(const struct memory *this, u8 *buffer, u64 offset, size_t length);
-    void (*free)(struct memory *this);
-    void (*cleanup)(struct memory *this); // called instead of ->free for singleton
+    int (*read_fn)(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length);
+    int (*write_fn)(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length);
+    void (*free)(struct memory_obj *this);
+    void (*cleanup)(struct memory_obj *this); // called instead of ->free for singleton
     void *private_data;
     int close;
 };

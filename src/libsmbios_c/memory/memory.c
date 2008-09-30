@@ -42,15 +42,15 @@
 #define __hidden __attribute__((visibility("hidden")))
 #define __internal __attribute__((visibility("internal")))
 
-void __internal init_mem_struct(struct memory *m);
-void __internal MEM_INIT_FUNCTION(struct memory *m, const char *fn);
+void __internal init_mem_struct(struct memory_obj *m);
+void __internal MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn);
 
-static struct memory singleton; // auto-init to 0
+static struct memory_obj singleton; // auto-init to 0
 
-struct memory *memory_factory(int flags, ...)
+struct memory_obj *memory_factory(int flags, ...)
 {
     va_list ap;
-    struct memory *toReturn = 0;
+    struct memory_obj *toReturn = 0;
 
     if (flags==MEMORY_DEFAULTS)
         flags = MEMORY_GET_SINGLETON;
@@ -58,7 +58,7 @@ struct memory *memory_factory(int flags, ...)
     if (flags & MEMORY_GET_SINGLETON)
         toReturn = &singleton;
     else
-        toReturn = (struct memory *)calloc(1, sizeof(struct memory));
+        toReturn = (struct memory_obj *)calloc(1, sizeof(struct memory_obj));
 
     if (toReturn->initialized)
         goto out;
@@ -77,32 +77,32 @@ out:
     return toReturn;
 }
 
-void  memory_suggest_leave_open(struct memory *this)
+void  memory_suggest_leave_open(struct memory_obj *this)
 {
     this->close--;
 }
 
-void  memory_suggest_close(struct memory *this)
+void  memory_suggest_close(struct memory_obj *this)
 {
     this->close++;
 }
 
-bool  memory_should_close(const struct memory *this)
+bool  memory_should_close(const struct memory_obj *this)
 {
     return this->close > 0;
 }
 
-int  memory_read(const struct memory *m, void *buffer, u64 offset, size_t length)
+int  memory_read(const struct memory_obj *m, void *buffer, u64 offset, size_t length)
 {
     return m->read_fn(m, (u8 *)buffer, offset, length);
 }
 
-int  memory_write(const struct memory *m, void *buffer, u64 offset, size_t length)
+int  memory_write(const struct memory_obj *m, void *buffer, u64 offset, size_t length)
 {
     return m->write_fn(m, (u8 *)buffer, offset, length);
 }
 
-void memory_free(struct memory *m)
+void memory_free(struct memory_obj *m)
 {
     if (m != &singleton)
         m->free(m);
@@ -110,11 +110,11 @@ void memory_free(struct memory *m)
         m->cleanup(m);
 }
 
-s64  memory_search(const struct memory *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
+s64  memory_search(const struct memory_obj *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
 {
     u8 *buf = calloc(1, patlen);
     u64 cur = start;
-    memory_suggest_leave_open((struct memory *)m);
+    memory_suggest_leave_open((struct memory_obj *)m);
 
     memset(buf, 0, patlen);
 
@@ -133,7 +133,7 @@ s64  memory_search(const struct memory *m, const char *pat, size_t patlen, u64 s
         cur = -1;
 
 out:
-    memory_suggest_close((struct memory *)m);
+    memory_suggest_close((struct memory_obj *)m);
     free(buf);
     return cur;
 }
@@ -149,7 +149,7 @@ struct ut_data
     int rw;
 };
 
-static int UT_read_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int UT_read_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -194,7 +194,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(const struct memory *this, u8 *buffer, u64 offset, size_t length)
+static int UT_write_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->mem_errno = errno = 0;
@@ -238,7 +238,7 @@ out:
     return retval;
 }
 
-static void UT_free(struct memory *this)
+static void UT_free(struct memory_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->filename)
@@ -255,7 +255,7 @@ static void UT_free(struct memory *this)
     this->private_data = 0;
 }
 
-static void UT_cleanup(struct memory *this)
+static void UT_cleanup(struct memory_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->fd)
@@ -269,7 +269,7 @@ static void UT_cleanup(struct memory *this)
 }
 
 
-void MEM_INIT_FUNCTION(struct memory *m, const char *fn)
+void MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);

@@ -32,29 +32,29 @@ EXTERN_C_BEGIN;
 #define MEMORY_GET_NEW        0x0002
 #define MEMORY_UNIT_TEST_MODE 0x0004
 
-struct memory;
+struct memory_obj;
 
 // construct
-struct memory *memory_factory(int flags, ...);
+struct memory_obj *memory_factory(int flags, ...);
 
 // destruct
-void memory_free(struct memory *);
+void memory_free(struct memory_obj *);
 
-int  memory_read(const struct memory *, void *buffer, u64 offset, size_t length);
-int  memory_write(const struct memory *, void *buffer, u64 offset, size_t length);
+int  memory_read(const struct memory_obj *, void *buffer, u64 offset, size_t length);
+int  memory_write(const struct memory_obj *, void *buffer, u64 offset, size_t length);
 
 // format error string
-size_t memory_fmt_err(const struct memory *, char *buf, size_t len);
+size_t memory_fmt_err(const struct memory_obj *, char *buf, size_t len);
 
 // helper
-s64  memory_search(const struct memory *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
+s64  memory_search(const struct memory_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 
 // Following calls must be properly nested in equal pairs
-void  memory_suggest_leave_open(struct memory *);
-void  memory_suggest_close(struct memory *);
+void  memory_suggest_leave_open(struct memory_obj *);
+void  memory_suggest_close(struct memory_obj *);
 
 // ask if close flag is set
-bool  memory_should_close(const struct memory *);
+bool  memory_should_close(const struct memory_obj *);
 
 EXTERN_C_END;
 
