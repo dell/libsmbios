@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -43,7 +43,7 @@ struct smbios_table *smbios_factory(int flags, ...);
 void smbios_free(struct smbios_table *);
 
 // format error string
-size_t smbios_fmt_err(struct memory *, char *buf, size_t len);
+size_t smbios_fmt_err(struct smbios_table *, char *buf, size_t len);
 
 // for looping/searching
 const struct smbios_struct *smbios_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
@@ -60,6 +60,20 @@ u16 smbios_struct_get_handle(const struct smbios_struct *);
 int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
 const char *smbios_get_string_from_offset(const struct smbios_struct *s, u8 offset);
 const char *smbios_get_string_number(const struct smbios_struct *s, u8 which);
+
+#define smbios_for_each_struct(table_name, struct_name)  \
+        for(    \
+            const struct smbios_struct *struct_name = smbios_get_next_struct(table_name, 0);\
+            struct_name;\
+            struct_name = smbios_get_next_struct(table_name, struct_name)\
+           )
+
+#define smbios_for_each_struct_type(table_name, struct_name, struct_type)  \
+        for(    \
+            const struct smbios_struct *struct_name = smbios_get_next_struct_by_type(table_name, 0, struct_type);\
+            struct_name;\
+            struct_name = smbios_get_next_struct_by_type(table_name, struct_name, struct_type)\
+           )
 
 EXTERN_C_END;
 
