@@ -17,6 +17,7 @@
  */
 
 // compat header should always be first header if including system headers
+#define LIBSMBIOS_SOURCE
 #include "smbios/compat.h"
 
 #include <iostream>
