@@ -23,8 +23,6 @@
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"
 
-#include <stdio.h>  // for size_t
-
 // abi_prefix should be last header included before declarations
 #include "smbios/config/abi_prefix.hpp"
 
@@ -52,8 +50,7 @@ EXTERN_C_BEGIN;
      * (server, desktop, workstation, or laptop) that uniquely identifies that
      * system within Dell's product line.
      */
-    int         smbios_get_dell_system_id();
-
+    int   smbios_get_dell_system_id();
     char *smbios_get_vendor_name();
     char *smbios_get_system_name();
     char *smbios_get_bios_version();
