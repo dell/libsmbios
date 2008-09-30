@@ -21,13 +21,19 @@
 // private stuff
 #define NvramByte1_Token                            0x83
 #define NvramByte2_Token                            0x84
+
+#define BIOS_Information_Structure                  0x00
 #define BIOS_Information_Version_Offset             0x05
+
 #define System_Information_Structure                0x01
 #define System_Information_Manufacturer_Offset      0x04
 #define System_Information_Product_Name_Offset      0x05
 #define System_Information_Serial_Number_Offset     0x07
+
+#define System_Enclosure_or_Chassis_Structure       0x03
 #define System_Enclosure_or_Chassis_Service_Offset  0x07
 #define System_Enclosure_or_Chassis_Asset_Offset    0x08
+
 #define ID_Byte_Location                            0xFE845
 #define ID_Word_Location                            0xFE840
 #define Cmos_Asset_Token                            0xC000

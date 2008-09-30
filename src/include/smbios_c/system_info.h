@@ -54,12 +54,12 @@ EXTERN_C_BEGIN;
      */
     int         smbios_get_dell_system_id();
 
-    const char *smbios_get_vendor_name();
-    const char *smbios_get_system_name();
-    const char *smbios_get_bios_version();
-    const char *smbios_get_asset_tag();
-    const char *smbios_get_service_tag();
-    void smbios_string_free(const void *);
+    char *smbios_get_vendor_name();
+    char *smbios_get_system_name();
+    char *smbios_get_bios_version();
+    char *smbios_get_asset_tag();
+    char *smbios_get_service_tag();
+    void smbios_string_free(void *);
 
 EXTERN_C_END;
 

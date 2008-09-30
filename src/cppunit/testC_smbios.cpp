@@ -182,7 +182,7 @@ void testCsmbios::testVariousAccessors()
 
     const struct smbios_struct *s = smbios_get_next_struct_by_type(table, 0, 0x00); // 0x00 == BIOS structure
 
-    string vendorStr="";
+    string biosVendorStr="";
     string versionStr="";
     string releaseStr="";
 
@@ -197,7 +197,7 @@ void testCsmbios::testVariousAccessors()
         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *vendor = xmlutils::findElement( biosInfo, "vendor", "", "" );
         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *version = xmlutils::findElement( biosInfo, "version", "", "" );
         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement *release = xmlutils::findElement( biosInfo, "release", "", "" );
-        vendorStr = xmlutils::getNodeText( vendor );
+        biosVendorStr = xmlutils::getNodeText( vendor );
         versionStr = xmlutils::getNodeText( version );
         releaseStr = xmlutils::getNodeText( release );
     }
@@ -206,21 +206,27 @@ void testCsmbios::testVariousAccessors()
         throw skip_test();
     }
 
-    const string string1( smbios_get_string_from_offset(s, 4) ); // BIOS VENDOR
-    const string string2( smbios_get_string_from_offset(s, 5) ); // BIOS VERSION
-    const string string3( smbios_get_string_from_offset(s, 8) ); // RELEASE DATE
+    const string biosVendorStrSmbios( smbios_get_string_from_offset(s, 4) ); // BIOS VENDOR
+    const string versionStrSmbios( smbios_get_string_from_offset(s, 5) ); // BIOS VERSION
+    const string releaseStrSmbios( smbios_get_string_from_offset(s, 8) ); // RELEASE DATE
 
-    const string string4( smbios_get_string_number(s, 1) ); //BIOS VENDOR
-    const string string5( smbios_get_string_number(s, 2) ); //BIOS VERSION
-    const string string6( smbios_get_string_number(s, 3) ); //RELEASE DATE
+    const string biosVendorStrSmbios2( smbios_get_string_number(s, 1) ); //BIOS VENDOR
+    const string versionStrSmbios2( smbios_get_string_number(s, 2) ); //BIOS VERSION
+    const string releaseStrSmbios2( smbios_get_string_number(s, 3) ); //RELEASE DATE
 
-    CPPUNIT_ASSERT_EQUAL( vendorStr, string1 );
-    CPPUNIT_ASSERT_EQUAL( versionStr, string2 );
-    CPPUNIT_ASSERT_EQUAL( releaseStr, string3 );
+    char *versionStrLib_raw = smbios_get_bios_version();
+    const string versionStrLib(versionStrLib_raw);
+    smbios_string_free(versionStrLib_raw);
 
-    CPPUNIT_ASSERT_EQUAL( string1, string4 );
-    CPPUNIT_ASSERT_EQUAL( string2, string5 );
-    CPPUNIT_ASSERT_EQUAL( string3, string6 );
+    CPPUNIT_ASSERT_EQUAL( versionStr, versionStrLib );
+    CPPUNIT_ASSERT_EQUAL( versionStr, versionStrSmbios );
+    CPPUNIT_ASSERT_EQUAL( versionStrSmbios, versionStrSmbios2 );
+
+    CPPUNIT_ASSERT_EQUAL( biosVendorStr, biosVendorStrSmbios );
+    CPPUNIT_ASSERT_EQUAL( biosVendorStrSmbios, biosVendorStrSmbios2 );
+
+    CPPUNIT_ASSERT_EQUAL( releaseStr, releaseStrSmbios );
+    CPPUNIT_ASSERT_EQUAL( releaseStrSmbios, releaseStrSmbios2 );
 
     STD_TEST_END("");
 }
@@ -237,6 +243,22 @@ testCsmbios::testIdByte()
     int id  = strtol( idStr.c_str(), 0, 0);
 
     CPPUNIT_ASSERT_EQUAL ( id, systemId );
+
+    STD_TEST_END("");
+}
+
+void
+testCsmbios::testServiceTag()
+{
+    STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
+
+    char *serviceTag   = smbios_get_service_tag();
+    string serviceTagStr(serviceTag);
+    smbios_string_free(serviceTag);
+
+    string expectedTag = getTestInputString("serviceTag");
+
+    CPPUNIT_ASSERT_EQUAL ( expectedTag, serviceTagStr );
 
     STD_TEST_END("");
 }

@@ -20,13 +20,13 @@
 #include "smbios_c/compat.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "smbios_c/smbios.h"
 #include "smbios_c/version.h"
 #include "smbios_c/system_info.h"
 #include "dell_magic.h"
-
-#define __internal __attribute__((visibility("internal")))
+#include "_impl.h"
 
 const char *smbios_get_library_version_string()
 {
@@ -63,7 +63,7 @@ void __internal strip_trailing_whitespace( char *str )
     } while(ch);
 }
 
-__internal const char * smbios_get_string_from_table(u8 type, u8 offset)
+__internal char * smbios_get_string_from_table(u8 type, u8 offset)
 {
     struct smbios_table *table;
     const struct smbios_struct *s;
@@ -94,34 +94,22 @@ out:
     return ret;
 }
 
-const char *smbios_get_vendor_name()
+void smbios_string_free(void *f)
+{
+    free(f);
+}
+
+char *smbios_get_vendor_name()
 {
     return smbios_get_string_from_table(System_Information_Structure, System_Information_Manufacturer_Offset);
 }
 
-const char *smbios_get_system_name()
+char *smbios_get_system_name()
 {
-    return 0;
+    return smbios_get_string_from_table(System_Information_Structure, System_Information_Product_Name_Offset);
 }
 
-const char *smbios_get_bios_version()
+char *smbios_get_bios_version()
 {
-    return 0;
+    return smbios_get_string_from_table(BIOS_Information_Structure, BIOS_Information_Version_Offset);
 }
-
-const char *smbios_get_asset_tag()
-{
-    return 0;
-}
-
-const char *smbios_get_service_tag()
-{
-    return 0;
-}
-
-
-
-
-
-
-

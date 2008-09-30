@@ -74,6 +74,7 @@ public:
     void testSmbiosConstruct();
     void testVariousAccessors();
     void testIdByte();
+    void testServiceTag();
 
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testCsmbios);
@@ -81,6 +82,7 @@ public:
     CPPUNIT_TEST (testSmbiosConstruct);
     CPPUNIT_TEST (testVariousAccessors);
     CPPUNIT_TEST (testIdByte);
+    CPPUNIT_TEST (testServiceTag);
 
     CPPUNIT_TEST_SUITE_END ();
 };

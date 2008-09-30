@@ -40,7 +40,8 @@ int
 main (int argc, char **argv)
 {
     int retval = 0;
-    int reqInt = 0;
+    int sysid = 0;
+    char *str;
 
     int c=0;
     char *args = 0;
@@ -69,15 +70,60 @@ main (int argc, char **argv)
     //Error handline needs to be implemented for each of these functions
     //we don't want to catch exceptions because we want to test the C calling interface
     //and besides, C calling interface cannot throw exceptions.
-    reqInt     = smbios_get_dell_system_id();
-    if(reqInt)
-        printf("System ID:    0x%04X\n", reqInt);
+    sysid     = smbios_get_dell_system_id();
+    if(sysid)
+        printf("System ID:    0x%04X\n", sysid);
     else
     {
         printf("Error getting the System ID:    unknown error.\n");
         retval = 1;
     }
 
+    str    = smbios_get_service_tag();
+    if(str)
+    {
+        printf("Service Tag:  %s\n", str);
+        printf("Express Service Code: %lld\n", strtoll(str, NULL, 36));
+    }
+    else
+    {
+        printf("Error getting the Service Tag:  unknown error\n");
+        retval = 1;
+    }
+    smbios_string_free(str);
+
+
+    str   = smbios_get_system_name();
+    if(str)
+        printf("Product Name: %s\n", str);
+    else
+    {
+        printf("Error getting the System Name:    unknown error.\n");
+        retval = 1;
+    }
+    smbios_string_free(str);
+
+    str   = smbios_get_bios_version();
+    if(str)
+        printf("BIOS Version: %s\n", str);
+    else
+    {
+        printf("Error getting the BIOS Version:    unknown error.\n");
+        retval = 1;
+    }
+    smbios_string_free(str);
+
+    str   = smbios_get_vendor_name();
+    if(str)
+        printf("Vendor:       %s\n", str);
+    else
+    {
+        printf("Error getting the Vendor:    unknown error.\n");
+        retval = 1;
+    }
+    smbios_string_free(str);
+
+    printf("Is Dell:      %d\n", (sysid!=0));
 
     return retval;
 }
