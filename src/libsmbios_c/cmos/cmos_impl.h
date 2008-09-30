@@ -23,6 +23,9 @@
 
 EXTERN_C_BEGIN;
 
+#define __hidden __attribute__((visibility("hidden")))
+#define __internal __attribute__((visibility("internal")))
+
 struct cmos_obj
 {
     int initialized;
@@ -31,8 +34,13 @@ struct cmos_obj
     void (*free)(struct cmos_obj *this);
     void (*cleanup)(struct cmos_obj *this); // called instead of ->free for singleton
     void *private_data;
-    int close;
 };
+
+// regular one
+void __internal init_cmos_struct(struct cmos_obj *m);
+
+// unit test one
+void __internal init_cmos_struct_filename(struct cmos_obj *m, const char *fn);
 
 EXTERN_C_END;
 
