@@ -22,11 +22,7 @@
 #include "smbios_c/compat.h"
 
 // system
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
+#include <sys/io.h>
 
 // public
 #include "smbios_c/cmos.h"
@@ -35,19 +31,23 @@
 // private
 #include "cmos_impl.h"
 
-
-struct linux_cmos_data
-{
-};
-
 static int linux_read_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
 {
-    return -1;
+    if(iopl(3) < 0)
+        return -1;
+
+    outb_p (offset, indexPort);
+    return (inb_p (dataPort));
 }
 
 static int linux_write_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
 {
-    return -1;
+    if(iopl(3) < 0)
+        return -1;
+
+    outb_p (offset, indexPort);
+    outb_p (byte, dataPort);
+    return 0;
 }
 
 static void linux_free(struct cmos_obj *this)
