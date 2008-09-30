@@ -28,6 +28,7 @@ EXTERN_C_BEGIN;
 #define __hidden __attribute__((visibility("hidden")))
 
 #if defined(DEBUG_SMBIOS_C)
+#   include <stdio.h>
 #   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
 #else
 #   define dprintf(format, args...) do {} while(0)
