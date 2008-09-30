@@ -4,6 +4,9 @@
 
 set -e
 
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+cd $SCRIPT_DIR
+
 cp configure.ac configure.ac~
 cp Makefile.am  Makefile.am~
 autopoint --force # gettextize replacement
