@@ -162,7 +162,7 @@ void testCsmbios::testSmbiosConstruct()
         structure_count ++;
     }
 
-    smbios_free(table);
+    smbios_table_free(table);
 
     u32 alt_count = 0;
     smbios_walk(test_walk_fn, &alt_count);

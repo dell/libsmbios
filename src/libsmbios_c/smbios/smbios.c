@@ -38,7 +38,7 @@
 
 // forward declarations
 void __internal init_smbios_struct(struct smbios_table *m);
-void __internal smbios_table_free(struct smbios_table *this);
+void __internal _smbios_table_free(struct smbios_table *this);
 
 // static vars
 static struct smbios_table singleton; // auto-init to 0
@@ -67,10 +67,10 @@ out:
 }
 
 
-void smbios_free(struct smbios_table *m)
+void smbios_table_free(struct smbios_table *m)
 {
     if (m != &singleton)
-        smbios_table_free(m);
+        _smbios_table_free(m);
 
     // can do special cleanup for singleton, but none necessary atm
 }
@@ -240,7 +240,7 @@ void smbios_walk(smbios_walk_fn fn, void *userdata)
         fn(s, userdata);
         s = smbios_get_next_struct(table, s);
     }while(s);
-    smbios_free(table);
+    smbios_table_free(table);
 }
 
 
@@ -250,7 +250,7 @@ void smbios_walk(smbios_walk_fn fn, void *userdata)
  *
  **************************************************/
 
-void __internal smbios_table_free(struct smbios_table *this)
+void __internal _smbios_table_free(struct smbios_table *this)
 {
     memset(&this->tep, 0, sizeof(this->tep));
 

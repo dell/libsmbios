@@ -38,7 +38,7 @@ struct memory_obj;
 struct memory_obj *memory_factory(int flags, ...);
 
 // destruct
-void memory_free(struct memory_obj *);
+void memory_obj_free(struct memory_obj *);
 
 int  memory_read(const struct memory_obj *, void *buffer, u64 offset, size_t length);
 int  memory_write(const struct memory_obj *, void *buffer, u64 offset, size_t length);

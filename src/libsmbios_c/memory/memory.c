@@ -102,7 +102,7 @@ int  memory_write(const struct memory_obj *m, void *buffer, u64 offset, size_t l
     return m->write_fn(m, (u8 *)buffer, offset, length);
 }
 
-void memory_free(struct memory_obj *m)
+void memory_obj_free(struct memory_obj *m)
 {
     if (m != &singleton)
         m->free(m);

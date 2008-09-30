@@ -22,6 +22,7 @@
 #define NvramByte1_Token                            0x83
 #define NvramByte2_Token                            0x84
 #define BIOS_Information_Version_Offset             0x05
+#define System_Information_Structure                0x01
 #define System_Information_Manufacturer_Offset      0x04
 #define System_Information_Product_Name_Offset      0x05
 #define System_Information_Serial_Number_Offset     0x07

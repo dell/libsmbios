@@ -80,7 +80,7 @@ __internal u16 getIdByteFromMem ()
     idWord = tempWord;
 
 out:
-    memory_free(mem);
+    memory_obj_free(mem);
     return idWord;
 }
 
@@ -123,7 +123,7 @@ __internal u16 getIdByteFromMem_Diamond ()
     }
 
 out:
-    memory_free(mem);
+    memory_obj_free(mem);
     return idWord;
 }
 
@@ -154,7 +154,7 @@ __internal u16 getIdByteFromOEMItem ()
     }
 
 out:
-    smbios_free(table);
+    smbios_table_free(table);
     return idWord;
 }
 

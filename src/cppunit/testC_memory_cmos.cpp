@@ -86,7 +86,7 @@ void testCInterface::testMemoryRead()
         ret = memory_read(m, &buf, i, 1);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
-        memory_free(m);
+        memory_obj_free(m);
     }
 
     STD_TEST_END("");
@@ -120,7 +120,7 @@ void testCInterface::testMemoryWrite()
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('A' + i) );
     }
 
-    memory_free(m);
+    memory_obj_free(m);
 
     STD_TEST_END("");
 }
@@ -135,7 +135,7 @@ void testCInterface::testMemoryReadMultipage()
     // 26 == start after alphabet in test file
     ret = memory_read(m, buf, 26, 65536*3);
     CPPUNIT_ASSERT_EQUAL( 0, ret );
-    memory_free(m);
+    memory_obj_free(m);
 
     for (int i=0; i<3; i++)
         for (int j=0; j<65536; j++)

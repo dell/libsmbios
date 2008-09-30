@@ -40,7 +40,7 @@ struct smbios_struct;
 struct smbios_table *smbios_factory(int flags, ...);
 
 // destruct
-void smbios_free(struct smbios_table *);
+void smbios_table_free(struct smbios_table *);
 
 // format error string
 size_t smbios_fmt_err(struct smbios_table *, char *buf, size_t len);
