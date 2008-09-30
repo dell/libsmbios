@@ -5,6 +5,7 @@ dist_sbin_SCRIPTS += src/bin-supported/mkbiospkg.sh
 sbin_PROGRAMS += \
     out/assetTag \
     out/getSystemId   \
+    out/getSystemId_lite   \
     out/propertyTag   \
     out/serviceTag    \
     out/verifySmiPassword     \
@@ -15,9 +16,10 @@ sbin_PROGRAMS += \
     out/dellWirelessCtl \
     out/dellMediaDirectCtl
 
-noinst_PROGRAMS += \
+EXTRA_PROGRAMS += \
     out/assetTagS \
     out/getSystemIdS   \
+    out/getSystemId_liteS   \
     out/propertyTagS   \
     out/serviceTagS    \
     out/verifySmiPasswordS     \
@@ -35,6 +37,7 @@ CLEANFILES += src/bin-supported/.libs
 
 out_assetTag_SOURCES = src/bin-supported/assetTag.cpp $(getopts_c)
 out_getSystemId_SOURCES = src/bin-supported/getSystemId.cpp $(getopts_c)
+out_getSystemId_lite_SOURCES = src/bin-supported/getSystemId_lite.c $(getopts_c)
 out_propertyTag_SOURCES = $(getopts_c) src/bin-supported/propertyTag.cpp
 out_serviceTag_SOURCES = $(getopts_c) src/bin-supported/serviceTag.cpp
 out_verifySmiPassword_SOURCES = $(getopts_c) src/bin-supported/verifySmiPassword.cpp
@@ -46,6 +49,7 @@ out_dumpSmbios_SOURCES = $(getopts_c) src/bin-supported/dumpSmbios.cpp
 
 out_assetTag_LDFLAGS = $(AM_LDFLAGS) -lsmbios
 out_getSystemId_LDFLAGS = $(AM_LDFLAGS) -lsmbios
+out_getSystemId_lite_LDFLAGS = $(AM_LDFLAGS) -lsmbios_c
 out_propertyTag_LDFLAGS = $(AM_LDFLAGS) -lsmbios
 out_serviceTag_LDFLAGS = $(AM_LDFLAGS) -lsmbios
 out_verifySmiPassword_LDFLAGS = $(AM_LDFLAGS) -lsmbios
@@ -65,6 +69,7 @@ out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios/common
 #static versions
 out_assetTagS_SOURCES = src/bin-supported/assetTag.cpp $(getopts_c)
 out_getSystemIdS_SOURCES = src/bin-supported/getSystemId.cpp $(getopts_c)
+out_getSystemId_liteS_SOURCES = src/bin-supported/getSystemId_lite.c $(getopts_c)
 out_propertyTagS_SOURCES = $(getopts_c) src/bin-supported/propertyTag.cpp
 out_serviceTagS_SOURCES = $(getopts_c) src/bin-supported/serviceTag.cpp
 out_verifySmiPasswordS_SOURCES = $(getopts_c) src/bin-supported/verifySmiPassword.cpp
@@ -76,6 +81,7 @@ out_dumpSmbiosS_SOURCES = $(getopts_c) src/bin-supported/dumpSmbios.cpp
 
 out_assetTagS_LDFLAGS          = $(AM_LDFLAGS) -all-static -lsmbios
 out_getSystemIdS_LDFLAGS       = $(AM_LDFLAGS) -all-static -lsmbios
+out_getSystemId_liteS_LDFLAGS       = $(AM_LDFLAGS) -all-static -lsmbios_c
 out_propertyTagS_LDFLAGS       = $(AM_LDFLAGS) -all-static -lsmbios
 out_serviceTagS_LDFLAGS        = $(AM_LDFLAGS) -all-static -lsmbios
 out_verifySmiPasswordS_LDFLAGS = $(AM_LDFLAGS) -all-static -lsmbios

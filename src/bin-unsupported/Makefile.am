@@ -13,7 +13,7 @@ sbin_PROGRAMS += \
     out/probes \
     out/dellLEDCtl
 
-noinst_PROGRAMS += \
+EXTRA_PROGRAMS += \
     out/activateCmosTokenS  \
     out/createUnitTestFilesS  \
     out/disable_console_redirS  \
