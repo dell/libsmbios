@@ -32,19 +32,50 @@
 // private
 #include "token_impl.h"
 
-int __internal _d4_get_id(struct token_obj *t)
+static int _d4_get_id(struct token_obj *t)
 {
     return ((struct indexed_io_token *)t)->tokenId;
+}
+
+static int _d4_get_flags(struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_is_active(struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_activate(struct token_obj *t)
+{
+    return 0;
+}
+
+static char * _d4_get_string(struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_get_string_len(struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_set_string(struct token_obj *t, const char *str)
+{
+    return 0;
 }
 
 void __internal init_d4_token(struct token_obj *t)
 {
     t->get_id = _d4_get_id;
-    t->get_flags = 0;
-    t->is_active = 0;
-    t->activate = 0;
-    t->get_string = 0;
-    t->set_string = 0;
+    t->get_flags = _d4_get_flags;
+    t->is_active = _d4_is_active;
+    t->activate = _d4_activate;
+    t->get_string = _d4_get_string;
+    t->get_string_len = _d4_get_string_len;
+    t->set_string = _d4_set_string;
     t->try_password = 0;
 }
 

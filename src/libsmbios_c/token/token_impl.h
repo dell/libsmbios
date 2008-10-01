@@ -55,7 +55,8 @@ struct token_obj
     int (*is_active)(struct token_obj*);
     int (*activate)(struct token_obj*);
 
-    const char* (*get_string)(struct token_obj*);
+    char* (*get_string)(struct token_obj*);
+    int (*get_string_len)(struct token_obj*);
     int (*set_string)(struct token_obj*, const char *);
 
     int (*try_password)(struct token_obj *, const char *);
