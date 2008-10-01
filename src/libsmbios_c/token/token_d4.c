@@ -40,12 +40,12 @@ int __internal _d4_get_id(struct token_obj *t)
 void __internal init_d4_token(struct token_obj *t)
 {
     t->get_id = _d4_get_id;
-    get_flags = 0;
-    is_active = 0;
-    activate = 0;
-    get_string = 0;
-    set_string = 0;
-    try_password = 0;
+    t->get_flags = 0;
+    t->is_active = 0;
+    t->activate = 0;
+    t->get_string = 0;
+    t->set_string = 0;
+    t->try_password = 0;
 }
 
 void __internal add_d4_tokens(struct token_table *t)

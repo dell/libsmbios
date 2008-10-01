@@ -72,6 +72,7 @@ struct token_table
     struct token_obj *list_head;
 };
 
+void __internal add_token(struct token_table *t, struct token_obj *o);
 void __internal add_d4_tokens(struct token_table *t);
 
 
