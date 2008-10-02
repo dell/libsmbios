@@ -15,6 +15,7 @@ out_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@to
 out_testRbu_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
+    src/cppunit/main.h  \
     src/cppunit/XmlUtils.cpp	\
     src/cppunit/XmlUtils.h	\
     src/cppunit/testRbu.h	\
@@ -25,6 +26,7 @@ out_testPlatform_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) 
 out_testPlatform_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
+    src/cppunit/main.h  \
     src/cppunit/XmlUtils.cpp	\
     src/cppunit/XmlUtils.h	\
     src/cppunit/testPlatform.h	\
@@ -35,6 +37,7 @@ out_testStandalone_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS
 out_testStandalone_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
+    src/cppunit/main.h  \
     src/cppunit/XmlUtils.cpp	\
     src/cppunit/XmlUtils.h	\
     src/cppunit/testStandalone.h	\
@@ -45,6 +48,7 @@ out_testC_memory_cmos_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdi
 out_testC_memory_cmos_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
+    src/cppunit/main.h  \
     src/cppunit/testC_memory_cmos.h	\
     src/cppunit/testC_memory_cmos.cpp
 
@@ -53,6 +57,7 @@ out_testC_smbios_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) 
 out_testC_smbios_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
+    src/cppunit/main.h  \
     src/cppunit/XmlUtils.cpp	\
     src/cppunit/XmlUtils.h	\
     src/cppunit/testC_smbios.h	\
@@ -63,6 +68,7 @@ out_testC_token_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -
 out_testC_token_SOURCES = \
     src/cppunit/outputctl.h	\
     src/cppunit/main.cpp  \
+    src/cppunit/main.h  \
     src/cppunit/XmlUtils.cpp	\
     src/cppunit/XmlUtils.h	\
     src/cppunit/testC_token.h	\
