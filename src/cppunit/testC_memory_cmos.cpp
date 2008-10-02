@@ -186,6 +186,12 @@ void testCInterface::testCmosRead()
     STD_TEST_END("");
 }
 
+int _test_write_callback(const struct cmos_obj *c, bool do_update, void *userdata)
+{
+    printf("Write detected. do_update: %d  userdata: %p\n", do_update, userdata);
+    return 0;
+}
+
 
 void testCInterface::testCmosWrite()
 {
@@ -193,6 +199,8 @@ void testCInterface::testCmosWrite()
     struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
     u8 buf;
     int ret;
+
+    cmos_register_write_callback(c, _test_write_callback, 0, 0);
 
     for (int i=0; i<26; ++i){
         ret = cmos_read_byte(c, &buf, 0, 0, i);

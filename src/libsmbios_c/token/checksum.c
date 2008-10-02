@@ -32,9 +32,8 @@
 // private
 #include "token_impl.h"
 
-
 // no error checking...
-__internal u8 readByte(u32 indexPort, u32 dataPort, u32 offset)
+__internal u8 _readByte(u32 indexPort, u32 dataPort, u32 offset)
 {
     struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
     u8 byte = 0;
@@ -42,11 +41,45 @@ __internal u8 readByte(u32 indexPort, u32 dataPort, u32 offset)
     return byte;
 }
 
-__internal u8 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort )
+// no error checking...
+__internal void _writeByte(u32 indexPort, u32 dataPort, u32 offset, u8 value)
+{
+    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
+    cmos_write_byte(c, value, indexPort, dataPort, offset);
+}
+
+__internal int update_checksum(const struct cmos_obj *c, bool do_update, void *userdata)
+{
+    int retval = 0;
+    struct checksum_details *data = (struct checksum_details *)userdata;
+
+    u16 wordRetval = data->csum_fn(data->start, data->end, data->indexPort, data->dataPort);
+    const u8 *csum = (const u8 *)(&wordRetval);
+
+    u32 actualcsum = 0;
+    u32 calculatedcsum = 0;
+    for( int i=0; i<data->csumlen; ++i )
+    {
+        u8 byte = _readByte(data->indexPort, data->dataPort, data->csumloc+i);
+        actualcsum = (actualcsum << 8) | byte;
+        calculatedcsum = calculatedcsum |  (csum[i] << (8*i));
+    }
+
+    if (actualcsum != calculatedcsum)
+        retval = 1;
+
+    if(do_update && actualcsum != calculatedcsum)
+        for( int i=0; i<data->csumlen; ++i )
+            _writeByte( data->indexPort, data->dataPort, data->csumloc+i, csum[data->csumlen -i -1]);
+
+    return retval;
+}
+
+__internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort )
 {
     u8 running_checksum=0;
     for( u32 i = start; i <= end; i++)
-        running_checksum += readByte( indexPort, dataPort, i );
+        running_checksum += _readByte( indexPort, dataPort, i );
     return running_checksum;
 }
 
@@ -55,12 +88,21 @@ __internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort, bo
 {
     u16 running_checksum=0;
     for( u32 i = start; i <= end; i++)
-        running_checksum += readByte( indexPort, dataPort, i );
+        running_checksum += _readByte( indexPort, dataPort, i );
     if( complement )
         running_checksum = (~running_checksum) + 1;
     return running_checksum;
 }
 
+__internal u16 wordChecksum_reg( u32 start, u32 end, u32 indexPort, u32 dataPort)
+{
+    return wordChecksum(start, end, indexPort, dataPort, false);
+}
+
+__internal u16 wordChecksum_comp( u32 start, u32 end, u32 indexPort, u32 dataPort)
+{
+    return wordChecksum(start, end, indexPort, dataPort, true);
+}
 
 __internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort )
 {
@@ -68,7 +110,7 @@ __internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort )
 
     for( u32 i = start; i <= end; i++)
     {
-        running_crc ^= readByte( indexPort, dataPort, i );
+        running_crc ^= _readByte( indexPort, dataPort, i );
 
         for( int j=0; j<7; j++ )
         {

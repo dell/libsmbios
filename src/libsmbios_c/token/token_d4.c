@@ -215,11 +215,44 @@ void __internal init_d4_token(struct token_obj *t)
     t->try_password = 0;
 }
 
+void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
+{
+    struct checksum_details *d = calloc(1, sizeof(struct checksum_details));
+
+    d->csumloc   = d4_struct->checkValueIndex;
+    d->csumlen   = sizeof(u16);
+    d->start     = d4_struct->checkedRangeStartIndex;
+    d->end       = d4_struct->checkedRangeEndIndex;
+    d->indexPort = d4_struct->indexPort;
+    d->dataPort  = d4_struct->dataPort;
+    d->checkType = d4_struct->checkType;
+
+    switch(d->checkType) {
+        case CHECK_TYPE_BYTE_CHECKSUM:
+            d->csum_fn = byteChecksum;
+            d->csumlen = sizeof(u8);
+            break;
+        case CHECK_TYPE_WORD_CHECKSUM:
+            d->csum_fn = wordChecksum_reg;
+            break;
+        case CHECK_TYPE_WORD_CHECKSUM_N:
+            d->csum_fn = wordChecksum_comp;
+            break;
+        case CHECK_TYPE_WORD_CRC:
+            d->csum_fn = wordCrc;
+            break;
+        default:
+            break;
+    }
+}
+
 void __internal add_d4_tokens(struct token_table *t)
 {
     smbios_for_each_struct_type(t->smbios_table, s, 0xD4) {
         struct indexed_io_access_structure *d4_struct = (struct indexed_io_access_structure*)s;
         struct indexed_io_token *token = d4_struct->tokens;
+
+        setup_d4_checksum(d4_struct);
 
         while (token->tokenId != TokenTypeEOT) {
             struct token_obj *n = calloc(1, sizeof(struct token_obj));

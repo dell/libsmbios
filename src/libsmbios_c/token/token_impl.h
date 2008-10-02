@@ -155,7 +155,30 @@ enum  // protected value format types
 #pragma pack(pop)
 #endif
 
+enum
+{
+    CHECK_TYPE_WORD_CHECKSUM   = 0x00, //simple running sum in word
+    CHECK_TYPE_BYTE_CHECKSUM   = 0x01, //simple running sum in byte
+    CHECK_TYPE_WORD_CRC        = 0x02, // crc
+    CHECK_TYPE_WORD_CHECKSUM_N = 0x03, //simple runnign sum in word, then (~result + 1)
+};
 
+__internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort );
+__internal u16 wordChecksum_reg( u32 start, u32 end, u32 indexPort, u32 dataPort);
+__internal u16 wordChecksum_comp( u32 start, u32 end, u32 indexPort, u32 dataPort);
+__internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort );
+
+struct checksum_details 
+{
+    u32 csumloc;
+    u32 csumlen;
+    u32 start;
+    u32 end;
+    u32 indexPort;
+    u32 dataPort;
+    u32 checkType;
+    u16 (*csum_fn)( u32 start, u32 end, u32 indexPort, u32 dataPort );
+};
 
 EXTERN_C_END;
 

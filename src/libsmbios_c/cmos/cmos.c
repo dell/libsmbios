@@ -76,20 +76,45 @@ int  cmos_write_byte(const struct cmos_obj *m, u8 byte, u32 indexPort, u32 dataP
     return temp;
 }
 
+void __internal _cmos_obj_free(struct cmos_obj *m)
+{
+    struct callback *ptr = m->cb_list_head;
+    struct callback *next = 0;
+
+    // free callback list
+    while(ptr)
+    {
+        next = 0;
+        if (ptr->next)
+            next = ptr->next;
+
+        if (ptr->destructor)
+            ptr->destructor(ptr->userdata);
+        free(ptr);
+        ptr = next;
+    }
+
+    m->cb_list_head = 0;
+
+    m->free(m);
+}
+
 void cmos_obj_free(struct cmos_obj *m)
 {
     if (m != &singleton)
-        m->free(m);
+        _cmos_obj_free(m);
     else
         m->cleanup(m);
 }
 
-void register_write_callback(struct cmos_obj *m, cmos_write_callback cb_fn, void *userdata)
+void cmos_register_write_callback(struct cmos_obj *m, cmos_write_callback cb_fn, void *userdata, void (*destructor)(void *))
 {
-    struct callback *ptr = &(m->cb_list_head);
+    struct callback *ptr = m->cb_list_head;
     struct callback *new = 0;
+    dprintf("%s\n", __PRETTY_FUNCTION__);
 
-    while(ptr->next)
+    dprintf("%s - loop\n", __PRETTY_FUNCTION__);
+    while(ptr && ptr->next)
     {
         // dont add duplicates
         if (ptr->cb_fn == cb_fn && ptr->userdata == userdata)
@@ -98,11 +123,18 @@ void register_write_callback(struct cmos_obj *m, cmos_write_callback cb_fn, void
         ptr = ptr->next;
     }
 
+    dprintf("%s - allocate\n", __PRETTY_FUNCTION__);
     new = calloc(1, sizeof(struct callback));
     new->cb_fn = cb_fn;
     new->userdata = userdata;
+    new->destructor = destructor;
     new->next = 0;
-    ptr->next = new;
+
+    dprintf("%s - join %p\n", __PRETTY_FUNCTION__, ptr);
+    if (ptr)
+        ptr->next = new;
+    else
+        m->cb_list_head = new;
 
 out:
     return;
@@ -111,16 +143,23 @@ out:
 int cmos_run_callbacks(const struct cmos_obj *m, bool do_update)
 {
     int retval = 0;
-    for(const struct callback *ptr = &(m->cb_list_head); ptr->next; ptr = ptr->next)
-        if(ptr->cb_fn)
-            retval |= ptr->cb_fn(m, do_update, ptr->userdata);
+    const struct callback *ptr = m->cb_list_head; 
+    dprintf("%s\n", __PRETTY_FUNCTION__);
+    if(!ptr)
+        goto out;
+
+    do{
+        dprintf("%s - ptr->cb_fn %p\n", __PRETTY_FUNCTION__, ptr->cb_fn);
+        retval |= ptr->cb_fn(m, do_update, ptr->userdata);
+        ptr = ptr->next;
+    } while (ptr);
+
+out:
     return retval;
 }
 
 void __internal _init_cmos_std_stuff(struct cmos_obj *m)
 {
     m->initialized = 1;
-    m->cb_list_head.cb_fn = 0;
-    m->cb_list_head.userdata = 0;
-    m->cb_list_head.next = 0;
+    m->cb_list_head = 0;
 }

@@ -145,20 +145,19 @@ namespace smbios
 
 
 
-        // if NULL parameter passed, or
-        // if parameter not null and evaluates to TRUE
-        if( !doUpdate || *static_cast<bool*>(doUpdate) )
+        u32 actualChksum = 0;
+        u32 calculatedChksum = 0;
+        for( int i=0; i<len; ++i )
         {
-            // only write new checksum if it doesn't match what is already there
-            u32 actualChksum = 0;
-            u32 calculatedChksum = 0;
-            for( int i=0; i<len; ++i )
-            {
-                u8 byte = cmos->readByte(indexPort, dataPort, checksumLocation+i);
-                actualChksum = (actualChksum << 8) | byte;
-                calculatedChksum = calculatedChksum |  (chksum[i] << (8*i));
-            }
-            if( actualChksum != calculatedChksum )
+            u8 byte = cmos->readByte(indexPort, dataPort, checksumLocation+i);
+            actualChksum = (actualChksum << 8) | byte;
+            calculatedChksum = calculatedChksum |  (chksum[i] << (8*i));
+        }
+
+        // if NULL parameter passed, or if parameter not null and evaluates to TRUE
+        // only write new checksum if it doesn't match what is already there
+        if (actualChksum != calculatedChksum)
+            if( !doUpdate || *static_cast<bool*>(doUpdate) )
             {
                 const cmos::Suppressable *o = dynamic_cast<const cmos::Suppressable *>(cmos);
                 o->suppressNotification(true);
@@ -170,18 +169,7 @@ namespace smbios
                 }
                 o->resumeNotification(true);
             }
-        }
-        else
-        {
-            u32 actualChksum = 0;
-            u32 calculatedChksum = 0;
-            for( int i=0; i<len; ++i )
-            {
-                u8 byte = cmos->readByte(indexPort, dataPort, checksumLocation+i);
-                actualChksum = (actualChksum << 8) | byte;
-                calculatedChksum = calculatedChksum |  (chksum[i] << (8*i));
-            }
-            if( actualChksum != calculatedChksum )
+            else
             {
                 ost << _("Checking alternate checksum algorithm results.") << endl
                 << _("Calculated (Type %(word_chksum_type)i) word checksum is: %(calc_word)i") << endl
@@ -215,7 +203,6 @@ namespace smbios
                 invalidChecksum.setMessageString( ost.str() );
                 throw invalidChecksum;
             }
-        }
     }
 
     /*******************

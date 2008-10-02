@@ -37,6 +37,7 @@ struct callback
 {
     cmos_write_callback cb_fn;
     void *userdata;
+    void (*destructor)(void *);
     struct callback *next;
 };
 
@@ -47,7 +48,7 @@ struct cmos_obj
     int (*write_fn)(const struct cmos_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset);
     void (*free)(struct cmos_obj *this);
     void (*cleanup)(struct cmos_obj *this); // called instead of ->free for singleton
-    struct callback cb_list_head;
+    struct callback *cb_list_head;
     void *private_data;
 };
 
