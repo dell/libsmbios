@@ -49,17 +49,20 @@ enum // Token types
 
 struct token_obj
 {
-    int (*get_id)(struct token_obj*);
-    int (*get_flags)(struct token_obj*); // is_bool, is_string, password_needed
+    const char* (*get_type)(const struct token_obj*);
+    int (*get_id)(const struct token_obj*);
+    //int (*get_flags)(const struct token_obj*);
+    int (*is_bool)(const struct token_obj*);
+    int (*is_string)(const struct token_obj*);
 
-    int (*is_active)(struct token_obj*);
-    int (*activate)(struct token_obj*);
+    int (*is_active)(const struct token_obj*);
+    int (*activate)(const struct token_obj*);
 
-    char* (*get_string)(struct token_obj*);
-    int (*get_string_len)(struct token_obj*);
-    int (*set_string)(struct token_obj*, const char *);
+    char* (*get_string)(const struct token_obj*);
+    int (*get_string_len)(const struct token_obj*);
+    int (*set_string)(const struct token_obj*, const char *);
 
-    int (*try_password)(struct token_obj *, const char *);
+    int (*try_password)(const struct token_obj *, const char *);
 
     const struct smbios_struct *smbios_structure;
     void *token_ptr;

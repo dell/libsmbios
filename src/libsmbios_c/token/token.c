@@ -71,7 +71,96 @@ void token_table_free(struct token_table *m)
     // can do special cleanup for singleton, but none necessary atm
 }
 
+const struct token_obj *token_get_next(const struct token_table *t, const struct token_obj *cur)
+{
+    if (!cur)
+        return t->list_head;
 
+    return cur->next;
+}
+
+const struct token_obj *token_get_next_by_id(const struct token_table *t, const struct token_obj *cur, u16 id)
+{
+    do {
+        cur = token_get_next(t, cur);
+        if (cur && token_obj_get_id(cur) == id)
+            break;
+    } while ( cur );
+    return cur;
+}
+
+#define makeit(ret, defret, callname) \
+    ret token_obj_##callname (const struct token_obj *t)    \
+    {\
+        if (t) return t-> callname (t);     \
+        return defret;\
+    }
+
+makeit( const char *, 0, get_type )
+makeit( u16, 0, get_id )
+makeit( int, 0, is_active )
+makeit( int, 0, activate )
+makeit( char *, 0, get_string )
+makeit( int, 0, is_bool )
+makeit( int, 0, is_string )
+
+int token_obj_set_string(const struct token_obj *t, const char *newstr)
+{
+    if (t)
+        return t->set_string (t, newstr);
+    return 0;
+}
+
+int token_obj_try_password(const struct token_obj *t, const char *password)
+{
+    if (t)
+        return t->try_password (t, password);
+    return 0;
+}
+
+
+const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *t)
+{
+    return t->smbios_structure;
+}
+
+void token_free_string(char *s)
+{
+    free(s);
+}
+
+#define makeit2(ret, defret, callname)\
+    ret token_##callname (u16 id)    \
+    {\
+        struct token_table *table = 0;              \
+        const struct token_obj *token = 0;          \
+        table = token_factory(TOKEN_GET_SINGLETON); \
+        if (!table) goto out;                       \
+        token = token_get_next_by_id(table, 0, id); \
+        if (!token) goto out;                       \
+        return token -> callname (token);          \
+out:\
+        return defret;  \
+    }
+
+makeit2(int, 0, is_bool)
+makeit2(int, 0, is_active)
+makeit2(int, 0, activate)
+makeit2(int, 0, is_string)
+makeit2(const char *, 0, get_string)
+
+int token_set_string(u16 id, const char *newstr)
+{
+    struct token_table *table = 0;
+    const struct token_obj *token = 0;
+    table = token_factory(TOKEN_GET_SINGLETON);
+    if (!table) goto out;
+    token = token_get_next_by_id(table, 0, id);
+    if (!token) goto out;
+    return token -> set_string (token, newstr);
+out:
+    return 0;
+}
 
 
 /**************************************************

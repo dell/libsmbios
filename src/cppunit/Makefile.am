@@ -8,7 +8,7 @@ EXTRA_DIST += \
 	src/cppunit/platform
 
 TESTS = src/cppunit/runtests.sh
-check_PROGRAMS = out/testRbu out/testPlatform out/testStandalone out/testC_memory_cmos out/testC_smbios
+check_PROGRAMS = out/testRbu out/testPlatform out/testStandalone out/testC_memory_cmos out/testC_smbios out/testC_token
 
 out_testRbu_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lout -lsmbios $(CPPUNIT_LIBS) $(AM_LDFLAGS)
 out_testRbu_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/libsmbios/common  -I@top_srcdir@/src/cppunit/
@@ -57,4 +57,14 @@ out_testC_smbios_SOURCES = \
     src/cppunit/XmlUtils.h	\
     src/cppunit/testC_smbios.h	\
     src/cppunit/testC_smbios.cpp
+
+out_testC_token_LDFLAGS = @LIBXML2_LIBS@ -lcppunit -ldl -Lout -lsmbios_c $(CPPUNIT_LIBS) $(AM_LDFLAGS)
+out_testC_token_CXXFLAGS = @LIBXML2_CFLAGS@ $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) -I@top_srcdir@/src/cppunit/ -I@top_srcdir@/src/libsmbios/common
+out_testC_token_SOURCES = \
+    src/cppunit/outputctl.h	\
+    src/cppunit/main.cpp  \
+    src/cppunit/XmlUtils.cpp	\
+    src/cppunit/XmlUtils.h	\
+    src/cppunit/testC_token.h	\
+    src/cppunit/testC_token.cpp
 

@@ -32,45 +32,65 @@
 // private
 #include "token_impl.h"
 
-static int _d4_get_id(struct token_obj *t)
+static const char *_d4_get_type(const struct token_obj *t)
 {
-    return ((struct indexed_io_token *)t)->tokenId;
+    return "d4";
 }
 
-static int _d4_get_flags(struct token_obj *t)
+//static int _d4_get_flags(const struct token_obj *t)
+static int _d4_get_id(const struct token_obj *t)
 {
-    return 0;
+    dprintf("_d4_get_id\n");
+    return ((struct indexed_io_token *)(t->token_ptr))->tokenId;
 }
 
-static int _d4_is_active(struct token_obj *t)
-{
-    return 0;
-}
+//static int _d4_get_flags(const struct token_obj *t)
+//{
+//    return 0;
+//}
 
-static int _d4_activate(struct token_obj *t)
-{
-    return 0;
-}
-
-static char * _d4_get_string(struct token_obj *t)
+static int _d4_is_bool(const struct token_obj *t)
 {
     return 0;
 }
 
-static int _d4_get_string_len(struct token_obj *t)
+static int _d4_is_string(const struct token_obj *t)
 {
     return 0;
 }
 
-static int _d4_set_string(struct token_obj *t, const char *str)
+static int _d4_is_active(const struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_activate(const struct token_obj *t)
+{
+    return 0;
+}
+
+static char * _d4_get_string(const struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_get_string_len(const struct token_obj *t)
+{
+    return 0;
+}
+
+static int _d4_set_string(const struct token_obj *t, const char *str)
 {
     return 0;
 }
 
 void __internal init_d4_token(struct token_obj *t)
 {
+    t->get_type = _d4_get_type;
     t->get_id = _d4_get_id;
-    t->get_flags = _d4_get_flags;
+    //t->get_flags = _d4_get_flags;
+    t->is_bool = _d4_is_bool;
+    t->is_string = _d4_is_string;
     t->is_active = _d4_is_active;
     t->activate = _d4_activate;
     t->get_string = _d4_get_string;

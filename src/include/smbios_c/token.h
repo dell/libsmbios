@@ -47,8 +47,25 @@ size_t token_fmt_err(struct token_table *, char *buf, size_t len);
 
 // for looping/searching
 const struct token_obj *token_get_next(const struct token_table *, const struct token_obj *cur);
-const struct token_obj *token_get_next_by_type(const struct token_table *, const struct token_obj *cur, u8 type);
+const struct token_obj *token_get_next_by_id(const struct token_table *, const struct token_obj *cur, u16 id);
 
+u16 token_obj_get_id(const struct token_obj *);
+
+#define token_for_each(table_name, struct_name)  \
+        for(    \
+            const struct token_obj *struct_name = token_get_next(table_name, 0);\
+            struct_name;\
+            struct_name = token_get_next(table_name, struct_name)\
+           )
+
+#define token_for_each_id(table_name, struct_name, id)  \
+        for(    \
+            const struct token_obj *struct_name = token_get_next_id(table_name, 0, id);\
+            struct_name;\
+            struct_name = token_get_next_id(table_name, struct_name, id)\
+           )
+
+const char * token_obj_get_type(const struct token_obj *);
 int token_obj_is_bool(const struct token_obj *);
 int token_obj_is_active(const struct token_obj *);
 int token_obj_activate(const struct token_obj *);
@@ -57,18 +74,18 @@ int token_obj_is_string(const struct token_obj *);
 char* token_obj_get_string(const struct token_obj *);
 int token_obj_set_string(const struct token_obj *, const char *);
 
-struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *);
+const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *);
 int token_obj_try_password(const struct token_obj *, const char *);
 
-int token_free_string(char *);
+void token_free_string(char *);
 
-int token_is_bool(u16 type);
-int token_is_active(u16 type);
-int token_activate(u16 type);
+int token_is_bool(u16 id);
+int token_is_active(u16 id);
+int token_activate(u16 id);
 
-int token_is_string(u16 type);
-const char *token_get_string(u16 type);
-int token_set_string(u16 type, const char *);
+int token_is_string(u16 id);
+const char *token_get_string(u16 id);
+int token_set_string(u16 id, const char *);
 
 
 EXTERN_C_END;
