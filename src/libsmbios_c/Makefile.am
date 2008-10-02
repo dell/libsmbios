@@ -21,5 +21,6 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/system_info/asset_tag.c		\
     src/libsmbios_c/system_info/service_tag.c		\
     src/libsmbios_c/system_info/system_info.c		\
+    src/libsmbios_c/token/checksum.c			\
     src/libsmbios_c/token/token.c			\
     src/libsmbios_c/token/token_d4.c
