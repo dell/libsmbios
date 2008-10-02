@@ -29,7 +29,6 @@
 #include "smbios_c/types.h"
 
 // private
-#include "../token/token_impl.h"
 #include "smbios_impl.h"
 
 //const Workaround *PE1300_Workarounds[] = { &PE1300_InvalidCheckType, 0 };

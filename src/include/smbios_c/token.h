@@ -123,6 +123,13 @@ LIBSMBIOS_PACKED_ATTR;
 #pragma pack(pop)
 #endif
 
+enum
+{
+    CHECK_TYPE_WORD_CHECKSUM   = 0x00, //simple running sum in word
+    CHECK_TYPE_BYTE_CHECKSUM   = 0x01, //simple running sum in byte
+    CHECK_TYPE_WORD_CRC        = 0x02, // crc
+    CHECK_TYPE_WORD_CHECKSUM_N = 0x03, //simple runnign sum in word, then (~result + 1)
+};
 
 EXTERN_C_END;
 
