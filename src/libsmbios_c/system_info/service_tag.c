@@ -25,6 +25,7 @@
 
 #include "smbios_c/smbios.h"
 #include "smbios_c/token.h"
+#include "smbios_c/cmos.h"
 #include "smbios_c/system_info.h"
 #include "dell_magic.h"
 #include "_impl.h"
@@ -155,55 +156,65 @@ __internal void dell_encode_service_tag( char *tag, size_t len )
 
 __internal char *getServiceTagFromCMOSToken()
 {
-    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
     const struct smbios_struct *s;
     char *tempval = 0;
+    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
+    u16 indexPort, dataPort;
+    u8  location;
+    u8 csum = 0;
+    u8 byte;
+    int ret;
 
     dprintf("getServiceTagFromCMOSToken()\n");
-
-    dprintf("getServiceTagFromCMOSToken() - table check\n");
-    if (!table)
+    if (!c)
         goto out;
 
-    dprintf("getServiceTagFromCMOSToken() - get 0xd4 token\n");
-    s = smbios_get_next_struct_by_type(table, 0, 0xD4);
-    if (!s)
-        goto out;
+    struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
+    const struct token_obj *token = token_get_next_by_id(table, 0, Cmos_Service_Token);
 
     // Step 1: Get tag from CMOS
     dprintf("getServiceTagFromCMOSToken() - get string\n");
-    tempval = token_get_string(Cmos_Service_Token);
+    tempval = token_obj_get_string(token);
     if (!tempval)
-        goto out;
+        goto out_err;
 
     // Step 2: Decode 7-char tag from 5-char CMOS value
     dprintf("getServiceTagFromCMOSToken() - decode string\n");
     dell_decode_service_tag( tempval, SVC_TAG_LEN_MAX + 1 );
+    dprintf("getServiceTagFromCMOSToken() - GOT: '%s'\n", tempval);
 
-#if 0
     // Step 3: Make sure checksum is good before returning value
-    u16 indexPort, dataPort;
-    u8  location;
+    dprintf("getServiceTagFromCMOSToken() - csum\n");
+    s = token_obj_get_smbios_struct(token);
+    indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
+    dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
+    location = ((struct indexed_io_token *)token_obj_get_ptr(token))->location;
 
-    smbios::IToken *token = &(*((*table)[ Cmos_Service_Token ]));
-    dynamic_cast< smbios::ICmosToken * >(token)->getCMOSDetails( &indexPort, &dataPort, &location );
-
-    u8 csum = 0;
-    ICmosRW *cmos = cmos::CmosRWFactory::getFactory()->getSingleton();
-
+    // calc checksum
     for( u32 i = 0; i < SVC_TAG_CMOS_LEN_MAX; i++)
     {
-        // stupid stuff to avoid MVC++ .NET runtime exception check for cast to different size
-        csum = (csum + cmos->readByte( indexPort, dataPort, location + i )) & 0xFF;
+        ret = cmos_read_byte(c, &byte, indexPort, dataPort, location + i);
+        if (ret<0)
+            goto out_err;
+
+        csum += byte;
     }
 
-    // stupid stuff to avoid MVC++ .NET runtime exception check for cast to different size
-    csum = (csum - cmos->readByte( indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX )) & 0xFF;
-    if( csum ) // bad (should be zero)
-        throw "Bad checksum";
-#endif
+    // get checksum byte
+    ret = cmos_read_byte(c, &byte, indexPort, dataPort, SVC_TAG_CMOS_LEN_MAX + 1);
+    if (ret<0)
+        goto out_err;
+
+    dprintf("getServiceTagFromCMOSToken() - got: %x  calc: %x\n", csum, byte);
+    if (csum - byte) // bad (should be zero)
+        goto out_err;
 
     dprintf("GOT CMOS TAG: %s\n", tempval);
+    goto out;
+
+out_err:
+    free(tempval);
+    tempval = 0;
 
 out:
     dprintf("getServiceTagFromCMOSToken() - out\n");
