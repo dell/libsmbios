@@ -250,9 +250,11 @@ void
 testCsmbios::testServiceTag()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
+    string serviceTagStr = "";
 
     char *serviceTag   = smbios_get_service_tag();
-    string serviceTagStr(serviceTag);
+    if (serviceTag)
+        serviceTagStr = serviceTag;
     smbios_string_free(serviceTag);
 
     string expectedTag = getTestInputString("serviceTag");
