@@ -89,6 +89,39 @@ bool token_is_string(u16 id);
 char *token_get_string(u16 id);
 int token_set_string(u16 id, const char *, size_t size);
 
+#if defined(_MSC_VER)
+#pragma pack(push,1)
+#endif
+struct indexed_io_token
+{
+    u16 tokenId;
+    u8  location;
+    u8  andMask;
+    union {
+        u8 orValue;
+        u8 stringLength;
+    };
+}
+LIBSMBIOS_PACKED_ATTR;
+struct indexed_io_access_structure
+{ /* 0xD4 structure */
+    u8	     type;
+    u8	     length;
+    u16	     handle;
+    u16      indexPort;
+    u16      dataPort;
+    u8       checkType;
+    u8       checkedRangeStartIndex;
+    u8       checkedRangeEndIndex;
+    u8       checkValueIndex;
+    //variable number of tokens present, but at least one.
+    struct   indexed_io_token  tokens[];
+}
+LIBSMBIOS_PACKED_ATTR;
+#if defined(_MSC_VER)
+#pragma pack(pop)
+#endif
+
 
 EXTERN_C_END;
 
