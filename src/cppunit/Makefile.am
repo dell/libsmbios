@@ -5,7 +5,7 @@ CLEANFILES+= testResults.xml src/cppunit/.libs
 
 EXTRA_DIST += \
  	src/cppunit/runtests.sh	\
-	src/cppunit/platform
+	src/cppunit/test_data
 
 TESTS = src/cppunit/runtests.sh
 check_PROGRAMS = out/testRbu out/testPlatform out/testStandalone out/testC_memory_cmos out/testC_smbios out/testC_token
