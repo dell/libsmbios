@@ -139,7 +139,8 @@ void testCtoken::testTokenConstruct()
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
 
     token_for_each(table, token){
-        printf("\t%s token id: %d\n", token_obj_get_type(token), token_obj_get_id(token));
+        token_obj_get_type(token);
+        token_obj_get_id(token);
     }
 
     token_table_free(table);
