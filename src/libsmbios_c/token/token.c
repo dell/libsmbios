@@ -121,10 +121,14 @@ int token_obj_try_password(const struct token_obj *t, const char *password)
     return 0;
 }
 
-
 const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *t)
 {
     return t->smbios_structure;
+}
+
+const void *token_obj_get_ptr(const struct token_obj *t)
+{
+    return t->token_ptr;
 }
 
 void token_free_string(char *s)
@@ -142,7 +146,7 @@ void token_free_string(char *s)
         if (!table) goto out;                       \
         token = token_get_next_by_id(table, 0, id); \
         if (!token) goto out;                       \
-        return token -> callname (token);          \
+        return token_obj_##callname (token);                    \
 out:\
         return defret;  \
     }
@@ -152,6 +156,8 @@ makeit2(bool, 0, is_active)
 makeit2(int, 0, activate)
 makeit2(bool, 0, is_string)
 makeit2(char *, 0, get_string)
+makeit2(const void *, 0, get_ptr)
+makeit2(const struct smbios_struct *, 0, get_smbios_struct)
 
 int token_set_string(u16 id, const char *newstr, size_t size)
 {

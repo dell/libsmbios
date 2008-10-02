@@ -78,6 +78,7 @@ int token_obj_set_string(const struct token_obj *, const char *, size_t size);
 
 const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *);
 int token_obj_try_password(const struct token_obj *, const char *);
+const void *token_obj_get_ptr(const struct token_obj *t);
 
 void token_free_string(char *);
 
@@ -88,6 +89,8 @@ int token_activate(u16 id);
 bool token_is_string(u16 id);
 char *token_get_string(u16 id);
 int token_set_string(u16 id, const char *, size_t size);
+const struct smbios_struct *token_get_smbios_struct(u16 id);
+const void *token_get_ptr(u16 id);
 
 #if defined(_MSC_VER)
 #pragma pack(push,1)
