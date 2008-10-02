@@ -46,9 +46,9 @@ void smbios_table_free(struct smbios_table *);
 size_t smbios_fmt_err(struct smbios_table *, char *buf, size_t len);
 
 // for looping/searching
-const struct smbios_struct *smbios_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
-const struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_table *, const struct smbios_struct *cur, u8 type);
-const struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_table *, const struct smbios_struct *cur, u16 handle);
+struct smbios_struct *smbios_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
+struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_table *, const struct smbios_struct *cur, u8 type);
+struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_table *, const struct smbios_struct *cur, u16 handle);
 
 // visitor pattern
 typedef void (*smbios_walk_fn)(const struct smbios_struct *, void *userdata);

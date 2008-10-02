@@ -34,8 +34,6 @@
 #include "smbios_impl.h"
 
 // forward declarations
-void __internal init_smbios_struct(struct smbios_table *m);
-void __internal _smbios_table_free(struct smbios_table *this);
 
 // static vars
 static struct smbios_table singleton; // auto-init to 0
@@ -59,6 +57,8 @@ struct smbios_table *smbios_factory(int flags, ...)
 
     init_smbios_struct(toReturn);
 
+    do_smbios_fixups(toReturn);
+
 out:
     return toReturn;
 }
@@ -73,7 +73,7 @@ void smbios_table_free(struct smbios_table *m)
 }
 
 
-const struct smbios_struct *smbios_get_next_struct(const struct smbios_table *table, const struct smbios_struct *cur)
+struct smbios_struct *smbios_get_next_struct(const struct smbios_table *table, const struct smbios_struct *cur)
 {
     const u8 *data = 0;
 
@@ -116,27 +116,27 @@ const struct smbios_struct *smbios_get_next_struct(const struct smbios_table *ta
     }
 
 out1:
-    return (const struct smbios_struct *)data;
+    return (struct smbios_struct *)data;
 }
 
-const struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_table *table, const struct smbios_struct *cur, u8 type)
+struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_table *table, const struct smbios_struct *cur, u8 type)
 {
     do {
         cur = smbios_get_next_struct(table, cur);
         if (cur && cur->type == type)
             break;
     } while ( cur );
-    return cur;
+    return (struct smbios_struct *)cur;
 }
 
-const struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_table *table, const struct smbios_struct *cur, u16 handle)
+struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_table *table, const struct smbios_struct *cur, u16 handle)
 {
     do {
         cur = smbios_get_next_struct(table, cur);
         if (cur && cur->handle == handle)
             break;
     } while ( cur );
-    return cur;
+    return (struct smbios_struct *)cur;
 }
 
 
