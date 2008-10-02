@@ -43,7 +43,7 @@ struct ut_data
     int rw;
 };
 
-static int UT_read_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+static int UT_read_fn(const struct cmos_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;
@@ -90,7 +90,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+static int UT_write_fn(const struct cmos_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;

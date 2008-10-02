@@ -36,8 +36,8 @@ struct callback
 struct cmos_obj
 {
     int initialized;
-    int (*read_fn)(const struct cmos_obj *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
-    int (*write_fn)(const struct cmos_obj *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
+    int (*read_fn)(const struct cmos_obj *m, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
+    int (*write_fn)(const struct cmos_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset);
     void (*free)(struct cmos_obj *this);
     void (*cleanup)(struct cmos_obj *this); // called instead of ->free for singleton
     struct callback cb_list_head;

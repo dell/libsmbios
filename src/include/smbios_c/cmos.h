@@ -35,8 +35,8 @@ struct cmos_obj;
 struct cmos_obj *cmos_factory(int flags, ...);
 void   cmos_obj_free(struct cmos_obj *);
 
-int     cmos_read_byte(const struct cmos_obj *, u32 indexPort, u32 dataPort, u32 offset, u8 *byte);
-int    cmos_write_byte(const struct cmos_obj *, u32 indexPort, u32 dataPort, u32 offset, u8 byte);
+int     cmos_read_byte(const struct cmos_obj *, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
+int    cmos_write_byte(const struct cmos_obj *, u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
 size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
 
 // useful for checksums, etc

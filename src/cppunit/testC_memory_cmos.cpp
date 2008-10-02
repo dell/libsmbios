@@ -177,7 +177,7 @@ void testCInterface::testCmosRead()
     for (int i=0; i<26; ++i){
         c = cmos_factory(CMOS_GET_SINGLETON);
         buf = '9';
-        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        ret = cmos_read_byte(c, &buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
         cmos_obj_free(c);
@@ -195,28 +195,28 @@ void testCInterface::testCmosWrite()
     int ret;
 
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        ret = cmos_read_byte(c, &buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
     }
 
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        ret = cmos_read_byte(c, &buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         buf = buf + 'A' - 'a';
-        ret = cmos_write_byte(c, 0, 0, i, buf);
+        ret = cmos_write_byte(c, buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
     }
 
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, 0, 0, i, &buf);
+        ret = cmos_read_byte(c, &buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('A' + i) );
     }
 
     // index port 1 (offset 512 + i) should be '0'
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, 1, 0, i, &buf);
+        ret = cmos_read_byte(c, &buf, 1, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('0') );
     }

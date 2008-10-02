@@ -66,14 +66,14 @@ out:
     return toReturn;
 }
 
-int  cmos_read_byte(const struct cmos_obj *m, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+int  cmos_read_byte(const struct cmos_obj *m, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
-    return m->read_fn(m, indexPort, dataPort, offset, byte);
+    return m->read_fn(m, byte, indexPort, dataPort, offset);
 }
 
-int  cmos_write_byte(const struct cmos_obj *m, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+int  cmos_write_byte(const struct cmos_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
-    int temp = m->write_fn(m, indexPort, dataPort, offset, byte);
+    int temp = m->write_fn(m, byte, indexPort, dataPort, offset);
     _do_callbacks(m);
     return temp;
 }

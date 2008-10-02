@@ -31,7 +31,7 @@
 // private
 #include "cmos_impl.h"
 
-static int linux_read_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 *byte)
+static int linux_read_fn(const struct cmos_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     if(iopl(3) < 0)
         return -1;
@@ -40,7 +40,7 @@ static int linux_read_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPor
     return (inb_p (dataPort));
 }
 
-static int linux_write_fn(const struct cmos_obj *this, u32 indexPort, u32 dataPort, u32 offset, u8 byte)
+static int linux_write_fn(const struct cmos_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     if(iopl(3) < 0)
         return -1;
