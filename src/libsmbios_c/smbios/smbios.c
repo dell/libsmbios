@@ -124,9 +124,9 @@ const struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_t
     do {
         cur = smbios_get_next_struct(table, cur);
         if (cur && cur->type == type)
-            return cur;
+            break;
     } while ( cur );
-    return 0;
+    return cur;
 }
 
 const struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_table *table, const struct smbios_struct *cur, u16 handle)
@@ -134,9 +134,9 @@ const struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios
     do {
         cur = smbios_get_next_struct(table, cur);
         if (cur && cur->handle == handle)
-            return cur;
+            break;
     } while ( cur );
-    return 0;
+    return cur;
 }
 
 
