@@ -104,7 +104,7 @@ static int UT_write_fn(const struct cmos_obj *this, u8 byte, u32 indexPort, u32 
     int retval = -1;
 
     // for unit testing, index into a file by indexPort
-    offset = indexPort * 512 + offset;
+    offset = indexPort * 256 + offset;
 
     if(!private_data->rw || !private_data->fd)
     {
