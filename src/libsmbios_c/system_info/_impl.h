@@ -18,6 +18,13 @@
 #ifndef C_SYSINFO_H
 #define C_SYSINFO_H
 
+#if defined(DEBUG_SYSINFO_C)
+#   include <stdio.h>
+#   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
+#else
+#   define dprintf(format, args...) do {} while(0)
+#endif
+
 #define __internal __attribute__((visibility("internal")))
 
 __internal char * smbios_get_string_from_table(u8 type, u8 offset);
