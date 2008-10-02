@@ -74,7 +74,7 @@ int token_obj_activate(const struct token_obj *);
 
 bool token_obj_is_string(const struct token_obj *);
 char* token_obj_get_string(const struct token_obj *);
-int token_obj_set_string(const struct token_obj *, const char *);
+int token_obj_set_string(const struct token_obj *, const char *, size_t size);
 
 const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *);
 int token_obj_try_password(const struct token_obj *, const char *);
@@ -86,8 +86,8 @@ bool token_is_active(u16 id);
 int token_activate(u16 id);
 
 bool token_is_string(u16 id);
-const char *token_get_string(u16 id);
-int token_set_string(u16 id, const char *);
+char *token_get_string(u16 id);
+int token_set_string(u16 id, const char *, size_t size);
 
 
 EXTERN_C_END;

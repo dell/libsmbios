@@ -81,8 +81,10 @@ const struct token_obj *token_get_next(const struct token_table *t, const struct
 
 const struct token_obj *token_get_next_by_id(const struct token_table *t, const struct token_obj *cur, u16 id)
 {
+    dprintf("%s\n", __PRETTY_FUNCTION__);
     do {
         cur = token_get_next(t, cur);
+        dprintf("look for %d, got %d\n", id, token_obj_get_id(cur));
         if (cur && token_obj_get_id(cur) == id)
             break;
     } while ( cur );
@@ -92,6 +94,7 @@ const struct token_obj *token_get_next_by_id(const struct token_table *t, const 
 #define makeit(ret, defret, callname) \
     ret token_obj_##callname (const struct token_obj *t)    \
     {\
+        dprintf("%s\n", __PRETTY_FUNCTION__);       \
         if (t) return t-> callname (t);     \
         return defret;\
     }
@@ -104,10 +107,10 @@ makeit( char *, 0, get_string )
 makeit( bool, 0, is_bool )
 makeit( bool, 0, is_string )
 
-int token_obj_set_string(const struct token_obj *t, const char *newstr)
+int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t size)
 {
     if (t)
-        return t->set_string (t, newstr);
+        return t->set_string (t, newstr, size);
     return 0;
 }
 
@@ -134,6 +137,7 @@ void token_free_string(char *s)
     {\
         struct token_table *table = 0;              \
         const struct token_obj *token = 0;          \
+        dprintf("%s\n", __PRETTY_FUNCTION__);       \
         table = token_factory(TOKEN_GET_SINGLETON); \
         if (!table) goto out;                       \
         token = token_get_next_by_id(table, 0, id); \
@@ -147,9 +151,9 @@ makeit2(bool, 0, is_bool)
 makeit2(bool, 0, is_active)
 makeit2(int, 0, activate)
 makeit2(bool, 0, is_string)
-makeit2(const char *, 0, get_string)
+makeit2(char *, 0, get_string)
 
-int token_set_string(u16 id, const char *newstr)
+int token_set_string(u16 id, const char *newstr, size_t size)
 {
     struct token_table *table = 0;
     const struct token_obj *token = 0;
@@ -157,7 +161,7 @@ int token_set_string(u16 id, const char *newstr)
     if (!table) goto out;
     token = token_get_next_by_id(table, 0, id);
     if (!token) goto out;
-    return token -> set_string (token, newstr);
+    return token -> set_string (token, newstr, size);
 out:
     return 0;
 }

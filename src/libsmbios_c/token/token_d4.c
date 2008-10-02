@@ -23,7 +23,7 @@
 
 // system
 #include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 
 // public
 #include "smbios_c/cmos.h"
@@ -131,15 +131,23 @@ static char * _d4_get_string(const struct token_obj *t)
     size_t strSize = _d4_get_string_len(t);
     struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
 
+    dprintf("_d4_get_string()\n");
+
+    dprintf("_d4_get_string() - check cmos\n");
     if (!c)
         goto out_err;
 
+    dprintf("_d4_get_string() - is string?\n");
     if (! _d4_is_string(t))
         goto out_err;
 
+    dprintf("_d4_get_string() - alloc string %ld bytes\n", strSize + 1);
     retval = calloc(1, strSize+1);
+    if (!retval)
+        goto out_err;
 
     for (int i=0; i<strSize; ++i){
+        dprintf("_d4_get_string() - read byte %d/%ld\n", i+1, strSize);
         int ret = cmos_read_byte(c, retval + i,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
@@ -150,16 +158,46 @@ static char * _d4_get_string(const struct token_obj *t)
     goto out;
 
 out_err:
+    dprintf("_d4_get_string() - out_err\n");
     free(retval);
     retval = 0;
 
 out:
+    dprintf("_d4_get_string() - out\n");
     return (char *)retval;
 }
 
-static int _d4_set_string(const struct token_obj *t, const char *str)
+static int _d4_set_string(const struct token_obj *t, const char *str, size_t size)
 {
-    return 0;
+    u8 retval = 0;
+    size_t strSize = _d4_get_string_len(t);
+    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
+    char *targetBuffer = calloc(1, strSize);
+
+    if (!c)
+        goto out;
+
+    if (!targetBuffer)
+        goto out;
+
+    if (! _d4_is_string(t))
+        goto out;
+
+    memset(targetBuffer, 0, strSize);
+    memcpy( targetBuffer, str, size < strSize ? size : strSize );
+
+    for (int i=0; i<strSize; ++i){
+        int ret = cmos_write_byte(c, targetBuffer[i],
+                  cast_struct(t)->indexPort,
+                  cast_struct(t)->dataPort,
+                  cast_token(t)->location + i
+              );
+        if(ret<0) goto out;
+    }
+
+out:
+    free(targetBuffer);
+    return retval;
 }
 
 void __internal init_d4_token(struct token_obj *t)
