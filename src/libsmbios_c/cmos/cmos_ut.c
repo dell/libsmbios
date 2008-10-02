@@ -49,12 +49,15 @@ static int UT_read_fn(const struct cmos_obj *this, u8 *byte, u32 indexPort, u32 
     private_data->cmos_errno = errno = 0;
     int retval = -1;
 
+    dprintf("%s %x %x %d\n", __PRETTY_FUNCTION__, indexPort, dataPort, offset);
+
     // for unit testing, index into a file by indexPort
-    offset = indexPort * 512 + offset;
+    offset = indexPort * 256 + offset;
 
     if (!private_data->fd)
     {
         // fopen portable to Windows if "b" is added to mode.
+        dprintf("%s - reopen\n", __PRETTY_FUNCTION__);
         private_data->rw=0;
         private_data->fd = fopen( private_data->filename, "rb" ); // open for read to start
         if (!private_data->fd)
@@ -62,15 +65,18 @@ static int UT_read_fn(const struct cmos_obj *this, u8 *byte, u32 indexPort, u32 
     }
 
     // FSEEK is a macro defined in config/ for portability
+    dprintf("%s - seek %d (%x)\n", __PRETTY_FUNCTION__, offset, offset);
     retval = -2;
     int ret = FSEEK(private_data->fd, offset, 0);
     if (ret)
         goto err_out;
 
+    dprintf("%s - read\n", __PRETTY_FUNCTION__);
     size_t bytesRead = fread( byte, 1, 1, private_data->fd );
 
     // TODO: handle short reads
     retval = -3;
+    dprintf("%s - short? %ld\n", __PRETTY_FUNCTION__, bytesRead);
     if ((1 != bytesRead))
         goto err_out;
 
@@ -87,6 +93,7 @@ out:
         fclose(private_data->fd);
         private_data->fd = 0;
     }
+    dprintf("%s - retval %d read\n", __PRETTY_FUNCTION__, retval);
     return retval;
 }
 
