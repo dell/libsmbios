@@ -51,7 +51,6 @@ struct token_obj
 {
     const char* (*get_type)(const struct token_obj*);
     int (*get_id)(const struct token_obj*);
-    //int (*get_flags)(const struct token_obj*);
     int (*is_bool)(const struct token_obj*);
     int (*is_string)(const struct token_obj*);
 

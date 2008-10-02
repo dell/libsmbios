@@ -26,57 +26,135 @@
 //#include <string.h>
 
 // public
+#include "smbios_c/cmos.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
 
 // private
 #include "token_impl.h"
 
+// helpers so we dont get line lengths from heck.
+#define cast_token(t)  ((struct indexed_io_token *)(t->token_ptr))
+#define cast_struct(t) ((struct indexed_io_access_structure *)token_obj_get_smbios_struct(t))
+
 static const char *_d4_get_type(const struct token_obj *t)
 {
     return "d4";
 }
 
-//static int _d4_get_flags(const struct token_obj *t)
 static int _d4_get_id(const struct token_obj *t)
 {
     dprintf("_d4_get_id\n");
-    return ((struct indexed_io_token *)(t->token_ptr))->tokenId;
+    return cast_token(t)->tokenId;
 }
-
-//static int _d4_get_flags(const struct token_obj *t)
-//{
-//    return 0;
-//}
 
 static int _d4_is_bool(const struct token_obj *t)
 {
-    return 0;
+    return cast_token(t)->andMask != 0;
 }
 
 static int _d4_is_string(const struct token_obj *t)
 {
-    return 0;
+    return cast_token(t)->andMask == 0;
 }
 
 static int _d4_is_active(const struct token_obj *t)
 {
-    return 0;
+    bool retval = false;
+    u8 byte=0;
+    struct cmos_obj *c=0;
+    int ret;
+
+    if (! _d4_is_bool(t))
+        goto out;
+
+    c = cmos_factory(CMOS_GET_SINGLETON);
+    ret = cmos_read_byte(c, &byte,
+                  cast_struct(t)->indexPort,
+                  cast_struct(t)->dataPort,
+                  cast_token(t)->location
+              );
+    if(ret<0) goto out;
+
+    if( (byte & (~cast_token(t)->andMask)) == cast_token(t)->orValue  )
+        retval = true;
+
+out:
+    return retval;
 }
 
 static int _d4_activate(const struct token_obj *t)
 {
-    return 0;
-}
+    int retval = -1;
+    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
+    u8 byte = 0;
+    int ret;
 
-static char * _d4_get_string(const struct token_obj *t)
-{
-    return 0;
+    if (!c)
+        goto out;
+
+    if (! _d4_is_bool(t))
+        goto out;
+
+    ret = cmos_read_byte(c, &byte,
+                  cast_struct(t)->indexPort,
+                  cast_struct(t)->dataPort,
+                  cast_token(t)->location
+              );
+    if(ret<0) goto out;
+
+    byte = byte & cast_token(t)->andMask;
+    byte = byte | cast_token(t)->orValue;
+
+    ret = cmos_write_byte(c, byte,
+        cast_struct(t)->indexPort,
+        cast_struct(t)->dataPort,
+        cast_token(t)->location
+        );
+    if(ret<0) goto out;
+
+    retval = 0;
+
+out:
+    return retval;
 }
 
 static int _d4_get_string_len(const struct token_obj *t)
 {
-    return 0;
+    // strings always at least 1, no matter what our buggy tables say.
+    return cast_token(t)->stringLength ? cast_token(t)->stringLength : 1;
+}
+
+static char * _d4_get_string(const struct token_obj *t)
+{
+    u8 *retval = 0;
+    size_t strSize = _d4_get_string_len(t);
+    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
+
+    if (!c)
+        goto out_err;
+
+    if (! _d4_is_string(t))
+        goto out_err;
+
+    retval = calloc(1, strSize+1);
+
+    for (int i=0; i<strSize; ++i){
+        int ret = cmos_read_byte(c, retval + i,
+                  cast_struct(t)->indexPort,
+                  cast_struct(t)->dataPort,
+                  cast_token(t)->location + i
+              );
+        if(ret<0) goto out_err;
+    }
+    goto out;
+
+out_err:
+    free(retval);
+    retval = 0;
+
+out:
+    return (char *)retval;
 }
 
 static int _d4_set_string(const struct token_obj *t, const char *str)

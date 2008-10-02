@@ -98,11 +98,11 @@ const struct token_obj *token_get_next_by_id(const struct token_table *t, const 
 
 makeit( const char *, 0, get_type )
 makeit( u16, 0, get_id )
-makeit( int, 0, is_active )
+makeit( bool, 0, is_active )
 makeit( int, 0, activate )
 makeit( char *, 0, get_string )
-makeit( int, 0, is_bool )
-makeit( int, 0, is_string )
+makeit( bool, 0, is_bool )
+makeit( bool, 0, is_string )
 
 int token_obj_set_string(const struct token_obj *t, const char *newstr)
 {
@@ -143,10 +143,10 @@ out:\
         return defret;  \
     }
 
-makeit2(int, 0, is_bool)
-makeit2(int, 0, is_active)
+makeit2(bool, 0, is_bool)
+makeit2(bool, 0, is_active)
 makeit2(int, 0, activate)
-makeit2(int, 0, is_string)
+makeit2(bool, 0, is_string)
 makeit2(const char *, 0, get_string)
 
 int token_set_string(u16 id, const char *newstr)

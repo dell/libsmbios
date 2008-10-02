@@ -23,6 +23,8 @@
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"
 
+#include <stdbool.h>
+
 // abi_prefix should be last header included before declarations
 #include "smbios/config/abi_prefix.hpp"
 
@@ -66,11 +68,11 @@ u16 token_obj_get_id(const struct token_obj *);
            )
 
 const char * token_obj_get_type(const struct token_obj *);
-int token_obj_is_bool(const struct token_obj *);
-int token_obj_is_active(const struct token_obj *);
+bool token_obj_is_bool(const struct token_obj *);
+bool token_obj_is_active(const struct token_obj *);
 int token_obj_activate(const struct token_obj *);
 
-int token_obj_is_string(const struct token_obj *);
+bool token_obj_is_string(const struct token_obj *);
 char* token_obj_get_string(const struct token_obj *);
 int token_obj_set_string(const struct token_obj *, const char *);
 
@@ -79,11 +81,11 @@ int token_obj_try_password(const struct token_obj *, const char *);
 
 void token_free_string(char *);
 
-int token_is_bool(u16 id);
-int token_is_active(u16 id);
+bool token_is_bool(u16 id);
+bool token_is_active(u16 id);
 int token_activate(u16 id);
 
-int token_is_string(u16 id);
+bool token_is_string(u16 id);
 const char *token_get_string(u16 id);
 int token_set_string(u16 id, const char *);
 
