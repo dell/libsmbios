@@ -35,7 +35,7 @@
 // ID Byte functions
 //
 //
-__internal u16 getIdByteFromMem ()
+__internal u16 get_id_byte_from_mem ()
 {
     u16 tempWord = 0;
     u16 idWord = 0;
@@ -85,7 +85,7 @@ out:
 }
 
 
-__internal u16 getIdByteFromMem_Diamond ()
+__internal u16 get_id_byte_from_mem_diamond()
 {
     u16 idWord = 0;
     char strBuf[DELL_SYSTEM_STRING_LEN] = { 0, };
@@ -159,7 +159,7 @@ out:
 }
 
 
-__internal u16 getIdByteFromRevItem ()
+__internal u16 get_id_byte_from_rev_and_id_structure ()
 {
     u16 idWord = 0;
     struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
@@ -187,16 +187,16 @@ struct DellIdByteFunctions
     u16 (*f_ptr)();
 }
 DellIdByteFunctions[] = {
-                            {&getIdByteFromMem,},       // normal system -- try this last always.
+                            {&get_id_byte_from_mem,},       // normal system -- try this last always.
 
 
                             {&getIdByteFromOEMItem,},   // bayonet
-                            {&getIdByteFromMem_Diamond,}, // diamond
+                            {&get_id_byte_from_mem_diamond,}, // diamond
 
                             // do this last because this may contain an OEM id
                             // do this as a last resort because it is
                             // unreliable.
-                            {&getIdByteFromRevItem,},   // Dell Smbios Revisions and ID's struct
+                            {&get_id_byte_from_rev_and_id_structure,},   // Dell Smbios Revisions and ID's struct
                         };
 
 
