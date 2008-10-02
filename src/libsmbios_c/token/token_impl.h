@@ -163,10 +163,13 @@ enum
     CHECK_TYPE_WORD_CHECKSUM_N = 0x03, //simple runnign sum in word, then (~result + 1)
 };
 
+struct cmos_obj; // forward declare so we dont have to include cmos.h
+
 __internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort );
-__internal u16 wordChecksum_reg( u32 start, u32 end, u32 indexPort, u32 dataPort);
-__internal u16 wordChecksum_comp( u32 start, u32 end, u32 indexPort, u32 dataPort);
+__internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort);
+__internal u16 wordChecksum_n( u32 start, u32 end, u32 indexPort, u32 dataPort);
 __internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort );
+__internal int update_checksum(const struct cmos_obj *c, bool do_update, void *userdata);
 
 struct checksum_details 
 {

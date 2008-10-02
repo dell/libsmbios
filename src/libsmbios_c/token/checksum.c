@@ -57,18 +57,18 @@ __internal int update_checksum(const struct cmos_obj *c, bool do_update, void *u
     const u8 *csum = (const u8 *)(&wordRetval);
 
     u32 actualcsum = 0;
-    u32 calculatedcsum = 0;
     for( int i=0; i<data->csumlen; ++i )
     {
         u8 byte = _readByte(data->indexPort, data->dataPort, data->csumloc+i);
         actualcsum = (actualcsum << 8) | byte;
-        calculatedcsum = calculatedcsum |  (csum[i] << (8*i));
     }
 
-    if (actualcsum != calculatedcsum)
+    dprintf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
+
+    if (actualcsum != wordRetval)
         retval = 1;
 
-    if(do_update && actualcsum != calculatedcsum)
+    if(do_update && actualcsum != wordRetval)
         for( int i=0; i<data->csumlen; ++i )
             _writeByte( data->indexPort, data->dataPort, data->csumloc+i, csum[data->csumlen -i -1]);
 
@@ -83,25 +83,21 @@ __internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort )
     return running_checksum;
 }
 
-
-__internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort, bool complement )
+__internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
     u16 running_checksum=0;
+    dprintf("%s\n", __PRETTY_FUNCTION__);
     for( u32 i = start; i <= end; i++)
         running_checksum += _readByte( indexPort, dataPort, i );
-    if( complement )
-        running_checksum = (~running_checksum) + 1;
+
+    dprintf("%s - %x\n", __PRETTY_FUNCTION__, running_checksum);
     return running_checksum;
 }
 
-__internal u16 wordChecksum_reg( u32 start, u32 end, u32 indexPort, u32 dataPort)
+__internal u16 wordChecksum_n( u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
-    return wordChecksum(start, end, indexPort, dataPort, false);
-}
-
-__internal u16 wordChecksum_comp( u32 start, u32 end, u32 indexPort, u32 dataPort)
-{
-    return wordChecksum(start, end, indexPort, dataPort, true);
+    dprintf("%s\n", __PRETTY_FUNCTION__);
+    return (~wordChecksum(start, end, indexPort, dataPort)) + 1;
 }
 
 __internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort )

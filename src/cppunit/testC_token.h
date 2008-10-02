@@ -72,11 +72,13 @@ public:
 
     // base smbios test
     void testTokenConstruct();
+    void testTokenChecksums();
 
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testCtoken);
 
     CPPUNIT_TEST (testTokenConstruct);
+    CPPUNIT_TEST (testTokenChecksums);
 
     CPPUNIT_TEST_SUITE_END ();
 };

@@ -148,3 +148,23 @@ void testCtoken::testTokenConstruct()
     STD_TEST_END("");
 }
 
+
+void testCtoken::testTokenChecksums()
+{
+    STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
+
+    struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
+
+    int ret = cmos_run_callbacks(cmos_factory(CMOS_GET_SINGLETON), false); 
+
+    token_table_free(table);
+
+    CPPUNIT_ASSERT_EQUAL(ret, 0);
+
+    STD_TEST_END("");
+}
+
+
+
+
+

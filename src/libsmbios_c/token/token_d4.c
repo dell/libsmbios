@@ -233,10 +233,10 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
             d->csumlen = sizeof(u8);
             break;
         case CHECK_TYPE_WORD_CHECKSUM:
-            d->csum_fn = wordChecksum_reg;
+            d->csum_fn = wordChecksum;
             break;
         case CHECK_TYPE_WORD_CHECKSUM_N:
-            d->csum_fn = wordChecksum_comp;
+            d->csum_fn = wordChecksum_n;
             break;
         case CHECK_TYPE_WORD_CRC:
             d->csum_fn = wordCrc;
@@ -244,6 +244,9 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
         default:
             break;
     }
+    
+    cmos_register_write_callback(
+            cmos_factory(CMOS_GET_SINGLETON), update_checksum, d, free);
 }
 
 void __internal add_d4_tokens(struct token_table *t)
