@@ -217,7 +217,13 @@ void __internal init_d4_token(struct token_obj *t)
 
 void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
 {
-    struct checksum_details *d = calloc(1, sizeof(struct checksum_details));
+    struct checksum_details *d = 0;
+
+    // if all zeros, there is no checksum
+    if (!(d4_struct->checkedRangeStartIndex || d4_struct->checkedRangeEndIndex || d4_struct->checkValueIndex))
+        goto out;
+
+    d = calloc(1, sizeof(struct checksum_details));
 
     d->csumloc   = d4_struct->checkValueIndex;
     d->csumlen   = sizeof(u16);
@@ -247,6 +253,8 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
     
     cmos_register_write_callback(
             cmos_factory(CMOS_GET_SINGLETON), update_checksum, d, free);
+out:
+    return;
 }
 
 void __internal add_d4_tokens(struct token_table *t)

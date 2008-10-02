@@ -63,7 +63,16 @@ __internal int update_checksum(const struct cmos_obj *c, bool do_update, void *u
         actualcsum = (actualcsum << 8) | byte;
     }
 
-    dprintf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
+    if (actualcsum != wordRetval)
+    {
+        u8 byteC = byteChecksum(data->start, data->end, data->indexPort, data->dataPort);
+        u16 C = wordChecksum(data->start, data->end, data->indexPort, data->dataPort);
+        u16 Cn = wordChecksum_n(data->start, data->end, data->indexPort, data->dataPort);
+        u16 Crc = wordCrc(data->start, data->end, data->indexPort, data->dataPort);
+        dprintf("%s - start %d end %d location %d indexPort %x\n", __PRETTY_FUNCTION__, data->start, data->end, data->csumloc,  data->indexPort);
+        dprintf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
+        dprintf("%s - byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", __PRETTY_FUNCTION__, byteC, C, Cn, Crc);
+    }
 
     if (actualcsum != wordRetval)
         retval = 1;
@@ -86,17 +95,14 @@ __internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort )
 __internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
     u16 running_checksum=0;
-    dprintf("%s\n", __PRETTY_FUNCTION__);
     for( u32 i = start; i <= end; i++)
         running_checksum += _readByte( indexPort, dataPort, i );
 
-    dprintf("%s - %x\n", __PRETTY_FUNCTION__, running_checksum);
     return running_checksum;
 }
 
 __internal u16 wordChecksum_n( u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
-    dprintf("%s\n", __PRETTY_FUNCTION__);
     return (~wordChecksum(start, end, indexPort, dataPort)) + 1;
 }
 
