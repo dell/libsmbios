@@ -22,6 +22,8 @@
 // compat header should always be first header
 #include "smbios_c/compat.h"
 
+#include <stdbool.h>
+
 typedef unsigned char   u8;
 typedef unsigned short  u16;
 typedef unsigned int    u32;

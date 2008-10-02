@@ -19,8 +19,6 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#include <stdbool.h>
-
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"

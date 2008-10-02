@@ -23,8 +23,6 @@
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"
 
-#include <stdbool.h>
-
 // abi_prefix should be last header included before declarations
 #include "smbios/config/abi_prefix.hpp"
 
