@@ -63,6 +63,7 @@ __internal int update_checksum(const struct cmos_obj *c, bool do_update, void *u
         actualcsum = (actualcsum << 8) | byte;
     }
 
+#ifdef DEBUG_TOKEN_C
     if (actualcsum != wordRetval)
     {
         u8 byteC = byteChecksum(data->start, data->end, data->indexPort, data->dataPort);
@@ -73,6 +74,7 @@ __internal int update_checksum(const struct cmos_obj *c, bool do_update, void *u
         dprintf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
         dprintf("%s - byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", __PRETTY_FUNCTION__, byteC, C, Cn, Crc);
     }
+#endif
 
     if (actualcsum != wordRetval)
         retval = 1;
