@@ -32,8 +32,6 @@
 // private
 #include "cmos_impl.h"
 
-void __internal _do_callbacks(const struct cmos_obj *);
-
 struct cmos_obj singleton; // auto-init to 0
 
 struct cmos_obj *cmos_factory(int flags, ...)
@@ -74,7 +72,7 @@ int  cmos_read_byte(const struct cmos_obj *m, u8 *byte, u32 indexPort, u32 dataP
 int  cmos_write_byte(const struct cmos_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     int temp = m->write_fn(m, byte, indexPort, dataPort, offset);
-    _do_callbacks(m);
+    cmos_run_callbacks(m, true);
     return temp;
 }
 
@@ -110,11 +108,13 @@ out:
     return;
 }
 
-void __internal _do_callbacks(const struct cmos_obj *m)
+int cmos_run_callbacks(const struct cmos_obj *m, bool do_update)
 {
+    int retval = 0;
     for(const struct callback *ptr = &(m->cb_list_head); ptr->next; ptr = ptr->next)
         if(ptr->cb_fn)
-            ptr->cb_fn(m, ptr->userdata);
+            retval |= ptr->cb_fn(m, do_update, ptr->userdata);
+    return retval;
 }
 
 void __internal _init_cmos_std_stuff(struct cmos_obj *m)

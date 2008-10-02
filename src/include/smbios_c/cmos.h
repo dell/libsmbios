@@ -21,6 +21,7 @@
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
+
 #include "smbios_c/types.h"
 
 EXTERN_C_BEGIN;
@@ -40,8 +41,9 @@ int    cmos_write_byte(const struct cmos_obj *, u8 byte,  u32 indexPort, u32 dat
 size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
 
 // useful for checksums, etc
-typedef void (*cmos_write_callback)(const struct cmos_obj *, void *);
+typedef int (*cmos_write_callback)(const struct cmos_obj *, bool, void *);
 void register_write_callback(struct cmos_obj *, cmos_write_callback, void *);
+int cmos_run_callbacks(const struct cmos_obj *m, bool do_update);
 
 EXTERN_C_END;
 
