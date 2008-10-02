@@ -26,7 +26,6 @@
 #include "testC_memory_cmos.h"
 #include "smbios_c/memory.h"
 #include "smbios_c/cmos.h"
-#include "smbios_c/version.h"
 
 #include "outputctl.h"
 #include "main.h"
