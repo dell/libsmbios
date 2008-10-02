@@ -27,11 +27,13 @@ EXTERN_C_BEGIN;
 #define __internal __attribute__((visibility("internal")))
 #define __hidden __attribute__((visibility("hidden")))
 
+#ifndef dprintf
 #if defined(DEBUG_TOKEN_C)
 #   include <stdio.h>
 #   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
 #else
 #   define dprintf(format, args...) do {} while(0)
+#endif
 #endif
 
 enum  // Smbios Structure types

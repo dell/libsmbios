@@ -27,11 +27,13 @@ EXTERN_C_BEGIN;
 #define __internal __attribute__((visibility("internal")))
 #define __hidden __attribute__((visibility("hidden")))
 
+#ifndef dprintf
 #if defined(DEBUG_SMBIOS_C)
 #   include <stdio.h>
 #   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
 #else
 #   define dprintf(format, args...) do {} while(0)
+#endif
 #endif
 
 #define E_BLOCK_START 0xE0000UL
@@ -86,6 +88,9 @@ struct smbios_table
     struct table *table;
 };
 
+void __internal init_smbios_struct(struct smbios_table *m);
+void __internal _smbios_table_free(struct smbios_table *this);
+void __internal do_smbios_fixups(struct smbios_table *);
 int __internal smbios_get_table_memory(struct smbios_table *m);
 
 #if 0

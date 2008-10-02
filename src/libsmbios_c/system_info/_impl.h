@@ -18,11 +18,13 @@
 #ifndef C_SYSINFO_H
 #define C_SYSINFO_H
 
+#ifndef dprintf
 #if defined(DEBUG_SYSINFO_C)
 #   include <stdio.h>
 #   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
 #else
 #   define dprintf(format, args...) do {} while(0)
+#endif
 #endif
 
 #define __internal __attribute__((visibility("internal")))

@@ -23,11 +23,13 @@
 
 EXTERN_C_BEGIN;
 
+#ifndef dprintf
 #if defined(DEBUG_CMOS_C)
 #   include <stdio.h>
 #   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
 #else
 #   define dprintf(format, args...) do {} while(0)
+#endif
 #endif
 
 #define __hidden __attribute__((visibility("hidden")))
