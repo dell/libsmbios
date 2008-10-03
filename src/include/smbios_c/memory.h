@@ -15,7 +15,6 @@
  * See the GNU General Public License for more details.
  */
 
-
 #ifndef MEMORY_H
 #define MEMORY_H
 
@@ -25,34 +24,18 @@
 
 EXTERN_C_BEGIN;
 
-#define MEMORY_DEFAULTS       0x0000
-#define MEMORY_GET_SINGLETON  0x0001
-#define MEMORY_GET_NEW        0x0002
-#define MEMORY_UNIT_TEST_MODE 0x0004
-
-struct memory_obj;
-
-// construct
-struct memory_obj *memory_factory(int flags, ...);
-
-// destruct
-void memory_obj_free(struct memory_obj *);
-
-int  memory_read(const struct memory_obj *, void *buffer, u64 offset, size_t length);
-int  memory_write(const struct memory_obj *, void *buffer, u64 offset, size_t length);
+int  memory_read(void *buffer, u64 offset, size_t length);
+int  memory_write(void *buffer, u64 offset, size_t length);
 
 // format error string
-size_t memory_fmt_err(const struct memory_obj *, char *buf, size_t len);
+size_t memory_fmt_err(char *buf, size_t len);
 
 // helper
-s64  memory_search(const struct memory_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
+s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 
 // Following calls must be properly nested in equal pairs
-void  memory_suggest_leave_open(struct memory_obj *);
-void  memory_suggest_close(struct memory_obj *);
-
-// ask if close flag is set
-bool  memory_should_close(const struct memory_obj *);
+void  memory_suggest_leave_open();
+void  memory_suggest_close();
 
 EXTERN_C_END;
 

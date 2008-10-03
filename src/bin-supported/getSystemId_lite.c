@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "smbios_c/memory.h"
+#include "smbios_c/obj/memory.h"
 #include "smbios_c/system_info.h"
 
 #include "getopts.h"
@@ -53,7 +53,7 @@ main (int argc, char **argv)
             // This is for unit testing. You can specify a file that
             // contains a dump of memory to use instead of writing
             // directly to RAM.
-            memory_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, args);
+            memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, args);
             break;
         case 255:
             printf("Libsmbios version:    %s\n", smbios_get_library_version_string());

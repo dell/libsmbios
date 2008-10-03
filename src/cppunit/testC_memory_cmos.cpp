@@ -24,6 +24,7 @@
 #include <iostream>
 
 #include "testC_memory_cmos.h"
+#include "smbios_c/obj/memory.h"
 #include "smbios_c/memory.h"
 #include "smbios_c/cmos.h"
 
@@ -31,14 +32,6 @@
 #include "main.h"
 
 using namespace std;
-
-// Note:
-//      Except for , there are no "using namespace XXXX;" statements
-//      here... on purpose. We want to ensure that while reading this code that
-//      it is extremely obvious where each function is coming from.
-//
-//      This leads to verbose code in some instances, but that is fine for
-//      these purposes.
 
 // Register the test
 CPPUNIT_TEST_SUITE_REGISTRATION (testCInterface);
@@ -48,25 +41,29 @@ void testCInterface::setUp()
     string writeDirectory = getWritableDirectory();
     string testFile = writeDirectory + "/testmem.dat";
 
-    FILE *fd = fopen(testFile.c_str(), "w+");
+    memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, testFile.c_str());
+    cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, testFile.c_str());
+
+    FILE *fd = fopen( testFile.c_str(), "w+" );
+    fseek(fd, 65536 * 4, 0);
+    fwrite("Z", 1, 1, fd);
+    fclose(fd);
+
+    u8 byte = 'a';
+    int offset = 0;
     for (int i=0; i<26; i++)
     {
-        char w = 'a' + i;
-        FWRITE(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
+        byte = 'a' + i;
+        memory_write(&byte, offset++, 1);
     }
 
     for (int i=0; i<3; i++)
-        for (int j=0; j<65536; j++)
-            {
-                char w = '0' + i;
-                FWRITE(&w, 1, 1, fd);  // void *ptr, size, nmemb, FILE *
-            }
-
-    fflush(fd);
-    fclose(fd);
-
-    memory_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, testFile.c_str());
-    cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, testFile.c_str());
+    {
+        u8 arr[65536];
+        memset(arr, '0' + i, 65536);
+        memory_write(arr, offset, 65536);
+        offset += 65536;
+    }
 }
 
 void testCInterface::tearDown()
@@ -77,64 +74,54 @@ void testCInterface::testMemoryRead()
     STD_TEST_START(getTestName().c_str() << "  ");
 
     u8 buf;
-    struct memory_obj *m = 0;
     int ret;
     for (int i=0; i<26; ++i){
-        m = memory_factory(MEMORY_GET_SINGLETON);
         buf = '9';
-        ret = memory_read(m, &buf, i, 1);
+        ret = memory_read(&buf, i, 1);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
-        memory_obj_free(m);
     }
 
     STD_TEST_END("");
 }
 
-
 void testCInterface::testMemoryWrite()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct memory_obj *m = memory_factory(MEMORY_GET_SINGLETON);
     u8 buf;
     int ret;
 
-    for (int i=0; i<26; ++i){
-        ret = memory_read(m, &buf, i, 1);
+    for (int i=1; i<26; ++i){
+        ret = memory_read(&buf, i, 1);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
     }
 
     for (int i=0; i<26; ++i){
-        ret = memory_read(m, &buf, i, 1);
+        ret = memory_read(&buf, i, 1);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         buf = buf + 'A' - 'a';
-        ret = memory_write(m, &buf, i, 1);
+        ret = memory_write(&buf, i, 1);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
     }
 
     for (int i=0; i<26; ++i){
-        ret = memory_read(m, &buf, i, 1);
+        ret = memory_read(&buf, i, 1);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
-        CPPUNIT_ASSERT_EQUAL( buf, (u8)('A' + i) );
+        CPPUNIT_ASSERT_EQUAL( (u8)('A' + i), buf );
     }
-
-    memory_obj_free(m);
-
     STD_TEST_END("");
 }
 
 void testCInterface::testMemoryReadMultipage()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct memory_obj *m = memory_factory(MEMORY_GET_SINGLETON);
     int ret=0;
     u8 buf[65536*3 + 1] = {0,};
 
     // 26 == start after alphabet in test file
-    ret = memory_read(m, buf, 26, 65536*3);
+    ret = memory_read(buf, 26, 65536*3);
     CPPUNIT_ASSERT_EQUAL( 0, ret );
-    memory_obj_free(m);
 
     for (int i=0; i<3; i++)
         for (int j=0; j<65536; j++)
@@ -148,19 +135,18 @@ void testCInterface::testMemoryReadMultipage()
 void testCInterface::testMemorySearch()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct memory_obj *m = memory_factory(MEMORY_GET_SINGLETON);
     s64 ret;
 
-    ret = memory_search(m, "abc", 3, 0, 4096, 1);
+    ret = memory_search("abc", 3, 0, 4096, 1);
     CPPUNIT_ASSERT_EQUAL( (s64)0, ret );
 
-    ret = memory_search(m, "de", 2, 0, 4096, 1);
+    ret = memory_search("de", 2, 0, 4096, 1);
     CPPUNIT_ASSERT_EQUAL( (s64)3, ret );
 
-    ret = memory_search(m, "nonexistent", 11, 0, 4096, 1);
+    ret = memory_search("nonexistent", 11, 0, 4096, 1);
     CPPUNIT_ASSERT_EQUAL( (s64)-1, ret );
 
-    ret = memory_search(m, "00000000", 8, 0, 4096, 1);
+    ret = memory_search("00000000", 8, 0, 4096, 1);
     CPPUNIT_ASSERT_EQUAL( (s64)26, ret );
 
     STD_TEST_END("");

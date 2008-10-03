@@ -43,20 +43,16 @@ __internal u16 get_id_byte_from_mem ()
     int ret;
 
     struct two_byte_structure tbs;
-    struct memory_obj *mem = memory_factory(MEMORY_GET_SINGLETON);
-
-    if( 0 == mem )
-        goto out;
 
     // Step 1: Check that "Dell System" is present at the proper offset
-    ret = memory_read(mem, strBuf, DELL_SYSTEM_STRING_LOC, DELL_SYSTEM_STRING_LEN-1);
+    ret = memory_read(strBuf, DELL_SYSTEM_STRING_LOC, DELL_SYSTEM_STRING_LEN-1);
     if (ret<0) goto out;
 
     if( strncmp( strBuf, DELL_SYSTEM_STRING, DELL_SYSTEM_STRING_LEN ) != 0 )
         goto out;
 
     // Step 2: fill the id structs
-    ret = memory_read(mem, &tbs, TWO_BYTE_STRUCT_LOC, sizeof(struct two_byte_structure) );
+    ret = memory_read(&tbs, TWO_BYTE_STRUCT_LOC, sizeof(struct two_byte_structure) );
     if (ret<0) goto out;
 
     // Step 3: check the checksum of one-byte struct
@@ -80,7 +76,6 @@ __internal u16 get_id_byte_from_mem ()
     idWord = tempWord;
 
 out:
-    memory_obj_free(mem);
     return idWord;
 }
 
@@ -91,18 +86,13 @@ __internal u16 get_id_byte_from_mem_diamond()
     char strBuf[DELL_SYSTEM_STRING_LEN] = { 0, };
     int ret;
 
-    struct memory_obj *mem = memory_factory(MEMORY_GET_SINGLETON);
-
-    if( 0 == mem )
-        goto out;
-
     // Step 1: Check that "Dell System" is present at the proper offset
-    ret = memory_read(mem, strBuf, DELL_SYSTEM_STRING_LOC_DIAMOND_1, DELL_SYSTEM_STRING_LEN - 1);
+    ret = memory_read(strBuf, DELL_SYSTEM_STRING_LOC_DIAMOND_1, DELL_SYSTEM_STRING_LEN - 1);
 
     if( ret>=0 && strncmp( strBuf, DELL_SYSTEM_STRING, DELL_SYSTEM_STRING_LEN ) == 0 )
     {
         u8 idByte = 0;
-        ret = memory_read(mem, &idByte, ID_BYTE_LOC_DIAMOND_1, sizeof(idByte));
+        ret = memory_read(&idByte, ID_BYTE_LOC_DIAMOND_1, sizeof(idByte));
         if( ret>=0 && SYSTEM_ID_DIAMOND == idByte )
         {
             idWord = SYSTEM_ID_DIAMOND;
@@ -110,11 +100,11 @@ __internal u16 get_id_byte_from_mem_diamond()
         }
     }
 
-    ret = memory_read(mem, strBuf, DELL_SYSTEM_STRING_LOC_DIAMOND_2, DELL_SYSTEM_STRING_LEN - 1);
+    ret = memory_read(strBuf, DELL_SYSTEM_STRING_LOC_DIAMOND_2, DELL_SYSTEM_STRING_LEN - 1);
     if( (ret>=0) && (strncmp( strBuf, DELL_SYSTEM_STRING, DELL_SYSTEM_STRING_LEN ) == 0 ))
     {
         u8 idByte = 0;
-        ret = memory_read(mem, &idByte, ID_BYTE_LOC_DIAMOND_2, sizeof(idByte));
+        ret = memory_read(&idByte, ID_BYTE_LOC_DIAMOND_2, sizeof(idByte));
         if( ret>=0 && SYSTEM_ID_DIAMOND == idByte )
         {
             idWord = SYSTEM_ID_DIAMOND;
@@ -123,7 +113,6 @@ __internal u16 get_id_byte_from_mem_diamond()
     }
 
 out:
-    memory_obj_free(mem);
     return idWord;
 }
 

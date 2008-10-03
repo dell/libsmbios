@@ -28,28 +28,11 @@
 #include <errno.h>
 #include <sys/mman.h>   // mmap
 
-
-#include "smbios_c/memory.h"
+#include "smbios_c/obj/memory.h"
 #include "smbios_c/types.h"
 #include "memory_impl.h"
 
-#if defined(DEBUG_MEMORY_C)
-#   define dprintf(format, args...) do { fprintf(stdout , format , ## args);  } while(0)
-#else
-#   define dprintf(format, args...) do {} while(0)
-#endif
-
-#if LIBSMBIOS_C_USE_MEMORY_MMAP
-#define MEM_INIT_FUNCTION init_mem_struct_filename
-#endif
-
-#define __hidden __attribute__((visibility("hidden")))
-#define __internal __attribute__((visibility("internal")))
-
-void __internal init_mem_struct(struct memory_obj *m);
-void __internal MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn);
-
-struct ut_data
+struct linux_data
 {
     char *filename;
     FILE *fd;
@@ -60,52 +43,50 @@ struct ut_data
     u64 mappingSize;
 };
 
-#define READ_MMAP 1
-#define WRITE_MMAP 0
+#define READ_MMAP 0
+#define WRITE_MMAP 1
 
-static int copy_mmap(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length, int fromMem)
+static int copy_mmap(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length, int rw)
 {
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
+    struct linux_data *private_data = (struct linux_data *)this->private_data;
     private_data->mem_errno = errno = 0;
     int retval = -1;
-    int flags = fromMem ? PROT_READ : PROT_WRITE;
-    char *openMode = fromMem ? "r+b": "rb";
+    int flags = rw ? PROT_WRITE : PROT_READ;
+    char *openMode = rw ? "r+b": "rb";
 
     size_t bytesCopied = 0;
 
-    dprintf("copy_mmap: buffer(%p) offset(%ld) length(%ld) fromMem(%d)\n", buffer, offset, length, fromMem);
-    dprintf("         : mappingSize(%d)\n", private_data->mappingSize);
+    fnprintf("buffer(%p) offset(%lld) length(%zd) rw(%d)\n", buffer, offset, length, rw);
+    fnprintf("mappingSize(%lld)\n", private_data->mappingSize);
 
     if(!private_data->rw || !private_data->fd)
     {
         if(private_data->fd)
             fclose(private_data->fd);
 
+        private_data->rw = rw;
         private_data->lastMapping = 0;
         private_data->lastMappedOffset = -1;
         private_data->fd = fopen( private_data->filename, openMode ); // re-open for write
         if(!private_data->fd)
             goto err_out;
-
-        if (!fromMem)
-            private_data->rw=1;
     }
 
     while( bytesCopied < length )
     {
         off_t mmoff = offset % private_data->mappingSize;
-        dprintf("\tLOOP: bytesCopied(%ld) mmoff(%ld)\n", bytesCopied, mmoff);
+        fnprintf("\tLOOP: bytesCopied(%ld) mmoff(%ld)\n", bytesCopied, mmoff);
 
         if ((offset-mmoff) != private_data->lastMappedOffset)
         {
             private_data->lastMappedOffset = offset-mmoff;
             if (private_data->lastMapping)
             {
-                dprintf("\t\tmunmap(%ld)\n", private_data->lastMapping);
+                fnprintf("\t\tmunmap(%p)\n", private_data->lastMapping);
                 munmap(private_data->lastMapping, private_data->mappingSize);
             }
-            dprintf("\t\tlastMappedOffset(%ld)\n", private_data->lastMappedOffset);
-            private_data->lastMapping = mmap( 0, private_data->mappingSize, flags, MAP_PRIVATE, fileno(private_data->fd), private_data->lastMappedOffset);
+            fnprintf("\t\tlastMappedOffset(%lld)\n", private_data->lastMappedOffset);
+            private_data->lastMapping = mmap( 0, private_data->mappingSize, flags, MAP_SHARED, fileno(private_data->fd), private_data->lastMappedOffset);
             if ((private_data->lastMapping) == (void *)-1)
                 goto err_out;
         }
@@ -114,14 +95,25 @@ static int copy_mmap(const struct memory_obj *this, u8 *buffer, u64 offset, size
         if( toCopy + mmoff > (private_data->mappingSize) )
             toCopy = (private_data->mappingSize) - mmoff;
 
-        dprintf("\t\tCOPYING(%d)\n", toCopy);
-        if (fromMem)
+        fnprintf("\t\tCOPYING(%lu)\n", toCopy);
+        if (rw)
+            memcpy(((u8 *)(private_data->lastMapping) + mmoff), 
+                    buffer + bytesCopied, toCopy);
+        else
             memcpy(buffer + bytesCopied, 
                     ((const u8 *)(private_data->lastMapping) + mmoff), toCopy);
-        else
-            memcpy(((u8 *)(private_data->lastMapping) + mmoff), 
-                    buffer + bytesCopied, 
-                    toCopy);
+
+#ifdef DEBUG_MEMORY_C
+        fnprintf("BUFFER: '");
+        for(int i=0;i<toCopy;++i)
+            dprintf("%c", buffer[bytesCopied + i]);
+        dprintf("'\n");
+
+        fnprintf("MEMORY: '");
+        for(int i=0;i<toCopy;++i)
+            dprintf("%c", (((const u8 *)(private_data->lastMapping))[mmoff + i]));
+        dprintf("'\n");
+#endif
 
         offset += toCopy;
         bytesCopied += toCopy;
@@ -131,14 +123,16 @@ static int copy_mmap(const struct memory_obj *this, u8 *buffer, u64 offset, size
     goto out;
 
 err_out:
+    fnprintf("%s - ERR_OUT: %d \n", __PRETTY_FUNCTION__, errno);
     private_data->mem_errno = errno;
     if (private_data->lastMapping == (void*)-1)
         private_data->lastMapping = 0;
 
 out:
     // close on error, or if close hint
-    if (private_data->fd && (memory_should_close(this) || retval))
+    if (private_data->fd && (memory_obj_should_close(this) || retval))
     {
+        fnprintf("out/close\n");
         if (private_data->lastMapping)
             munmap(private_data->lastMapping, private_data->mappingSize);
 
@@ -151,19 +145,20 @@ out:
     return retval;
 }
 
-static int linux_read_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
+static int linux_read_fn(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length)
 {
     return copy_mmap(this, buffer, offset, length, READ_MMAP);
 }
 
-static int linux_write_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
+static int linux_write_fn(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length)
 {
+    fnprintf(" BUFFER: %s\n", (char *)buffer);
     return copy_mmap(this, buffer, offset, length, WRITE_MMAP);
 }
 
-static void linux_free(struct memory_obj *this)
+static void linux_free(struct memory_access_obj *this)
 {
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
+    struct linux_data *private_data = (struct linux_data *)this->private_data;
     if (private_data->filename)
     {
         free(private_data->filename);
@@ -184,10 +179,9 @@ static void linux_free(struct memory_obj *this)
     this->initialized=0;
 }
 
-
-static void linux_cleanup(struct memory_obj *this)
+static void linux_cleanup(struct memory_access_obj *this)
 {
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
+    struct linux_data *private_data = (struct linux_data *)this->private_data;
 
     if (private_data->lastMapping)
     {
@@ -204,12 +198,13 @@ static void linux_cleanup(struct memory_obj *this)
     private_data->rw = 0;
 }
 
-__internal void MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn)
+__internal void init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
 {
-    struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
+    struct linux_data *priv_ut = (struct linux_data *)calloc(1, sizeof(struct linux_data));
     priv_ut->mappingSize = getpagesize() * 16;;
     priv_ut->lastMappedOffset = -1;
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);
+    priv_ut->rw = 0;
     strcat(priv_ut->filename, fn);
 
     m->private_data = priv_ut;
@@ -221,9 +216,9 @@ __internal void MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn)
     m->initialized = 1;
 }
 
-__internal void init_mem_struct(struct memory_obj *m)
+__internal void init_mem_struct(struct memory_access_obj *m)
 {
-   MEM_INIT_FUNCTION(m, "/dev/mem"); 
+   init_mem_struct_filename(m, "/dev/mem"); 
 }
 
 

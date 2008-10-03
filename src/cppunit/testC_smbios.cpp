@@ -25,7 +25,7 @@
 
 #include "testC_smbios.h"
 #include "smbios_c/smbios.h"
-#include "smbios_c/memory.h"
+#include "smbios_c/obj/memory.h"
 #include "smbios_c/cmos.h"
 #include "smbios_c/system_info.h"
 
@@ -63,7 +63,7 @@ void testCsmbios::setUp()
     string cmosCopyFile = writeDirectory + "/cmos-copy.dat";
     copyFile( cmosCopyFile, cmosOrigFile );
 
-    memory_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
+    memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
     cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
 
     doc = 0;

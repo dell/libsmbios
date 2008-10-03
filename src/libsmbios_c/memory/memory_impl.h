@@ -23,16 +23,33 @@
 
 EXTERN_C_BEGIN;
 
-struct memory_obj
+#define __hidden __attribute__((visibility("hidden")))
+#define __internal __attribute__((visibility("internal")))
+
+#ifndef dprintf
+#if defined(DEBUG_MEMORY_C)
+#   include <stdio.h>
+#   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
+#else
+#   define dprintf(format, args...) do {} while(0)
+#endif
+#endif
+
+#define fnprintf(fmt, args...)  dprintf( "%s: " fmt, __PRETTY_FUNCTION__, ## args)
+
+struct memory_access_obj
 {
     int initialized;
-    int (*read_fn)(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length);
-    int (*write_fn)(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length);
-    void (*free)(struct memory_obj *this);
-    void (*cleanup)(struct memory_obj *this); // called instead of ->free for singleton
+    int (*read_fn)(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length);
+    int (*write_fn)(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length);
+    void (*free)(struct memory_access_obj *this);
+    void (*cleanup)(struct memory_access_obj *this); // called instead of ->free for singleton
     void *private_data;
     int close;
 };
+
+void __internal init_mem_struct(struct memory_access_obj *m);
+void __internal init_mem_struct_filename(struct memory_access_obj *m, const char *fn);
 
 EXTERN_C_END;
 

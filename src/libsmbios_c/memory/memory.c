@@ -22,266 +22,41 @@
 #include "smbios_c/compat.h"
 
 // system
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 
 // public
 #include "smbios_c/memory.h"
+#include "smbios_c/obj/memory.h"
 #include "smbios_c/types.h"
 
-// private
 #include "memory_impl.h"
 
-#if !LIBSMBIOS_C_USE_MEMORY_MMAP
-#define MEM_INIT_FUNCTION init_mem_struct_filename
-#endif
-
-#define __hidden __attribute__((visibility("hidden")))
-#define __internal __attribute__((visibility("internal")))
-
-void __internal init_mem_struct(struct memory_obj *m);
-void __internal MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn);
-
-static struct memory_obj singleton; // auto-init to 0
-
-struct memory_obj *memory_factory(int flags, ...)
+void  memory_suggest_leave_open()
 {
-    va_list ap;
-    struct memory_obj *toReturn = 0;
-
-    if (flags==MEMORY_DEFAULTS)
-        flags = MEMORY_GET_SINGLETON;
-
-    if (flags & MEMORY_GET_SINGLETON)
-        toReturn = &singleton;
-    else
-        toReturn = (struct memory_obj *)calloc(1, sizeof(struct memory_obj));
-
-    if (toReturn->initialized)
-        goto out;
-
-    if (flags & MEMORY_UNIT_TEST_MODE)
-    {
-        va_start(ap, flags);
-        init_mem_struct_filename(toReturn, va_arg(ap, const char *));
-        va_end(ap);
-    } else
-    {
-        init_mem_struct(toReturn);
-    }
-
-out:
-    return toReturn;
+    struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
+    memory_obj_suggest_leave_open(m);
 }
 
-void  memory_suggest_leave_open(struct memory_obj *this)
+void  memory_suggest_close()
 {
-    this->close--;
+    struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
+    memory_obj_suggest_close(m);
 }
 
-void  memory_suggest_close(struct memory_obj *this)
+int  memory_read(void *buffer, u64 offset, size_t length)
 {
-    this->close++;
+    struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
+    return memory_obj_read(m, buffer, offset, length);
 }
 
-bool  memory_should_close(const struct memory_obj *this)
+int  memory_write(void *buffer, u64 offset, size_t length)
 {
-    return this->close > 0;
+    struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
+    dprintf("%s - BUFFER: %s\n", __PRETTY_FUNCTION__, (char *)buffer );
+    return memory_obj_write(m, buffer, offset, length);
 }
 
-int  memory_read(const struct memory_obj *m, void *buffer, u64 offset, size_t length)
+s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
 {
-    return m->read_fn(m, (u8 *)buffer, offset, length);
+    struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
+    return memory_obj_search(m, pat, patlen, start, end, stride);
 }
-
-int  memory_write(const struct memory_obj *m, void *buffer, u64 offset, size_t length)
-{
-    return m->write_fn(m, (u8 *)buffer, offset, length);
-}
-
-void memory_obj_free(struct memory_obj *m)
-{
-    if (m != &singleton)
-        m->free(m);
-    else
-        m->cleanup(m);
-}
-
-s64  memory_search(const struct memory_obj *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
-{
-    u8 *buf = calloc(1, patlen);
-    u64 cur = start;
-    memory_suggest_leave_open((struct memory_obj *)m);
-
-    memset(buf, 0, patlen);
-
-    while ( (cur + patlen) < end)
-    {
-        memory_read(m, buf, cur, patlen);
-
-        if (memcmp (buf, pat, patlen) == 0)
-            goto out;
-
-        cur += stride;
-    }
-
-    // bad stuff happened if we got to here and cur > end
-    if ((cur + patlen) >= end)
-        cur = -1;
-
-out:
-    memory_suggest_close((struct memory_obj *)m);
-    free(buf);
-    return cur;
-}
-
-
-// UNIT TEST
-
-struct ut_data
-{
-    char *filename;
-    FILE *fd;
-    int mem_errno;
-    int rw;
-};
-
-static int UT_read_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
-{
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
-    private_data->mem_errno = errno = 0;
-    int retval = -1;
-
-    if (!private_data->fd)
-    {
-        // fopen portable to Windows if "b" is added to mode.
-        private_data->rw=0;
-        private_data->fd = fopen( private_data->filename, "rb" ); // open for read to start
-        if (!private_data->fd)
-            goto err_out;
-    }
-
-    // FSEEK is a macro defined in config/ for portability
-    retval = -2;
-    int ret = FSEEK(private_data->fd, offset, 0);
-    if (ret)
-        goto err_out;
-
-    size_t bytesRead = fread( buffer, 1, length, private_data->fd );
-
-    // TODO: handle short reads
-    retval = -3;
-    if ((length != bytesRead))
-        goto err_out;
-
-    retval = 0;
-    goto out;
-
-err_out:
-    private_data->mem_errno = errno;
-
-out:
-    // close on error, or if close hint
-    if (private_data->fd && (memory_should_close(this) || retval))
-    {
-        fflush(private_data->fd);
-        fclose(private_data->fd);
-        private_data->fd = 0;
-    }
-    return retval;
-}
-
-static int UT_write_fn(const struct memory_obj *this, u8 *buffer, u64 offset, size_t length)
-{
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
-    private_data->mem_errno = errno = 0;
-    int retval = -1;
-
-    if(!private_data->rw || !private_data->fd)
-    {
-        if(private_data->fd)
-            fclose(private_data->fd);
-
-        private_data->fd = fopen( private_data->filename, "r+b" ); // re-open for write
-        if(!private_data->fd)
-            goto err_out;
-
-        private_data->rw=1;
-    }
-
-    // FSEEK is a macro defined in config/ for portability
-    int ret = FSEEK(private_data->fd, offset, 0);
-    if(ret)
-        goto err_out;
-
-    size_t bytesWritten = fwrite( buffer, length, 1, private_data->fd );
-    if( 1 != bytesWritten )
-        goto err_out;
-
-    retval = 0;
-    goto out;
-
-err_out:
-    private_data->mem_errno = errno;
-
-out:
-    // close on error, or if close hint
-    if (private_data->fd && (memory_should_close(this) || retval))
-    {
-        fflush(private_data->fd);
-        fclose(private_data->fd);
-        private_data->fd = 0;
-    }
-    return retval;
-}
-
-static void UT_free(struct memory_obj *this)
-{
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
-    if (private_data->filename)
-    {
-        free(private_data->filename);
-        private_data->filename = 0;
-    }
-    if (private_data->fd)
-    {
-        fflush(private_data->fd);
-        fclose(private_data->fd);
-    }
-    free(private_data);
-    this->private_data = 0;
-}
-
-static void UT_cleanup(struct memory_obj *this)
-{
-    struct ut_data *private_data = (struct ut_data *)this->private_data;
-    if (private_data->fd)
-    {
-        fflush(private_data->fd);
-        fclose(private_data->fd);
-        private_data->fd = 0;
-    }
-    private_data->mem_errno = 0;
-    private_data->rw = 0;
-}
-
-
-void MEM_INIT_FUNCTION(struct memory_obj *m, const char *fn)
-{
-    struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
-    priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);
-    strcpy(priv_ut->filename, fn);
-
-    m->private_data = priv_ut;
-    m->free = UT_free;
-    m->read_fn = UT_read_fn;
-    m->write_fn = UT_write_fn;
-    m->cleanup = UT_cleanup;
-    m->close = 1;
-    m->initialized = 1;
-}
-
-

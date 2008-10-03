@@ -363,20 +363,19 @@ bool __internal validate_smbios_tep( const struct smbios_table_entry_point *temp
 int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
 {
     int retval = 1;
-    struct memory_obj *mem = memory_factory(MEMORY_GET_SINGLETON);
 
     unsigned long fp = E_BLOCK_START;
 
     // tell the memory subsystem that it can optimize here and
     // keep memory open while we scan rather than open/close/open/close/...
     // for each fillBuffer() call
-    memory_suggest_leave_open(mem);
+    memory_suggest_leave_open();
 
     struct smbios_table_entry_point tempTEP;
     memset(&tempTEP, 0, sizeof(tempTEP));
     while ( (fp + sizeof(tempTEP)) < F_BLOCK_END)
     {
-        memory_read(mem, &tempTEP, fp, sizeof(tempTEP));
+        memory_read(&tempTEP, fp, sizeof(tempTEP));
 
         // search for promising looking headers
         // first, look for old-style DMI header
@@ -405,7 +404,7 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
     }
 
     // dont need memory optimization anymore
-    memory_suggest_close(mem);
+    memory_suggest_close();
 
     // bad stuff happened if we got to here and fp > 0xFFFFFL
     if ((fp + sizeof(tempTEP)) >= F_BLOCK_END)
@@ -423,7 +422,6 @@ out:
 
 int __internal smbios_get_table_memory(struct smbios_table *m)
 {
-    struct memory_obj *mem = memory_factory(MEMORY_GET_SINGLETON);
     int retval = -1; //fail
 
     dprintf("DEBUG: smbios_get_table_memory()\n");
@@ -433,7 +431,7 @@ int __internal smbios_get_table_memory(struct smbios_table *m)
 
     size_t len = m->tep.dmi.table_length;
     m->table = (struct table*)calloc(1, len);
-    retval = memory_read(mem, m->table, m->tep.dmi.table_address, len);
+    retval = memory_read(m->table, m->tep.dmi.table_address, len);
     if (retval == 0)
         goto out;
 
