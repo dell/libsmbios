@@ -23,6 +23,8 @@
 
 #include <exception>
 #include <typeinfo>     // for typeid()
+#include <iostream>
+#include <iomanip>
 
 // A collection of macros to use in the unit tests.
 // They print things out in a standard format, or shorten unit tests.

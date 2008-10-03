@@ -19,9 +19,7 @@
 // compat header should always be first header if including system headers
 #include "smbios_c/compat.h"
 
-#include <iomanip>
-#include <fstream>
-#include <iostream>
+// system
 
 #include "testC_smbios.h"
 #include "smbios_c/smbios.h"
