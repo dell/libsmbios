@@ -41,7 +41,7 @@ struct cmos_obj *cmos_factory(int flags, ...)
 
     if (flags==CMOS_DEFAULTS)
         flags = CMOS_GET_SINGLETON;
-            
+
     if (flags & CMOS_GET_SINGLETON)
         toReturn = &singleton;
     else
@@ -55,7 +55,7 @@ struct cmos_obj *cmos_factory(int flags, ...)
         va_start(ap, flags);
         init_cmos_struct_filename(toReturn, va_arg(ap, const char *));
         va_end(ap);
-    } else 
+    } else
     {
         init_cmos_struct(toReturn);
     }
@@ -143,7 +143,7 @@ out:
 int cmos_run_callbacks(const struct cmos_obj *m, bool do_update)
 {
     int retval = 0;
-    const struct callback *ptr = m->cb_list_head; 
+    const struct callback *ptr = m->cb_list_head;
     dprintf("%s\n", __PRETTY_FUNCTION__);
     if(!ptr)
         goto out;

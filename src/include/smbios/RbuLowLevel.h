@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- 
+
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -27,12 +27,12 @@
 #   define RBU_CANCEL   (0x005d)
 
 // WARNING WARNING WARNING
-// 
+//
 // This file is not guaranteed to be API/ABI stable. Include it at your own risk.
 //
 // WARNING WARNING WARNING
 
-namespace rbu 
+namespace rbu
 {
 #   if defined(_MSC_VER)
 #       pragma pack(push,1)
@@ -44,7 +44,7 @@ namespace rbu
     {
         u32 pktId;      // must be '$RPK'
         u16 pktSize;    // size of packet in KB
-        u16 reserved1;  // 
+        u16 reserved1;  //
         u16 hdrSize;    // size of packet header in paragraphs (16 byte chunks)
         u16  reserved2; //
         u32 pktSetId;   // unique id for packet set, can be anything
@@ -59,12 +59,12 @@ namespace rbu
 
 
     /* RBU Packet Requirements
-    
+
     1.All values in the packet header except PktNum must be the same for all packets in a set with the following exception:
             -- Packet 0 may have a different packet size (PktSize).
             -- checksums
     2.Packet 0 data does not contain RBU data. Packet 1 contains the first chunk of RBU data.
-    3.Packet data begins immediately after the header. Packet data size and offset can be calculated from PktSize and HdrSize. 
+    3.Packet data begins immediately after the header. Packet data size and offset can be calculated from PktSize and HdrSize.
     4.Reserved fields are 0.
     5.If multiple packets sets are written to memory, all packet sets must be identical.
     6.All packets must start on 4 KB boundaries.
@@ -76,9 +76,9 @@ namespace rbu
     12.PktChk is the value resulting in a zero sum of all packet words (header and data).
     13.PktSetId uniquely identifies a packet set. BIOS aborts the packet search if all packets do not have the same PkSetId. Example identifiers: a 4-character ASCII ID string (e.g. “_A00”), a 4-byte hash value (e.g. CRC).
         */
-    
+
     /*  RBU Packet 0 */
-    
+
     struct  rbu_packet_0
     {
         rbu_packet  header;
@@ -91,17 +91,17 @@ namespace rbu
     /* RBU Packet 0 Definition
 
     Packet 0 is reserved for packet set information. Packet 0 data consists of data items -- each item consists of an info byte followed by the actual data item. If bit 0 of the info byte is 1, the actual data starting at the next byte is present. If bit 0 is 0, the data is not present.
-    
+
     The system flash password is currently defined as the admin or setup password.
-    
+
     BIOS reject the packet set when:
     1.The packet set flash password CRC and the system flash password CRC do not match.
     2.The packet set flash password CRC is not present but the system flash password is present.
-    
+
     */
 
 
-    /* 
+    /*
        RBU BIOS UPDATE HEADER FILE (.HDR) structure
        */
 
@@ -120,12 +120,12 @@ namespace rbu
         u8  biosInternalUse;
         u8  reserved[5];
         u16 compatFlags;
-        u16 systemIdList[NUM_SYS_ID_IN_HDR]; /* 
-            Contains the list of NumSystems Dell System ID and Hardware Revision 
+        u16 systemIdList[NUM_SYS_ID_IN_HDR]; /*
+            Contains the list of NumSystems Dell System ID and Hardware Revision
             ID pairs for which the Image Data is valid, in the following format:
             Bit Range  Description
-            15:11      Dell System ID, bits 12:8.  
-                        This range is set to 00000b if the Dell System ID 
+            15:11      Dell System ID, bits 12:8.
+                        This range is set to 00000b if the Dell System ID
                         is a 1-byte value.
             10:8       Hardware Revision ID
             7:0        Dell System ID, bits 7:0. */

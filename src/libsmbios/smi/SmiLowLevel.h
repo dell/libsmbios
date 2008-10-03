@@ -8,7 +8,7 @@
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -40,7 +40,7 @@ namespace smi
         u16 command_address;
         u8  command_code;
         u8  reserved;
-        /*this should be 'u8 command_buffer[]', but it is not supported in VC6 
+        /*this should be 'u8 command_buffer[]', but it is not supported in VC6
           therefore, we just hack it, I guess. Remember to subtract this from
           the size when taking the sizeof this struct
         */

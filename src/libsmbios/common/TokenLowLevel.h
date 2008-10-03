@@ -136,7 +136,7 @@ namespace smbios
         //variable number of tokens present, zero or more possible
         //would _really_ like to do:
         //   struct   calling_interface_token  token_array[];
-        // 
+        //
         //but cannot because it is a gcc extension. :-(
         struct   calling_interface_token  first_token;
     }

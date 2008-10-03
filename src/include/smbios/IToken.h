@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -112,7 +112,7 @@ namespace smbios
         virtual bool isBool() const = 0;
         //! Returns length for string-type tokens
         virtual unsigned int getStringLength() const = 0;
-        //! returns std:string and raw value in first parameter. 
+        //! returns std:string and raw value in first parameter.
         //  \warning byteArray must be at least <b> getStringLength()+1 </b> bytes or NULL!
         /** \param byteArray If Non-NULL, getString() will store the raw string here.
          * \param size This must be the length of the space allocated for byteArray. getString() will not overflow this length.
@@ -147,9 +147,9 @@ namespace smbios
     class ICmosToken
     {
     public:
-        //! returns details about CMOS index/data ports and cmos location. 
+        //! returns details about CMOS index/data ports and cmos location.
         //  should be used judiciously, as this circumvents object layering.
-        //  The main purpose for this is to implement special-case code 
+        //  The main purpose for this is to implement special-case code
         //  that needs to access raw cmos.
         virtual void getCMOSDetails( u16 *indexPort, u16 *dataPort, u8 *location ) const = 0;
         virtual ~ICmosToken() throw() {};
@@ -164,7 +164,7 @@ namespace smbios
     public:
         //! returns details about Smi location and value
         //  should be used judiciously, as this circumvents object layering.
-        //  The main purpose for this is to implement special-case code 
+        //  The main purpose for this is to implement special-case code
         //  that needs to access raw smi.
         virtual void getSmiDetails( u16 *cmdIOAddress, u8 *cmdIOCode, u8 *location ) const = 0;
         virtual ~ISmiToken() throw() {};
@@ -201,7 +201,7 @@ namespace smbios
         const ITokenTable *table;
         int current;
     };
-    
+
     //! Iterator for TokenTable objects
     /**
     */

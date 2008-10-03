@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -56,7 +56,7 @@ namespace rbu
 
     //!AbstractFactory that produces IRbuHdr objects.
     /** The RbuFactory class is based on the Factory design pattern.
-    * The RbuFactory is the recommended method to create IRbuHdr 
+    * The RbuFactory is the recommended method to create IRbuHdr
     * objects.
     *
     * The getSingleton() is the recommended method to call to create
@@ -66,7 +66,7 @@ namespace rbu
     * Most users of the factory need call nothing more than getFactory()
     * and then getSingleton() on the returned factory object.
     *
-    * Advanced users can call setParameter() to set up internal factory 
+    * Advanced users can call setParameter() to set up internal factory
     * variables that control creation of tables.
     */
     class RbuFactory : public virtual factory::IFactory
@@ -80,7 +80,7 @@ namespace rbu
          * The getSingleton() is the recommended method to call to create
          * tables. You need not delete the pointer returned by this method, it
          * will be deleted by the factory when it is reset() or destructed.
-         * 
+         *
          * \returns Singleton RbuFactory object pointer.
          */
         static RbuFactory *getFactory();
@@ -88,8 +88,8 @@ namespace rbu
 
         //! Create a new IRbuHdr object that the caller must delete. (NOT RECOMMENDED)
         /** The makeNew() method returns a pointer to a newly allocated
-         * IRbuHdr object. The caller is responsible for deleting this 
-         * reference when it is finished with it. It is recommended that the 
+         * IRbuHdr object. The caller is responsible for deleting this
+         * reference when it is finished with it. It is recommended that the
          * caller store the pointer in an std::auto_ptr<IRbuHdr>.
          *
          * The getSingleton() method is preferred over this method.
@@ -133,22 +133,22 @@ namespace rbu
     std::ostream & operator << (std::ostream & cout, const IRbuHdr & item);
 
     //! Cancel BIOS Update on Dell systems
-    /** 
+    /**
      */
     void cancelDellBiosUpdate();
 
     //! Check to see if a HDR file supports a specific System ID
-    /** 
+    /**
      */
     bool checkSystemId(const IRbuHdr &hdr, u16 sysId );
 
     //! Update BIOS on Dell systems
-    /** 
+    /**
      */
     void dellBiosUpdate(const IRbuHdr &hdr, packet_type force_type);
 
     //! Compare BIOS Versions
-    /** 
+    /**
      */
     int compareBiosVersion(std::string ver1, std::string ver2);
 

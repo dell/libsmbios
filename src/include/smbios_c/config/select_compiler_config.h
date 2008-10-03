@@ -1,10 +1,10 @@
 //  Boost compiler configuration selection header file
 
-//  (C) Copyright John Maddock 2001 - 2003. 
+//  (C) Copyright John Maddock 2001 - 2003.
 //  (C) Copyright Martin Wille 2003.
-//  (C) Copyright Guillaume Melquiond 2003. 
-//  Use, modification and distribution are subject to the 
-//  Boost Software License, Version 1.0. (See accompanying file 
+//  (C) Copyright Guillaume Melquiond 2003.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for most recent version.
@@ -18,7 +18,7 @@
 
 
 // locate which compiler we are using and define
-// LIBSMBIOS_COMPILER_CONFIG as needed: 
+// LIBSMBIOS_COMPILER_CONFIG as needed:
 
 # if defined __GNUC__
 //  GNU C++:
@@ -34,6 +34,6 @@
 #elif defined (LIBSMBIOS_ASSERT_CONFIG)
 // this must come last - generate an error if we don't
 // recognise the compiler:
-#  error "Unknown compiler - please report to libsmbios maintainer." 
+#  error "Unknown compiler - please report to libsmbios maintainer."
 
 #endif

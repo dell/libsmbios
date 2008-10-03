@@ -1,15 +1,15 @@
 //  Boost config.h configuration header file  ------------------------------//
 
-//  (C) Copyright John Maddock 2001 - 2003. 
-//  (C) Copyright Darin Adler 2001. 
-//  (C) Copyright Peter Dimov 2001. 
-//  (C) Copyright Bill Kempf 2002. 
-//  (C) Copyright Jens Maurer 2002. 
-//  (C) Copyright David Abrahams 2002 - 2003. 
-//  (C) Copyright Gennaro Prota 2003. 
-//  (C) Copyright Eric Friedman 2003. 
-//  Use, modification and distribution are subject to the 
-//  Boost Software License, Version 1.0. (See accompanying file 
+//  (C) Copyright John Maddock 2001 - 2003.
+//  (C) Copyright Darin Adler 2001.
+//  (C) Copyright Peter Dimov 2001.
+//  (C) Copyright Bill Kempf 2002.
+//  (C) Copyright Jens Maurer 2002.
+//  (C) Copyright David Abrahams 2002 - 2003.
+//  (C) Copyright Gennaro Prota 2003.
+//  (C) Copyright Eric Friedman 2003.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for most recent version.
@@ -157,7 +157,7 @@
 
 //
 // Helper macro LIBSMBIOS_JOIN:
-// The following piece of macro magic joins the two 
+// The following piece of macro magic joins the two
 // arguments together, even when one of the arguments is
 // itself a macro (see 16.3.1 in C++ standard).  The key
 // is that macro expansion of macro arguments does not

@@ -165,7 +165,7 @@ __internal u16 wordChecksum_n( u32 start, u32 end, u32 indexPort, u32 dataPort);
 __internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort );
 __internal int update_checksum(const struct cmos_obj *c, bool do_update, void *userdata);
 
-struct checksum_details 
+struct checksum_details
 {
     u32 csumloc;
     u32 csumlen;

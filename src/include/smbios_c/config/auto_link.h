@@ -1,18 +1,18 @@
-/* vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:cindent: 
+/* vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:cindent:
  */
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -35,7 +35,7 @@
 #endif
 
 #ifdef LIBSMBIOS_PLATFORM_WIN32
-// The rest of the code in this file is used to automatically select which 
+// The rest of the code in this file is used to automatically select which
 // version libsmbios library to link to.
 
 // libsmbios-vc6        // single-thread  (DLL)     (non-debug)     XXX
@@ -218,11 +218,11 @@
 // automatic linking for xerces, if we are using XML
 #if defined(LIBSMBIOS_NEED_SMBIOSXML)
 #   undef LIBSMBIOS_LIB_NAME
-#   if !defined(_MT) && !defined(__MT__) 
+#   if !defined(_MT) && !defined(__MT__)
 #       error("Xerces DLLs are only distributed as (debug|non-debug) x (multithreaded|multithreaded DLL). Your runtime code-generation must be set to either of these configurations.")
 #   endif
 
-#   if (defined(_DLL) || defined(_RTLDLL)) 
+#   if (defined(_DLL) || defined(_RTLDLL))
 #       if defined(_DEBUG)
 #           define LIBSMBIOS_LIB_NAME xerces-c_2D
 #       else

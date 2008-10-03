@@ -1,11 +1,11 @@
-//  (C) Copyright John Maddock 2001 - 2003. 
-//  (C) Copyright Darin Adler 2001 - 2002. 
-//  (C) Copyright Peter Dimov 2001. 
-//  (C) Copyright Aleksey Gurtovoy 2002. 
-//  (C) Copyright David Abrahams 2002 - 2003. 
-//  (C) Copyright Beman Dawes 2002 - 2003. 
-//  Use, modification and distribution are subject to the 
-//  Boost Software License, Version 1.0. (See accompanying file 
+//  (C) Copyright John Maddock 2001 - 2003.
+//  (C) Copyright Darin Adler 2001 - 2002.
+//  (C) Copyright Peter Dimov 2001.
+//  (C) Copyright Aleksey Gurtovoy 2002.
+//  (C) Copyright David Abrahams 2002 - 2003.
+//  (C) Copyright Beman Dawes 2002 - 2003.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for most recent version.
@@ -27,7 +27,7 @@
 
 // Only new MSVC has _strtoi64. Older compilers are screwed (will get undefined ref error)
 #if _MSC_VER >= 1300
-#define strtoll(p, e, b) _strtoi64(p, e, b) 
+#define strtoll(p, e, b) _strtoi64(p, e, b)
 #endif
 
 #define UNREFERENCED_PARAMETER(P)  (P)
@@ -64,11 +64,11 @@
 #  define LIBSMBIOS_NO_INTRINSIC_WCHAR_T
 #endif
 
-//   
-// check for exception handling support:   
-#ifndef _CPPUNWIND   
-#  define LIBSMBIOS_NO_EXCEPTIONS   
-#endif 
+//
+// check for exception handling support:
+#ifndef _CPPUNWIND
+#  define LIBSMBIOS_NO_EXCEPTIONS
+#endif
 
 //
 // __int64 support:

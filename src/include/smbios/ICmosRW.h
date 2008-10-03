@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -54,7 +54,7 @@ namespace cmos
         CmosRWFactory();
     };
 
-    class ICmosRW  
+    class ICmosRW
     {
     public:
         explicit ICmosRW();
@@ -69,7 +69,7 @@ namespace cmos
     /** Read or write an array of bytes to CMOS.
      *
      * This function is set up as a non-member helper function. It successively reads/writes \param count bytes from/to CMOS.
-     *  
+     *
      * Note that the byte array passed as a parameter need not be zero-terminated.
      *
      * \param cmos Pass in the ICmosRW object to operate on
@@ -83,7 +83,7 @@ namespace cmos
     /** Read or write an array of bytes to CMOS.
      *
      * This function is set up as a non-member helper function. It successively reads/writes \param count bytes from/to CMOS.
-     *  
+     *
      * Note that the byte array passed as a parameter need not be zero-terminated.
      *
      * \param cmos Pass in the ICmosRW object to operate on

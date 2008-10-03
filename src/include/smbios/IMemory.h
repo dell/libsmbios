@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -56,7 +56,7 @@ namespace memory
     * Most users of the factory need call nothing more than getFactory()
     * and then getSingleton() on the returned factory object.
     *
-    * Advanced users can call setParameter() to set up internal factory 
+    * Advanced users can call setParameter() to set up internal factory
     * variables that control creation of tables.
     */
     class MemoryFactory : public virtual factory::IFactory
@@ -70,7 +70,7 @@ namespace memory
          * The getSingleton() is the recommended method to call to create
          * tables. You need not delete the pointer returned by this method, it
          * will be deleted by the factory when it is reset() or destructed.
-         * 
+         *
          * \returns Singleton MemoryFactory object pointer.
          */
         static MemoryFactory *getFactory();
@@ -79,7 +79,7 @@ namespace memory
         //! Recommended way to get an IMemory object.
         /** getSingleton() returns a pointer to a Singleton IMemory
          * object. The user need not delete the pointer returned by this method.
-         * The singleton will be deleted when the factory is destructed or 
+         * The singleton will be deleted when the factory is destructed or
          * the reset() method is called
          * \returns (IMemory *) -- Factory manages lifetime, do not delete.
          */
@@ -87,8 +87,8 @@ namespace memory
 
         //! Create a new IMemory object that the caller must delete. (NOT RECOMMENDED)
         /** The make() method returns a pointer to a newly allocated
-         * IMemory object. The caller is responsible for deleting this 
-         * reference when it is finished with it. It is recommended that the 
+         * IMemory object. The caller is responsible for deleting this
+         * reference when it is finished with it. It is recommended that the
          * caller store the pointer in an std::auto_ptr<IMemory>.
          *
          * The getSingleton() method is preferred over this method.

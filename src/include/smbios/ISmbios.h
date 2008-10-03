@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -55,7 +55,7 @@ namespace smbios
 
     //!AbstractFactory that produces ISmbiosTable objects.
     /** The SmbiosFactory class is based on the Factory design pattern.
-    * The SmbiosFactory is the recommended method to create ISmbiosTable 
+    * The SmbiosFactory is the recommended method to create ISmbiosTable
     * objects.
     *
     * The getSingleton() is the recommended method to call to create
@@ -65,7 +65,7 @@ namespace smbios
     * Most users of the factory need call nothing more than getFactory()
     * and then getSingleton() on the returned factory object.
     *
-    * Advanced users can call setParameter() to set up internal factory 
+    * Advanced users can call setParameter() to set up internal factory
     * variables that control creation of tables.
     */
     class SmbiosFactory : public virtual factory::IFactory
@@ -79,7 +79,7 @@ namespace smbios
          * The getSingleton() is the recommended method to call to create
          * tables. You need not delete the pointer returned by this method, it
          * will be deleted by the factory when it is reset() or destructed.
-         * 
+         *
          * \returns Singleton SmbiosFactory object pointer.
          */
         static SmbiosFactory *getFactory();
@@ -88,7 +88,7 @@ namespace smbios
         //! Recommended way to get an ISmbiosTable object.
         /** getSingleton() returns a pointer to a Singleton ISmbiosTable
          * object. The user need not delete the pointer returned by this method.
-         * The singleton will be deleted when the factory is destructed or 
+         * The singleton will be deleted when the factory is destructed or
          * the reset() method is called
          * \returns (ISmbiosTable *) -- Factory manages lifetime, do not delete.
          */
@@ -96,8 +96,8 @@ namespace smbios
 
         //! Create a new ISmbiosTable object that the caller must delete. (NOT RECOMMENDED)
         /** The makeNew() method returns a pointer to a newly allocated
-         * ISmbiosTable object. The caller is responsible for deleting this 
-         * reference when it is finished with it. It is recommended that the 
+         * ISmbiosTable object. The caller is responsible for deleting this
+         * reference when it is finished with it. It is recommended that the
          * caller store the pointer in an std::auto_ptr<ISmbiosTable>.
          *
          * The getSingleton() method is preferred over this method.
@@ -111,7 +111,7 @@ namespace smbios
     };
 
     //!Interface definition for Smbios Table operations.
-    /** 
+    /**
      * \copydoc smbios_theory
      */
     class ISmbiosTable
@@ -130,7 +130,7 @@ namespace smbios
         // ITERATORS
         //
         //! Standard iterator interface. Points to first table item.
-        /** 
+        /**
          * \returns iterator or const_iterator
          * Example Iterator Usage:
 \code
@@ -148,11 +148,11 @@ namespace smbios
         /** \copydoc begin() */
         virtual const_iterator begin () const = 0;
 
-        //! Standard iterator interface. Points to one-past-the-last table item. 
+        //! Standard iterator interface. Points to one-past-the-last table item.
         /** \copydoc begin() */
         virtual iterator end () = 0;
 
-        //! Standard iterator interface. Points to one-past-the-last table item. 
+        //! Standard iterator interface. Points to one-past-the-last table item.
         /** Used by const_iterator.
          * \copydoc begin() */
         virtual const_iterator end () const = 0;
@@ -207,7 +207,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
          * definition needs to be moved to the SmbiosItem class. This needs to
          * happen at the same time that itemList is moved.
          */
-        virtual void clearItemCache() const = 0;  
+        virtual void clearItemCache() const = 0;
 
         //! Returns the number of table items, per SMBIOS table header
         virtual int getNumberOfEntries () const = 0;  // used by unit-test code
@@ -235,7 +235,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
     };
 
     //!Interface definition for Smbios Item operations.
-    /** 
+    /**
      * \copydoc item_theory
      */
     class ISmbiosItem
@@ -272,8 +272,8 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
         /** Set of accessor functions: getU8(), getU16(), getU32(), and getU64()
          * Returns a (byte|word|dword|qword) field from the Item.
          *
-         * The \a offset specified is an int representing the a valid offset 
-         * within the table.  Method will return a u8/u16/u32/u64 
+         * The \a offset specified is an int representing the a valid offset
+         * within the table.  Method will return a u8/u16/u32/u64
          * (depending on function called).
          *
          * These methods all check the offset parameter for out of bounds
@@ -284,25 +284,25 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
          * \param out  void pointer to where to store output data
          * \param size  size of data to return
          *
-         * \returns The (byte|word|dword|qword) at \a offset.  Throws 
-         * smbios::SmbiosItemDataOutOfBounds or smbios::SmbiosParseException 
+         * \returns The (byte|word|dword|qword) at \a offset.  Throws
+         * smbios::SmbiosItemDataOutOfBounds or smbios::SmbiosParseException
          * on error.
          *
          *
          * \warning These methods are unchecked access. There is no verification
-         * that (for example) when you use getU8() that the location you are 
-         * trying to access is actually a U8. 
+         * that (for example) when you use getU8() that the location you are
+         * trying to access is actually a U8.
          */
         virtual void getData( unsigned int offset, u8 *out, size_t size ) const = 0;
 
         virtual const u8* getBufferCopy(size_t &length) const = 0;
-        
+
         //! Returns the buffer size of the item.
         // The validateBios.cpp calls this function.
         virtual size_t getBufferSize() const = 0;
 
         /** Not likely to be useful to regular client code. It is public
-         * mainly to help in writing Unit Tests. Clients should normally 
+         * mainly to help in writing Unit Tests. Clients should normally
          * use getString().
          */
         virtual const char *getStringByStringNumber (u8) const = 0;
@@ -336,7 +336,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
     void *getBits_FromItem(const ISmbiosItem &item, unsigned int offset, void *out, unsigned int lsb=0, unsigned int msb=0 );
     bool isBitSet(const ISmbiosItem *itemPtr, unsigned int offset, unsigned int bitToTest);
 
-    template <class R> 
+    template <class R>
     R &getData(const ISmbiosItem &item, unsigned int offset, R &out)
     {
         item.getData(offset, &out, sizeof(R));
@@ -411,7 +411,7 @@ cout << "The BIOS Version is: " << item1->getString(0x05) << endl;
         ConstSmbiosTableIterator & operator ++ (); // ++Prefix
         const ConstSmbiosTableIterator operator ++ (int);  //Postfix++
     };
-    
+
     //
     // Non-member functions
     //

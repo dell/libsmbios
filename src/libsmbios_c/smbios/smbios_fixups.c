@@ -62,7 +62,7 @@ __internal u16 get_id_byte_from_mem();
 static void do_dell_check_type_fixup(struct smbios_table *table)
 {
     u16 affected[] = {PE1300, PE0600, PE0650, PE1600, PE1650, IDS4235, PE1655, PE1750, PE2600, PE2650, PE4600, PE6600};
-    int num_affected = sizeof(affected)/sizeof(affected[0]); 
+    int num_affected = sizeof(affected)/sizeof(affected[0]);
     struct smbios_struct *s = 0;
     struct indexed_io_access_structure *broken = 0;
 

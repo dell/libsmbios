@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License as published
  * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
@@ -35,7 +35,7 @@
 #       define DCERR(line) do {} while(0)
 #   endif
 
-namespace rbu 
+namespace rbu
 {
     DEFINE_EXCEPTION_EX( RbuNotSupportedImpl, rbu, RbuNotSupported );
     DEFINE_EXCEPTION_EX( InvalidHdrFileImpl, rbu, InvalidHdrFile );
@@ -48,7 +48,7 @@ namespace rbu
     public:
         RbuFactoryImpl();
         virtual ~RbuFactoryImpl() throw();
-        virtual IRbuHdr *makeNew( std::string filename ); 
+        virtual IRbuHdr *makeNew( std::string filename );
     };
 
 

@@ -250,7 +250,7 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
         default:
             break;
     }
-    
+
     cmos_register_write_callback(
             cmos_factory(CMOS_GET_SINGLETON), update_checksum, d, free);
 out:

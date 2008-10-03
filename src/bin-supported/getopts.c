@@ -9,31 +9,31 @@
  * Copyright (c) 2001, 2002, Steve Mertz <steve@dragon-ware.com>
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this 
+ * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
- * Redistributions in binary form must reproduce the above copyright notice, 
- * this list of conditions and the following disclaimer in the documentation 
+ *
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
- * Neither the name of Dragon Ware nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without 
- * specific prior written permission. 
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS 
- * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+ *
+ * Neither the name of Dragon Ware nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS
+ * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
 */
 #include <stdio.h>
@@ -50,7 +50,7 @@ int option_index = 1;
 int getopts_usage(char *progName, struct options opts[])
 {
   int count;
-  
+
   printf("Usage: %s [options]\n\n", progName);
   printf("  --help,\t-h\t\t\tDisplays this information\n");
   for (count = 0; opts[count].description; count++)
@@ -68,7 +68,7 @@ int getopts_usage(char *progName, struct options opts[])
               sprintf(cmd, "--%s,\t-%s\t\t\t", opts[count].name, opts[count].shortName);
             }
         }
-      else if (opts[count].name) 
+      else if (opts[count].name)
         {
           cmd = calloc(1, strlen(opts[count].name) + 15);
           if (opts[count].args)
@@ -80,7 +80,7 @@ int getopts_usage(char *progName, struct options opts[])
               sprintf(cmd, "--%s\t\t\t", opts[count].name);
             }
         }
-      else if (opts[count].shortName) 
+      else if (opts[count].shortName)
         {
           cmd = calloc(1, strlen(opts[count].shortName) + 15);
           if (opts[count].args)
@@ -103,19 +103,19 @@ int getopts_usage(char *progName, struct options opts[])
 
 /* int getopts()
  *
- * Returns: -1 - Couldn't allocate memory.  Please handle me. 
+ * Returns: -1 - Couldn't allocate memory.  Please handle me.
  *          0  - No arguements to parse
  *          #  - The number in the struct for the matched arg.
  *
 */
 int getopts(int argc, char **argv, struct options opts[], char **args)
 {
-  int count1 = 0; 
+  int count1 = 0;
   size_t sizeOfArgs = 0;
 
   if (argc == 1 || option_index == argc)
     return 0;
-  
+
 /* Search for '-h' or '--help' first.  Then we can just exit */
   for (count1 = 1; count1 < argc; count1++)
     {
@@ -132,9 +132,9 @@ useage:
     {
       for (count1 = 0; opts[count1].description; count1++)
         {
-          if ((opts[count1].name && !strcmp(opts[count1].name, 
-              (argv[option_index]+2))) || 
-              (opts[count1].shortName && !strcmp(opts[count1].shortName, 
+          if ((opts[count1].name && !strcmp(opts[count1].name,
+              (argv[option_index]+2))) ||
+              (opts[count1].shortName && !strcmp(opts[count1].shortName,
               (argv[option_index]+1))))
             {
               if (opts[count1].args)
@@ -152,8 +152,8 @@ useage:
                       for (optionSeeker = 0; opts[optionSeeker].description;
                            optionSeeker++)
                         {
-                          if ((opts[optionSeeker].name && 
-                               !strcmp(opts[optionSeeker].name, 
+                          if ((opts[optionSeeker].name &&
+                               !strcmp(opts[optionSeeker].name,
                                        (argv[option_index]+2))) ||
                                (opts[optionSeeker].shortName &&
                                !strcmp(opts[optionSeeker].shortName,

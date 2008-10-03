@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -54,7 +54,7 @@ namespace smi
     public:
         virtual ~IDellCallingInterfaceSmi();
         // compiler-generated copy and operator = are good for now, I think.
-        
+
         virtual void setClass( u16 newClass ) = 0;
         virtual void setSelect( u16 newSelect ) = 0;
         virtual void setArg( u8 argNumber, u32 argValue ) = 0;
@@ -75,7 +75,7 @@ namespace smi
     {
     public:
         enum { DELL_CALLING_INTERFACE_SMI_RAW, DELL_CALLING_INTERFACE_SMI,};
-    
+
         static SmiFactory *getFactory();
         virtual ~SmiFactory() throw();
         virtual std::auto_ptr<IDellCallingInterfaceSmi> makeNew(u8 type) = 0; // not for use

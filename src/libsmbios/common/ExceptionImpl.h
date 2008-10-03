@@ -111,7 +111,7 @@ namespace smbios
     {
         if (this == &source)
             return *this;
-        
+
         messageStr = source.messageStr;
         outputStr = "";
 

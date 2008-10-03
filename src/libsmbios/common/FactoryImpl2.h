@@ -36,7 +36,7 @@ namespace factory
     class TFactory : public S
     {
     public:
-        virtual ~TFactory() throw() 
+        virtual ~TFactory() throw()
         {
             if( _instance )
             {
@@ -50,8 +50,8 @@ namespace factory
         // default parameter foo=0 to workaround vc6 ICE when trying
         // to compile an explicit template function initialization
         template <class R>
-        static TFactory<S> *getFactory(R *foo= 0) 
-        {  
+        static TFactory<S> *getFactory(R *foo= 0)
+        {
             UNREFERENCED_PARAMETER(foo);
             if( _instance == 0 )
             {
@@ -60,7 +60,7 @@ namespace factory
             return _instance;
         }
 
-        virtual void reset() 
+        virtual void reset()
         {
             if( _instance )
             {

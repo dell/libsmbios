@@ -2,16 +2,16 @@
 /*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -37,7 +37,7 @@
     public:\
         virtual ~excName() throw() {};\
         excName() {};\
-    } 
+    }
 #define DECLARE_EXCEPTION( excName )   DECLARE_EXCEPTION_EX( excName, smbios, IException )
 
 namespace smbios
@@ -45,7 +45,7 @@ namespace smbios
      //! Base class for all Abstract Exceptions.
      /**
      */
-    class IException : public std::exception 
+    class IException : public std::exception
     {
     public:
         // use default compiler-generated constructor/copy constructor/operator =
@@ -57,7 +57,7 @@ namespace smbios
     // some standard exceptions
 
     /** Raised when some class does not implement part of the public interface
-      Used mainly in classes where there are optional parts of the interface 
+      Used mainly in classes where there are optional parts of the interface
       defined that require extra external functionality, such as XML, for example.
       */
     DECLARE_EXCEPTION( NotImplemented );

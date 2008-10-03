@@ -97,10 +97,10 @@ static int copy_mmap(const struct memory_access_obj *this, u8 *buffer, u64 offse
 
         fnprintf("\t\tCOPYING(%lu)\n", toCopy);
         if (rw)
-            memcpy(((u8 *)(private_data->lastMapping) + mmoff), 
+            memcpy(((u8 *)(private_data->lastMapping) + mmoff),
                     buffer + bytesCopied, toCopy);
         else
-            memcpy(buffer + bytesCopied, 
+            memcpy(buffer + bytesCopied,
                     ((const u8 *)(private_data->lastMapping) + mmoff), toCopy);
 
 #ifdef DEBUG_MEMORY_C
@@ -218,7 +218,7 @@ __internal void init_mem_struct_filename(struct memory_access_obj *m, const char
 
 __internal void init_mem_struct(struct memory_access_obj *m)
 {
-   init_mem_struct_filename(m, "/dev/mem"); 
+   init_mem_struct_filename(m, "/dev/mem");
 }
 
 
