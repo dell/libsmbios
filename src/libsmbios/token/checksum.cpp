@@ -157,6 +157,7 @@ namespace smbios
         // if NULL parameter passed, or if parameter not null and evaluates to TRUE
         // only write new checksum if it doesn't match what is already there
         if (actualChksum != calculatedChksum)
+        {
             if( !doUpdate || *static_cast<bool*>(doUpdate) )
             {
                 const cmos::Suppressable *o = dynamic_cast<const cmos::Suppressable *>(cmos);
@@ -203,6 +204,7 @@ namespace smbios
                 invalidChecksum.setMessageString( ost.str() );
                 throw invalidChecksum;
             }
+        }
     }
 
     /*******************
