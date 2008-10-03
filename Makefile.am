@@ -38,40 +38,24 @@ $(check_PROGRAMS): $(lib_LTLIBRARIES)
 $(noinst_PROGRAMS): $(lib_LTLIBRARIES)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
-########## DOCS ################
 clean-generic:
 	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
 
+valgrind:
+	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check
+
+########## DOCS ################
 if HAS_DOXYGEN
 all: out/full/html/index.html out/interface/html/index.html
 endif
 
 doxygen: out/full/html/index.html out/interface/html/index.html
-out/full/html/index.html: out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find $(top_srcdir)/doc -name \*.txt)
+out/full/html/index.html: $(shell find $(top_srcdir)/doc -name \*.txt)
 	cd out/; doxygen full-documentation.dox > doxygen-full.log
 
-out/interface/html/index.html: out/interface-only.dox out/reports/code-coverage.txt out/reports/valgrind_output.txt $(shell find $(top_srcdir)/doc -name \*.txt)
+out/interface/html/index.html: out/interface-only.dox $(shell find $(top_srcdir)/doc -name \*.txt)
 	cd out/; doxygen interface-only.dox > doxygen-int.log
 
-out/reports/code-coverage.txt:
-	[ -e out/reports ] || mkdir -p out/reports
-	@echo '/** \page code_coverage Automatically generated code coverage report' > out/reports/code-coverage.txt
-	@echo '<pre>' >> out/reports/code-coverage.txt
-	@echo 'CODE COVERAGE REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/code-coverage.txt
-	@echo "</pre>*/" >> out/reports/code-coverage.txt
-
-out/reports/valgrind_output.txt:
-	[ -e out/reports ] || mkdir -p out/reports
-	@echo '/** \page leak_detect Automatically generated leak detection report' > out/reports/valgrind_output.txt
-	@echo '\section leaks Leak detection report' >> out/reports/valgrind_output.txt
-	@echo "Generated for $$(whoami) on $$(date)" >> out/reports/valgrind_output.txt
-	@echo '<pre>' >> out/reports/valgrind_output.txt
-	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/valgrind_output.txt
-	@echo "</pre>*/" >> out/reports/valgrind_output.txt
-	@echo '/** \section leak_time Time to run leak detection report.' >> out/reports/valgrind_output.txt
-	@echo '<pre>' >> out/reports/valgrind_output.txt
-	@echo 'LEAK DETECTION REPORT HAS NOT BEEN RUN YET IN THIS SOURCE TREE!' >> out/reports/valgrind_output.txt
-	@echo "</pre>*/" >> out/reports/valgrind_output.txt
 ########## END DOCS ################
 
 EXTRA_DIST += \

@@ -11,35 +11,35 @@ DIR=$(cd $(dirname $0); pwd)
 TMPDIR=$PWD/out/test
 mkdir -p $TMPDIR
 
-TST=out
+[ -n "$TST" ] || TST=out
 
 echo -e "\n\nRunning CInterface tests."
-$TST/testC_memory_cmos $TMPDIR 
+$VALGRIND $TST/testC_memory_cmos $TMPDIR
 
 echo -e "\n\nRunning test for RBU"
-$TST/testRbu  $TMPDIR  $DIR/test_data/rbu
+$VALGRIND $TST/testRbu  $TMPDIR  $DIR/test_data/rbu
 
 echo -e "\n\nRunning Standalone tests."
-$TST/testStandalone $TMPDIR $DIR/test_data/opti
+$VALGRIND $TST/testStandalone $TMPDIR $DIR/test_data/opti
 
 for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i/autotest_flag ] || continue
     echo -e "\n\nRunning test for $i"
-    $TST/testC_token $TMPDIR $(basename $i) $i
+    $VALGRIND $TST/testC_token $TMPDIR $(basename $i) $i
     [ $? -eq 0 ] || exit 1
 done
 
 for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i/autotest_flag ] || continue
     echo -e "\n\nRunning test for $i"
-    $TST/testC_smbios $TMPDIR $(basename $i) $i
+    $VALGRIND $TST/testC_smbios $TMPDIR $(basename $i) $i
     [ $? -eq 0 ] || exit 1
 done
 
 for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i/autotest_flag ] || continue
     echo -e "\n\nRunning test for $i"
-    $TST/testPlatform $TMPDIR $(basename $i) $i
+    $VALGRIND $TST/testPlatform $TMPDIR $(basename $i) $i
     [ $? -eq 0 ] || exit 1
 done
 
