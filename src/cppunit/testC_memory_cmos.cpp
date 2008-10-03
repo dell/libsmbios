@@ -46,7 +46,9 @@ void testCInterface::setUp()
 
     FILE *fd = fopen( testFile.c_str(), "w+" );
     fseek(fd, 65536 * 4, 0);
-    fwrite("Z", 1, 1, fd);
+    size_t ret = fwrite("Z", 1, 1, fd);
+    if(ret!=1)
+        ;
     fclose(fd);
 
     u8 byte = 'a';
