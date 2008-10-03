@@ -22,13 +22,13 @@ LIBTOOL_REVISION=0
 LIBTOOL_AGE=0
 ####################################
 
-AC_PREREQ(2.61)
+AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
 AM_PATH_CPPUNIT(1.9.6)
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.16.1])
+AM_GNU_GETTEXT_VERSION([0.14])
 
 AC_GNU_SOURCE
 
@@ -132,7 +132,7 @@ AC_SUBST([RELEASE_EXTRALEVEL])
 AC_SUBST([RELEASE_RPM_EXTRALEVEL])
 AC_SUBST([LIBTOOL_CURRENT])
 AC_SUBST([LIBTOOL_REVISION])
-AC_SUBST([LIBTOOL_AGE ])
+AC_SUBST([LIBTOOL_AGE])
 
 LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)
@@ -144,13 +144,11 @@ echo "PACKAGE_VERSION='$PACKAGE_VERSION'" >> version
 echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 
 # generate files and exit
-AC_CONFIG_FILES([
-    Makefile
-    out/include/smbios/version.h:pkg/version.h.in
-    out/include/smbios_c/version.h:pkg/version.h.in
-    out/full-documentation.dox:pkg/full-documentation.dox.in
-    out/interface-only.dox:pkg/interface-only.dox.in
-    pkg/${PACKAGE_NAME}.spec:pkg/${PACKAGE_NAME}.spec.in
-    po/Makefile.in
-    ])
+AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([out/include/smbios/version.h:pkg/version.h.in])
+AC_CONFIG_FILES([out/include/smbios_c/version.h:pkg/version.h.in])
+AC_CONFIG_FILES([out/full-documentation.dox:pkg/full-documentation.dox.in])
+AC_CONFIG_FILES([out/interface-only.dox:pkg/interface-only.dox.in])
+AC_CONFIG_FILES([pkg/libsmbios.spec])
+AC_CONFIG_FILES([po/Makefile.in])
 AC_OUTPUT
