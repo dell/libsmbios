@@ -4,8 +4,12 @@
 set -e
 
 DIR=$(cd $(dirname $0); pwd)
-TMPDIR=$(mktemp -d  /tmp/unittest-$$-$RANDOM-XXXXXX)
-trap "rm -rf $TMPDIR" EXIT QUIT HUP TERM INT
+
+#TMPDIR=$(mktemp -d  /tmp/unittest-$$-$RANDOM-XXXXXX)
+#trap "rm -rf $TMPDIR" EXIT QUIT HUP TERM INT
+
+TMPDIR=$PWD/out/test
+mkdir -p $TMPDIR
 
 TST=out
 
