@@ -143,8 +143,6 @@ namespace smbios
             throw smbios::Exception<smbios::IException>( chkost.str() );
         }
 
-
-
         u32 actualChksum = 0;
         u32 calculatedChksum = 0;
         for( int i=0; i<len; ++i )
@@ -154,57 +152,59 @@ namespace smbios
             calculatedChksum = calculatedChksum |  (chksum[i] << (8*i));
         }
 
-        // if NULL parameter passed, or if parameter not null and evaluates to TRUE
         // only write new checksum if it doesn't match what is already there
-        if (actualChksum != calculatedChksum)
+        if (actualChksum == calculatedChksum)
+            goto out;
+
+        // if NULL parameter passed, or if parameter not null and evaluates to TRUE
+        if( !doUpdate || *static_cast<bool*>(doUpdate) )
         {
-            if( !doUpdate || *static_cast<bool*>(doUpdate) )
+            const cmos::Suppressable *o = dynamic_cast<const cmos::Suppressable *>(cmos);
+            o->suppressNotification(true);
+            for( int i=0; i<len; ++i )
             {
-                const cmos::Suppressable *o = dynamic_cast<const cmos::Suppressable *>(cmos);
-                o->suppressNotification(true);
-                for( int i=0; i<len; ++i )
-                {
-                    cmos->writeByte(
-                        indexPort, dataPort,
-                        checksumLocation+i, chksum[len -i -1]);
-                }
-                o->resumeNotification(true);
+                cmos->writeByte(
+                    indexPort, dataPort,
+                    checksumLocation+i, chksum[len -i -1]);
             }
-            else
-            {
-                ost << _("Checking alternate checksum algorithm results.") << endl
-                << _("Calculated (Type %(word_chksum_type)i) word checksum is: %(calc_word)i") << endl
-                << _("Calculated (Type %(byte_chksum_type)i) byte checksum is: %(calc_byte)i") << endl
-                << _("Calculated (Type %(word_crc_type)i) word crc is: %(calc_crc)i") << endl
-                << _("Calculated (Type %(word_chksum_n_type)i) 1's complement word checksum is: %(calc_word_n)i") << endl
-                << _("Actual data value is: %(actual)i") << endl
-                << _("Calculated data value is: %(calc)i") << endl
-                << _("Start: %(start)i") << endl
-                << _("End: %(end)i") << endl
-                << _("Checksum Loc: %(checksumLocation)i") << endl
-                << _("Index Port: %(index)i") << endl
-                << _("Data Port: %(data)i") << endl;
-
-                invalidChecksum.setParameter( "byte_chksum_type", CHECK_TYPE_BYTE_CHECKSUM );
-                invalidChecksum.setParameter( "word_chksum_type", CHECK_TYPE_WORD_CHECKSUM );
-                invalidChecksum.setParameter( "word_chksum_n_type", CHECK_TYPE_WORD_CHECKSUM_N );
-                invalidChecksum.setParameter( "word_crc_type", CHECK_TYPE_WORD_CRC );
-                invalidChecksum.setParameter("calc_byte", byteChecksum(cmos, start, end, indexPort, dataPort));
-                invalidChecksum.setParameter("calc_word", wordChecksum(cmos, start, end, indexPort, dataPort, false));
-                invalidChecksum.setParameter("calc_word_n", wordChecksum(cmos, start, end, indexPort, dataPort, true));
-                invalidChecksum.setParameter("calc_crc", wordCrc(cmos, start, end, indexPort, dataPort));
-                invalidChecksum.setParameter("actual", actualChksum);
-                invalidChecksum.setParameter("calc", calculatedChksum);
-                invalidChecksum.setParameter("start", start);
-                invalidChecksum.setParameter("end", end);
-                invalidChecksum.setParameter("checksumLocation", checksumLocation);
-                invalidChecksum.setParameter("index", indexPort);
-                invalidChecksum.setParameter("data", dataPort);
-
-                invalidChecksum.setMessageString( ost.str() );
-                throw invalidChecksum;
-            }
+            o->resumeNotification(true);
         }
+        else
+        {
+            ost << _("Checking alternate checksum algorithm results.") << endl
+            << _("Calculated (Type %(word_chksum_type)i) word checksum is: %(calc_word)i") << endl
+            << _("Calculated (Type %(byte_chksum_type)i) byte checksum is: %(calc_byte)i") << endl
+            << _("Calculated (Type %(word_crc_type)i) word crc is: %(calc_crc)i") << endl
+            << _("Calculated (Type %(word_chksum_n_type)i) 1's complement word checksum is: %(calc_word_n)i") << endl
+            << _("Actual data value is: %(actual)i") << endl
+            << _("Calculated data value is: %(calc)i") << endl
+            << _("Start: %(start)i") << endl
+            << _("End: %(end)i") << endl
+            << _("Checksum Loc: %(checksumLocation)i") << endl
+            << _("Index Port: %(index)i") << endl
+            << _("Data Port: %(data)i") << endl;
+
+            invalidChecksum.setParameter( "byte_chksum_type", CHECK_TYPE_BYTE_CHECKSUM );
+            invalidChecksum.setParameter( "word_chksum_type", CHECK_TYPE_WORD_CHECKSUM );
+            invalidChecksum.setParameter( "word_chksum_n_type", CHECK_TYPE_WORD_CHECKSUM_N );
+            invalidChecksum.setParameter( "word_crc_type", CHECK_TYPE_WORD_CRC );
+            invalidChecksum.setParameter("calc_byte", byteChecksum(cmos, start, end, indexPort, dataPort));
+            invalidChecksum.setParameter("calc_word", wordChecksum(cmos, start, end, indexPort, dataPort, false));
+            invalidChecksum.setParameter("calc_word_n", wordChecksum(cmos, start, end, indexPort, dataPort, true));
+            invalidChecksum.setParameter("calc_crc", wordCrc(cmos, start, end, indexPort, dataPort));
+            invalidChecksum.setParameter("actual", actualChksum);
+            invalidChecksum.setParameter("calc", calculatedChksum);
+            invalidChecksum.setParameter("start", start);
+            invalidChecksum.setParameter("end", end);
+            invalidChecksum.setParameter("checksumLocation", checksumLocation);
+            invalidChecksum.setParameter("index", indexPort);
+            invalidChecksum.setParameter("data", dataPort);
+
+            invalidChecksum.setMessageString( ost.str() );
+            throw invalidChecksum;
+        }
+out:
+        return;
     }
 
     /*******************
