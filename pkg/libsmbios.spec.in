@@ -148,6 +148,7 @@ rm -rf %{buildroot}
 %{_sbindir}/assetTag
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/getSystemId
+%{_sbindir}/getSystemId_lite
 %{_sbindir}/propertyTag
 %{_sbindir}/serviceTag
 %{_sbindir}/verifySmiPassword
