@@ -25,6 +25,7 @@
 #include "testC_memory_cmos.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/memory.h"
+#include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
 
 #include "outputctl.h"
@@ -41,7 +42,7 @@ void testCInterface::setUp()
     string testFile = writeDirectory + "/testmem.dat";
 
     memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, testFile.c_str());
-    cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, testFile.c_str());
+    cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, testFile.c_str());
 
     FILE *fd = fopen( testFile.c_str(), "w+" );
     fseek(fd, 65536 * 4, 0);
@@ -159,21 +160,18 @@ void testCInterface::testCmosRead()
     STD_TEST_START(getTestName().c_str() << "  ");
 
     u8 buf;
-    struct cmos_obj *c = 0;
     int ret;
     for (int i=0; i<26; ++i){
-        c = cmos_factory(CMOS_GET_SINGLETON);
         buf = '9';
-        ret = cmos_read_byte(c, &buf, 0, 0, i);
+        ret = cmos_read_byte(&buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
-        cmos_obj_free(c);
     }
 
     STD_TEST_END("");
 }
 
-int _test_write_callback(const struct cmos_obj *c, bool do_update, void *userdata)
+int _test_write_callback(const struct cmos_access_obj *c, bool do_update, void *userdata)
 {
     //printf("Write detected. do_update: %d  userdata: %d\n", do_update, *(int*)userdata);
     (*(int*)userdata)++;
@@ -183,36 +181,36 @@ int _test_write_callback(const struct cmos_obj *c, bool do_update, void *userdat
 void testCInterface::testCmosWrite()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
-    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
+    struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
     u8 buf;
     int ret;
 
     int counter=0;
-    cmos_register_write_callback(c, _test_write_callback, &counter, 0);
+    cmos_obj_register_write_callback(c, _test_write_callback, &counter, 0);
 
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, &buf, 0, 0, i);
+        ret = cmos_read_byte(&buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('a' + i) );
     }
 
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, &buf, 0, 0, i);
+        ret = cmos_read_byte(&buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         buf = buf + 'A' - 'a';
-        ret = cmos_write_byte(c, buf, 0, 0, i);
+        ret = cmos_write_byte(buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
     }
 
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, &buf, 0, 0, i);
+        ret = cmos_read_byte(&buf, 0, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('A' + i) );
     }
 
     // index port 1 (offset 512 + i) should be '0'
     for (int i=0; i<26; ++i){
-        ret = cmos_read_byte(c, &buf, 1, 0, i);
+        ret = cmos_read_byte(&buf, 1, 0, i);
         CPPUNIT_ASSERT_EQUAL( 0, ret );
         CPPUNIT_ASSERT_EQUAL( buf, (u8)('0') );
     }

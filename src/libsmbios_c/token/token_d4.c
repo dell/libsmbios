@@ -26,6 +26,7 @@
 #include <string.h>
 
 // public
+#include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
@@ -62,14 +63,12 @@ static int _d4_is_active(const struct token_obj *t)
 {
     bool retval = false;
     u8 byte=0;
-    struct cmos_obj *c=0;
     int ret;
 
     if (! _d4_is_bool(t))
         goto out;
 
-    c = cmos_factory(CMOS_GET_SINGLETON);
-    ret = cmos_read_byte(c, &byte,
+    ret = cmos_read_byte(&byte,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location
@@ -86,17 +85,13 @@ out:
 static int _d4_activate(const struct token_obj *t)
 {
     int retval = -1;
-    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
     u8 byte = 0;
     int ret;
-
-    if (!c)
-        goto out;
 
     if (! _d4_is_bool(t))
         goto out;
 
-    ret = cmos_read_byte(c, &byte,
+    ret = cmos_read_byte(&byte,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location
@@ -106,7 +101,7 @@ static int _d4_activate(const struct token_obj *t)
     byte = byte & cast_token(t)->andMask;
     byte = byte | cast_token(t)->orValue;
 
-    ret = cmos_write_byte(c, byte,
+    ret = cmos_write_byte(byte,
         cast_struct(t)->indexPort,
         cast_struct(t)->dataPort,
         cast_token(t)->location
@@ -129,13 +124,8 @@ static char * _d4_get_string(const struct token_obj *t)
 {
     u8 *retval = 0;
     size_t strSize = _d4_get_string_len(t);
-    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
 
     dprintf("_d4_get_string()\n");
-
-    dprintf("_d4_get_string() - check cmos\n");
-    if (!c)
-        goto out_err;
 
     dprintf("_d4_get_string() - is string?\n");
     if (! _d4_is_string(t))
@@ -148,7 +138,7 @@ static char * _d4_get_string(const struct token_obj *t)
 
     for (int i=0; i<strSize; ++i){
         dprintf("_d4_get_string() - read byte %d/%ld\n", i+1, strSize);
-        int ret = cmos_read_byte(c, retval + i,
+        int ret = cmos_read_byte(retval + i,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location + i
@@ -171,11 +161,7 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
 {
     u8 retval = 0;
     size_t strSize = _d4_get_string_len(t);
-    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
     char *targetBuffer = calloc(1, strSize);
-
-    if (!c)
-        goto out;
 
     if (!targetBuffer)
         goto out;
@@ -187,7 +173,7 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
     memcpy( targetBuffer, str, size < strSize ? size : strSize );
 
     for (int i=0; i<strSize; ++i){
-        int ret = cmos_write_byte(c, targetBuffer[i],
+        int ret = cmos_write_byte(targetBuffer[i],
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location + i
@@ -218,6 +204,10 @@ void __internal init_d4_token(struct token_obj *t)
 void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
 {
     struct checksum_details *d = 0;
+    struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
+
+    if (!c)
+        goto out;
 
     // if all zeros, there is no checksum
     if (!(d4_struct->checkedRangeStartIndex || d4_struct->checkedRangeEndIndex || d4_struct->checkValueIndex))
@@ -251,8 +241,7 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
             break;
     }
 
-    cmos_register_write_callback(
-            cmos_factory(CMOS_GET_SINGLETON), update_checksum, d, free);
+    cmos_obj_register_write_callback(c, update_checksum, d, free);
 out:
     return;
 }

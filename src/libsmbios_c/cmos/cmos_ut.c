@@ -43,7 +43,7 @@ struct ut_data
     int rw;
 };
 
-static int UT_read_fn(const struct cmos_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
+static int UT_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;
@@ -97,7 +97,7 @@ out:
     return retval;
 }
 
-static int UT_write_fn(const struct cmos_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
+static int UT_write_fn(const struct cmos_access_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     private_data->cmos_errno = errno = 0;
@@ -143,7 +143,7 @@ out:
     return retval;
 }
 
-static void UT_free(struct cmos_obj *this)
+static void UT_free(struct cmos_access_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->filename)
@@ -159,7 +159,7 @@ static void UT_free(struct cmos_obj *this)
     this->private_data = 0;
 }
 
-static void UT_cleanup(struct cmos_obj *this)
+static void UT_cleanup(struct cmos_access_obj *this)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     if (private_data->fd)
@@ -172,7 +172,7 @@ static void UT_cleanup(struct cmos_obj *this)
 }
 
 
-void init_cmos_struct_filename(struct cmos_obj *m, const char *fn)
+void init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);

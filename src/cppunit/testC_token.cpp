@@ -24,6 +24,7 @@
 #include "testC_token.h"
 #include "smbios_c/token.h"
 #include "smbios_c/obj/memory.h"
+#include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
 
 #include "outputctl.h"
@@ -61,7 +62,7 @@ void testCtoken::setUp()
     copyFile( cmosCopyFile, cmosOrigFile );
 
     memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
-    cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
+    cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
 
     doc = 0;
     parser = 0;
@@ -153,7 +154,7 @@ void testCtoken::testTokenChecksums()
 
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
 
-    int ret = cmos_run_callbacks(cmos_factory(CMOS_GET_SINGLETON), false); 
+    int ret = cmos_run_callbacks(false);
 
     token_table_free(table);
 

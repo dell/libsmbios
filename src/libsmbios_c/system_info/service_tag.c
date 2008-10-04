@@ -158,7 +158,6 @@ __internal char *getServiceTagFromCMOSToken()
 {
     const struct smbios_struct *s;
     char *tempval = 0;
-    struct cmos_obj *c = cmos_factory(CMOS_GET_SINGLETON);
     u16 indexPort, dataPort;
     u8  location;
     u8 csum = 0;
@@ -166,8 +165,6 @@ __internal char *getServiceTagFromCMOSToken()
     int ret;
 
     dprintf("getServiceTagFromCMOSToken()\n");
-    if (!c)
-        goto out;
 
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
     const struct token_obj *token = token_get_next_by_id(table, 0, Cmos_Service_Token);
@@ -193,7 +190,7 @@ __internal char *getServiceTagFromCMOSToken()
     // calc checksum
     for( u32 i = 0; i < SVC_TAG_CMOS_LEN_MAX; i++)
     {
-        ret = cmos_read_byte(c, &byte, indexPort, dataPort, location + i);
+        ret = cmos_read_byte(&byte, indexPort, dataPort, location + i);
         if (ret<0)
             goto out_err;
 
@@ -201,7 +198,7 @@ __internal char *getServiceTagFromCMOSToken()
     }
 
     // get checksum byte
-    ret = cmos_read_byte(c, &byte, indexPort, dataPort, SVC_TAG_CMOS_LEN_MAX + 1);
+    ret = cmos_read_byte(&byte, indexPort, dataPort, SVC_TAG_CMOS_LEN_MAX + 1);
     if (ret<0)
         goto out_err;
 

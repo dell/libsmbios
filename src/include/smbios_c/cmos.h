@@ -16,34 +16,25 @@
  */
 
 
-#ifndef CMOS_H
-#define CMOS_H
+#ifndef C_CMOS_H
+#define C_CMOS_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
-
 #include "smbios_c/types.h"
 
 EXTERN_C_BEGIN;
 
-#define CMOS_DEFAULTS       0x0000
-#define CMOS_GET_SINGLETON  0x0001
-#define CMOS_GET_NEW        0x0002
-#define CMOS_UNIT_TEST_MODE 0x0004
+int    cmos_read_byte (u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
+int    cmos_write_byte(u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
 
-struct cmos_obj;
+// to run all the attached callbacks
+// most callbacks currently are for checksums. So, run with do_update = 0
+// to get a return code indicating if checksums are all valid
+int cmos_run_callbacks(bool do_update);
 
-struct cmos_obj *cmos_factory(int flags, ...);
-void   cmos_obj_free(struct cmos_obj *);
-
-int     cmos_read_byte(const struct cmos_obj *, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
-int    cmos_write_byte(const struct cmos_obj *, u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
-size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
-
-// useful for checksums, etc
-typedef int (*cmos_write_callback)(const struct cmos_obj *, bool, void *);
-void cmos_register_write_callback(struct cmos_obj *, cmos_write_callback, void *, void (*destruct)(void *));
-int cmos_run_callbacks(const struct cmos_obj *m, bool do_update);
+// not yet implemented
+//size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
 
 EXTERN_C_END;
 

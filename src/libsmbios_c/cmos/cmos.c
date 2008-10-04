@@ -21,145 +21,28 @@
 // Include compat.h first, then system headers, then public, then private
 #include "smbios_c/compat.h"
 
-// system
-#include <stdarg.h>
-#include <stdlib.h>
-
-// public
 #include "smbios_c/cmos.h"
+#include "smbios_c/obj/cmos.h"
 #include "smbios_c/types.h"
 
 // private
 #include "cmos_impl.h"
 
-struct cmos_obj singleton; // auto-init to 0
 
-struct cmos_obj *cmos_factory(int flags, ...)
+int  cmos_read_byte(u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
-    va_list ap;
-    struct cmos_obj *toReturn = 0;
-
-    if (flags==CMOS_DEFAULTS)
-        flags = CMOS_GET_SINGLETON;
-
-    if (flags & CMOS_GET_SINGLETON)
-        toReturn = &singleton;
-    else
-        toReturn = (struct cmos_obj *)calloc(1, sizeof(struct cmos_obj));
-
-    if (toReturn->initialized)
-        goto out;
-
-    if (flags & CMOS_UNIT_TEST_MODE)
-    {
-        va_start(ap, flags);
-        init_cmos_struct_filename(toReturn, va_arg(ap, const char *));
-        va_end(ap);
-    } else
-    {
-        init_cmos_struct(toReturn);
-    }
-
-out:
-    return toReturn;
+    struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
+    return cmos_obj_read_byte(c, byte, indexPort, dataPort, offset);
 }
 
-int  cmos_read_byte(const struct cmos_obj *m, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
+int  cmos_write_byte(u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
-    return m->read_fn(m, byte, indexPort, dataPort, offset);
+    struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
+    return cmos_obj_write_byte(c, byte, indexPort, dataPort, offset);
 }
 
-int  cmos_write_byte(const struct cmos_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
+int cmos_run_callbacks(bool do_update)
 {
-    int temp = m->write_fn(m, byte, indexPort, dataPort, offset);
-    cmos_run_callbacks(m, true);
-    return temp;
-}
-
-void __internal _cmos_obj_free(struct cmos_obj *m)
-{
-    struct callback *ptr = m->cb_list_head;
-    struct callback *next = 0;
-
-    // free callback list
-    while(ptr)
-    {
-        next = 0;
-        if (ptr->next)
-            next = ptr->next;
-
-        if (ptr->destructor)
-            ptr->destructor(ptr->userdata);
-        free(ptr);
-        ptr = next;
-    }
-
-    m->cb_list_head = 0;
-
-    m->free(m);
-}
-
-void cmos_obj_free(struct cmos_obj *m)
-{
-    if (m != &singleton)
-        _cmos_obj_free(m);
-    else
-        m->cleanup(m);
-}
-
-void cmos_register_write_callback(struct cmos_obj *m, cmos_write_callback cb_fn, void *userdata, void (*destructor)(void *))
-{
-    struct callback *ptr = m->cb_list_head;
-    struct callback *new = 0;
-    dprintf("%s\n", __PRETTY_FUNCTION__);
-
-    dprintf("%s - loop\n", __PRETTY_FUNCTION__);
-    while(ptr && ptr->next)
-    {
-        // dont add duplicates
-        if (ptr->cb_fn == cb_fn && ptr->userdata == userdata)
-            goto out;
-
-        ptr = ptr->next;
-    }
-
-    dprintf("%s - allocate\n", __PRETTY_FUNCTION__);
-    new = calloc(1, sizeof(struct callback));
-    new->cb_fn = cb_fn;
-    new->userdata = userdata;
-    new->destructor = destructor;
-    new->next = 0;
-
-    dprintf("%s - join %p\n", __PRETTY_FUNCTION__, ptr);
-    if (ptr)
-        ptr->next = new;
-    else
-        m->cb_list_head = new;
-
-out:
-    return;
-}
-
-int cmos_run_callbacks(const struct cmos_obj *m, bool do_update)
-{
-    int retval = 0;
-    const struct callback *ptr = m->cb_list_head;
-    dprintf("%s\n", __PRETTY_FUNCTION__);
-    if(!ptr)
-        goto out;
-
-    do{
-        dprintf("%s - ptr->cb_fn %p\n", __PRETTY_FUNCTION__, ptr->cb_fn);
-        retval |= ptr->cb_fn(m, do_update, ptr->userdata);
-        ptr = ptr->next;
-    } while (ptr);
-
-out:
-    return retval;
-}
-
-void __internal _init_cmos_std_stuff(struct cmos_obj *m)
-{
-    m->initialized = 1;
-    m->cb_list_head = 0;
+    struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
+    return cmos_obj_run_callbacks(c, do_update);
 }

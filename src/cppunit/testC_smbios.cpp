@@ -24,7 +24,7 @@
 #include "testC_smbios.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/obj/memory.h"
-#include "smbios_c/cmos.h"
+#include "smbios_c/obj/cmos.h"
 #include "smbios_c/system_info.h"
 
 #include "outputctl.h"
@@ -62,7 +62,7 @@ void testCsmbios::setUp()
     copyFile( cmosCopyFile, cmosOrigFile );
 
     memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
-    cmos_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
+    cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
 
     doc = 0;
     parser = 0;
