@@ -15,8 +15,8 @@
  * See the GNU General Public License for more details.
  */
 
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef C_MEMORY_H
+#define C_MEMORY_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
@@ -27,15 +27,16 @@ EXTERN_C_BEGIN;
 int  memory_read(void *buffer, u64 offset, size_t length);
 int  memory_write(void *buffer, u64 offset, size_t length);
 
-// format error string
-size_t memory_fmt_err(char *buf, size_t len);
-
 // helper
 s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 
 // Following calls must be properly nested in equal pairs
 void  memory_suggest_leave_open();
 void  memory_suggest_close();
+
+// not yet implemented
+//// format error string
+//size_t memory_fmt_err(char *buf, size_t len);
 
 EXTERN_C_END;
 
