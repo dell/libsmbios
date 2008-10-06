@@ -100,6 +100,11 @@ static void remap(struct linux_data *private_data, u64 offset, bool rw)
     off_t mmoff = offset % private_data->mappingSize;
 
     fnprintf("\n");
+
+    // no need to remap if we already have the correct area mapped.
+    if (offset-mmoff == private_data->lastMappedOffset)
+        goto out;
+
     private_data->lastMappedOffset = offset-mmoff;
 
     if (private_data->lastMapping)
@@ -112,6 +117,8 @@ static void remap(struct linux_data *private_data, u64 offset, bool rw)
                   MAP_SHARED,
                   fileno(private_data->fd),
                   private_data->lastMappedOffset); // last arg, offset, must be mod pagesize.
+out:
+    return;
 }
 
 static size_t trycopy(struct linux_data *private_data, u8 *buffer, u64 offset, size_t length, bool rw)
