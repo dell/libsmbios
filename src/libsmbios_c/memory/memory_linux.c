@@ -91,7 +91,7 @@ static void debug_dump_buffer(const char *fn, const char *s, const u8 *buffer, s
     dprintf("'\n");
 }
 #else
-#define debug_dump_buffer(...)
+#define debug_dump_buffer(...) do {} while(0)
 #endif
 
 static void remap(struct linux_data *private_data, u64 offset, bool rw)
