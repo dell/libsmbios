@@ -25,6 +25,15 @@
 #include <typeinfo>
 #include <string>
 
+#if defined(DEBUG_TEST_C_MEMORY)
+#include <iostream>
+#   define DCOUT(line) do { cout << line; } while(0)
+#   define DCERR(line) do { cerr << line; } while(0)
+#else
+#   define DCOUT(line) do {} while(0)
+#   define DCERR(line) do {} while(0)
+#endif
+
 extern int global_argc;
 extern char ** global_argv;
 
