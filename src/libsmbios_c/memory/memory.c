@@ -51,7 +51,6 @@ int  memory_read(void *buffer, u64 offset, size_t length)
 int  memory_write(void *buffer, u64 offset, size_t length)
 {
     struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
-    dprintf("%s - BUFFER: %s\n", __PRETTY_FUNCTION__, (char *)buffer );
     return memory_obj_write(m, buffer, offset, length);
 }
 

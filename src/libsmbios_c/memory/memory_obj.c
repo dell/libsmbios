@@ -87,7 +87,6 @@ int  memory_obj_read(const struct memory_access_obj *m, void *buffer, u64 offset
 
 int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
-    dprintf("%s - BUFFER: %s\n", __PRETTY_FUNCTION__, (char *)buffer );
     return m->write_fn(m, (u8 *)buffer, offset, length);
 }
 
