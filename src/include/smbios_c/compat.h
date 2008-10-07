@@ -23,6 +23,10 @@
 #include "smbios_c/config/config.h"
 #include "smbios_c/config/auto_link.h"
 
+#ifdef LIBSMBIOS_C_SOURCE
+#include "libsmbios_c_source.h"
+#endif
+
 /*
  * CHANGES TO THIS FILE CAUSE A WHOLE-PROJECT REBUILD!
  *      Keep changes here to a minimum!

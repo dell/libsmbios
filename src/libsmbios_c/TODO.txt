@@ -8,3 +8,8 @@
 - sysinfo functions - asset/service tags
 
 - Windows support?
+
+
+DONE:
+- make libsmbios_c/common with internal includes. move internal-use #defines
+  out of include/smbios_c/config/... into common. (FSEEK, dbg_print, etc)
