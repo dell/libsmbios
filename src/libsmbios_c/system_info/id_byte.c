@@ -120,21 +120,16 @@ out:
 __internal u16 getIdByteFromOEMItem ()
 {
     u16 idWord = 0;
-    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
-
-    if (!table)
-        goto out;
-
     // search through 0x0B (OEM_Strings_Structure) items
-    smbios_for_each_struct_type( table, s, OEM_Strings ) {
-        const char *str = smbios_get_string_number(s, OEM_String_Field_Number);
+    smbios_for_each_struct_type( s, OEM_Strings ) {
+        const char *str = smbios_struct_get_string_number(s, OEM_String_Field_Number);
         if ((!str) && (0 != strncmp (str, Bayonet_Detect_String, strlen(Bayonet_Detect_String))))
             continue;
 
         //  Id byte is in second string in table 0x0B
         //  the format is "1[NN]", where NN is the idbyte;
         //  note the &str[2] below to skip the 'n['
-        str = smbios_get_string_number(s, 2);
+        str = smbios_struct_get_string_number(s, 2);
         if(str && strlen(str) > 3 && str[0] == '1' && str[1] == '[')
             idWord = strtol( &str[2], NULL, 16 );
 
@@ -142,8 +137,6 @@ __internal u16 getIdByteFromOEMItem ()
             break;
     }
 
-out:
-    smbios_table_free(table);
     return idWord;
 }
 
@@ -151,13 +144,8 @@ out:
 __internal u16 get_id_byte_from_rev_and_id_structure ()
 {
     u16 idWord = 0;
-    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
-
-    if (0 == table)
-        goto out;
-
     // search through 0x0B (Revisions_and_IDs_Structure)
-    smbios_for_each_struct_type( table, s, Dell_Revisions_and_IDs ) {
+    smbios_for_each_struct_type( s, Dell_Revisions_and_IDs ) {
         //If byte field is 0xFE, we need to look in the extension field
         smbios_struct_get_data(s, &idWord, 0x06, 1);
         if( 0xFE == idWord )
@@ -165,7 +153,6 @@ __internal u16 get_id_byte_from_rev_and_id_structure ()
             smbios_struct_get_data(s, &idWord, 0x08, 2);
         }
     }
-out:
     return idWord;
 }
 

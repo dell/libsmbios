@@ -26,6 +26,7 @@
 //#include <string.h>
 
 // public
+#include "smbios_c/obj/smbios.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
 
@@ -214,7 +215,7 @@ void __internal add_token(struct token_table *t, struct token_obj *o)
 
 void __internal init_token_table(struct token_table *t)
 {
-    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
+    struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
 
     t->smbios_table = table;
 

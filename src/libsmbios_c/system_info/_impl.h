@@ -29,7 +29,7 @@
 
 #define __internal __attribute__((visibility("internal")))
 
-__internal char * smbios_get_string_from_table(u8 type, u8 offset);
+__internal char * smbios_struct_get_string_from_table(u8 type, u8 offset);
 void __internal strip_trailing_whitespace( char *str );
 
 #endif

@@ -28,6 +28,7 @@
 // public
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
+#include "smbios_c/obj/smbios.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
 
@@ -248,7 +249,7 @@ out:
 
 void __internal add_d4_tokens(struct token_table *t)
 {
-    smbios_for_each_struct_type(t->smbios_table, s, 0xD4) {
+    smbios_table_for_each_struct_type(t->smbios_table, s, 0xD4) {
         struct indexed_io_access_structure *d4_struct = (struct indexed_io_access_structure*)s;
         struct indexed_io_token *token = d4_struct->tokens;
 

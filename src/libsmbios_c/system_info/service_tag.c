@@ -221,13 +221,13 @@ out:
 __internal char *getServiceTagFromSysInfo()
 {
     dprintf("getServiceTagFromSysInfo()\n");
-    return smbios_get_string_from_table(System_Information_Structure, System_Information_Serial_Number_Offset);
+    return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Serial_Number_Offset);
 }
 
 __internal char *getServiceTagFromSysEncl()
 {
     dprintf("getServiceTagFromSysEncl()\n");
-    return smbios_get_string_from_table(System_Enclosure_or_Chassis_Structure, System_Enclosure_or_Chassis_Service_Offset);
+    return smbios_struct_get_string_from_table(System_Enclosure_or_Chassis_Structure, System_Enclosure_or_Chassis_Service_Offset);
 }
 
 // Code for getting the service tag from one of many locations

@@ -140,10 +140,8 @@ void testCsmbios::testSmbiosConstruct()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
-
     u32 structure_count = 0;
-    smbios_for_each_struct(table, s) {
+    smbios_for_each_struct(s) {
         u32 data=0;
         smbios_struct_get_data(s, &data, 0, sizeof(u8));
         CPPUNIT_ASSERT_EQUAL( (u32)smbios_struct_get_type(s), data );
@@ -159,8 +157,6 @@ void testCsmbios::testSmbiosConstruct()
         structure_count ++;
     }
 
-    smbios_table_free(table);
-
     u32 alt_count = 0;
     smbios_walk(test_walk_fn, &alt_count);
 
@@ -175,9 +171,7 @@ void testCsmbios::testVariousAccessors()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    const struct smbios_table *table = smbios_factory(SMBIOS_GET_SINGLETON);
-
-    const struct smbios_struct *s = smbios_get_next_struct_by_type(table, 0, 0x00); // 0x00 == BIOS structure
+    const struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0x00); // 0x00 == BIOS structure
 
     string biosVendorStr="";
     string versionStr="";
@@ -203,13 +197,13 @@ void testCsmbios::testVariousAccessors()
         throw skip_test();
     }
 
-    const string biosVendorStrSmbios( smbios_get_string_from_offset(s, 4) ); // BIOS VENDOR
-    const string versionStrSmbios( smbios_get_string_from_offset(s, 5) ); // BIOS VERSION
-    const string releaseStrSmbios( smbios_get_string_from_offset(s, 8) ); // RELEASE DATE
+    const string biosVendorStrSmbios( smbios_struct_get_string_from_offset(s, 4) ); // BIOS VENDOR
+    const string versionStrSmbios( smbios_struct_get_string_from_offset(s, 5) ); // BIOS VERSION
+    const string releaseStrSmbios( smbios_struct_get_string_from_offset(s, 8) ); // RELEASE DATE
 
-    const string biosVendorStrSmbios2( smbios_get_string_number(s, 1) ); //BIOS VENDOR
-    const string versionStrSmbios2( smbios_get_string_number(s, 2) ); //BIOS VERSION
-    const string releaseStrSmbios2( smbios_get_string_number(s, 3) ); //RELEASE DATE
+    const string biosVendorStrSmbios2( smbios_struct_get_string_number(s, 1) ); //BIOS VENDOR
+    const string versionStrSmbios2( smbios_struct_get_string_number(s, 2) ); //BIOS VERSION
+    const string releaseStrSmbios2( smbios_struct_get_string_number(s, 3) ); //RELEASE DATE
 
     char *versionStrLib_raw = smbios_get_bios_version();
     const string versionStrLib(versionStrLib_raw);

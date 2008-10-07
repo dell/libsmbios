@@ -63,22 +63,17 @@ void __internal strip_trailing_whitespace( char *str )
     } while(ch);
 }
 
-__internal char * smbios_get_string_from_table(u8 type, u8 offset)
+__internal char * smbios_struct_get_string_from_table(u8 type, u8 offset)
 {
-    struct smbios_table *table;
     const struct smbios_struct *s;
     const char *r;
     char *ret=0;
 
-    table = smbios_factory(SMBIOS_GET_SINGLETON);
-    if (!table)
-        goto out;
-
-    s = smbios_get_next_struct_by_type(table, 0, type);
+    s = smbios_get_next_struct_by_type(0, type);
     if (!s)
         goto out;
 
-    r = smbios_get_string_from_offset(s, offset);
+    r = smbios_struct_get_string_from_offset(s, offset);
     if (!r)
         goto out;
 
@@ -90,7 +85,6 @@ __internal char * smbios_get_string_from_table(u8 type, u8 offset)
     strip_trailing_whitespace(ret);
 
 out:
-    smbios_table_free(table);
     return ret;
 }
 
@@ -101,15 +95,15 @@ void smbios_string_free(void *f)
 
 char *smbios_get_vendor_name()
 {
-    return smbios_get_string_from_table(System_Information_Structure, System_Information_Manufacturer_Offset);
+    return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Manufacturer_Offset);
 }
 
 char *smbios_get_system_name()
 {
-    return smbios_get_string_from_table(System_Information_Structure, System_Information_Product_Name_Offset);
+    return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Product_Name_Offset);
 }
 
 char *smbios_get_bios_version()
 {
-    return smbios_get_string_from_table(BIOS_Information_Structure, BIOS_Information_Version_Offset);
+    return smbios_struct_get_string_from_table(BIOS_Information_Structure, BIOS_Information_Version_Offset);
 }

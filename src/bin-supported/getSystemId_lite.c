@@ -16,9 +16,6 @@
  * See the GNU General Public License for more details.
  */
 
-// compat header should always be first header if including system headers
-#include "smbios_c/compat.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 

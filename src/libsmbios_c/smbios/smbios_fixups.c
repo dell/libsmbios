@@ -24,7 +24,7 @@
 // system
 
 // public
-#include "smbios_c/smbios.h"
+#include "smbios_c/obj/smbios.h"
 #include "smbios_c/token.h"
 #include "smbios_c/types.h"
 
@@ -71,7 +71,7 @@ static void do_dell_check_type_fixup(struct smbios_table *table)
     if (!system_affected(affected, num_affected, sysid))
         goto out;
 
-    s = smbios_get_next_struct_by_handle(smbios_factory(SMBIOS_GET_SINGLETON), 0, DELL_CHECK_FIXUP_BAD_HANDLE);
+    s = smbios_table_get_next_struct_by_handle(table, 0, DELL_CHECK_FIXUP_BAD_HANDLE);
     if (!s)
         goto out;
 
