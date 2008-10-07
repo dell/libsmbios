@@ -50,13 +50,13 @@ int smbios_get_library_version_minor();
  * (server, desktop, workstation, or laptop) that uniquely identifies that
  * system within Dell's product line.
  */
-int   smbios_get_dell_system_id();
-char *smbios_get_vendor_name();
-char *smbios_get_system_name();
-char *smbios_get_bios_version();
-char *smbios_get_asset_tag();
-char *smbios_get_service_tag();
-void smbios_string_free(void *);
+int   sysinfo_get_dell_system_id();
+char *sysinfo_get_vendor_name();
+char *sysinfo_get_system_name();
+char *sysinfo_get_bios_version();
+char *sysinfo_get_asset_tag();
+char *sysinfo_get_service_tag();
+void sysinfo_string_free(void *);
 
 EXTERN_C_END;
 

@@ -28,7 +28,7 @@
 #include "dell_magic.h"
 #include "_impl.h"
 
-char *smbios_get_asset_tag()
+char *sysinfo_get_asset_tag()
 {
     return 0;
 }

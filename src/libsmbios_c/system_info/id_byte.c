@@ -178,7 +178,7 @@ DellIdByteFunctions[] = {
 
 
 
-int smbios_get_dell_system_id()
+int sysinfo_get_dell_system_id()
 {
     int systemId = 0;
     int numEntries =

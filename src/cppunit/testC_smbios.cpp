@@ -205,9 +205,9 @@ void testCsmbios::testVariousAccessors()
     const string versionStrSmbios2( smbios_struct_get_string_number(s, 2) ); //BIOS VERSION
     const string releaseStrSmbios2( smbios_struct_get_string_number(s, 3) ); //RELEASE DATE
 
-    char *versionStrLib_raw = smbios_get_bios_version();
+    char *versionStrLib_raw = sysinfo_get_bios_version();
     const string versionStrLib(versionStrLib_raw);
-    smbios_string_free(versionStrLib_raw);
+    sysinfo_string_free(versionStrLib_raw);
 
     CPPUNIT_ASSERT_EQUAL( versionStr, versionStrLib );
     CPPUNIT_ASSERT_EQUAL( versionStr, versionStrSmbios );
@@ -228,7 +228,7 @@ testCsmbios::testIdByte()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    int   systemId   = smbios_get_dell_system_id  ();
+    int   systemId   = sysinfo_get_dell_system_id  ();
 
     string idStr = getTestInputString("idByte");
     int id  = strtol( idStr.c_str(), 0, 0);
@@ -244,10 +244,10 @@ testCsmbios::testServiceTag()
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
     string serviceTagStr = "";
 
-    char *serviceTag   = smbios_get_service_tag();
+    char *serviceTag   = sysinfo_get_service_tag();
     if (serviceTag)
         serviceTagStr = serviceTag;
-    smbios_string_free(serviceTag);
+    sysinfo_string_free(serviceTag);
 
     string expectedTag = getTestInputString("serviceTag");
 

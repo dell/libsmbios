@@ -88,22 +88,22 @@ out:
     return ret;
 }
 
-void smbios_string_free(void *f)
+void sysinfo_string_free(void *f)
 {
     free(f);
 }
 
-char *smbios_get_vendor_name()
+char *sysinfo_get_vendor_name()
 {
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Manufacturer_Offset);
 }
 
-char *smbios_get_system_name()
+char *sysinfo_get_system_name()
 {
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Product_Name_Offset);
 }
 
-char *smbios_get_bios_version()
+char *sysinfo_get_bios_version()
 {
     return smbios_struct_get_string_from_table(BIOS_Information_Structure, BIOS_Information_Version_Offset);
 }

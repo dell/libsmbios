@@ -244,7 +244,7 @@ DellGetServiceTagFunctions[] = {
                                    {&getServiceTagFromSysEncl,},   // SMBIOS System Enclosure Item
                                };
 
-char *smbios_get_service_tag()
+char *sysinfo_get_service_tag()
 {
     char *serviceTag = 0;
     int numEntries =
