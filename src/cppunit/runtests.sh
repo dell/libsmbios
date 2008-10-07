@@ -22,6 +22,9 @@ $VALGRIND $TST/testRbu  $TMPDIR  $DIR/test_data/rbu
 echo -e "\n\nRunning Standalone tests."
 $VALGRIND $TST/testStandalone $TMPDIR $DIR/test_data/opti
 
+echo -e "\n\nRunning SMI tests."
+$VALGRIND $TST/testC_smi $TMPDIR opti $DIR/test_data/opti
+
 for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i/autotest_flag ] || continue
     echo -e "\n\nRunning test for $i"
