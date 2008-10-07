@@ -46,23 +46,23 @@ void token_table_free(struct token_table *);
 size_t token_fmt_err(struct token_table *, char *buf, size_t len);
 
 // for looping/searching
-const struct token_obj *token_get_next(const struct token_table *, const struct token_obj *cur);
-const struct token_obj *token_get_next_by_id(const struct token_table *, const struct token_obj *cur, u16 id);
+const struct token_obj *token_table_get_next(const struct token_table *, const struct token_obj *cur);
+const struct token_obj *token_table_get_next_by_id(const struct token_table *, const struct token_obj *cur, u16 id);
 
 u16 token_obj_get_id(const struct token_obj *);
 
-#define token_for_each(table_name, struct_name)  \
+#define token_table_for_each(table_name, struct_name)  \
         for(    \
-            const struct token_obj *struct_name = token_get_next(table_name, 0);\
+            const struct token_obj *struct_name = token_table_get_next(table_name, 0);\
             struct_name;\
-            struct_name = token_get_next(table_name, struct_name)\
+            struct_name = token_table_get_next(table_name, struct_name)\
            )
 
-#define token_for_each_id(table_name, struct_name, id)  \
+#define token_table_for_each_id(table_name, struct_name, id)  \
         for(    \
-            const struct token_obj *struct_name = token_get_next_id(table_name, 0, id);\
+            const struct token_obj *struct_name = token_table_get_next_id(table_name, 0, id);\
             struct_name;\
-            struct_name = token_get_next_id(table_name, struct_name, id)\
+            struct_name = token_table_get_next_id(table_name, struct_name, id)\
            )
 
 const char * token_obj_get_type(const struct token_obj *);
@@ -78,17 +78,10 @@ const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *
 int token_obj_try_password(const struct token_obj *, const char *);
 const void *token_obj_get_ptr(const struct token_obj *t);
 
+#ifndef TOKEN_FREE_STRING
+#define TOKEN_FREE_STRING
 void token_free_string(char *);
-
-bool token_is_bool(u16 id);
-bool token_is_active(u16 id);
-int token_activate(u16 id);
-
-bool token_is_string(u16 id);
-char *token_get_string(u16 id);
-int token_set_string(u16 id, const char *, size_t size);
-const struct smbios_struct *token_get_smbios_struct(u16 id);
-const void *token_get_ptr(u16 id);
+#endif
 
 #if defined(_MSC_VER)
 #pragma pack(push,1)

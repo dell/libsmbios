@@ -25,7 +25,7 @@
 
 // public
 #include "smbios_c/obj/smbios.h"
-#include "smbios_c/token.h"
+#include "smbios_c/obj/token.h"
 #include "smbios_c/types.h"
 
 // private

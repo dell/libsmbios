@@ -21,10 +21,6 @@
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
-#include "smbios_c/types.h"
-
-// abi_prefix should be last header included before declarations
-#include "smbios_c/config/abi_prefix.h"
 
 EXTERN_C_BEGIN;
 
@@ -59,8 +55,5 @@ char *sysinfo_get_service_tag();
 void sysinfo_string_free(void *);
 
 EXTERN_C_END;
-
-// always should be last thing in header file
-#include "smbios_c/config/abi_suffix.h"
 
 #endif  /* SYSTEMINFO_H */

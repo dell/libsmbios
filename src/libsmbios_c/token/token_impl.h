@@ -19,7 +19,7 @@
 #define TOKEN_IMPL_H
 
 #include "smbios_c/compat.h"
-#include "smbios_c/token.h"
+#include "smbios_c/obj/token.h"
 #include "smbios_c/types.h"
 
 EXTERN_C_BEGIN;

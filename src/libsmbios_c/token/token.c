@@ -72,7 +72,7 @@ void token_table_free(struct token_table *m)
     // can do special cleanup for singleton, but none necessary atm
 }
 
-const struct token_obj *token_get_next(const struct token_table *t, const struct token_obj *cur)
+const struct token_obj *token_table_get_next(const struct token_table *t, const struct token_obj *cur)
 {
     if (!cur)
         return t->list_head;
@@ -80,11 +80,11 @@ const struct token_obj *token_get_next(const struct token_table *t, const struct
     return cur->next;
 }
 
-const struct token_obj *token_get_next_by_id(const struct token_table *t, const struct token_obj *cur, u16 id)
+const struct token_obj *token_table_get_next_by_id(const struct token_table *t, const struct token_obj *cur, u16 id)
 {
     dprintf("%s\n", __PRETTY_FUNCTION__);
     do {
-        cur = token_get_next(t, cur);
+        cur = token_table_get_next(t, cur);
         dprintf("look for %d, got %d\n", id, token_obj_get_id(cur));
         if (cur && token_obj_get_id(cur) == id)
             break;
@@ -145,7 +145,7 @@ void token_free_string(char *s)
         dprintf("%s\n", __PRETTY_FUNCTION__);       \
         table = token_factory(TOKEN_GET_SINGLETON); \
         if (!table) goto out;                       \
-        token = token_get_next_by_id(table, 0, id); \
+        token = token_table_get_next_by_id(table, 0, id); \
         if (!token) goto out;                       \
         return token_obj_##callname (token);                    \
 out:\
@@ -166,7 +166,7 @@ int token_set_string(u16 id, const char *newstr, size_t size)
     const struct token_obj *token = 0;
     table = token_factory(TOKEN_GET_SINGLETON);
     if (!table) goto out;
-    token = token_get_next_by_id(table, 0, id);
+    token = token_table_get_next_by_id(table, 0, id);
     if (!token) goto out;
     return token -> set_string (token, newstr, size);
 out:

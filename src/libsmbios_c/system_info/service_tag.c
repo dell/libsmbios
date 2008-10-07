@@ -24,7 +24,7 @@
 #include <ctype.h>  // toupper
 
 #include "smbios_c/smbios.h"
-#include "smbios_c/token.h"
+#include "smbios_c/obj/token.h"
 #include "smbios_c/cmos.h"
 #include "smbios_c/system_info.h"
 #include "dell_magic.h"
@@ -167,7 +167,7 @@ __internal char *getServiceTagFromCMOSToken()
     dprintf("getServiceTagFromCMOSToken()\n");
 
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
-    const struct token_obj *token = token_get_next_by_id(table, 0, Cmos_Service_Token);
+    const struct token_obj *token = token_table_get_next_by_id(table, 0, Cmos_Service_Token);
 
     // Step 1: Get tag from CMOS
     dprintf("getServiceTagFromCMOSToken() - get string\n");

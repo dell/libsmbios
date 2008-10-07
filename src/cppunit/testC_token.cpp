@@ -22,7 +22,7 @@
 // system
 
 #include "testC_token.h"
-#include "smbios_c/token.h"
+#include "smbios_c/obj/token.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
@@ -137,7 +137,7 @@ void testCtoken::testTokenConstruct()
 
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
 
-    token_for_each(table, token){
+    token_table_for_each(table, token){
         token_obj_get_type(token);
         token_obj_get_id(token);
     }
