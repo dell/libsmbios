@@ -16,7 +16,7 @@
  * See the GNU General Public License for more details.
  */
 
-#define LIBSMBIOS_SOURCE
+#define LIBSMBIOS_C_SOURCE
 #include "smbios_c/compat.h"
 
 #include <string.h>

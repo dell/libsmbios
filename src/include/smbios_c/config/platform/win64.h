@@ -18,4 +18,6 @@
 #define FSEEK(fh, pos, whence) fseek(fh, static_cast<long>(pos), whence)
 #endif
 
+/* Windows is lame. */
+#   define _snprintf    snprintf
 
