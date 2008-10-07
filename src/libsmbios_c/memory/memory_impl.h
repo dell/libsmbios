@@ -23,9 +23,6 @@
 
 EXTERN_C_BEGIN;
 
-#define __hidden __attribute__((visibility("hidden")))
-#define __internal __attribute__((visibility("internal")))
-
 #ifndef dprintf
 #if defined(DEBUG_MEMORY_C)
 #   include <stdio.h>

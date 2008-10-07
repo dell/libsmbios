@@ -33,9 +33,6 @@ EXTERN_C_BEGIN;
 #endif
 #endif
 
-#define __hidden __attribute__((visibility("hidden")))
-#define __internal __attribute__((visibility("internal")))
-
 struct callback
 {
     cmos_write_callback cb_fn;

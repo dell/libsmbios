@@ -23,6 +23,9 @@
 #define LIBSMBIOS_C_HAS_DECLSPEC
 #define LIBSMBIOS_C_PACKED_ATTR
 
+#define __internal
+#define __hidden
+
 // turn off the warnings before we #include anything
 // 4503: warning: decorated name length exceeded
 // 4250: 'class1' : inherits 'class2::member' via dominance

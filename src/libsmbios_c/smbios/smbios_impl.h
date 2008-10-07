@@ -24,9 +24,6 @@
 
 EXTERN_C_BEGIN;
 
-#define __internal __attribute__((visibility("internal")))
-#define __hidden __attribute__((visibility("hidden")))
-
 #ifndef dprintf
 #if defined(DEBUG_SMBIOS_C)
 #   include <stdio.h>

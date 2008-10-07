@@ -21,6 +21,10 @@
 #define LIBSMBIOS_C_COMPILER "GNU C++ version " __VERSION__
 #define LIBSMBIOS_C_HAS_LONG_LONG
 
+#define __internal __attribute__((visibility("internal")))
+#define __hidden __attribute__((visibility("hidden")))
+
+
 //
 // versions check:
 // we don't know gcc prior to version 2.90:

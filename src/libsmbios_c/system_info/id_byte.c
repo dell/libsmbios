@@ -28,8 +28,6 @@
 
 #include "dell_magic.h"
 
-#define __internal __attribute__((visibility("internal")))
-
 //
 //
 // ID Byte functions
