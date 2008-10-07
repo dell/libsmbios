@@ -59,9 +59,9 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
         u16 C = wordChecksum(data->start, data->end, data->indexPort, data->dataPort);
         u16 Cn = wordChecksum_n(data->start, data->end, data->indexPort, data->dataPort);
         u16 Crc = wordCrc(data->start, data->end, data->indexPort, data->dataPort);
-        dprintf("%s - start %d end %d location %d indexPort %x\n", __PRETTY_FUNCTION__, data->start, data->end, data->csumloc,  data->indexPort);
-        dprintf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
-        dprintf("%s - byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", __PRETTY_FUNCTION__, byteC, C, Cn, Crc);
+        dbg_printf("%s - start %d end %d location %d indexPort %x\n", __PRETTY_FUNCTION__, data->start, data->end, data->csumloc,  data->indexPort);
+        dbg_printf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
+        dbg_printf("%s - byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", __PRETTY_FUNCTION__, byteC, C, Cn, Crc);
     }
 #endif
 

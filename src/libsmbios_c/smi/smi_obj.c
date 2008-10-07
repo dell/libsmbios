@@ -42,7 +42,7 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
 {
     struct dell_smi_obj dell_smi *toReturn = 0;
 
-    dprintf("DEBUG: dell_smi_factory()\n");
+    dbg_printf("DEBUG: dell_smi_factory()\n");
 
     if (flags==SMBIOS_DEFAULTS)
         flags = SMBIOS_GET_SINGLETON;

@@ -46,7 +46,7 @@ static const char *_d4_get_type(const struct token_obj *t)
 
 static int _d4_get_id(const struct token_obj *t)
 {
-    dprintf("_d4_get_id\n");
+    dbg_printf("_d4_get_id\n");
     return cast_token(t)->tokenId;
 }
 
@@ -126,19 +126,19 @@ static char * _d4_get_string(const struct token_obj *t)
     u8 *retval = 0;
     size_t strSize = _d4_get_string_len(t);
 
-    dprintf("_d4_get_string()\n");
+    dbg_printf("_d4_get_string()\n");
 
-    dprintf("_d4_get_string() - is string?\n");
+    dbg_printf("_d4_get_string() - is string?\n");
     if (! _d4_is_string(t))
         goto out_err;
 
-    dprintf("_d4_get_string() - alloc string %ld bytes\n", strSize + 1);
+    dbg_printf("_d4_get_string() - alloc string %ld bytes\n", strSize + 1);
     retval = calloc(1, strSize+1);
     if (!retval)
         goto out_err;
 
     for (int i=0; i<strSize; ++i){
-        dprintf("_d4_get_string() - read byte %d/%ld\n", i+1, strSize);
+        dbg_printf("_d4_get_string() - read byte %d/%ld\n", i+1, strSize);
         int ret = cmos_read_byte(retval + i,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
@@ -149,12 +149,12 @@ static char * _d4_get_string(const struct token_obj *t)
     goto out;
 
 out_err:
-    dprintf("_d4_get_string() - out_err\n");
+    dbg_printf("_d4_get_string() - out_err\n");
     free(retval);
     retval = 0;
 
 out:
-    dprintf("_d4_get_string() - out\n");
+    dbg_printf("_d4_get_string() - out\n");
     return (char *)retval;
 }
 

@@ -164,24 +164,24 @@ __internal char *getServiceTagFromCMOSToken()
     u8 byte;
     int ret;
 
-    dprintf("getServiceTagFromCMOSToken()\n");
+    dbg_printf("getServiceTagFromCMOSToken()\n");
 
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
     const struct token_obj *token = token_table_get_next_by_id(table, 0, Cmos_Service_Token);
 
     // Step 1: Get tag from CMOS
-    dprintf("getServiceTagFromCMOSToken() - get string\n");
+    dbg_printf("getServiceTagFromCMOSToken() - get string\n");
     tempval = token_obj_get_string(token);
     if (!tempval)
         goto out_err;
 
     // Step 2: Decode 7-char tag from 5-char CMOS value
-    dprintf("getServiceTagFromCMOSToken() - decode string\n");
+    dbg_printf("getServiceTagFromCMOSToken() - decode string\n");
     dell_decode_service_tag( tempval, SVC_TAG_LEN_MAX + 1 );
-    dprintf("getServiceTagFromCMOSToken() - GOT: '%s'\n", tempval);
+    dbg_printf("getServiceTagFromCMOSToken() - GOT: '%s'\n", tempval);
 
     // Step 3: Make sure checksum is good before returning value
-    dprintf("getServiceTagFromCMOSToken() - csum\n");
+    dbg_printf("getServiceTagFromCMOSToken() - csum\n");
     s = token_obj_get_smbios_struct(token);
     indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
     dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
@@ -202,11 +202,11 @@ __internal char *getServiceTagFromCMOSToken()
     if (ret<0)
         goto out_err;
 
-    dprintf("getServiceTagFromCMOSToken() - got: %x  calc: %x\n", csum, byte);
+    dbg_printf("getServiceTagFromCMOSToken() - got: %x  calc: %x\n", csum, byte);
     if (csum - byte) // bad (should be zero)
         goto out_err;
 
-    dprintf("GOT CMOS TAG: %s\n", tempval);
+    dbg_printf("GOT CMOS TAG: %s\n", tempval);
     goto out;
 
 out_err:
@@ -214,19 +214,19 @@ out_err:
     tempval = 0;
 
 out:
-    dprintf("getServiceTagFromCMOSToken() - out\n");
+    dbg_printf("getServiceTagFromCMOSToken() - out\n");
     return tempval;
 }
 
 __internal char *getServiceTagFromSysInfo()
 {
-    dprintf("getServiceTagFromSysInfo()\n");
+    dbg_printf("getServiceTagFromSysInfo()\n");
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Serial_Number_Offset);
 }
 
 __internal char *getServiceTagFromSysEncl()
 {
-    dprintf("getServiceTagFromSysEncl()\n");
+    dbg_printf("getServiceTagFromSysEncl()\n");
     return smbios_struct_get_string_from_table(System_Enclosure_or_Chassis_Structure, System_Enclosure_or_Chassis_Service_Offset);
 }
 

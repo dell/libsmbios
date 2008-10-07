@@ -43,7 +43,7 @@ struct smbios_table *smbios_table_factory(int flags, ...)
 {
     struct smbios_table *toReturn = 0;
 
-    dprintf("DEBUG: smbios_table_factory()\n");
+    dbg_printf("DEBUG: smbios_table_factory()\n");
 
     if (flags==SMBIOS_DEFAULTS)
         flags = SMBIOS_GET_SINGLETON;
@@ -160,7 +160,7 @@ int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset,
 {
     int retval = -1;
 
-    dprintf("smbios_struct_get_data(%p, %p, %d, %ld)\n", s, dest, offset, len);
+    dbg_printf("smbios_struct_get_data(%p, %p, %d, %ld)\n", s, dest, offset, len);
 
     if (offset > smbios_struct_get_length(s))
         goto out;
@@ -183,15 +183,15 @@ const char *smbios_struct_get_string_from_offset(const struct smbios_struct *s, 
     u8 strnum = 0;
     const char *retval = 0;
 
-    dprintf("smbios_struct_get_string_from_offset()\n");
+    dbg_printf("smbios_struct_get_string_from_offset()\n");
 
     if (smbios_struct_get_data(s, &strnum, offset, sizeof(strnum)) >= 0)
     {
-        dprintf("string offset: %d  which: %d\n", offset, strnum);
+        dbg_printf("string offset: %d  which: %d\n", offset, strnum);
         retval = smbios_struct_get_string_number(s, strnum);
     }
 
-    dprintf("string: %s\n", retval);
+    dbg_printf("string: %s\n", retval);
     return retval;
 }
 
@@ -200,7 +200,7 @@ const char *smbios_struct_get_string_number(const struct smbios_struct *s, u8 wh
     const char *string_pointer = 0;
     const char *retval = 0;
 
-    dprintf("smbios_struct_get_string_number(%p, %d)\n", s, which);
+    dbg_printf("smbios_struct_get_string_number(%p, %d)\n", s, which);
 
     if (!which)     //strings are numbered beginning with 1
         goto out;
@@ -263,7 +263,7 @@ void __internal init_smbios_struct(struct smbios_table *m)
 {
     m->initialized = 1;
 
-    dprintf("DEBUG: smbios_table_factory()\n");
+    dbg_printf("DEBUG: smbios_table_factory()\n");
 
     // smbios efi strategy
     if (smbios_get_table_efi(m) >= 0)
@@ -381,7 +381,7 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
         // first, look for old-style DMI header
         if (memcmp (&tempTEP, "_DMI_", 5) == 0)
         {
-            dprintf("Found _DMI_ anchor. Trying to parse legacy DMI structure.\n");
+            dbg_printf("Found _DMI_ anchor. Trying to parse legacy DMI structure.\n");
             struct dmi_table_entry_point *dmiTEP = (struct dmi_table_entry_point *)(&tempTEP);
             memmove(&(tempTEP.dmi), &dmiTEP, sizeof(struct dmi_table_entry_point));
             // fake the rest of the smbios table entry point...
@@ -395,7 +395,7 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
         // occur before _DMI_ in memory
         if ((memcmp (&tempTEP, "_SM_", 4) == 0))
         {
-            dprintf("Found _SM_ anchor. Trying to parse legacy DMI structure.\n");
+            dbg_printf("Found _SM_ anchor. Trying to parse legacy DMI structure.\n");
             if(validate_smbios_tep(&tempTEP, strict))
                 break;
         }
@@ -424,7 +424,7 @@ int __internal smbios_get_table_memory(struct smbios_table *m)
 {
     int retval = -1; //fail
 
-    dprintf("DEBUG: smbios_get_table_memory()\n");
+    dbg_printf("DEBUG: smbios_get_table_memory()\n");
 
     if (!smbios_get_tep_memory(m, false))
         goto out;

@@ -44,7 +44,7 @@ struct token_table *token_factory(int flags, ...)
 {
     struct token_table *toReturn = 0;
 
-    dprintf("DEBUG: token_factory()\n");
+    dbg_printf("DEBUG: token_factory()\n");
 
     if (flags==TOKEN_DEFAULTS)
         flags = TOKEN_GET_SINGLETON;
@@ -82,10 +82,10 @@ const struct token_obj *token_table_get_next(const struct token_table *t, const 
 
 const struct token_obj *token_table_get_next_by_id(const struct token_table *t, const struct token_obj *cur, u16 id)
 {
-    dprintf("%s\n", __PRETTY_FUNCTION__);
+    dbg_printf("%s\n", __PRETTY_FUNCTION__);
     do {
         cur = token_table_get_next(t, cur);
-        dprintf("look for %d, got %d\n", id, token_obj_get_id(cur));
+        dbg_printf("look for %d, got %d\n", id, token_obj_get_id(cur));
         if (cur && token_obj_get_id(cur) == id)
             break;
     } while ( cur );
@@ -95,7 +95,7 @@ const struct token_obj *token_table_get_next_by_id(const struct token_table *t, 
 #define makeit(ret, defret, callname) \
     ret token_obj_##callname (const struct token_obj *t)    \
     {\
-        dprintf("%s\n", __PRETTY_FUNCTION__);       \
+        dbg_printf("%s\n", __PRETTY_FUNCTION__);       \
         if (t) return t-> callname (t);     \
         return defret;\
     }
@@ -142,7 +142,7 @@ void token_free_string(char *s)
     {\
         struct token_table *table = 0;              \
         const struct token_obj *token = 0;          \
-        dprintf("%s\n", __PRETTY_FUNCTION__);       \
+        dbg_printf("%s\n", __PRETTY_FUNCTION__);       \
         table = token_factory(TOKEN_GET_SINGLETON); \
         if (!table) goto out;                       \
         token = token_table_get_next_by_id(table, 0, id); \

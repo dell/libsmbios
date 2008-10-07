@@ -111,9 +111,9 @@ void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_call
 {
     struct callback *ptr = m->cb_list_head;
     struct callback *new = 0;
-    dprintf("%s\n", __PRETTY_FUNCTION__);
+    dbg_printf("%s\n", __PRETTY_FUNCTION__);
 
-    dprintf("%s - loop\n", __PRETTY_FUNCTION__);
+    dbg_printf("%s - loop\n", __PRETTY_FUNCTION__);
     while(ptr && ptr->next)
     {
         // dont add duplicates
@@ -123,14 +123,14 @@ void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_call
         ptr = ptr->next;
     }
 
-    dprintf("%s - allocate\n", __PRETTY_FUNCTION__);
+    dbg_printf("%s - allocate\n", __PRETTY_FUNCTION__);
     new = calloc(1, sizeof(struct callback));
     new->cb_fn = cb_fn;
     new->userdata = userdata;
     new->destructor = destructor;
     new->next = 0;
 
-    dprintf("%s - join %p\n", __PRETTY_FUNCTION__, ptr);
+    dbg_printf("%s - join %p\n", __PRETTY_FUNCTION__, ptr);
     if (ptr)
         ptr->next = new;
     else
@@ -144,12 +144,12 @@ int cmos_obj_run_callbacks(const struct cmos_access_obj *m, bool do_update)
 {
     int retval = 0;
     const struct callback *ptr = m->cb_list_head;
-    dprintf("%s\n", __PRETTY_FUNCTION__);
+    dbg_printf("%s\n", __PRETTY_FUNCTION__);
     if(!ptr)
         goto out;
 
     do{
-        dprintf("%s - ptr->cb_fn %p\n", __PRETTY_FUNCTION__, ptr->cb_fn);
+        dbg_printf("%s - ptr->cb_fn %p\n", __PRETTY_FUNCTION__, ptr->cb_fn);
         retval |= ptr->cb_fn(m, do_update, ptr->userdata);
         ptr = ptr->next;
     } while (ptr);

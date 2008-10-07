@@ -24,13 +24,10 @@
 
 EXTERN_C_BEGIN;
 
-#ifndef dprintf
 #if defined(DEBUG_SMBIOS_C)
 #   include <stdio.h>
-#   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
-#else
-#   define dprintf(format, args...) do {} while(0)
-#endif
+#   undef dbg_printf
+#   define dbg_printf _dbg_printf
 #endif
 
 #define E_BLOCK_START 0xE0000UL

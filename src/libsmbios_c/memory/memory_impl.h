@@ -23,16 +23,11 @@
 
 EXTERN_C_BEGIN;
 
-#ifndef dprintf
 #if defined(DEBUG_MEMORY_C)
 #   include <stdio.h>
-#   define dprintf(format, args...) do { fprintf(stderr , format , ## args);  } while(0)
-#else
-#   define dprintf(format, args...) do {} while(0)
+#   undef dbg_printf
+#   define dbg_printf _dbg_printf
 #endif
-#endif
-
-#define fnprintf(fmt, args...)  dprintf( "%s: " fmt, __PRETTY_FUNCTION__, ## args)
 
 struct memory_access_obj
 {

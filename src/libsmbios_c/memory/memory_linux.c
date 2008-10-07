@@ -82,13 +82,13 @@ static FILE * reopen(struct linux_data *private_data, int rw)
 #ifdef DEBUG_MEMORY_C
 static void debug_dump_buffer(const char *fn, const char *s, const u8 *buffer, size_t start, size_t toCopy)
 {
-    dprintf("%s %s: ", fn, s);
+    dbg_printf("%s %s: ", fn, s);
     for(int i=0;i<(toCopy>100?100:toCopy);++i)
         if (isalnum(buffer[start + i]))
-            dprintf("%c", buffer[start + i]);
+            dbg_printf("%c", buffer[start + i]);
         else
-            dprintf("*");
-    dprintf("'\n");
+            dbg_printf("*");
+    dbg_printf("'\n");
 }
 #else
 #define debug_dump_buffer(...) do {} while(0)

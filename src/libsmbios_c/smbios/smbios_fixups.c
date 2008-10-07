@@ -66,7 +66,7 @@ static void do_dell_check_type_fixup(struct smbios_table *table)
     struct smbios_struct *s = 0;
     struct indexed_io_access_structure *broken = 0;
 
-    dprintf ("%s\n", __PRETTY_FUNCTION__);
+    dbg_printf ("%s\n", __PRETTY_FUNCTION__);
     u16 sysid = get_id_byte_from_mem();
     if (!system_affected(affected, num_affected, sysid))
         goto out;
@@ -76,7 +76,7 @@ static void do_dell_check_type_fixup(struct smbios_table *table)
         goto out;
 
     broken = (struct indexed_io_access_structure *)s;
-    dprintf ("%s - cur checktype: %x  sysid: %x\n", __PRETTY_FUNCTION__, broken->checkType, sysid);
+    dbg_printf ("%s - cur checktype: %x  sysid: %x\n", __PRETTY_FUNCTION__, broken->checkType, sysid);
 
     if (broken->checkType == CHECK_TYPE_WORD_CHECKSUM_N)
         broken->checkType = CHECK_TYPE_WORD_CHECKSUM;
@@ -91,7 +91,7 @@ out:
 
 __internal void do_smbios_fixups(struct smbios_table *table)
 {
-    dprintf ("%s\n", __PRETTY_FUNCTION__);
+    dbg_printf ("%s\n", __PRETTY_FUNCTION__);
     do_dell_check_type_fixup(table);
 }
 
