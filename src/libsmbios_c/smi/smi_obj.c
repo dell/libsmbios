@@ -22,6 +22,7 @@
 #include "smbios_c/compat.h"
 
 // system
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -34,20 +35,23 @@
 #include "smi_impl.h"
 
 // forward declarations
+void _smi_free(struct dell_smi_obj *m);
 
 // static vars
-static struct dell_smi_obj dell_smi singleton; // auto-init to 0
+static struct dell_smi_obj singleton; // auto-init to 0
+typedef int (*init_fn)(struct dell_smi_obj *);
 
 struct dell_smi_obj *dell_smi_factory(int flags, ...)
 {
-    struct dell_smi_obj dell_smi *toReturn = 0;
+    va_list ap;
+    struct dell_smi_obj *toReturn = 0;
 
     dbg_printf("DEBUG: dell_smi_factory()\n");
 
-    if (flags==SMBIOS_DEFAULTS)
-        flags = SMBIOS_GET_SINGLETON;
+    if (flags==DELL_SMI_DEFAULTS)
+        flags = DELL_SMI_GET_SINGLETON;
 
-    if (flags & SMBIOS_GET_SINGLETON)
+    if (flags & DELL_SMI_GET_SINGLETON)
         toReturn = &singleton;
     else
         toReturn = (struct dell_smi_obj *)calloc(1, sizeof(struct dell_smi_obj));
@@ -55,8 +59,18 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
     if (toReturn->initialized)
         goto out;
 
-    _ini_smi(toReturn);
+    if (flags & DELL_SMI_UNIT_TEST_MODE)
+    {
+        va_start(ap, flags);
+        init_fn fn = va_arg(ap, init_fn);
+        fn(toReturn);
+        va_end(ap);
+    } else
+    {
+        init_dell_smi_obj(toReturn);
+    }
 
+    init_dell_smi_obj_std(toReturn);
 out:
     return toReturn;
 }
@@ -70,6 +84,40 @@ void dell_smi_obj_free(struct dell_smi_obj *m)
     // can do special cleanup for singleton, but none necessary atm
 }
 
+void dell_smi_obj_set_class(struct dell_smi_obj *this, u16 class)
+{
+    this->class = class;
+}
+
+void dell_smi_obj_set_select(struct dell_smi_obj *this, u16 select)
+{
+    this->select = select;
+}
+
+void dell_smi_obj_set_arg(struct dell_smi_obj *this, u8 argno, u32 value)
+{
+    this->arg[argno] = value;
+}
+
+u32  dell_smi_obj_get_res(struct dell_smi_obj *this, u8 argno)
+{
+    return this->res[argno];
+}
+
+u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *this, u8 argno, size_t size)
+{
+    if (argno>3)
+        return 0;
+
+    free(this->physical_buffers[argno]);
+    this->physical_buffers[argno] = calloc(1, size);
+    return this->physical_buffers[argno];
+}
+
+void dell_smi_obj_execute(struct dell_smi_obj *this)
+{
+    this->execute(this);
+}
 
 /**************************************************
  *
@@ -80,14 +128,18 @@ void dell_smi_obj_free(struct dell_smi_obj *m)
 void __internal _smi_free(struct dell_smi_obj *this)
 {
     this->initialized=0;
+    for (int i=0;i<4;++i)
+    {
+        free(this->physical_buffers[i]);
+        this->physical_buffers[i]=0;
+    }
     free(this);
 }
 
-void __internal _init_smi(struct dell_smi_obj *m)
+void __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
 {
     fnprintf("\n");
-    m->initialized = 1;
-
+    this->initialized = 1;
 }
 
 

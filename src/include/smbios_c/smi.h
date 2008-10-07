@@ -25,10 +25,6 @@
 EXTERN_C_BEGIN;
 
 void dell_smi_calling_interface_simple(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
-u32  dell_smi_get_authentication_key(const char *pass);
-
-enum password_format_enum { PW_FORMAT_UNKNOWN, PW_FORMAT_SCAN_CODE, PW_FORMAT_ASCII };
-enum password_format_enum dell_smi_get_password_format();
 
 EXTERN_C_END;
 

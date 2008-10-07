@@ -15,8 +15,8 @@
  * See the GNU General Public License for more details.
  */
 
-#ifndef C_SMI_H
-#define C_SMI_H
+#ifndef C_OBJ_SMI_H
+#define C_OBJ_SMI_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
@@ -42,7 +42,11 @@ void dell_smi_obj_set_select(struct dell_smi_obj *, u16 select);
 void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
 u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
 u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *, u8 argno, size_t size);
-void dell_smi_obj_execute();
+void dell_smi_obj_execute(struct dell_smi_obj *);
+
+//u32  dell_smi_get_authentication_key(const char *pass);
+//enum password_format_enum { PW_FORMAT_UNKNOWN, PW_FORMAT_SCAN_CODE, PW_FORMAT_ASCII };
+//enum password_format_enum dell_smi_get_password_format();
 
 EXTERN_C_END;
 

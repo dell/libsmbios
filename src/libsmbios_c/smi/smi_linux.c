@@ -1,5 +1,6 @@
-// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:
-/*
+/* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+ * vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:cindent:textwidth=0:
+ *
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
  * Licensed under the Open Software License version 2.1
@@ -15,35 +16,31 @@
  * See the GNU General Public License for more details.
  */
 
-#ifndef SMBIOS_IMPL_H
-#define SMBIOS_IMPL_H
+#define LIBSMBIOS_C_SOURCE
 
+// Include compat.h first, then system headers, then public, then private
 #include "smbios_c/compat.h"
-#include "smbios_c/smi.h"
+
+// system
+#include <stdlib.h>
+#include <string.h>
+
+// public
+#include "smbios_c/obj/smi.h"
 #include "smbios_c/types.h"
 
-EXTERN_C_BEGIN;
+// private
+#include "smi_impl.h"
 
-#if defined(DEBUG_SMI_C)
-#   include <stdio.h>
-#   undef dbg_printf
-#   define dbg_printf _dbg_printf
-#endif
+// forward declarations
 
-struct dell_smi_obj
+int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 {
-    int initialized;
-    int (*execute)(struct dell_smi_obj *this);
-    u16 class;
-    u16 select;
-    u32 arg[4];
-    u32 res[4];
-    u8 *physical_buffers[4];
-};
+    fnprintf("FOO!\n");
+    return -1;
+}
 
-void __internal init_dell_smi_obj(struct dell_smi_obj *);
-void __internal init_dell_smi_obj_std(struct dell_smi_obj *);
-
-EXTERN_C_END;
-
-#endif /* SMBIOS_IMPL_H */
+void __internal init_dell_smi_obj(struct dell_smi_obj *this)
+{
+    this->execute = LINUX_dell_smi_obj_execute;
+}
