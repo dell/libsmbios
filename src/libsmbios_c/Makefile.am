@@ -5,6 +5,7 @@ out_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISIO
 out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
 
 EXTRA_DIST += src/include/smbios_c
+EXTRA_DIST += src/libsmbios_c/common
 
 out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/cmos/cmos_impl.h			\
