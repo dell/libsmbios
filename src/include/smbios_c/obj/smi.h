@@ -37,8 +37,8 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...);
 // destruct
 void dell_smi_obj_free(struct dell_smi_obj *);
 
-void dell_smi_obj_set_class(struct dell_smi_obj *, u16 class);
-void dell_smi_obj_set_select(struct dell_smi_obj *, u16 select);
+void dell_smi_obj_set_class(struct dell_smi_obj *, u16 );
+void dell_smi_obj_set_select(struct dell_smi_obj *, u16 );
 void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
 u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
 u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *, u8 argno, size_t size);
