@@ -25,7 +25,9 @@
 #endif
 
 // Enable 64-bit file access 
+#ifndef FSEEK
 #define FSEEK(fh, pos, whence) fseeko(fh, static_cast<off_t>(pos), whence)
+#endif
 
 //
 // <stdint.h> added to glibc 2.1.1

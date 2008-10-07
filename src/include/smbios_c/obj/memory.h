@@ -15,8 +15,8 @@
  * See the GNU General Public License for more details.
  */
 
-#ifndef OBJ_MEMORY_H
-#define OBJ_MEMORY_H
+#ifndef C_OBJ_MEMORY_H
+#define C_OBJ_MEMORY_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"

@@ -68,7 +68,7 @@ struct one_byte_structure
     u8   platform_revision;
     u8   checksum; //(offsets 3+4+5 must equal 0)
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 struct two_byte_structure
 {
@@ -84,7 +84,7 @@ struct two_byte_structure
     u8   first_extended_byte; // Brand ID
     //u8   ... more extension bytes ...
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 #if defined(_MSC_VER)
 #pragma pack(pop)

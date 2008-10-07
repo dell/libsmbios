@@ -16,15 +16,15 @@
  */
 
 
-#ifndef TOKEN_H
-#define TOKEN_H
+#ifndef C_TOKEN_H
+#define C_TOKEN_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
 #include "smbios_c/types.h"
 
 // abi_prefix should be last header included before declarations
-#include "smbios/config/abi_prefix.hpp"
+#include "smbios_c/config/abi_prefix.h"
 
 EXTERN_C_BEGIN;
 
@@ -103,7 +103,7 @@ struct indexed_io_token
         u8 stringLength;
     };
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 struct indexed_io_access_structure
 { /* 0xD4 structure */
     u8	     type;
@@ -118,7 +118,7 @@ struct indexed_io_access_structure
     //variable number of tokens present, but at least one.
     struct   indexed_io_token  tokens[];
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 #if defined(_MSC_VER)
 #pragma pack(pop)
 #endif
@@ -134,6 +134,6 @@ enum
 EXTERN_C_END;
 
 // always should be last thing in header file
-#include "smbios/config/abi_suffix.hpp"
+#include "smbios_c/config/abi_suffix.h"
 
 #endif  /* TOKEN_H */

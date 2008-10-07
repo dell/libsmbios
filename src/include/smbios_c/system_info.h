@@ -16,8 +16,8 @@
  */
 
 
-#ifndef SYSTEM_INFO_H
-#define SYSTEM_INFO_H
+#ifndef C_SYSTEM_INFO_H
+#define C_SYSTEM_INFO_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
@@ -28,35 +28,35 @@
 
 EXTERN_C_BEGIN;
 
-    //////////////////////////////////////////////////////////////////////////
-    //
-    // Stable API section.
-    //
-    // All of the functions in this section have a strong guarantee that we
-    // will not break API compatibility.
-    //
-    //////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//
+// Stable API section.
+//
+// All of the functions in this section have a strong guarantee that we
+// will not break API compatibility.
+//
+//////////////////////////////////////////////////////////////////////////
 
-    //! Return a string representing the version of the libsmbios library.
-    /** Returns the current version of the SMBIOS library as a string
-     */
-    const char *smbios_get_library_version_string();
-    int smbios_get_library_version_major();
-    int smbios_get_library_version_minor();
+//! Return a string representing the version of the libsmbios library.
+/** Returns the current version of the SMBIOS library as a string
+ */
+const char *smbios_get_library_version_string();
+int smbios_get_library_version_major();
+int smbios_get_library_version_minor();
 
 
-    //! Return the Dell System ID Byte or Word
-    /** The Dell System ID is a unique number allocated to each Dell System
-     * (server, desktop, workstation, or laptop) that uniquely identifies that
-     * system within Dell's product line.
-     */
-    int   smbios_get_dell_system_id();
-    char *smbios_get_vendor_name();
-    char *smbios_get_system_name();
-    char *smbios_get_bios_version();
-    char *smbios_get_asset_tag();
-    char *smbios_get_service_tag();
-    void smbios_string_free(void *);
+//! Return the Dell System ID Byte or Word
+/** The Dell System ID is a unique number allocated to each Dell System
+ * (server, desktop, workstation, or laptop) that uniquely identifies that
+ * system within Dell's product line.
+ */
+int   smbios_get_dell_system_id();
+char *smbios_get_vendor_name();
+char *smbios_get_system_name();
+char *smbios_get_bios_version();
+char *smbios_get_asset_tag();
+char *smbios_get_service_tag();
+void smbios_string_free(void *);
 
 EXTERN_C_END;
 

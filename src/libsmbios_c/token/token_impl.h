@@ -99,7 +99,7 @@ struct dell_protected_value_1_structure
     u8       valueStartIndex;
     u8       checkIndex;
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 struct dell_protected_value_2_structure
 {  /* 0xD6 structure */
@@ -120,7 +120,7 @@ struct dell_protected_value_2_structure
     u8       rangeCheckEnd;
     u8       rangeCheckIndex;
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 struct calling_interface_token
 {
@@ -131,7 +131,7 @@ struct calling_interface_token
         u16 stringLength;
     };
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 struct calling_interface_structure
 { /* 0xDA structure */
@@ -144,7 +144,7 @@ struct calling_interface_structure
     u32      supportedCmds;
     struct   calling_interface_token  first_token[];
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 enum  // protected value format types
 {

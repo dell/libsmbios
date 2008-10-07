@@ -18,23 +18,23 @@
 
 /* safe to include in C headers */
 
-#ifndef LIBSMBIOS_AUTO_LINK_H_INCLUDED
-#define LIBSMBIOS_AUTO_LINK_H_INCLUDED
+#ifndef LIBSMBIOS_C_AUTO_LINK_H_INCLUDED
+#define LIBSMBIOS_C_AUTO_LINK_H_INCLUDED
 
 #ifdef __cplusplus
-#  ifndef LIBSMBIOS_CONFIG_H
-#     include "smbios_c/config.h"
+#  ifndef LIBSMBIOS_C_CONFIG_H
+#     include "smbios_c/config/config.h"
 #  endif
 #elif defined(_MSC_VER) && !defined(__MWERKS__) && !defined(__EDG_VERSION__)
 /*
  * C language compatability (no, honestly)
  */
-#  define BOOST_MSVC _MSC_VER
-#  define BOOST_STRINGIZE(X) BOOST_DO_STRINGIZE(X)
-#  define BOOST_DO_STRINGIZE(X) #X
+#  define LIBSMBIOS_C_MSVC _MSC_VER
+#  define LIBSMBIOS_C_STRINGIZE(X) LIBSMBIOS_C_DO_STRINGIZE(X)
+#  define LIBSMBIOS_C_DO_STRINGIZE(X) #X
 #endif
 
-#ifdef LIBSMBIOS_PLATFORM_WIN32
+#ifdef LIBSMBIOS_C_PLATFORM_WIN32
 // The rest of the code in this file is used to automatically select which
 // version libsmbios library to link to.
 
@@ -49,37 +49,37 @@
 
 
 
-#if !defined(LIBSMBIOS_ALL_NO_LIB) && !defined(LIBSMBIOS_SOURCE)
+#if !defined(LIBSMBIOS_C_ALL_NO_LIB) && !defined(LIBSMBIOS_SOURCE)
 
 
-#if defined(LIBSMBIOS_ALL_DYN_LINK)
-#   define LIBSMBIOS_DYN_LINK
+#if defined(LIBSMBIOS_C_ALL_DYN_LINK)
+#   define LIBSMBIOS_C_DYN_LINK
 #endif
 
 // ==============================
 //
 // select toolset if not defined already:
 //
-#ifndef LIBSMBIOS_LIB_TOOLSET
-#if defined(LIBSMBIOS_MSVC) && (LIBSMBIOS_MSVC == 1200)
+#ifndef LIBSMBIOS_C_LIB_TOOLSET
+#if defined(LIBSMBIOS_C_MSVC) && (LIBSMBIOS_C_MSVC == 1200)
 
    // vc6:
-#  define LIBSMBIOS_LIB_TOOLSET "vc6"
+#  define LIBSMBIOS_C_LIB_TOOLSET "vc6"
 
-#elif defined(LIBSMBIOS_MSVC) && (LIBSMBIOS_MSVC == 1300)
+#elif defined(LIBSMBIOS_C_MSVC) && (LIBSMBIOS_C_MSVC == 1300)
 
    // vc7:
-#  define LIBSMBIOS_LIB_TOOLSET "vc7"
+#  define LIBSMBIOS_C_LIB_TOOLSET "vc7"
 
-#elif defined(LIBSMBIOS_MSVC) && (LIBSMBIOS_MSVC == 1310)
+#elif defined(LIBSMBIOS_C_MSVC) && (LIBSMBIOS_C_MSVC == 1310)
 
    // vc71:
-#  define LIBSMBIOS_LIB_TOOLSET "vc71"
+#  define LIBSMBIOS_C_LIB_TOOLSET "vc71"
 
-#elif defined(LIBSMBIOS_MSVC) && (LIBSMBIOS_MSVC >= 1400)
+#elif defined(LIBSMBIOS_C_MSVC) && (LIBSMBIOS_C_MSVC >= 1400)
 
    // vc80:
-#  define LIBSMBIOS_LIB_TOOLSET "vc80"
+#  define LIBSMBIOS_C_LIB_TOOLSET "vc80"
 #endif
 #endif
 
@@ -88,12 +88,12 @@
 //
 // select linkage opt:
 //
-#if (defined(_DLL) || defined(_RTLDLL)) && defined(LIBSMBIOS_DYN_LINK)
-#  define LIBSMBIOS_LIB_PREFIX
-#elif defined(LIBSMBIOS_DYN_LINK)
+#if (defined(_DLL) || defined(_RTLDLL)) && defined(LIBSMBIOS_C_DYN_LINK)
+#  define LIBSMBIOS_C_LIB_PREFIX
+#elif defined(LIBSMBIOS_C_DYN_LINK)
 #  error "Mixing a dll boost library with a static runtime is a really bad idea..."
 #else
-#  define LIBSMBIOS_LIB_PREFIX "lib"
+#  define LIBSMBIOS_C_LIB_PREFIX "lib"
 #endif
 
 
@@ -102,9 +102,9 @@
 // select thread opt:
 //
 #if defined(_MT) || defined(__MT__)
-#  define LIBSMBIOS_LIB_THREAD_OPT "-mt"
+#  define LIBSMBIOS_C_LIB_THREAD_OPT "-mt"
 #else
-#  define LIBSMBIOS_LIB_THREAD_OPT
+#  define LIBSMBIOS_C_LIB_THREAD_OPT
 #endif
 
 // ==============================
@@ -116,33 +116,33 @@
 #     if (defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)) && (defined(_STLP_OWN_IOSTREAMS) || defined(__STL_OWN_IOSTREAMS))
 
 #        if defined(_DEBUG) && (defined(__STL_DEBUG) || defined(_STLP_DEBUG))
-#            define LIBSMBIOS_LIB_RT_OPT "-gdp"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-gdp"
 #        elif defined(_DEBUG)
-#            define LIBSMBIOS_LIB_RT_OPT "-gdp"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-gdp"
 #            pragma message("warning: STLPort debug versions are built with /D_STLP_DEBUG=1")
 #            error "Build options aren't compatible with pre-built libraries"
 #        else
-#            define LIBSMBIOS_LIB_RT_OPT "-p"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-p"
 #        endif
 
 #     elif defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)
 
 #        if defined(_DEBUG) && (defined(__STL_DEBUG) || defined(_STLP_DEBUG))
-#            define LIBSMBIOS_LIB_RT_OPT "-gdpn"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-gdpn"
 #        elif defined(_DEBUG)
-#            define LIBSMBIOS_LIB_RT_OPT "-gdpn"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-gdpn"
 #            pragma message("warning: STLPort debug versions are built with /D_STLP_DEBUG=1")
 #            error "Build options aren't compatible with pre-built libraries"
 #        else
-#            define LIBSMBIOS_LIB_RT_OPT "-pn"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-pn"
 #        endif
 
 #     else
 
 #        if defined(_DEBUG)
-#            define LIBSMBIOS_LIB_RT_OPT "-gd"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-gd"
 #        else
-#            define LIBSMBIOS_LIB_RT_OPT
+#            define LIBSMBIOS_C_LIB_RT_OPT
 #        endif
 
 #     endif
@@ -151,33 +151,33 @@
 #     if (defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)) && (defined(_STLP_OWN_IOSTREAMS) || defined(__STL_OWN_IOSTREAMS))
 
 #        if defined(_DEBUG) && (defined(__STL_DEBUG) || defined(_STLP_DEBUG))
-#            define LIBSMBIOS_LIB_RT_OPT "-sgdp"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-sgdp"
 #        elif defined(_DEBUG)
-#             define LIBSMBIOS_LIB_RT_OPT "-sgdp"
+#             define LIBSMBIOS_C_LIB_RT_OPT "-sgdp"
 #            pragma message("warning: STLPort debug versions are built with /D_STLP_DEBUG=1")
 #            error "Build options aren't compatible with pre-built libraries"
 #        else
-#            define LIBSMBIOS_LIB_RT_OPT "-sp"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-sp"
 #        endif
 
 #     elif defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)
 
 #        if defined(_DEBUG) && (defined(__STL_DEBUG) || defined(_STLP_DEBUG))
-#            define LIBSMBIOS_LIB_RT_OPT "-sgdpn"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-sgdpn"
 #        elif defined(_DEBUG)
-#             define LIBSMBIOS_LIB_RT_OPT "-sgdpn"
+#             define LIBSMBIOS_C_LIB_RT_OPT "-sgdpn"
 #            pragma message("warning: STLPort debug versions are built with /D_STLP_DEBUG=1")
 #            error "Build options aren't compatible with pre-built libraries"
 #        else
-#            define LIBSMBIOS_LIB_RT_OPT "-spn"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-spn"
 #        endif
 
 #     else
 
 #        if defined(_DEBUG)
-#             define LIBSMBIOS_LIB_RT_OPT "-sgd"
+#             define LIBSMBIOS_C_LIB_RT_OPT "-sgd"
 #        else
-#            define LIBSMBIOS_LIB_RT_OPT "-s"
+#            define LIBSMBIOS_C_LIB_RT_OPT "-s"
 #        endif
 
 #     endif
@@ -185,92 +185,50 @@
 #  endif
 #endif
 
-#define LIBSMBIOS_LIB_NAME smbios
+#define LIBSMBIOS_C_LIB_NAME smbios_c
 
-#ifndef LIBSMBIOS_AUTO_LINK_NOMANGLE
-#   pragma comment(lib, LIBSMBIOS_LIB_PREFIX LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) "-" LIBSMBIOS_LIB_TOOLSET LIBSMBIOS_LIB_THREAD_OPT LIBSMBIOS_LIB_RT_OPT ".lib" )
-#   ifdef LIBSMBIOS_LIB_DIAGNOSTIC
-#       pragma message ("Automatically Linking to lib file: " LIBSMBIOS_LIB_PREFIX LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) "-" LIBSMBIOS_LIB_TOOLSET LIBSMBIOS_LIB_THREAD_OPT LIBSMBIOS_LIB_RT_OPT ".lib")
-#   endif
-#   if defined(LIBSMBIOS_NEED_SMBIOSXML)
-#       undef LIBSMBIOS_LIB_NAME
-#       define LIBSMBIOS_LIB_NAME smbiosxml
-#       pragma comment(lib, LIBSMBIOS_LIB_PREFIX LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) "-" LIBSMBIOS_LIB_TOOLSET LIBSMBIOS_LIB_THREAD_OPT LIBSMBIOS_LIB_RT_OPT ".lib" )
-#       ifdef LIBSMBIOS_LIB_DIAGNOSTIC
-#           pragma message ("Automatically Linking to lib file: " LIBSMBIOS_LIB_PREFIX LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) "-" LIBSMBIOS_LIB_TOOLSET LIBSMBIOS_LIB_THREAD_OPT LIBSMBIOS_LIB_RT_OPT ".lib")
-#       endif
+#ifndef LIBSMBIOS_C_AUTO_LINK_NOMANGLE
+#   pragma comment(lib, LIBSMBIOS_C_LIB_PREFIX LIBSMBIOS_C_STRINGIZE(LIBSMBIOS_C_LIB_NAME) "-" LIBSMBIOS_C_LIB_TOOLSET LIBSMBIOS_C_LIB_THREAD_OPT LIBSMBIOS_C_LIB_RT_OPT ".lib" )
+#   ifdef LIBSMBIOS_C_LIB_DIAGNOSTIC
+#       pragma message ("Automatically Linking to lib file: " LIBSMBIOS_C_LIB_PREFIX LIBSMBIOS_C_STRINGIZE(LIBSMBIOS_C_LIB_NAME) "-" LIBSMBIOS_C_LIB_TOOLSET LIBSMBIOS_C_LIB_THREAD_OPT LIBSMBIOS_C_LIB_RT_OPT ".lib")
 #   endif
 #else
-#   pragma comment(lib, LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) ".lib" )
-#   ifdef LIBSMBIOS_LIB_DIAGNOSTIC
-#       pragma message ("Automatically Linking to lib file: " LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) ".lib")
-#   endif
-#   if defined(LIBSMBIOS_NEED_SMBIOSXML)
-#       undef LIBSMBIOS_LIB_NAME
-#       define LIBSMBIOS_LIB_NAME smbiosxml
-#       pragma comment(lib, LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) ".lib" )
-#       ifdef LIBSMBIOS_LIB_DIAGNOSTIC
-#           pragma message ("Automatically Linking to lib file: " LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) ".lib")
-#       endif
-#   endif
-#endif
-
-// automatic linking for xerces, if we are using XML
-#if defined(LIBSMBIOS_NEED_SMBIOSXML)
-#   undef LIBSMBIOS_LIB_NAME
-#   if !defined(_MT) && !defined(__MT__)
-#       error("Xerces DLLs are only distributed as (debug|non-debug) x (multithreaded|multithreaded DLL). Your runtime code-generation must be set to either of these configurations.")
-#   endif
-
-#   if (defined(_DLL) || defined(_RTLDLL))
-#       if defined(_DEBUG)
-#           define LIBSMBIOS_LIB_NAME xerces-c_2D
-#       else
-#           define LIBSMBIOS_LIB_NAME xerces-c_2
-#       endif
-#   else
-#       if defined(_DEBUG)
-#           define LIBSMBIOS_LIB_NAME Xerces-c_static_2D
-#       else
-#           define LIBSMBIOS_LIB_NAME Xerces-c_static_2
-#       endif
-#   endif
-#   pragma comment(lib, LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) ".lib" )
-#   ifdef LIBSMBIOS_LIB_DIAGNOSTIC
-#       pragma message ("Automatically Linking to lib file: " LIBSMBIOS_STRINGIZE(LIBSMBIOS_LIB_NAME) ".lib")
+#   pragma comment(lib, LIBSMBIOS_C_STRINGIZE(LIBSMBIOS_C_LIB_NAME) ".lib" )
+#   ifdef LIBSMBIOS_C_LIB_DIAGNOSTIC
+#       pragma message ("Automatically Linking to lib file: " LIBSMBIOS_C_STRINGIZE(LIBSMBIOS_C_LIB_NAME) ".lib")
 #   endif
 #endif
 
 //  //#include <config/auto_link.h>
-#endif /* !LIBSMBIOS_ALL_NO_LIB && ! LIBSMBIOS_SOURCE */
-#endif /* LIBSMBIOS_PLATFORM_WIN32 */
+#endif /* !LIBSMBIOS_C_ALL_NO_LIB && ! LIBSMBIOS_C_SOURCE */
+#endif /* LIBSMBIOS_C_PLATFORM_WIN32 */
 
-#ifdef LIBSMBIOS_LIB_PREFIX
-#  undef LIBSMBIOS_LIB_PREFIX
+#ifdef LIBSMBIOS_C_LIB_PREFIX
+#  undef LIBSMBIOS_C_LIB_PREFIX
 #endif
-#if defined(LIBSMBIOS_LIB_NAME)
-#  undef LIBSMBIOS_LIB_NAME
+#if defined(LIBSMBIOS_C_LIB_NAME)
+#  undef LIBSMBIOS_C_LIB_NAME
 #endif
-#if defined(LIBSMBIOS_LIB_TOOLSET)
-#  undef LIBSMBIOS_LIB_TOOLSET
+#if defined(LIBSMBIOS_C_LIB_TOOLSET)
+#  undef LIBSMBIOS_C_LIB_TOOLSET
 #endif
-#if defined(LIBSMBIOS_LIB_THREAD_OPT)
-#  undef LIBSMBIOS_LIB_THREAD_OPT
+#if defined(LIBSMBIOS_C_LIB_THREAD_OPT)
+#  undef LIBSMBIOS_C_LIB_THREAD_OPT
 #endif
-#if defined(LIBSMBIOS_LIB_RT_OPT)
-#  undef LIBSMBIOS_LIB_RT_OPT
+#if defined(LIBSMBIOS_C_LIB_RT_OPT)
+#  undef LIBSMBIOS_C_LIB_RT_OPT
 #endif
-#if defined(LIBSMBIOS_LIB_LINK_OPT)
-#  undef LIBSMBIOS_LIB_LINK_OPT
+#if defined(LIBSMBIOS_C_LIB_LINK_OPT)
+#  undef LIBSMBIOS_C_LIB_LINK_OPT
 #endif
-#if defined(LIBSMBIOS_LIB_DEBUG_OPT)
-#  undef LIBSMBIOS_LIB_DEBUG_OPT
+#if defined(LIBSMBIOS_C_LIB_DEBUG_OPT)
+#  undef LIBSMBIOS_C_LIB_DEBUG_OPT
 #endif
-#if defined(LIBSMBIOS_DYN_LINK)
-#  undef LIBSMBIOS_DYN_LINK
+#if defined(LIBSMBIOS_C_DYN_LINK)
+#  undef LIBSMBIOS_C_DYN_LINK
 #endif
-#if defined(LIBSMBIOS_AUTO_LINK_NOMANGLE)
-#  undef LIBSMBIOS_AUTO_LINK_NOMANGLE
+#if defined(LIBSMBIOS_C_AUTO_LINK_NOMANGLE)
+#  undef LIBSMBIOS_C_AUTO_LINK_NOMANGLE
 #endif
 
 #endif /* AUTO_LINK_H */

@@ -22,22 +22,53 @@
 // compat header should always be first header
 #include "smbios/compat.h"
 
+#ifndef TYPE_DEFINED_U8
+#define TYPE_DEFINED_U8
 typedef unsigned char   u8;
+#endif
+#ifndef TYPE_DEFINED_U16
+#define TYPE_DEFINED_U16
 typedef unsigned short  u16;
+#endif
+#ifndef TYPE_DEFINED_U32
+#define TYPE_DEFINED_U32
 typedef unsigned int    u32;
+#endif
 
-typedef char   s8;
-typedef short  s16;
-typedef int    s32;
 
+#ifndef TYPE_DEFINED_S8
+#define TYPE_DEFINED_S8
+typedef   signed char   s8;
+#endif
+#ifndef TYPE_DEFINED_S16
+#define TYPE_DEFINED_S16
+typedef   signed short  s16;
+#endif
+#ifndef TYPE_DEFINED_S32
+#define TYPE_DEFINED_S32
+typedef   signed int    s32;
+#endif
+
+#ifndef TYPE_DEFINED_U64
+#define TYPE_DEFINED_U64
 #if defined(LIBSMBIOS_HAS_LONG_LONG)
 typedef unsigned long long  u64;
-typedef long long  s64;
 #elif defined(LIBSMBIOS_HAS_MS_INT64)
-typedef unsigned __int64   u64;
-typedef __int64 s64;
+typedef unsigned __int64 u64;
 #else
 #error  "No LONG LONG or __INT64 support. Current compiler config is not supported."
+#endif
+#endif
+
+#ifndef TYPE_DEFINED_S64
+#define TYPE_DEFINED_S64
+#if defined(LIBSMBIOS_HAS_LONG_LONG)
+typedef   signed long long  s64;
+#elif defined(LIBSMBIOS_HAS_MS_INT64)
+typedef signed   __int64 s64;
+#else
+#error  "No LONG LONG or __INT64 support. Current compiler config is not supported."
+#endif
 #endif
 
 #endif /* TYPES_H */

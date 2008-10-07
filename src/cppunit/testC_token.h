@@ -19,7 +19,7 @@
 #ifndef _TESTCTOKEN_H
 #define _TESTCTOKEN_H
 
-#include "smbios/compat.h"
+#include "smbios_c/compat.h"
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <typeinfo>

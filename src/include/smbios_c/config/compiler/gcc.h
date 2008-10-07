@@ -11,57 +11,26 @@
 
 //  See http://www.boost.org for most recent version.
 
-//  GNU C++ compiler setup:
-
-
-#ifndef __EXCEPTIONS
-# define LIBSMBIOS_NO_EXCEPTIONS
+#ifndef UNREFERENCED_PARAMETER
+#   define UNREFERENCED_PARAMETER(P)  (void)(P)
 #endif
 
-// GCC has __PRETTY_FUNCTION__ macro
-#define LIBSMBIOS_HAS_PRETTY_FUNCTION
-#define LIBSMBIOS_HAS_FUNCTION
-
-//
-// Bug specific to gcc 3.1 and 3.2:
-//
-
-#define LIBSMBIOS_PACKED_ATTR      __attribute__ ((packed))
-#define UNREFERENCED_PARAMETER(P)  (void)(P)
-
-//
-// Threading support: Turn this on unconditionally here (except for
-// those platforms where we can know for sure). It will get turned off again
-// later if no threading API is detected.
-//
-#if !defined(__MINGW32__) && !defined(linux) && !defined(__linux) && !defined(__linux__)
-# define LIBSMBIOS_HAS_THREADS
-#endif
-
-//
-// gcc has "long long"
-//
-#define LIBSMBIOS_HAS_LONG_LONG
-
-//
-// gcc implements the named return value optimization since version 3.1
-//
-#if __GNUC__ > 3 || ( __GNUC__ == 3 && __GNUC_MINOR__ >= 1 )
-#define LIBSMBIOS_HAS_NRVO
-#endif
-
-#define LIBSMBIOS_COMPILER "GNU C++ version " __VERSION__
+#define LIBSMBIOS_C_HAS_PRETTY_FUNCTION
+#define LIBSMBIOS_C_HAS_FUNCTION
+#define LIBSMBIOS_C_PACKED_ATTR      __attribute__ ((packed))
+#define LIBSMBIOS_C_COMPILER "GNU C++ version " __VERSION__
+#define LIBSMBIOS_C_HAS_LONG_LONG
 
 //
 // versions check:
 // we don't know gcc prior to version 2.90:
 #if (__GNUC__ == 2) && (__GNUC_MINOR__ < 90)
-#  error "Compiler not configured - please reconfigure"
+#  error "GCC versions < 2.90 not supported"
 #endif
 //
 // last known and checked version is 3.4:
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 3))
-#  if defined(LIBSMBIOS_ASSERT_CONFIG)
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 4))
+#  if defined(LIBSMBIOS_C_ASSERT_CONFIG)
 #     error "Unknown compiler version - please run the configure tests and report the results"
 #  else
 #     warning "Unknown compiler version - please run the configure tests and report the results"

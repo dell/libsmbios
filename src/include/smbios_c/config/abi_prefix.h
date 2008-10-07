@@ -6,15 +6,15 @@
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt).
 
-#ifndef LIBSMBIOS_CONFIG_ABI_PREFIX_H
-# define LIBSMBIOS_CONFIG_ABI_PREFIX_H
+#ifndef LIBSMBIOS_C_CONFIG_ABI_PREFIX_H
+# define LIBSMBIOS_C_CONFIG_ABI_PREFIX_H
 #else
 # error double inclusion of header smbios_c/config/abi_prefix.h is an error
 #endif
 
-#include <smbios_c/config.h>
+#include <smbios_c/config/config.h>
 
 // this must occur after all other includes and before any code appears:
-#ifdef LIBSMBIOS_HAS_ABI_HEADERS
-#  include LIBSMBIOS_ABI_PREFIX
+#ifdef LIBSMBIOS_C_HAS_ABI_HEADERS
+#  include LIBSMBIOS_C_ABI_PREFIX
 #endif

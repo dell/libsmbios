@@ -12,7 +12,16 @@
 
 //  Microsoft Visual C++ compiler setup:
 
-#define LIBSMBIOS_MSVC _MSC_VER
+#ifndef UNREFERENCED_PARAMETER
+#   define UNREFERENCED_PARAMETER(P)  (P)
+#endif 
+
+#define LIBSMBIOS_C_MSVC _MSC_VER
+#define strtoll(p, e, b) _strtoi64(p, e, b)
+#define LIBSMBIOS_C_HAS_FUNCTION
+#define LIBSMBIOS_C_HAS_LONG_LONG
+#define LIBSMBIOS_C_HAS_DECLSPEC
+#define LIBSMBIOS_C_PACKED_ATTR
 
 // turn off the warnings before we #include anything
 // 4503: warning: decorated name length exceeded
@@ -20,109 +29,48 @@
 // 4201: nonstandard extension used : nameless struct/union
 // 4127: warning: conditional expression is constant
 #pragma warning( disable : 4201 4250 4503 4127 )
+
 #ifndef DEBUG
 // 4702: unreachable code
 #pragma warning( disable : 4702 ) // disable in release because MS headers have tons of unreachable code
 #endif
 
-// Only new MSVC has _strtoi64. Older compilers are screwed (will get undefined ref error)
-#if _MSC_VER >= 1300
-#define strtoll(p, e, b) _strtoi64(p, e, b)
-#endif
-
-#define UNREFERENCED_PARAMETER(P)  (P)
-#define LIBSMBIOS_PACKED_ATTR
-
-#if _MSC_VER <= 1200  // 1200 == VC++ 6.0
-#pragma warning( disable : 4786 ) // ident trunc to '255' chars in debug info
-#  define LIBSMBIOS_NO_VOID_RETURNS
-#endif
-
-#if (_MSC_VER <= 1300)  // 1300 == VC++ 7.0
-
-#if !defined(_MSC_EXTENSIONS) && !defined(LIBSMBIOS_NO_DEPENDENT_TYPES_IN_TEMPLATE_VALUE_PARAMETERS)      // VC7 bug with /Za
-#  define LIBSMBIOS_NO_DEPENDENT_TYPES_IN_TEMPLATE_VALUE_PARAMETERS
-#endif
-
-#  define LIBSMBIOS_NO_PRIVATE_IN_AGGREGATE
-#  define LIBSMBIOS_NO_INTEGRAL_INT64_T
-
-#  define LIBSMBIOS_NO_SWPRINTF
-
-#endif
-
-#if _MSC_VER >= 1300
-// VC++ 7 and higher have __FUNCTION__ macro
-#define LIBSMBIOS_HAS_FUNCTION
-#endif
-
-#if _MSC_VER < 1310 // 1310 == VC++ 7.1
-#  define LIBSMBIOS_NO_SWPRINTF
-#endif
-
 #ifndef _NATIVE_WCHAR_T_DEFINED
-#  define LIBSMBIOS_NO_INTRINSIC_WCHAR_T
+#  define LIBSMBIOS_C_NO_INTRINSIC_WCHAR_T
 #endif
 
-//
-// check for exception handling support:
-#ifndef _CPPUNWIND
-#  define LIBSMBIOS_NO_EXCEPTIONS
-#endif
-
-//
-// __int64 support:
-//
-#if (_MSC_VER >= 1200)
-#   define LIBSMBIOS_HAS_MS_INT64
-#endif
-#if (_MSC_VER >= 1310) && defined(_MSC_EXTENSIONS)
-#   define LIBSMBIOS_HAS_LONG_LONG
-#endif
-//
-// disable Win32 API's if compiler extentions are
-// turned off:
-//
-#ifndef _MSC_EXTENSIONS
-#  define LIBSMBIOS_DISABLE_WIN32
-#endif
-
-//
-// all versions support __declspec:
-//
-#define LIBSMBIOS_HAS_DECLSPEC
 //
 // prefix and suffix headers:
 //
-#ifndef LIBSMBIOS_ABI_PREFIX
-#  define LIBSMBIOS_ABI_PREFIX "smbios_c/config/abi/msvc_prefix.h"
+#ifndef LIBSMBIOS_C_ABI_PREFIX
+#  define LIBSMBIOS_C_ABI_PREFIX "smbios_c/config/abi/msvc_prefix.h"
 #endif
-#ifndef LIBSMBIOS_ABI_SUFFIX
-#  define LIBSMBIOS_ABI_SUFFIX "smbios_c/config/abi/msvc_suffix.h"
+#ifndef LIBSMBIOS_C_ABI_SUFFIX
+#  define LIBSMBIOS_C_ABI_SUFFIX "smbios_c/config/abi/msvc_suffix.h"
 #endif
 
-# if _MSC_VER == 1200
-#   define LIBSMBIOS_COMPILER_VERSION 6.0
-# elif _MSC_VER == 1300
-#   define LIBSMBIOS_COMPILER_VERSION 7.0
-# elif _MSC_VER == 1310
-#   define LIBSMBIOS_COMPILER_VERSION 7.1
+#if _MSC_VER == 1310
+#   define LIBSMBIOS_C_COMPILER_VERSION 7.1
+# elif _MSC_VER == 1400
+#   define LIBSMBIOS_C_COMPILER_VERSION 8.0
+# elif _MSC_VER == 1500
+#   define LIBSMBIOS_C_COMPILER_VERSION 9.0
 # else
-#   define LIBSMBIOS_COMPILER_VERSION _MSC_VER
-# endif
+#   define LIBSMBIOS_C_COMPILER_VERSION _MSC_VER
+#endif
 
-#define LIBSMBIOS_COMPILER "Microsoft Visual C++ version " LIBSMBIOS_STRINGIZE(LIBSMBIOS_COMPILER_VERSION)
+#define LIBSMBIOS_C_COMPILER "Microsoft Visual C++ version " LIBSMBIOS_C_STRINGIZE(LIBSMBIOS_C_COMPILER_VERSION)
 
 //
 // versions check:
 // we don't support Visual C++ prior to version 6:
-#if _MSC_VER < 1200
-#error "Compiler looks ancient. Sorry but we dont support it MSVC++ prior to version 6."
+#if _MSC_VER < 1310
+#error "Compiler looks ancient. Sorry but we dont support it MSVC++ prior to version 7.1."
 #endif
 //
 // last known and checked version is 1310:
-#if (_MSC_VER > 1400)
-#  if defined(LIBSMBIOS_ASSERT_CONFIG)
+#if (_MSC_VER > 1500)
+#  if defined(LIBSMBIOS_C_ASSERT_CONFIG)
 #     error "Unknown compiler version - please run the configure tests and report the results"
 #  else
 #     pragma message("Unknown compiler version - please run the configure tests and report the results")

@@ -16,8 +16,8 @@
  */
 
 
-#ifndef SMBIOS_H
-#define SMBIOS_H
+#ifndef C_SMBIOS_H
+#define C_SMBIOS_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"

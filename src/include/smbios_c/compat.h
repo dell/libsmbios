@@ -17,10 +17,10 @@
  */
 
 
-#ifndef LIBSMBIOS_COMPAT_H_INCLUDED
-#define LIBSMBIOS_COMPAT_H_INCLUDED
+#ifndef LIBSMBIOS_C_COMPAT_H_INCLUDED
+#define LIBSMBIOS_C_COMPAT_H_INCLUDED
 
-#include "smbios_c/config.h"
+#include "smbios_c/config/config.h"
 #include "smbios_c/config/auto_link.h"
 
 /*
@@ -28,7 +28,7 @@
  *      Keep changes here to a minimum!
 */
 
-#if defined(LIBSMBIOS_HAS_DECLSPEC) && defined(LIBSMBIOS_ALL_DYN_LINK)
+#if defined(LIBSMBIOS_C_HAS_DECLSPEC) && defined(LIBSMBIOS_C_ALL_DYN_LINK)
 #       if defined(LIBSMBIOS_SOURCE) || defined(LIBSMBIOS_SOURCE)
 #           define DLL_SPEC  __declspec(dllexport)
 #       else
@@ -48,11 +48,11 @@
 #define EXTERN_C_END
 #endif
 
-#ifdef LIBSMBIOS_PLATFORM_WIN32
+#ifdef LIBSMBIOS_C_PLATFORM_WIN32
 #   define WIN32_LEAN_AND_MEAN		/* Exclude rarely-used stuff from Windows headers */
 #   include <windows.h>
 /* Windows is lame. */
 #   define _snprintf    snprintf
 
-#endif /* LIBSMBIOS_PLATFORM_WIN32 */
+#endif /* LIBSMBIOS_C_PLATFORM_WIN32 */
 #endif /* COMPAT_H */

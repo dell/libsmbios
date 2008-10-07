@@ -15,41 +15,41 @@
 //
 //  Modified for libsmbios project: 2004-03-28 by Michael Brown
 
-#ifndef LIBSMBIOS_CONFIG_H
-#define LIBSMBIOS_CONFIG_H
+#ifndef LIBSMBIOS_C_CONFIG_H
+#define LIBSMBIOS_C_CONFIG_H
 
 // if we don't have a user config, then use the default location:
-#if !defined(LIBSMBIOS_USER_CONFIG) && !defined(LIBSMBIOS_NO_USER_CONFIG)
-#  define LIBSMBIOS_USER_CONFIG <smbios_c/config/user.h>
+#if !defined(LIBSMBIOS_C_USER_CONFIG) && !defined(LIBSMBIOS_C_NO_USER_CONFIG)
+#  define LIBSMBIOS_C_USER_CONFIG <smbios_c/config/user.h>
 #endif
 // include it first:
-#ifdef LIBSMBIOS_USER_CONFIG
-#  include LIBSMBIOS_USER_CONFIG
+#ifdef LIBSMBIOS_C_USER_CONFIG
+#  include LIBSMBIOS_C_USER_CONFIG
 #endif
 
 // if we don't have a compiler config set, try and find one:
-#if !defined(LIBSMBIOS_COMPILER_CONFIG) && !defined(LIBSMBIOS_NO_COMPILER_CONFIG) && !defined(LIBSMBIOS_NO_CONFIG)
+#if !defined(LIBSMBIOS_C_COMPILER_CONFIG) && !defined(LIBSMBIOS_C_NO_COMPILER_CONFIG) && !defined(LIBSMBIOS_C_NO_CONFIG)
 #  include <smbios_c/config/select_compiler_config.h>
 #endif
 // if we have a compiler config, include it now:
-#ifdef LIBSMBIOS_COMPILER_CONFIG
-#  include LIBSMBIOS_COMPILER_CONFIG
+#ifdef LIBSMBIOS_C_COMPILER_CONFIG
+#  include LIBSMBIOS_C_COMPILER_CONFIG
 #endif
 
 
 // if we don't have a platform config set, try and find one:
-#if !defined(LIBSMBIOS_PLATFORM_CONFIG) && !defined(LIBSMBIOS_NO_PLATFORM_CONFIG) && !defined(LIBSMBIOS_NO_CONFIG)
+#if !defined(LIBSMBIOS_C_PLATFORM_CONFIG) && !defined(LIBSMBIOS_C_NO_PLATFORM_CONFIG) && !defined(LIBSMBIOS_C_NO_CONFIG)
 #  include <smbios_c/config/select_platform_config.h>
 #endif
 // if we have a platform config, include it now:
-#ifdef LIBSMBIOS_PLATFORM_CONFIG
-#  include LIBSMBIOS_PLATFORM_CONFIG
+#ifdef LIBSMBIOS_C_PLATFORM_CONFIG
+#  include LIBSMBIOS_C_PLATFORM_CONFIG
 #endif
 
 // get config suffix code:
 #include <smbios_c/config/suffix.h>
 
-#endif  // LIBSMBIOS_CONFIG_H
+#endif  // LIBSMBIOS_C_CONFIG_H
 
 
 

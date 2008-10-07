@@ -23,19 +23,19 @@
 
 #if defined(linux) || defined(__linux) || defined(__linux__)
 // linux:
-#  define LIBSMBIOS_PLATFORM_CONFIG "smbios_c/config/platform/linux.h"
+#  define LIBSMBIOS_C_PLATFORM_CONFIG "smbios_c/config/platform/linux.h"
 
 #elif defined(_WIN64) || defined(__WIN64__) || defined(WIN64)
 // win64:
-#  define LIBSMBIOS_PLATFORM_CONFIG "smbios_c/config/platform/win64.h"
+#  define LIBSMBIOS_C_PLATFORM_CONFIG "smbios_c/config/platform/win64.h"
 
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 // win32:
-#  define LIBSMBIOS_PLATFORM_CONFIG "smbios_c/config/platform/win32.h"
+#  define LIBSMBIOS_C_PLATFORM_CONFIG "smbios_c/config/platform/win32.h"
 
 #else
 
-#  if defined (LIBSMBIOS_ASSERT_CONFIG)
+#  if defined (LIBSMBIOS_C_ASSERT_CONFIG)
       // this must come last - generate an error if we don't
       // recognise the platform:
 #     error "Unknown platform - please report to libsmbios maintainer."

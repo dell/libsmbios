@@ -49,7 +49,7 @@ struct smbios_struct
     u8 length;
     u16 handle;
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 struct dmi_table_entry_point
 {
@@ -60,7 +60,7 @@ struct dmi_table_entry_point
     u16 table_num_structs;
     u8 smbios_bcd_revision;
 }
-LIBSMBIOS_PACKED_ATTR;
+LIBSMBIOS_C_PACKED_ATTR;
 
 struct smbios_table_entry_point
 {
@@ -74,7 +74,7 @@ struct smbios_table_entry_point
     u8 formatted_area[5];
     struct dmi_table_entry_point dmi;
     u8 padding_for_Intel_BIOS_bugs;
-} LIBSMBIOS_PACKED_ATTR;
+} LIBSMBIOS_C_PACKED_ATTR;
 
 #if defined(_MSC_VER)
 #pragma pack(pop)

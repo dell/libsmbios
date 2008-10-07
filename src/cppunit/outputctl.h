@@ -19,8 +19,6 @@
 #ifndef _OUTPUTCTL_H
 #define _OUTPUTCTL_H
 
-#include "smbios/compat.h"
-
 #include <exception>
 #include <typeinfo>     // for typeid()
 #include <iostream>

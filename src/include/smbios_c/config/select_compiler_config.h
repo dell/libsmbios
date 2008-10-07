@@ -22,16 +22,16 @@
 
 # if defined __GNUC__
 //  GNU C++:
-#   define LIBSMBIOS_COMPILER_CONFIG "smbios_c/config/compiler/gcc.h"
+#   define LIBSMBIOS_C_COMPILER_CONFIG "smbios_c/config/compiler/gcc.h"
 
 #elif defined _MSC_VER
 //  Microsoft Visual C++
 //
 //  Must remain the last #elif since some other vendors (Metrowerks, for
 //  example) also #define _MSC_VER
-#   define LIBSMBIOS_COMPILER_CONFIG "smbios_c/config/compiler/visualc.h"
+#   define LIBSMBIOS_C_COMPILER_CONFIG "smbios_c/config/compiler/visualc.h"
 
-#elif defined (LIBSMBIOS_ASSERT_CONFIG)
+#elif defined (LIBSMBIOS_C_ASSERT_CONFIG)
 // this must come last - generate an error if we don't
 // recognise the compiler:
 #  error "Unknown compiler - please report to libsmbios maintainer."

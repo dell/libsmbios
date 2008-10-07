@@ -16,8 +16,8 @@
  */
 
 
-#ifndef CMOS_H
-#define CMOS_H
+#ifndef C_OBJ_CMOS_H
+#define C_OBJ_CMOS_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"

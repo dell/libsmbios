@@ -19,8 +19,6 @@
 #ifndef _STDFUNCS_H
 #define _STDFUNCS_H
 
-#include "smbios/compat.h"
-
 void copyFile( std::string dstFile, std::string srcFile );
 bool fileExists(std::string fileName);
 size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream);

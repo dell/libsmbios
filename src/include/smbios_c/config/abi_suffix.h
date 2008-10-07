@@ -9,15 +9,15 @@
 // This header should be #included AFTER code that was preceded by a #include
 // <boost/config/abi_prefix.h>.
 
-#ifndef LIBSMBIOS_CONFIG_ABI_PREFIX_H
+#ifndef LIBSMBIOS_C_CONFIG_ABI_PREFIX_H
 # error Header smbios_c/config/abi_suffix.h must only be used after smbios_c/config/abi_prefix.h
 #else
-# undef LIBSMBIOS_CONFIG_ABI_PREFIX_H
+# undef LIBSMBIOS_C_CONFIG_ABI_PREFIX_H
 #endif
 
 // the suffix header occurs after all of our code:
-#ifdef LIBSMBIOS_HAS_ABI_HEADERS
-#  include LIBSMBIOS_ABI_SUFFIX
+#ifdef LIBSMBIOS_C_HAS_ABI_HEADERS
+#  include LIBSMBIOS_C_ABI_SUFFIX
 #endif
 
 

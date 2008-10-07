@@ -17,7 +17,9 @@
 #define LIBSMBIOS_HAS_ARCH_TABLE_CLASS
 
 // Enable 64-bit file access (changes off_t to 64-bit)
+#ifndef FSEEK
 #define FSEEK(fh, pos, whence) fseek(fh, static_cast<long>(pos), whence)
+#endif
 
 #if defined(__GNUC__) && !defined(LIBSMBIOS_NO_SWPRINTF)
 #  define LIBSMBIOS_NO_SWPRINTF
