@@ -21,12 +21,12 @@
 
 // system
 
-#include "testC_token.h"
 #include "smbios_c/obj/token.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
 
+#include "testC_token.h"
 #include "outputctl.h"
 #include "main.h"
 #include "XmlUtils.h"

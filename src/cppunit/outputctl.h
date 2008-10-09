@@ -28,8 +28,18 @@
 // They print things out in a standard format, or shorten unit tests.
 
 class skip_test : public std::exception
-    { public: virtual ~skip_test() throw() {}; }
-;
+    { public: virtual ~skip_test() throw() {}; };
+
+#undef DCOUT
+#undef DCERR
+#if defined(DEBUG_TEST_OUTPUT)
+#   include <iostream>
+#   define DCOUT(line)  do { cout << line; } while(0)
+#   define DCERR(line)  do { cerr << line; } while(0)
+#else
+#   define DCOUT(line)  do { } while(0)
+#   define DCERR(line)  do { } while(0)
+#endif
 
 #if defined(LIBSMBIOS_HAS_PRETTY_FUNCTION) || defined(LIBSMBIOS_C_HAS_PRETTY_FUNCTION)
 #define WHEREAMI "\t" << __PRETTY_FUNCTION__ << "... "

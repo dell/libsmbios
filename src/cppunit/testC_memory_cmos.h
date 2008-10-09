@@ -25,15 +25,6 @@
 #include <typeinfo>
 #include <string>
 
-#if defined(DEBUG_TEST_C_MEMORY)
-#include <iostream>
-#   define DCOUT(line) do { cout << line; } while(0)
-#   define DCERR(line) do { cerr << line; } while(0)
-#else
-#   define DCOUT(line) do {} while(0)
-#   define DCERR(line) do {} while(0)
-#endif
-
 extern int global_argc;
 extern char ** global_argv;
 
@@ -64,6 +55,7 @@ public:
     void testMemorySearch();
     void testCmosRead();
     void testCmosWrite();
+    void testForLeaks();
 
 
     // make sure to put this at the end...
@@ -75,6 +67,7 @@ public:
     CPPUNIT_TEST (testCmosRead);
     CPPUNIT_TEST (testCmosWrite);
     CPPUNIT_TEST (testMemoryWrite);
+    CPPUNIT_TEST (testForLeaks);
 
     CPPUNIT_TEST_SUITE_END ();
 };

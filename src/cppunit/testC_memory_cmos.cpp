@@ -16,18 +16,22 @@
  * See the GNU General Public License for more details.
  */
 
+#ifdef DEBUG_TEST_MEMORY_C
+#define DEBUG_TEST_OUTPUT
+#endif
+
 // compat header should always be first header if including system headers
 #include "smbios_c/compat.h"
 
 #include <string.h>
 #include <stdio.h>
 
-#include "testC_memory_cmos.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/memory.h"
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/cmos.h"
 
+#include "testC_memory_cmos.h"
 #include "outputctl.h"
 #include "main.h"
 
@@ -80,6 +84,25 @@ void testCInterface::setUp()
 
 void testCInterface::tearDown()
 { }
+
+void testCInterface::testForLeaks()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+
+    for (int i=0;i<1000;++i)
+    {
+        struct memory_access_obj *m = memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_NEW, "/dev/null");
+        memory_obj_free(m);
+    }
+
+    for (int i=0;i<1000;++i)
+    {
+        struct cmos_access_obj *m = cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_NEW, "/dev/null");
+        cmos_obj_free(m);
+    }
+
+    STD_TEST_END("");
+}
 
 void testCInterface::testMemoryRead()
 {
