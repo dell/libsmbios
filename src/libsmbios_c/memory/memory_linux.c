@@ -210,12 +210,10 @@ static int linux_write_fn(const struct memory_access_obj *this, u8 *buffer, u64 
 static void linux_free(struct memory_access_obj *this)
 {
     struct linux_data *private_data = (struct linux_data *)this->private_data;
+    fnprintf("\n");
 
-    if (private_data->filename)
-    {
-        free(private_data->filename);
-        private_data->filename = 0;
-    }
+    free(private_data->filename);
+    private_data->filename = 0;
 
     closefds(private_data);
 
