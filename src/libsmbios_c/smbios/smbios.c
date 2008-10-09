@@ -48,20 +48,23 @@ void smbios_walk(void (*smbios_walk_fn)(const struct smbios_struct *, void *user
 struct smbios_struct *smbios_get_next_struct(const struct smbios_struct *cur)
 {
     struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
-    return smbios_table_get_next_struct(table, cur);
+    struct smbios_struct *ret = smbios_table_get_next_struct(table, cur);
     smbios_table_free(table);
+    return ret;
 }
 
 struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_struct *cur, u8 type)
 {
     struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
-    return smbios_table_get_next_struct_by_type(table, cur, type);
+    struct smbios_struct *ret = smbios_table_get_next_struct_by_type(table, cur, type);
     smbios_table_free(table);
+    return ret;
 }
 
 struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_struct *cur, u16 handle)
 {
     struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
-    return smbios_table_get_next_struct_by_handle(table, cur, handle);
+    struct smbios_struct *ret = smbios_table_get_next_struct_by_handle(table, cur, handle);
     smbios_table_free(table);
+    return ret;
 }
