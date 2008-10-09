@@ -32,17 +32,23 @@
 int  cmos_read_byte(u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
-    return cmos_obj_read_byte(c, byte, indexPort, dataPort, offset);
+    int retval = cmos_obj_read_byte(c, byte, indexPort, dataPort, offset);
+    cmos_obj_free(c);
+    return retval;
 }
 
 int  cmos_write_byte(u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
-    return cmos_obj_write_byte(c, byte, indexPort, dataPort, offset);
+    int retval = cmos_obj_write_byte(c, byte, indexPort, dataPort, offset);
+    cmos_obj_free(c);
+    return retval;
 }
 
 int cmos_run_callbacks(bool do_update)
 {
     struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
-    return cmos_obj_run_callbacks(c, do_update);
+    int retval = cmos_obj_run_callbacks(c, do_update);
+    cmos_obj_free(c);
+    return retval;
 }
