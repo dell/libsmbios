@@ -47,8 +47,8 @@ obs-upload: dist
 	@[ -n "$(PROJECT)" ] || exit 1
 	$(top_srcdir)/pkg/obs-upload.sh $(PROJECT) $(PACKAGE)
 
-valgrind:
-	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check
+valgrind: $(check_PROGRAMS)
+	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check-TESTS
 
 ########## DOCS ################
 if HAS_DOXYGEN
