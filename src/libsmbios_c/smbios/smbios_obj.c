@@ -237,7 +237,6 @@ void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbio
         fn(s, userdata);
         s = smbios_table_get_next_struct(table, s);
     }while(s);
-    smbios_table_free(table);
 }
 
 

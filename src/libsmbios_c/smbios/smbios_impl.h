@@ -19,7 +19,6 @@
 #define SMBIOS_IMPL_H
 
 #include "smbios_c/compat.h"
-#include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
 
 EXTERN_C_BEGIN;
