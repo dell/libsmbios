@@ -61,9 +61,7 @@ void testCsmi::tearDown()
 
 void testCsmi::testSmiConstruct()
 {
-    STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
-
-
+    STD_TEST_START(getTestName().c_str() << "  ");
     STD_TEST_END("");
 }
 
