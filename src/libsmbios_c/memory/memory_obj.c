@@ -92,8 +92,12 @@ int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offse
 
 void memory_obj_free(struct memory_access_obj *m)
 {
+    fnprintf("  m(%p)  singleton(%p)\n", m, &singleton);
     if (m != &singleton)
+    {
         m->free(m);
+        free(m);
+    }
     else
         m->cleanup(m);
 }

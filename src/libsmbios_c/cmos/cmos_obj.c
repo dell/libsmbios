@@ -97,6 +97,8 @@ void __internal _cmos_obj_free(struct cmos_access_obj *m)
     m->cb_list_head = 0;
 
     m->free(m);
+
+    free(m);
 }
 
 void cmos_obj_free(struct cmos_access_obj *m)
