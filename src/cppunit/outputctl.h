@@ -31,8 +31,7 @@ class skip_test : public std::exception
     { public: virtual ~skip_test() throw() {}; }
 ;
 
-
-#ifdef LIBSMBIOS_HAS_PRETTY_FUNCTION
+#if defined(LIBSMBIOS_HAS_PRETTY_FUNCTION) || defined(LIBSMBIOS_C_HAS_PRETTY_FUNCTION)
 #define WHEREAMI "\t" << __PRETTY_FUNCTION__ << "... "
 #else
 #define WHEREAMI typeid(*this).name() << " (line " << __LINE__ << ")... "
@@ -41,15 +40,15 @@ class skip_test : public std::exception
 #define GET_FLAGS() std::ios::fmtflags old_opts = cout.flags()
 #define RESTORE_FLAGS() cout.flags(old_opts)
 
-#define startTest(arg) do{GET_FLAGS(); cout << arg << WHEREAMI;         RESTORE_FLAGS();}while(0)
-#define passTest(arg)  do{GET_FLAGS(); cout << "[ ok ]" << arg << endl; RESTORE_FLAGS();} while(0)
-#define failTest(arg)  do{GET_FLAGS(); cout << "[FAIL]" << arg << endl; RESTORE_FLAGS();} while(0)
-#define skipTest(arg)  do{GET_FLAGS(); cout << "[SKIP]" << arg << endl; RESTORE_FLAGS();} while(0)
+#define startTest(arg) do{cout << arg << WHEREAMI;        }while(0)
+#define passTest(arg)  do{cout << "[ ok ]" << arg << endl;} while(0)
+#define failTest(arg)  do{cout << "[FAIL]" << arg << endl;} while(0)
+#define skipTest(arg)  do{cout << "[SKIP]" << arg << endl;} while(0)
 
 // standard stuff
 
 // Standard test start/end header
-#ifdef LIBSMBIOS_HAS_PRETTY_FUNCTION
+#if defined(LIBSMBIOS_HAS_PRETTY_FUNCTION) || defined(LIBSMBIOS_C_HAS_PRETTY_FUNCTION)
 #define STD_TEST_START_CHECKSKIP(arg) startTest(arg);  bool skip=false; cout << flush; try { checkSkipTest(__FUNCTION__)
 #define STD_TEST_START(arg)           startTest(arg);  bool skip=false; cout << flush; try {
 #else
