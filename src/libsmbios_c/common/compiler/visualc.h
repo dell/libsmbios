@@ -9,8 +9,17 @@
 #define _null_call(...) do {} while(0)
 #define _dbg_printf(format, ...) do { fprintf(stderr , format , __VA_ARGS__);  } while(0)
 // dbg_printf gets redefined to _dbg_printf on a source file by source file basis
+
+#ifdef DEBUG_OUTPUT_ALL
+#include <stdio.h>
+#define dbg_printf _dbg_printf
+#else
 #define dbg_printf _null_call
+#endif
+
 #define fnprintf(fmt, ...)  dbg_printf( "%s: " fmt, __FUNCTION__, __VA_ARGS__)
+
+
 
 // turn off the warnings before we #include anything
 // 4503: warning: decorated name length exceeded
