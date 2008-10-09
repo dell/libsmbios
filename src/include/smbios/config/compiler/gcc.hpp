@@ -57,8 +57,14 @@
 #define _dbg_cout(line) _dbg_iostream_out(cout, line)
 #define _dbg_cerr(line) _dbg_iostream_out(cerr, line)
 #define _null_call( args...) do {} while(0)
+#ifdef DEBUG_OUTPUT_ALL
+#include <iostream>
+#define DCOUT _dbg_cout
+#define DCERR _dbg_cerr
+#else
 #define DCOUT _null_call
 #define DCERR _null_call
+#endif
 
 //
 // Bug specific to gcc 3.1 and 3.2:

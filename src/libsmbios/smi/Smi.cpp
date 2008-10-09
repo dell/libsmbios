@@ -16,6 +16,10 @@
  * See the GNU General Public License for more details.
  */
 
+#if defined(DEBUG_SYSINFO)
+#define DEBUG_OUTPUT_ALL
+#endif
+
 // compat header should always be first header if including system headers
 #define LIBSMBIOS_SOURCE
 #include "smbios/compat.h"
@@ -29,14 +33,6 @@
 #include "TokenLowLevel.h"
 
 using namespace std;
-
-#if defined(DEBUG_SMI)
-#   undef DCOUT
-#   undef DCERR
-#   include <iostream>
-#   define DCOUT  _dbg_iostream_out(cout, line)
-#   define DCERR  _dbg_iostream_out(cerr, line)
-#endif
 
 /* work around broken VC6 compiler */
 #define SIZEOF_KERNELBUF  (sizeof(kernel_buf) - sizeof(kernel_buf.command_buffer_start))

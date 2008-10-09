@@ -16,6 +16,10 @@
  * See the GNU General Public License for more details.
  */
 
+#if defined(DEBUG_SYSINFO)
+#define DEBUG_OUTPUT_ALL
+#endif
+
 // compat header should always be first header if including system headers
 #define LIBSMBIOS_SOURCE
 #include "smbios/compat.h"
@@ -31,14 +35,6 @@
 
 using namespace smbiosLowlevel;
 using namespace std;
-
-#if defined(DEBUG_SMBIOS_STRATEGY)
-#   undef DCOUT
-#   undef DCERR
-#   include <iostream>
-#   define DCOUT  _dbg_iostream_out(cout, line)
-#   define DCERR  _dbg_iostream_out(cerr, line)
-#endif
 
 #if 1
 #define EFIVARS_FILE_le266 "/proc/efi/systab"
