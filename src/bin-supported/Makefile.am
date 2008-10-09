@@ -12,8 +12,11 @@ sbin_PROGRAMS += \
     out/dellBiosUpdate    \
     out/dellLcdBrightness     \
     out/dumpSmbios    \
-    out/dellWirelessCtl \
-    out/dellMediaDirectCtl
+    out/dellWirelessCtl
+
+if BUILD_MEDIA_DIRECT
+sbin_PROGRAMS += out/dellMediaDirectCtl
+endif
 
 EXTRA_PROGRAMS += \
     out/assetTagS \
@@ -25,8 +28,11 @@ EXTRA_PROGRAMS += \
     out/dellBiosUpdateS    \
     out/dellLcdBrightnessS     \
     out/dumpSmbiosS    \
-    out/dellWirelessCtlS \
-    out/dellMediaDirectCtlS
+    out/dellWirelessCtlS
+
+if BUILD_MEDIA_DIRECT
+EXTRA_PROGRAMS += out/dellMediaDirectCtlS
+endif
 
 getopts_h=src/bin-supported/getopts.h
 getopts_c=src/bin-supported/getopts.c
