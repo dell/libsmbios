@@ -16,19 +16,14 @@
  * See the GNU General Public License for more details.
  */
 
+#if defined(DEBUG_XMLUTILS)
+#define DEBUG_OUTPUT_ALL
+#endif
+
 #define LIBSMBIOS_SOURCE
 #include "XmlUtils.h"
 
 using namespace std;
-
-#if defined(DEBUG_XMLUTILS)
-#include <iostream>
-#   define DCOUT(line) do { cout << line; } while(0)
-#   define DCERR(line) do { cerr << line; } while(0)
-#else
-#   define DCOUT(line) do {} while(0)
-#   define DCERR(line) do {} while(0)
-#endif
 
 namespace xmlutils
 {
