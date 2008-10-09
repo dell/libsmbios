@@ -73,7 +73,7 @@ struct smbios_table_entry_point
 #pragma pack(pop)
 #endif
 
-
+// if this struct changes, update my_smbios_table struct in savesmbios.c
 struct smbios_table
 {
     int initialized;

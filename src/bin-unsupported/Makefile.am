@@ -11,7 +11,8 @@ sbin_PROGRAMS += \
     out/getPasswordFormat  \
     out/ascii2enUS_scancode  \
     out/probes \
-    out/dellLEDCtl
+    out/dellLEDCtl  \
+    out/savesmbios
 
 EXTRA_PROGRAMS += \
     out/activateCmosTokenS  \
@@ -42,6 +43,7 @@ out_getPasswordFormat_SOURCES = $(getopts_c) src/bin-unsupported/getPasswordForm
 out_ascii2enUS_scancode_SOURCES = $(getopts_c) src/bin-unsupported/ascii2enUS_scancode.cpp
 out_probes_SOURCES = $(getopts_c) src/bin-unsupported/probes.cpp
 out_dellLEDCtl_SOURCES = $(getopts_c) src/bin-unsupported/dellLEDCtl.cpp
+out_savesmbios_SOURCES = $(getopts_c) src/bin-unsupported/savesmbios.cpp
 
 out_activateCmosToken_LDFLAGS=  -lsmbios $(AM_LDFLAGS)
 out_createUnitTestFiles_LDFLAGS= -lsmbios $(AM_LDFLAGS)
@@ -55,6 +57,7 @@ out_getPasswordFormat_LDFLAGS= -lsmbios $(AM_LDFLAGS)
 out_ascii2enUS_scancode_LDFLAGS= -lsmbios $(AM_LDFLAGS)
 out_probes_LDFLAGS= -lsmbios $(AM_LDFLAGS)
 out_dellLEDCtl_LDFLAGS= -lsmbios $(AM_LDFLAGS)
+out_savesmbios_LDFLAGS= -lsmbios_c $(AM_LDFLAGS)
 
 
 #static 
