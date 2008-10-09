@@ -90,6 +90,11 @@ if test x$wantgraphviz != xyes ; then
     AM_CONDITIONAL(HAS_DOT, false)
 fi
 
+# the manual assembly in the media direct sources fails to build on ia64 as it
+# relies on more registers than available on ia64; there's no ia64 system with
+# media direct, so it's disabled on ia64
+AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
+
 # update 'real' variables from the temp variable names.
 # do this at the end of the file so that they A) are not overwitten by other
 # autoconf stuff, and B) so that user can override on cmdline
