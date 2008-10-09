@@ -6,24 +6,23 @@
 %define release_name libsmbios
 %define release_version %{major}.%{minor}.%{sub}%{extralevel}
 
-
-%define cppunit_BR %{nil}
+%define cppunit_BR cppunit-devel
 %define doxygen_BR %{nil}
+%define valgrind_BR %{nil}
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
 # Fedora: fedora dist fc8 fc9
 %if 0%{?fedora_version} || 0%{?fedora}
     %define doxygen_BR doxygen
-    # no cppunit in suse build service for fedora, so disable for now
 %endif
 
+# no doxygen in most suse versions base
 %if 0%{?suse_version}
-    %define cppunit_BR cppunit-devel
-    # no doxygen in most suse versions base
+    %define valgrind_BR valgrind
 %endif
 
 %if 0%{?sles_version}
-    %define cppunit_BR cppunit-devel
+    %define valgrind_BR valgrind
 %endif
 
 %if 0%{?rhel_version}
@@ -45,7 +44,7 @@ Summary: Libsmbios shared libraries
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = %{version}-%{release}
-BuildRequires: libxml2-devel
+BuildRequires: libxml2-devel, %{valgrind_BR}
 BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
 
 # libsmbios only ever makes sense on intel compatible arches
@@ -102,7 +101,15 @@ export RELEASE_EXTRALEVEL=%{extralevel}
 %configure
 mkdir -p out/full/html
 make -e %{?_smp_mflags}
-[ ! -d /usr/include/cppunit ] || make -e check
+
+%check
+if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
+    make -e valgrind
+elif [ -d /usr/include/cppunit ]; then
+    make -e check
+else
+    echo "Unit tests skipped due to missing cppunit."
+fi
 
 %install
 rm -rf %{buildroot}
