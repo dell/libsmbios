@@ -22,6 +22,7 @@
 // system
 
 #include "testC_smbios.h"
+#include "smbios_c/obj/smbios.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
@@ -252,6 +253,23 @@ testCsmbios::testServiceTag()
     string expectedTag = getTestInputString("serviceTag");
 
     CPPUNIT_ASSERT_EQUAL ( expectedTag, serviceTagStr );
+
+    STD_TEST_END("");
+}
+
+void testCsmbios::testForLeaks()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+
+    for (int i=0;i<10;++i)
+    {
+        struct smbios_table *s = smbios_table_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_NEW);
+        struct smbios_table *t = smbios_table_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_NEW);
+        smbios_table_free(s);
+        s = 0;
+        smbios_table_free(t);
+        t = 0;
+    }
 
     STD_TEST_END("");
 }

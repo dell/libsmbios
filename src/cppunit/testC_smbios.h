@@ -75,6 +75,7 @@ public:
     void testVariousAccessors();
     void testIdByte();
     void testServiceTag();
+    void testForLeaks();
 
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testCsmbios);
@@ -83,6 +84,7 @@ public:
     CPPUNIT_TEST (testVariousAccessors);
     CPPUNIT_TEST (testIdByte);
     CPPUNIT_TEST (testServiceTag);
+    CPPUNIT_TEST (testForLeaks);
 
     CPPUNIT_TEST_SUITE_END ();
 };
