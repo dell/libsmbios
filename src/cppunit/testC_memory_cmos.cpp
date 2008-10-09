@@ -92,13 +92,21 @@ void testCInterface::testForLeaks()
     for (int i=0;i<1000;++i)
     {
         struct memory_access_obj *m = memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_NEW, "/dev/null");
+        struct memory_access_obj *n = memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_NEW, "/dev/null");
         memory_obj_free(m);
+        m = 0;
+        memory_obj_free(n);
+        n = 0;
     }
 
     for (int i=0;i<1000;++i)
     {
-        struct cmos_access_obj *m = cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_NEW, "/dev/null");
-        cmos_obj_free(m);
+        struct cmos_access_obj *c = cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_NEW, "/dev/null");
+        struct cmos_access_obj *d = cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_NEW, "/dev/null");
+        cmos_obj_free(c);
+        c = 0;
+        cmos_obj_free(d);
+        d = 0;
     }
 
     STD_TEST_END("");
