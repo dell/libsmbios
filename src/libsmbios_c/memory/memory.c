@@ -34,28 +34,36 @@ void  memory_suggest_leave_open()
 {
     struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
     memory_obj_suggest_leave_open(m);
+    memory_obj_free(m);
 }
 
 void  memory_suggest_close()
 {
     struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
     memory_obj_suggest_close(m);
+    memory_obj_free(m);
 }
 
 int  memory_read(void *buffer, u64 offset, size_t length)
 {
     struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
-    return memory_obj_read(m, buffer, offset, length);
+    int retval = memory_obj_read(m, buffer, offset, length);
+    memory_obj_free(m);
+    return retval;
 }
 
 int  memory_write(void *buffer, u64 offset, size_t length)
 {
     struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
-    return memory_obj_write(m, buffer, offset, length);
+    int retval = memory_obj_write(m, buffer, offset, length);
+    memory_obj_free(m);
+    return retval;
 }
 
 s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
 {
     struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
-    return memory_obj_search(m, pat, patlen, start, end, stride);
+    int retval = memory_obj_search(m, pat, patlen, start, end, stride);
+    memory_obj_free(m);
+    return retval;
 }
