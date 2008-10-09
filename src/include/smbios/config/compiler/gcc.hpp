@@ -50,6 +50,15 @@
 // GCC has __PRETTY_FUNCTION__ macro
 #define LIBSMBIOS_HAS_PRETTY_FUNCTION
 #define LIBSMBIOS_HAS_FUNCTION
+#define LIBSMBIOS_PACKED_ATTR      __attribute__ ((packed))
+#define UNREFERENCED_PARAMETER(P)  (void)(P)
+
+#define _dbg_iostream_out(stream, line) do { stream << line; } while(0)
+#define _dbg_cout(line) _dbg_iostream_out(cout, line)
+#define _dbg_cerr(line) _dbg_iostream_out(cerr, line)
+#define _null_call( args...) do {} while(0)
+#define DCOUT _null_call
+#define DCERR _null_call
 
 //
 // Bug specific to gcc 3.1 and 3.2:
@@ -57,9 +66,6 @@
 #if (__GNUC__ == 3) && ((__GNUC_MINOR__ == 1) || (__GNUC_MINOR__ == 2))
 #  define LIBSMBIOS_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
 #endif
-
-#define LIBSMBIOS_PACKED_ATTR      __attribute__ ((packed))
-#define UNREFERENCED_PARAMETER(P)  (void)(P)
 
 //
 // Threading support: Turn this on unconditionally here (except for

@@ -32,11 +32,11 @@ using namespace smbiosLowlevel;
 using namespace std;
 
 #if defined(DEBUG_SMBIOS)
-#   define DCOUT(line) do { cout << line; } while(0)
-#   define DCERR(line) do { cerr << line; } while(0)
-#else
-#   define DCOUT(line) do {} while(0)
-#   define DCERR(line) do {} while(0)
+#   undef DCOUT
+#   undef DCERR
+#   include <iostream>
+#   define DCOUT  _dbg_iostream_out(cout, line)
+#   define DCERR  _dbg_iostream_out(cerr, line)
 #endif
 
 namespace smbios
