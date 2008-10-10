@@ -1,64 +1,61 @@
 # vim:tw=0:et:ts=4:sw=4
-sbin_PROGRAMS += \
-    out/activateCmosToken  \
-    out/createUnitTestFiles  \
-    out/disable_console_redir  \
-    out/dumpCmos \
-    out/isCmosTokenActive  \
-    out/smitest  \
-    out/stateByteCtl  \
-    out/upBootCtl  \
-    out/getPasswordFormat  \
-    out/ascii2enUS_scancode  \
-    out/probes \
-    out/dellLEDCtl  \
-    out/savesmbios
-
-
 EXTRA_DIST += src/bin-unsupported/getopts.h src/bin-unsupported/getopts_LICENSE.txt
 CLEANFILES += src/bin-unsupported/.libs
 
+sbin_PROGRAMS += out/activateCmosToken
 out_activateCmosToken_SOURCES = $(getopts) src/bin-unsupported/activateCmosToken.cpp
 out_activateCmosToken_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/createUnitTestFiles
 out_createUnitTestFiles_SOURCES = $(getopts) src/bin-unsupported/createUnitTestFiles.cpp
 out_createUnitTestFiles_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/disable_console_redir
 out_disable_console_redir_SOURCES = $(getopts) src/bin-unsupported/disable_console_redir.cpp
 out_disable_console_redir_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/dumpCmos
 out_dumpCmos_SOURCES = $(getopts) src/bin-unsupported/dumpCmos.cpp
 out_dumpCmos_LDADD = out/libsmbios.la
 
+sbin_PROGRAMS += out/isCmosTokenActive
 out_isCmosTokenActive_SOURCES = $(getopts) src/bin-unsupported/isCmosTokenActive.cpp
 out_isCmosTokenActive_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/smitest
 out_smitest_SOURCES = $(getopts) src/bin-unsupported/smitest.cpp
 out_smitest_LDADD = out/libsmbios.la
 
+sbin_PROGRAMS += out/stateByteCtl
 out_stateByteCtl_SOURCES = $(getopts) src/bin-unsupported/stateByteCtl.cpp
 out_stateByteCtl_LDADD = out/libsmbios.la
 
+sbin_PROGRAMS += out/upBootCtl
 out_upBootCtl_SOURCES = $(getopts) src/bin-unsupported/upBootCtl.cpp
 out_upBootCtl_LDADD = out/libsmbios.la
 
+sbin_PROGRAMS += out/getPasswordFormat
 out_getPasswordFormat_SOURCES = $(getopts) src/bin-unsupported/getPasswordFormat.cpp
 out_getPasswordFormat_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/ascii2enUS_scancode
 out_ascii2enUS_scancode_SOURCES = $(getopts) src/bin-unsupported/ascii2enUS_scancode.cpp
 out_ascii2enUS_scancode_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/probes
 out_probes_SOURCES = $(getopts) src/bin-unsupported/probes.cpp
 out_probes_LDADD = out/libsmbios.la
 
+sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = $(getopts) src/bin-unsupported/dellLEDCtl.cpp
 out_dellLEDCtl_LDADD = out/libsmbios.la
 
+noinst_PROGRAMS += out/savesmbios
 out_savesmbios_SOURCES = $(getopts) src/bin-unsupported/savesmbios.c
 out_savesmbios_LDADD = out/libsmbios_c.la
 
 
-#static 
+#static
 EXTRA_PROGRAMS += out/activateCmosTokenS
 out_activateCmosTokenS_SOURCES = $(getopts) src/bin-unsupported/activateCmosToken.cpp
 out_activateCmosTokenS_LDFLAGS = -all-static $(AM_LDFLAGS)
