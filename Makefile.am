@@ -54,6 +54,9 @@ obs-upload: dist
 valgrind: $(check_PROGRAMS)
 	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check-TESTS
 
+gprof: $(check_PROGRAMS)
+	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="gprof" make check-TESTS CFLAGS="-pg" CXXFLAGS="-pg"
+
 ########## DOCS ################
 if HAS_DOXYGEN
 all: out/full/html/index.html out/interface/html/index.html
