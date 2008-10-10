@@ -52,10 +52,25 @@ obs-upload: dist
 	$(top_srcdir)/pkg/obs-upload.sh $(PROJECT) $(PACKAGE)
 
 valgrind: $(check_PROGRAMS)
-	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check-TESTS
+	VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check-TESTS
 
-gprof: $(check_PROGRAMS)
-	LD_LIBRARY_PATH=out/.libs/ TST=out/.libs/ VALGRIND="gprof" make check-TESTS CFLAGS="-pg" CXXFLAGS="-pg"
+CLEANFILES+=gmon.out *.gcov coverage
+.PHONY: coverage
+coverage:
+	make $(AM_MAKEFLAGS) $(check_PROGRAMS) CFLAGS="-pg -fprofile-arcs -ftest-coverage" CXXFLAGS="-pg -fprofile-arcs -ftest-coverage"
+	make check-TESTS
+	find $(top_builddir)/src/libsmbios* -name out_libsmbios*.gcda | while read fn; do	\
+		bas=$$(basename $$fn .gcda)	;\
+		bas=$${fn##*-}	;\
+		d=$$(dirname $$fn)	;\
+		d=$${d##top_builddir/}	;\
+		gcov -p -o $$fn  $(top_srcdir)/$$d/$$bas.* ;\
+	done
+	rm \#usr*gcov
+	mkdir $(top_builddir)/coverage
+	mv ^\#src*gcov $(top_builddir)/coverage
+	$(top_srcdir)/pkg/scripts/tr-report.py $(top_builddir)/coverage
+
 
 ########## DOCS ################
 if HAS_DOXYGEN
