@@ -4,11 +4,11 @@
 
 ####################################
 # change version here.
-AC_INIT([libsmbios],[2.1.0])
+AC_INIT([libsmbios],[2.2.0])
 
 temp_RELEASE_NAME=libsmbios
 temp_RELEASE_MAJOR=2
-temp_RELEASE_MINOR=1
+temp_RELEASE_MINOR=2
 temp_RELEASE_SUBLEVEL=0
 temp_RELEASE_EXTRALEVEL=
 
@@ -19,7 +19,7 @@ temp_RELEASE_EXTRALEVEL=
 # If any interfaces have been removed since the last public release, then set age to 0.
 LIBTOOL_CURRENT=2
 LIBTOOL_REVISION=0
-LIBTOOL_AGE=0
+LIBTOOL_AGE=2
 ####################################
 
 AC_PREREQ(2.59)
