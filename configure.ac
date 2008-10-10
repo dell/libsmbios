@@ -121,7 +121,7 @@ AC_SUBST([ LIBXML2_LIBS LIBXML2_CFLAGS ])
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([out/libsmbios.dox:pkg/libsmbios.dox.in])
+AC_CONFIG_FILES([out/libsmbios_c++.dox:pkg/libsmbios_c++.dox.in])
 AC_CONFIG_FILES([out/libsmbios_c.dox:pkg/libsmbios_c.dox.in])
 AC_CONFIG_FILES([pkg/libsmbios.spec])
 AC_CONFIG_FILES([pkg/mk-rel-rpm.sh])

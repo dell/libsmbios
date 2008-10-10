@@ -76,13 +76,13 @@ coverage:
 if HAS_DOXYGEN
 all: doxygen
 doxygen: out/libsmbios_c/html/index.html
-doxygen: out/libsmbios/html/index.html
+doxygen: out/libsmbios_c++/html/index.html
 endif
 
 out/libsmbios_c/html/index.html: out/libsmbios_c.dox
 	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
 
-out/libsmbios/html/index.html: out/libsmbios.dox
+out/libsmbios_c++/html/index.html: out/libsmbios_c++.dox
 	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
 
 ########## END DOCS ################

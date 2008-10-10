@@ -99,7 +99,8 @@ export RELEASE_MINOR=%{minor}
 export RELEASE_SUBLEVEL=%{sub}
 export RELEASE_EXTRALEVEL=%{extralevel}
 %configure
-mkdir -p out/full/html
+mkdir -p out/libsmbios_c
+mkdir -p out/libsmbios_c++
 make -e %{?_smp_mflags}
 
 %check
@@ -119,7 +120,6 @@ mkdir -p %{buildroot}/usr/include
 cp -a src/include/*  %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
-find out/full -exec touch -r configure.ac {} \;
 
 # backwards compatible:
 ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
@@ -144,7 +144,8 @@ rm -rf %{buildroot}
 %{_libdir}/libsmbios.so
 %{_libdir}/libsmbios_c.a
 %{_libdir}/libsmbios_c.so
-%doc out/full/html
+%doc out/libsmbios_c++
+%doc out/libsmbios_c
 
 %files -n smbios-utils
 %defattr(-,root,root,-)
