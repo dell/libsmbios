@@ -3,14 +3,15 @@
 # Process this file with autoconf to produce a configure script.
 
 ####################################
+####################################
 # change version here.
 AC_INIT([libsmbios],[2.2.0])
 
-temp_RELEASE_NAME=libsmbios
-temp_RELEASE_MAJOR=2
-temp_RELEASE_MINOR=2
-temp_RELEASE_SUBLEVEL=0
-temp_RELEASE_EXTRALEVEL=
+RELEASE_NAME=libsmbios
+RELEASE_MAJOR=2
+RELEASE_MINOR=2
+RELEASE_SUBLEVEL=0
+RELEASE_EXTRALEVEL=
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
 # If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
@@ -20,6 +21,7 @@ temp_RELEASE_EXTRALEVEL=
 LIBTOOL_CURRENT=3
 LIBTOOL_REVISION=0
 LIBTOOL_AGE=1
+####################################
 ####################################
 
 AC_PREREQ(2.59)
@@ -94,40 +96,15 @@ fi
 # media direct, so it's disabled on ia64
 AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
 
-# update 'real' variables from the temp variable names.
-# do this at the end of the file so that they A) are not overwitten by other
-# autoconf stuff, and B) so that user can override on cmdline
-for i in RELEASE_NAME RELEASE_MAJOR RELEASE_MINOR RELEASE_SUBLEVEL RELEASE_EXTRALEVEL
-do
-    varname=temp_$i
-    if test -z "${!i}"; then
-        eval $i=${!varname}; export $i
-    fi
-done
-
-if test -z "$RELEASE_RPM_EXTRALEVEL"; then
-    if test -z "$RELEASE_EXTRALEVEL"; then
-        RELEASE_RPM_EXTRALEVEL=%{nil}
-    else
-        RELEASE_RPM_EXTRALEVEL=$RELEASE_EXTRALEVEL
-    fi
+if test -z "$RELEASE_EXTRALEVEL"; then
+    RELEASE_RPM_EXTRALEVEL=%{nil}
+else
+    RELEASE_RPM_EXTRALEVEL=$RELEASE_EXTRALEVEL
 fi
 
-PACKAGE_VERSION=[`echo ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}`]
-PACKAGE_STRING=[`echo ${RELEASE_NAME} ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_SUBLEVEL}${RELEASE_EXTRALEVEL}`]
-VERSION=$PACKAGE_VERSION
-
-cat confdefs.h |
-    grep -v 'define VERSION ' |
-    grep -v 'define PACKAGE_VERSION ' |
-    grep -v 'define PACKAGE_STRING '  > confdefs.new
-mv confdefs.new confdefs.h
-cat >>confdefs.h <<_ACEOF
-#define VERSION "$VERSION"
-#define PACKAGE_VERSION "$PACKAGE_VERSION"
-#define PACKAGE_STRING "$PACKAGE_STRING"
-_ACEOF
-
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_VERSION,"$VERSION","Full package version string")
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 AC_SUBST([RELEASE_NAME])
 AC_SUBST([RELEASE_MAJOR])
 AC_SUBST([RELEASE_MINOR])
@@ -138,23 +115,15 @@ AC_SUBST([LIBTOOL_CURRENT])
 AC_SUBST([LIBTOOL_REVISION])
 AC_SUBST([LIBTOOL_AGE])
 
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_VERSION,"$VERSION","Full package version string")
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
-
 LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)
 AC_SUBST([ LIBXML2_LIBS LIBXML2_CFLAGS ])
 
-# this is used by the autobuilder hook to determine the version we built
-echo "PACKAGE_NAME='$PACKAGE_NAME'" > version
-echo "PACKAGE_VERSION='$PACKAGE_VERSION'" >> version
-echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
-
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([out/full-documentation.dox:pkg/full-documentation.dox.in])
-AC_CONFIG_FILES([out/interface-only.dox:pkg/interface-only.dox.in])
+AC_CONFIG_FILES([out/libsmbios.dox:pkg/libsmbios.dox.in])
+AC_CONFIG_FILES([out/libsmbios_c.dox:pkg/libsmbios_c.dox.in])
 AC_CONFIG_FILES([pkg/libsmbios.spec])
+AC_CONFIG_FILES([pkg/mk-rel-rpm.sh])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_OUTPUT
