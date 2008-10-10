@@ -30,11 +30,10 @@ AM_MAINTAINER_MODE
 AM_PATH_CPPUNIT(1.9.6)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.14])
-
 AC_GNU_SOURCE
-
-#AC_CONFIG_SRCDIR([.])
-#AC_CONFIG_HEADER([config.h])
+AC_CONFIG_SRCDIR([src/])
+AC_CONFIG_HEADER([out/include/smbios/config.h:pkg/config.h.in])
+AC_CONFIG_HEADER([out/include/smbios_c/config.h:pkg/config.h.in])
 
 dnl Help line for doxygen
 AC_ARG_ENABLE(doxygen,

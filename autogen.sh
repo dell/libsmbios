@@ -15,5 +15,6 @@ mv Makefile.am~  Makefile.am
 
 aclocal -I m4
 libtoolize -c --force --automake
+autoheader --force
 automake --force --foreign --add-missing -c
 autoconf --force
