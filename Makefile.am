@@ -74,15 +74,16 @@ coverage:
 
 ########## DOCS ################
 if HAS_DOXYGEN
-all: out/full/html/index.html out/interface/html/index.html
+all: doxygen
+doxygen: out/libsmbios_c/html/index.html
+doxygen: out/libsmbios/html/index.html
 endif
 
-doxygen: out/full/html/index.html out/interface/html/index.html
-out/full/html/index.html: $(shell find $(top_srcdir)/doc -name \*.txt)
-	cd out/; doxygen full-documentation.dox > doxygen-full.log
+out/libsmbios_c/html/index.html: out/libsmbios_c.dox
+	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
 
-out/interface/html/index.html: out/interface-only.dox $(shell find $(top_srcdir)/doc -name \*.txt)
-	cd out/; doxygen interface-only.dox > doxygen-int.log
+out/libsmbios/html/index.html: out/libsmbios.dox
+	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
 
 ########## END DOCS ################
 
