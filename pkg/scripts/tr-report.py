@@ -50,9 +50,10 @@ def main():
     totalLines = 0
     totalLoc = 0
     totalExc = 0
-    path = sys.argv[1] + "/libraries*"
+    path = os.path.join(sys.argv[1],  "*.gcov")
 
     fileList = glob.glob( path )
+    fileList.sort()
 
     print " PCT\tLINES\tCODE\tEXEC\tFILENAME"
     for file in fileList:
