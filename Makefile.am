@@ -39,6 +39,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES += $(EXTRA_PROGRAMS)
 
+# bug in po/Makefile or something...
+DISTCLEANFILES += ./po/stamp-po
+
 clean-generic:
 	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
 
