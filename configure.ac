@@ -17,9 +17,9 @@ temp_RELEASE_EXTRALEVEL=
 # If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
 # If any interfaces have been added since the last public release, then increment age.
 # If any interfaces have been removed since the last public release, then set age to 0.
-LIBTOOL_CURRENT=2
+LIBTOOL_CURRENT=3
 LIBTOOL_REVISION=0
-LIBTOOL_AGE=2
+LIBTOOL_AGE=1
 ####################################
 
 AC_PREREQ(2.59)
