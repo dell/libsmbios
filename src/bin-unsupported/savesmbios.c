@@ -90,6 +90,8 @@ void dump_smbios_table(struct smbios_table *table, FILE *fd )
     memcpy(&tep, & (my->tep), sizeof(my->tep));
     tep.dmi.table_address = 0xF0000UL + sizeof(tep);
     fwrite(&tep, sizeof(tep), 1, fd);
-    fwrite(& (my->table), sizeof(tep.dmi.table_length), 1, fd);
+    fwrite(my->table, tep.dmi.table_length, 1, fd);
+
+    printf("table length: %d", tep.dmi.table_length);
 }
 
