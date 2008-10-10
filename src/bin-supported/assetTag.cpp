@@ -28,7 +28,6 @@
 #include "smbios/IMemory.h"  // only needed if you want to use fake input (memdump.dat)
 #include "smbios/ICmosRW.h"  // only needed if you want to use fake input (cmos.dat)
 #include "smbios/SystemInfo.h" // this is the main header to include to use the C interface
-#include "smbios/version.h"
 #include "getopts.h"
 
 // always include last if included.
@@ -95,7 +94,7 @@ main (int argc, char **argv)
                 rawPassword = true;
                 break;
             case 255:
-                cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
+                cout << "Libsmbios version:    " << SMBIOSGetLibraryVersionString() << endl;
                 exit(0);
                 break;
             default:

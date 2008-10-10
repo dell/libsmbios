@@ -20,7 +20,6 @@
 #include <stdlib.h>
 
 #include "smbios/SystemInfo.h"
-#include "smbios/version.h"
 #include "getopts.h"
 
 struct options opts[] =
@@ -43,7 +42,7 @@ main (int argc, char **argv)
         switch(c)
         {
         case 255:
-            printf( "Libsmbios version:    "  LIBSMBIOS_RELEASE_VERSION "\n");
+            printf( "Libsmbios version:    "  SMBIOSGetLibraryVersionString() "\n");
             exit(0);
             break;
         default:
@@ -52,7 +51,7 @@ main (int argc, char **argv)
         free(args);
     }
 
-    printf("Libsmbios:    " LIBSMBIOS_RELEASE_VERSION "\n" );
+    printf("Libsmbios:    " SMBIOSGetLibraryVersionString() "\n" );
 
     //Error handline needs to be implemented for each of these functions
     //we don't want to catch exceptions because we want to test the C calling interface

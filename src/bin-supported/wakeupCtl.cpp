@@ -25,7 +25,7 @@
 #include "smbios/IToken.h"
 #include "smbios/ICmosRW.h"
 #include "smbios/IObserver.h"
-#include "smbios/version.h"
+#include "smbios/SystemInfo.h"
 #include "getopts.h"
 
 using namespace std;
@@ -168,7 +168,7 @@ main (int argc, char **argv)
                 rawPassword = true;
                 break;
             case 255:
-                cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
+                cout << "Libsmbios version:    " << SMBIOSGetLibraryVersionString() << endl;
                 exit(0);
                 break;
             default:

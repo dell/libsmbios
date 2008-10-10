@@ -28,7 +28,7 @@
 
 #include "smbios/ISmbios.h"
 #include "smbios/IMemory.h"  // only needed if you want to use fake input (memdump.dat)
-#include "smbios/version.h"
+#include "smbios/SystemInfo.h"
 #include "getopts.h"
 
 // always include last if included.
@@ -145,7 +145,7 @@ main (int argc, char **argv)
                 memoryFactory->setMode( memory::MemoryFactory::UnitTestMode );
                 break;
             case 255: // -v, --version
-                cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
+                cout << "Libsmbios version:    " << SMBIOSGetLibraryVersionString() << endl;
                 exit(0);
                 break;
             default:

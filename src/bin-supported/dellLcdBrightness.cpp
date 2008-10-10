@@ -28,7 +28,6 @@
 #include "smbios/ISmi.h"
 #include "smbios/IToken.h"
 #include "smbios/SystemInfo.h"
-#include "smbios/version.h"
 #include "getopts.h"
 
 // always include last if included.
@@ -110,7 +109,7 @@ main (int argc, char **argv)
                 break;
 
             case 255:
-                cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
+                cout << "Libsmbios version:    " << SMBIOSGetLibraryVersionString() << endl;
                 exit(0);
                 break;
             default:

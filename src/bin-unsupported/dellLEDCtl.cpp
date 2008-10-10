@@ -35,7 +35,6 @@
 #include "smbios/ISmi.h"
 #include "smbios/IToken.h"
 #include "smbios/SystemInfo.h"
-#include "smbios/version.h"
 #include "getopts.h"
 
 // always include last if included.
@@ -436,7 +435,7 @@ int main (int argc, char **argv)
             switch(c)
             {
             case 1:
-                cout << "Libsmbios version      : " << LIBSMBIOS_RELEASE_VERSION << endl;
+                cout << "Libsmbios version      : " << SMBIOSGetLibraryVersionString() << endl;
                 cout << "dellLEDCtl version: " << DELL_LED_CTL_VERSION << endl;
                 printInfo = true;
                 break;
@@ -491,7 +490,7 @@ int main (int argc, char **argv)
                 break;
 
             case 255:
-                cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
+                cout << "Libsmbios version:    " << SMBIOSGetLibraryVersionString() << endl;
                 cout << "dellLEDCtl version: " << DELL_LED_CTL_VERSION << endl;
                 exit(0);
                 break;

@@ -1,6 +1,5 @@
-/* -*- Mode: C; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
- * vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:cindent:textwidth=0:
- *
+// vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=c:
+/*
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
  * Licensed under the Open Software License version 2.1
@@ -16,26 +15,12 @@
  * See the GNU General Public License for more details.
  */
 
-#define LIBSMBIOS_C_SOURCE
-#include "smbios_c/compat.h"
 
-#include <string.h>
-#include <stdlib.h>
+#ifndef LIBSMBIOS_VERSION_H
+#define LIBSMBIOS_VERSION_H
 
-#include "smbios_c/smbios.h"
-#include "smbios_c/system_info.h"
-#include "dell_magic.h"
-#include "_impl.h"
+#include "smbios/SystemInfo.h"
 
-char *sysinfo_get_asset_tag()
-{
-    return 0;
-}
+#define LIBSMBIOS_RELEASE_VERSION SMBIOSGetLibraryVersionString()
 
-
-
-
-
-
-
-
+#endif /* LIBSMBIOS_VERSION_H */

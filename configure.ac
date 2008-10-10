@@ -139,6 +139,10 @@ AC_SUBST([LIBTOOL_CURRENT])
 AC_SUBST([LIBTOOL_REVISION])
 AC_SUBST([LIBTOOL_AGE])
 
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_VERSION,"$VERSION","Full package version string")
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
+
 LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)
 AC_SUBST([ LIBXML2_LIBS LIBXML2_CFLAGS ])
@@ -150,8 +154,6 @@ echo "PACKAGE_STRING='$PACKAGE_STRING'" >> version
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([out/include/smbios/version.h:pkg/version.h.in])
-AC_CONFIG_FILES([out/include/smbios_c/version.h:pkg/version.h.in])
 AC_CONFIG_FILES([out/full-documentation.dox:pkg/full-documentation.dox.in])
 AC_CONFIG_FILES([out/interface-only.dox:pkg/interface-only.dox.in])
 AC_CONFIG_FILES([pkg/libsmbios.spec])

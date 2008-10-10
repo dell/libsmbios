@@ -31,7 +31,6 @@
 #include "smbios/ISmi.h"
 #include "smbios/IObserver.h"
 
-#include "smbios/version.h"
 #include "outputctl.h"
 #include "main.h"
 

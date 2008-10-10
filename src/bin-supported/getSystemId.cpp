@@ -26,7 +26,6 @@
 
 #include "smbios/IMemory.h"
 #include "smbios/SystemInfo.h"
-#include "smbios/version.h"
 #include "getopts.h"
 
 using namespace std;
@@ -63,7 +62,7 @@ main (int argc, char **argv)
             memoryFactory->setMode( memory::MemoryFactory::UnitTestMode );
             break;
         case 255:
-            cout << "Libsmbios version:    " << LIBSMBIOS_RELEASE_VERSION << endl;
+            cout << "Libsmbios version:    " << SMBIOSGetLibraryVersionString() << endl;
             exit(0);
             break;
         default:
@@ -72,7 +71,7 @@ main (int argc, char **argv)
         free(args);
     }
 
-    printf("Libsmbios:    " LIBSMBIOS_RELEASE_VERSION "\n" );
+    printf("Libsmbios:    %s\n", SMBIOSGetLibraryVersionString());
 
     //Error handline needs to be implemented for each of these functions
     //we don't want to catch exceptions because we want to test the C calling interface

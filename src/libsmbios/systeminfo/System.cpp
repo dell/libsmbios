@@ -37,10 +37,12 @@
 
 #include "DellMagic.h"
 
-#include "smbios/version.h"
-
-// this always should be included last
+// this always should be included last (except config.h)
 #include "smbios/message.h"
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 using namespace smbios;
 using namespace cmos;

@@ -23,10 +23,13 @@
 #include <stdlib.h>
 
 #include "smbios_c/smbios.h"
-#include "smbios_c/version.h"
 #include "smbios_c/system_info.h"
 #include "dell_magic.h"
 #include "_impl.h"
+
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 const char *smbios_get_library_version_string()
 {
