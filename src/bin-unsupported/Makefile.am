@@ -54,7 +54,7 @@ out_probes_LDADD = out/libsmbios.la
 out_dellLEDCtl_SOURCES = $(getopts) src/bin-unsupported/dellLEDCtl.cpp
 out_dellLEDCtl_LDADD = out/libsmbios.la
 
-out_savesmbios_SOURCES = $(getopts) src/bin-unsupported/savesmbios.cpp
+out_savesmbios_SOURCES = $(getopts) src/bin-unsupported/savesmbios.c
 out_savesmbios_LDADD = out/libsmbios_c.la
 
 
