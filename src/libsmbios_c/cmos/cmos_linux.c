@@ -37,7 +37,8 @@ static int linux_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 index
         return -1;
 
     outb_p (offset, indexPort);
-    return (inb_p (dataPort));
+    *byte = (inb_p (dataPort));
+    return 0;
 }
 
 static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
