@@ -57,7 +57,7 @@ out_dumpSmbios_LDADD = out/libsmbios.la out/libgetopt.la
 sbin_PROGRAMS += out/dellBiosUpdate
 out_dellBiosUpdate_SOURCES = src/bin/dellBiosUpdate.cpp
 out_dellBiosUpdate_LDADD = out/libsmbios.la out/libgetopt.la
-out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios/common
+out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios_c++/common
 
 # C
 noinst_PROGRAMS += out/getSystemId_lite

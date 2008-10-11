@@ -27,7 +27,7 @@ AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -W
 AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall
 
 include Makefile-std
-include src/libsmbios/Makefile.am
+include src/libsmbios_c++/Makefile.am
 include src/libsmbios_c/Makefile.am
 include src/bin/Makefile.am
 include src/cppunit/Makefile.am

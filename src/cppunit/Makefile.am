@@ -18,10 +18,10 @@ out_libtestmain_la_LDFLAGS = -static
 noinst_LTLIBRARIES += out/libxmlutil.la
 out_libxmlutil_la_SOURCES = src/cppunit/XmlUtils.cpp src/cppunit/XmlUtils.h
 out_libxmlutil_la_LIBADD =  $(LIBXML2_LIBS)
-out_libxmlutil_la_CXXFLAGS = $(LIBXML2_CFLAGS) $(AM_CXXFLAGS) -I$(top_srcdir)/src/libsmbios/common
+out_libxmlutil_la_CXXFLAGS = $(LIBXML2_CFLAGS) $(AM_CXXFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
 out_libxmlutil_la_LDFLAGS = -static
 
-TEST_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios/common
+TEST_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
 
 check_PROGRAMS += out/testRbu
 out_testRbu_SOURCES = src/cppunit/testRbu.h src/cppunit/testRbu.cpp
