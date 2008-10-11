@@ -25,12 +25,34 @@
 
 EXTERN_C_BEGIN;
 
+/** Read byte from CMOS.
+ *  @param byte  pointer to buffer were byte will be stored
+ *  @param indexPort  the io port where we write the offset
+ *  @param dataPort  the io port where we will read the resulting value
+ *  @param offset  the offset into cmos (usually cmos is 256 byte banks)
+ *  @return  0 on success, < 0 on failure
+ */
 int    cmos_read_byte (u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
+
+/** Write byte to CMOS.
+ *  @param byte  byte to write
+ *  @param indexPort  the io port where we write the offset
+ *  @param dataPort  the io port where we will write the byte
+ *  @param offset  the offset into cmos (usually cmos is 256 byte banks)
+ *  @return  0 on success, < 0 on failure
+ */
 int    cmos_write_byte(u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
 
-// to run all the attached callbacks
-// most callbacks currently are for checksums. So, run with do_update = 0
-// to get a return code indicating if checksums are all valid
+/** Run all registered CMOS callbacks.
+ * Higher layers can register callbacks that are run when any byte in CMOS is
+ * changed. Presently, all these callbacks are used to update checksums in
+ * CMOS.  If do_update is false, return code indicates if checksums are
+ * currently correct.
+ * @param do_update  should callback update checksum if it is wrong
+ * @return The return value of all callbacks is 'or'-ed together. Checksum
+ * callbacks return 0 if checksum is good and do_update is false. (otherwise
+ * they just write the correct checksum)
+ */
 int cmos_run_callbacks(bool do_update);
 
 // not yet implemented
