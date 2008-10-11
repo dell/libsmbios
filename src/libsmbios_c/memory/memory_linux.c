@@ -203,7 +203,6 @@ static int linux_read_fn(const struct memory_access_obj *this, u8 *buffer, u64 o
 
 static int linux_write_fn(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length)
 {
-    fnprintf("THIS: %p\n", this);
     return copy_mmap(this, buffer, offset, length, WRITE_MMAP);
 }
 
