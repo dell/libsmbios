@@ -29,8 +29,7 @@ AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror 
 include Makefile-std
 include src/libsmbios/Makefile.am
 include src/libsmbios_c/Makefile.am
-include src/bin-supported/Makefile.am
-include src/bin-unsupported/Makefile.am
+include src/bin/Makefile.am
 include src/cppunit/Makefile.am
 
 CLEANFILES+=_buildtemp smbios-utils*.rpm out
