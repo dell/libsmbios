@@ -78,10 +78,10 @@ doxygen: out/libsmbios_c/html/index.html
 doxygen: out/libsmbios_c++/html/index.html
 endif
 
-out/libsmbios_c/html/index.html: out/libsmbios_c.dox $(wildcard src/include/smbios_c/*.h)
+out/libsmbios_c/html/index.html: out/libsmbios_c.dox $(wildcard $(top_srcdir)/src/include/smbios_c/*.h)
 	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
 
-out/libsmbios_c++/html/index.html: out/libsmbios_c++.dox $(wildcard src/include/smbios/*.h)
+out/libsmbios_c++/html/index.html: out/libsmbios_c++.dox $(wildcard $(top_srcdir)/src/include/smbios/*.h)
 	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
 
 ########## END DOCS ################
