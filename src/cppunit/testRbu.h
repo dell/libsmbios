@@ -45,7 +45,7 @@ protected:
     virtual std::string getTestDirectory()
     {
         //return DEFAULT_TEST_DIR;
-        return global_argv[2];
+        return global_argv[1];
     };
 
     std::string getTestInputString( std::string toFind, std::string section="systemInfo" );

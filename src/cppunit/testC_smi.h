@@ -47,7 +47,7 @@ protected:
     virtual std::string getTestDirectory()
     {
         //return DEFAULT_TEST_DIR;
-        return global_argv[3];
+        return global_argv[1];
     };
 
 public:

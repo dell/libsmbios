@@ -5,45 +5,56 @@ set -e
 
 DIR=$(cd $(dirname $0); pwd)
 
-#TMPDIR=$(mktemp -d  /tmp/unittest-$$-$RANDOM-XXXXXX)
-#trap "rm -rf $TMPDIR" EXIT QUIT HUP TERM INT
-
 TMPDIR=$PWD/out/test
 mkdir -p $TMPDIR
 
 [ -n "$TST" ] || TST=out
 
-echo -e "\n\nRunning CInterface tests."
-$VALGRIND $TST/testC_memory_cmos $TMPDIR
+reconstruct_memdump() {
+    source_dir=$1
+    target_dir=$2
 
-echo -e "\n\nRunning test for RBU"
-$VALGRIND $TST/testRbu  $TMPDIR  $DIR/test_data/rbu
+    # start with smbios, since it should be 0xE0000
+    if [ -e $source_dir/smbios.dat ]; then
+        echo "laying down smbios table."
+        dd if=$source_dir/smbios.dat of=$target_dir/memdump.dat bs=1 seek=$(( 0xE0000 )) > /dev/null 2>&1
+    fi
 
-echo -e "\n\nRunning Standalone tests."
-$VALGRIND $TST/testStandalone $TMPDIR $DIR/test_data/opti
+    if [ -e $source_dir/sysstr.dat ]; then
+        echo "laying down system string"
+        dd if=$source_dir/sysstr.dat of=$target_dir/memdump.dat bs=1 conv=notrunc seek=$(( 0xFE076 )) > /dev/null 2>&1
+    fi
 
-echo -e "\n\nRunning SMI tests."
-$VALGRIND $TST/testC_smi $TMPDIR opti $DIR/test_data/opti
+    if [ -e $source_dir/idbyte.dat ]; then
+        echo "laying down id byte"
+        dd if=$source_dir/idbyte.dat of=$target_dir/memdump.dat bs=1 conv=notrunc seek=$(( 0xFE840 )) > /dev/null 2>&1
+    fi
+
+    echo "padding"
+    dd if=/dev/zero of=$target_dir/memdump.dat bs=1 count=1 conv=notrunc seek=$(( 0x100000 - 1 )) > /dev/null 2>&1
+}
+
+run_test() {
+    target_dir=$TMPDIR
+    test_binary=$1
+    source_dir=$2
+    echo -e $3
+    rm -rf $TMPDIR/*
+    if [ -n "$source_dir" ]; then
+        cp $source_dir/* $target_dir/
+        reconstruct_memdump $target_dir $target_dir
+    fi
+    $VALGRIND $TST/$test_binary $TMPDIR $(basename "$source_dir")
+}
+
+run_test testC_memory_cmos ""                  "\n\nRunning CInterface tests."
+run_test testRbu           $DIR/test_data/rbu  "\n\nRunning test for RBU"
+run_test testStandalone    $DIR/test_data/opti "\n\nRunning Standalone tests."
+run_test testC_smi         $DIR/test_data/opti "\n\nRunning SMI tests."
 
 for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
-    [ -e $i/autotest_flag ] || continue
-    echo -e "\n\nRunning test for $i"
-    $VALGRIND $TST/testC_token $TMPDIR $(basename $i) $i
-    [ $? -eq 0 ] || exit 1
+    [ -e $i ] || continue
+    run_test testC_token $i "\n\nRunning TOKEN test for $i"
+    run_test testC_smbios $i "\n\nRunning SMBIOS test for $i"
+    run_test testPlatform $i "\n\nRunning PLATFORM test for $i"
 done
-
-for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
-    [ -e $i/autotest_flag ] || continue
-    echo -e "\n\nRunning test for $i"
-    $VALGRIND $TST/testC_smbios $TMPDIR $(basename $i) $i
-    [ $? -eq 0 ] || exit 1
-done
-
-for i in $DIR/test_data/opti ${UNIT_TEST_DATA_DIR}/platform/*; do
-    [ -e $i/autotest_flag ] || continue
-    echo -e "\n\nRunning test for $i"
-    $VALGRIND $TST/testPlatform $TMPDIR $(basename $i) $i
-    [ $? -eq 0 ] || exit 1
-done
-
-
