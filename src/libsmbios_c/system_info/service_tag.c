@@ -164,7 +164,7 @@ __internal char *getServiceTagFromCMOSToken()
     u8 byte;
     int ret;
 
-    dbg_printf("getServiceTagFromCMOSToken()\n");
+    fnprintf("\n");
 
     struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
     const struct token_obj *token = token_table_get_next_by_id(table, 0, Cmos_Service_Token);
@@ -210,6 +210,7 @@ __internal char *getServiceTagFromCMOSToken()
     goto out;
 
 out_err:
+    dbg_printf("getServiceTagFromCMOSToken() - out_err\n");
     free(tempval);
     tempval = 0;
 
@@ -250,11 +251,23 @@ char *sysinfo_get_service_tag()
     int numEntries =
         sizeof (DellGetServiceTagFunctions) / sizeof (DellGetServiceTagFunctions[0]);
 
+    fnprintf("\n");
     for (int i = 0; (i < numEntries) && (!serviceTag); ++i)
     {
-        // first function to return non-zero id wins.
+        fnprintf("Call fn pointer %p\n", DellGetServiceTagFunctions[i].f_ptr);
+        // first function to return non-zero id with strlen()>0 wins.
         serviceTag = DellGetServiceTagFunctions[i].f_ptr ();
+        fnprintf("got result: %p\n", serviceTag);
+        if (serviceTag)
+        {
+            strip_trailing_whitespace(serviceTag);
+            if (!strlen(serviceTag))
+            {
+                fnprintf("string is zero len, discarding\n");
+                free(serviceTag);
+                serviceTag=0;
+            }
+        }
     }
-    strip_trailing_whitespace(serviceTag);
     return serviceTag;
 }
