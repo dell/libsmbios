@@ -34,7 +34,7 @@ struct smbios_struct;
  *  @param cur  pointer to current structure, or 0 to begin at the start of the table.
  *  @return  Pointer to next smbios structure. returns 0 on end of table.
  */
-struct smbios_struct *smbios_get_next_struct(const struct smbios_struct *cur);
+struct smbios_struct * DLL_SPEC smbios_get_next_struct(const struct smbios_struct *cur);
 
 
 /** Function for looping over smbios table structures by type.
@@ -46,7 +46,7 @@ struct smbios_struct *smbios_get_next_struct(const struct smbios_struct *cur);
  *  @param type  only return smbios structures matching type
  *  @return  Pointer to next smbios structure. returns 0 on end of table.
  */
-struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_struct *cur, u8 type);
+struct smbios_struct * DLL_SPEC smbios_get_next_struct_by_type(const struct smbios_struct *cur, u8 type);
 
 /** Function for looping over smbios table structures by handle.
  * Returns a pointer to the next smbios structure with a given handle. You can
@@ -57,7 +57,7 @@ struct smbios_struct *smbios_get_next_struct_by_type(const struct smbios_struct 
  *  @param handle  only return smbios structures matching handle
  *  @return  Pointer to next smbios structure. returns 0 on end of table.
  */
-struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_struct *cur, u16 handle);
+struct smbios_struct * DLL_SPEC smbios_get_next_struct_by_handle(const struct smbios_struct *cur, u16 handle);
 
 /** Call a named function for each smbios structure.
  * Calls the given function for each smbios table structure. Passes a pointer
@@ -65,7 +65,7 @@ struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_struc
  * @param fn  pointer to the function to call
  * @param userdata  opaque pointer that will be passed to the funciton
  */
-void smbios_walk(void (*fn)(const struct smbios_struct *, void *userdata), void *userdata);
+void DLL_SPEC smbios_walk(void (*fn)(const struct smbios_struct *, void *userdata), void *userdata);
 
 /** looping helper macro.
  * This macro makes it easy to loop over each structure in the smbios table
@@ -89,13 +89,13 @@ void smbios_walk(void (*fn)(const struct smbios_struct *, void *userdata), void 
            )
 
 /** Returns the structure type of a given smbios structure. */
-u8 smbios_struct_get_type(const struct smbios_struct *);
+u8 DLL_SPEC smbios_struct_get_type(const struct smbios_struct *);
 
 /** Returns the structure length of a given smbios structure. */
-u8 smbios_struct_get_length(const struct smbios_struct *);
+u8 DLL_SPEC smbios_struct_get_length(const struct smbios_struct *);
 
 /** Returns the structure handle of a given smbios structure. */
-u16 smbios_struct_get_handle(const struct smbios_struct *);
+u16 DLL_SPEC smbios_struct_get_handle(const struct smbios_struct *);
 
 /** Copy data out of the smbios structure.
  * Does bounds-checking to ensure that structure overflows do not happen.
@@ -105,7 +105,7 @@ u16 smbios_struct_get_handle(const struct smbios_struct *);
  * @param len  length of data to copy into buffer
  * @return returns 0 on success, <0 on failure.
  */
-int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
+int DLL_SPEC smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
 
 /** get string from smbios structure.
  * Most smbios structures have specific offsets that contain a string number.
@@ -114,14 +114,14 @@ int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset,
  * @param offset  offset containing string pointer
  * @return returns a pointer to the string, or 0 on failure.
  */
-const char *smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
+const char * DLL_SPEC smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
 
 /** get string from smbios structure.
  * Retrieves string N from the end of a smbios structure.
  * @param s pointer to smbios structure
  * @param which string number to return
  */
-const char *smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
+const char * DLL_SPEC smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 
 EXTERN_C_END;
 

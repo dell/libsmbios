@@ -34,25 +34,25 @@ EXTERN_C_BEGIN;
  * tokens can be 0xD4, 0xD5, 0xD6, or 0xDA tokens, depending on the smbios
  * table structure they come from.
  */
-int token_get_type(u16 id);
+int DLL_SPEC token_get_type(u16 id);
 
 /** Check if a token is a boolean-type token.
  * @return true if token is bool, false if otherwise
  */
-bool token_is_bool(u16 id);
+bool DLL_SPEC token_is_bool(u16 id);
 /** Check if a boolean token is currently set.
  * @return true if token is active (set), false if otherwise
  */
-bool token_is_active(u16 id);
+bool DLL_SPEC token_is_active(u16 id);
 /** Activate a boolean token.
  * @return 0 on success, <0 on failure.
  */
-int token_activate(u16 id);
+int DLL_SPEC token_activate(u16 id);
 
 /** Check if a token is a string-type token.
  * @return true if token is a string, false otherwise.
  */
-bool token_is_string(u16 id);
+bool DLL_SPEC token_is_string(u16 id);
 
 /** Get a new buffer containing the token string value.
  * @param id token id to get
@@ -63,7 +63,7 @@ bool token_is_string(u16 id);
  * @return pointer to allocated buffer (note: use token_free_string() to free
  * this value). 0 on failure.
  */
-char *token_get_string(u16 id, size_t *len);
+char * DLL_SPEC token_get_string(u16 id, size_t *len);
 
 /** Set a string token value.
  * @param id token id
@@ -71,17 +71,17 @@ char *token_get_string(u16 id, size_t *len);
  * @param size size of the buffer
  * @return 0 on success, <0 on failure.
  */
-int token_set_string(u16 id, const char *value, size_t size);
+int DLL_SPEC token_set_string(u16 id, const char *value, size_t size);
 
 /** Free allocated memory.
  * Use this to free any memory buffer pointers that you get from this module.
  * For example, token_get_string(...)
  */
-void token_free_string(char *);
+void DLL_SPEC token_free_string(char *);
 
 /** Get a pointer to the smbios struct containing this token.
  */
-const struct smbios_struct *token_get_smbios_struct(u16 id);
+const struct smbios_struct * DLL_SPEC token_get_smbios_struct(u16 id);
 
 EXTERN_C_END;
 

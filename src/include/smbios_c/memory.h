@@ -34,7 +34,7 @@ EXTERN_C_BEGIN;
  *  @param length  how many bytes of memory to copy
  *  @return  0 on success, < 0 on failure
  */
-int  memory_read(void *buffer, u64 offset, size_t length);
+int DLL_SPEC memory_read(void *buffer, u64 offset, size_t length);
 
 /** Write a buffer to a physical memory address.
  * This function will write a range of bytes to a physical memory address.
@@ -46,7 +46,7 @@ int  memory_read(void *buffer, u64 offset, size_t length);
  *  @param length  how many bytes of memory to copy
  *  @return  0 on success, < 0 on failure
  */
-int  memory_write(void *buffer, u64 offset, size_t length);
+int DLL_SPEC memory_write(void *buffer, u64 offset, size_t length);
 
 /** Search a range of physical addresses for a pattern.
  * Note that some OS have severe restrictions on which addresses may be read
@@ -59,7 +59,7 @@ int  memory_write(void *buffer, u64 offset, size_t length);
  *  @param stride search for pattern only where physical addresses % stride == 0
  *  @return  -1 on failure. offset of memory address where pattern found on success
  */
-s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
+s64 DLL_SPEC memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 
 // Following calls must be properly nested in equal pairs
 
@@ -73,7 +73,7 @@ s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 strid
  *
  * No parameters, no return.
  */
-void  memory_suggest_leave_open();
+void DLL_SPEC memory_suggest_leave_open();
 
 /** Optimize memory device access - request memory device be closed between calls.
  * By default, the memory device is closed between subsequent calls to read/write.
@@ -85,7 +85,7 @@ void  memory_suggest_leave_open();
  *
  * No parameters, no return.
  */
-void  memory_suggest_close();
+void DLL_SPEC memory_suggest_close();
 
 // not yet implemented
 //// format error string
