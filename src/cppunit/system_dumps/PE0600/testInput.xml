@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x134</idByte>
+	<systemName>PowerEdge 600SC</systemName>
+	<serviceTag>C8B0331</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A06</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

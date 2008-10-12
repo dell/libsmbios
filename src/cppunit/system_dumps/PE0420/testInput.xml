@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x180</idByte>
+	<systemName>PowerEdge SC420</systemName>
+	<serviceTag>4C98G61</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A00</biosVersion>
+	<vendorName>Dell Inc.</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+</TESTINPUT>

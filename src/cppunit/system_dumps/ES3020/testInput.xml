@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x123</idByte>
+        <systemName>ES3020</systemName>
+	    <serviceTag>8T64121</serviceTag>
+    `	<assetTag/>
+	    <biosVersion>A10</biosVersion>
+	    <vendorName>UNISYS Corp.</vendorName>
+	    <isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

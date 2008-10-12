@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x0109</idByte>
+        <systemName>ES3040</systemName>
+	    <serviceTag>DJJYN11</serviceTag>
+    `	<assetTag/>
+	    <biosVersion>A14</biosVersion>
+	    <vendorName>UNISYS Corp.</vendorName>
+	    <isDellSystem>1</isDellSystem>
+    </systemInfo>
+</TESTINPUT>

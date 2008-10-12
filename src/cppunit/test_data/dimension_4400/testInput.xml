@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x0115</idByte>
+	<systemName>DIM4400</systemName>
+	<serviceTag>53PSG11</serviceTag>
+	<assetTag/>
+	<biosVersion>A05</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+</TESTINPUT>

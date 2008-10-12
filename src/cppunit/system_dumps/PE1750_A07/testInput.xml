@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x014A</idByte>
+	<systemName>PowerEdge 1750</systemName>
+	<serviceTag>144S931</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A07</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

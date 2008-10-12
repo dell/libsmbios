@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x109</idByte>
+	<systemName>PowerEdge 6600</systemName>
+	<serviceTag>5QBKP11</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A05</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

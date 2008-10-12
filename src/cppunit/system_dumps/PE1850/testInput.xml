@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x16c</idByte>
+        <systemName>PowerEdge 1850</systemName>
+        <serviceTag></serviceTag>
+        <assetTag></assetTag>
+        <biosVersion>P19</biosVersion>
+        <vendorName>Dell Computer Corporation</vendorName>
+        <isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

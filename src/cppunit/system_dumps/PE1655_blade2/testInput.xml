@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x124</idByte>
+        <systemName>PowerEdge 1655MC</systemName>
+        <serviceTag>J0VBM21</serviceTag>
+        <assetTag></assetTag>
+        <biosVersion>A00</biosVersion>
+        <vendorName>Dell Computer Corporation</vendorName>
+        <isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

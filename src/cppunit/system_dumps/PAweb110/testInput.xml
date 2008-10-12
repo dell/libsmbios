@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0xE0</idByte>
+	<systemName>PowerApp.web 110 L</systemName>
+	<serviceTag>BEN03</serviceTag>
+	<assetTag/>
+	<biosVersion>TR440BXA.86B.0026.P08.0008311605</biosVersion>
+	<vendorName>Dell Computer Corp.</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000">
+        <biosInformation numstrings="3">
+            <vendor>Intel Corp.</vendor>
+            <version>TR440BXA.86B.0026.P08.0008311605</version>
+            <release>08/31/2000</release>
+        </biosInformation>
+    </smbios>
+</TESTINPUT>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x0152</idByte>
+        <systemName>Latitude D500</systemName>
+        <serviceTag>5QK2X31</serviceTag>
+        <assetTag></assetTag>
+        <biosVersion>A06</biosVersion>
+        <vendorName>Dell Computer Corporation</vendorName>
+        <isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+    <testsToSkip>
+        <test name="testCmosWriting">
+            <reason>BIOS Bug in this version of BIOS that we have not yet worked around. They put a checksum in the middle of a checked-range.</reason>
+        </test>
+    </testsToSkip>
+</TESTINPUT>

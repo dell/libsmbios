@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x010B</idByte>
+	<systemName>PowerEdge 500SC</systemName>
+	<serviceTag>28SXY01</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>X21</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+</TESTINPUT>

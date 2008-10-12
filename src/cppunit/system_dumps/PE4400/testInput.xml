@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x09A</idByte>
+	<systemName>PowerEdge 4400</systemName>
+	<serviceTag>FG8Y6</serviceTag>
+	<assetTag/>
+	<biosVersion>A11</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>
+

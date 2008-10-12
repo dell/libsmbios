@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x011B</idByte>
+	<systemName>IDS-4235/4250</systemName>
+	<serviceTag>970LB41</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A04</biosVersion>
+	<vendorName>Cisco Systems</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+</TESTINPUT>

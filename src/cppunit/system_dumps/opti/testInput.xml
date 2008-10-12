@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+    <idByte>0x00B4</idByte>
+	<systemName>OptiPlex GX110</systemName>
+	<serviceTag>6EGWH</serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>A05</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000">
+        <biosInformation numstrings="3">
+            <vendor>Dell Computer Corporation</vendor>
+            <version>A05</version>
+            <release>09/18/2000</release>
+        </biosInformation>
+    </smbios>
+</TESTINPUT>

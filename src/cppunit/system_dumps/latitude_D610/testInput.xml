@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x0182</idByte>
+        <systemName>Latitude D610</systemName>
+        <serviceTag>HNJTC81</serviceTag>
+        <assetTag></assetTag>
+        <biosVersion>A06</biosVersion>
+        <vendorName>Dell Inc.</vendorName>
+        <isDellSystem>1</isDellSystem>
+    </systemInfo>
+</TESTINPUT>

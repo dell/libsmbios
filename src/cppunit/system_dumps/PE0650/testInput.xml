@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x141</idByte>
+        <systemName>PowerEdge 650</systemName>
+        <serviceTag>DRF8B31</serviceTag>
+        <assetTag></assetTag>
+        <biosVersion>A03</biosVersion>
+        <vendorName>Dell Computer Corporation</vendorName>
+        <isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>

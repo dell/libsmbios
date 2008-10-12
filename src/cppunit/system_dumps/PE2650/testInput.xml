@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+        <idByte>0x121</idByte>
+	<systemName>PowerEdge 2650</systemName>
+	<serviceTag>1LWBP21</serviceTag>
+	<assetTag/>
+	<biosVersion>A10</biosVersion>
+	<vendorName>Dell Computer Corporation</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000"/>
+</TESTINPUT>
