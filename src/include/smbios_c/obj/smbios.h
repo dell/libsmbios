@@ -32,6 +32,7 @@ EXTERN_C_BEGIN;
 #define SMBIOS_GET_SINGLETON  0x0001
 #define SMBIOS_GET_NEW        0x0002
 #define SMBIOS_UNIT_TEST_MODE 0x0004
+#define SMBIOS_NO_FIXUPS      0x0008
 
 struct smbios_table;
 struct smbios_struct;

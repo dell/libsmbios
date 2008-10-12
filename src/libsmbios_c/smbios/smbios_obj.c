@@ -58,7 +58,8 @@ struct smbios_table *smbios_table_factory(int flags, ...)
 
     init_smbios_struct(toReturn);
 
-    do_smbios_fixups(toReturn);
+    if (! flags & SMBIOS_NO_FIXUPS)
+        do_smbios_fixups(toReturn);
 
 out:
     return toReturn;
