@@ -171,7 +171,7 @@ __internal char *getServiceTagFromCMOSToken()
 
     // Step 1: Get tag from CMOS
     dbg_printf("getServiceTagFromCMOSToken() - get string\n");
-    tempval = token_obj_get_string(token);
+    tempval = token_obj_get_string(token, 0);
     if (!tempval)
         goto out_err;
 

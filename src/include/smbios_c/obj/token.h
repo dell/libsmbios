@@ -16,8 +16,8 @@
  */
 
 
-#ifndef C_TOKEN_H
-#define C_TOKEN_H
+#ifndef C_OBJ_TOKEN_H
+#define C_OBJ_TOKEN_H
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
@@ -65,23 +65,18 @@ u16 token_obj_get_id(const struct token_obj *);
             struct_name = token_table_get_next_id(table_name, struct_name, id)\
            )
 
-const char * token_obj_get_type(const struct token_obj *);
+int token_obj_get_type(const struct token_obj *);
 bool token_obj_is_bool(const struct token_obj *);
 bool token_obj_is_active(const struct token_obj *);
 int token_obj_activate(const struct token_obj *);
 
 bool token_obj_is_string(const struct token_obj *);
-char* token_obj_get_string(const struct token_obj *);
+char* token_obj_get_string(const struct token_obj *, size_t *len);
 int token_obj_set_string(const struct token_obj *, const char *, size_t size);
 
 const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *);
 int token_obj_try_password(const struct token_obj *, const char *);
 const void *token_obj_get_ptr(const struct token_obj *t);
-
-#ifndef TOKEN_FREE_STRING
-#define TOKEN_FREE_STRING
-void token_free_string(char *);
-#endif
 
 #if defined(_MSC_VER)
 #pragma pack(push,1)

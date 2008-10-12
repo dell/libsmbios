@@ -39,9 +39,9 @@
 #define cast_token(t)  ((struct indexed_io_token *)(t->token_ptr))
 #define cast_struct(t) ((struct indexed_io_access_structure *)token_obj_get_smbios_struct(t))
 
-static const char *_d4_get_type(const struct token_obj *t)
+static int _d4_get_type(const struct token_obj *t)
 {
-    return "d4";
+    return 0xD4;
 }
 
 static int _d4_get_id(const struct token_obj *t)
@@ -67,17 +67,22 @@ static int _d4_is_active(const struct token_obj *t)
     int ret;
 
     if (! _d4_is_bool(t))
-        goto out;
+        goto out_err;
 
     ret = cmos_read_byte(&byte,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location
               );
-    if(ret<0) goto out;
+    if(ret<0) goto out_err;
 
     if( (byte & (~cast_token(t)->andMask)) == cast_token(t)->orValue  )
         retval = true;
+
+    goto out;
+
+out_err:
+    // really should do something here.
 
 out:
     return retval;
@@ -90,14 +95,14 @@ static int _d4_activate(const struct token_obj *t)
     int ret;
 
     if (! _d4_is_bool(t))
-        goto out;
+        goto out_err;
 
     ret = cmos_read_byte(&byte,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location
               );
-    if(ret<0) goto out;
+    if(ret<0) goto out_err;
 
     byte = byte & cast_token(t)->andMask;
     byte = byte | cast_token(t)->orValue;
@@ -107,9 +112,13 @@ static int _d4_activate(const struct token_obj *t)
         cast_struct(t)->dataPort,
         cast_token(t)->location
         );
-    if(ret<0) goto out;
+    if(ret<0) goto out_err;
 
     retval = 0;
+    goto out;
+
+out_err:
+    // really should do something here
 
 out:
     return retval;
@@ -121,16 +130,20 @@ static int _d4_get_string_len(const struct token_obj *t)
     return cast_token(t)->stringLength ? cast_token(t)->stringLength : 1;
 }
 
-static char * _d4_get_string(const struct token_obj *t)
+static char * _d4_get_string(const struct token_obj *t, size_t *len)
 {
     u8 *retval = 0;
-    size_t strSize = _d4_get_string_len(t);
+    size_t strSize = 0;
 
     dbg_printf("_d4_get_string()\n");
 
     dbg_printf("_d4_get_string() - is string?\n");
     if (! _d4_is_string(t))
         goto out_err;
+
+    strSize = _d4_get_string_len(t);
+    if(len)
+        *len = strSize;
 
     dbg_printf("_d4_get_string() - alloc string %ld bytes\n", strSize + 1);
     retval = calloc(1, strSize+1);
@@ -165,10 +178,10 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
     char *targetBuffer = calloc(1, strSize);
 
     if (!targetBuffer)
-        goto out;
+        goto out_err;
 
     if (! _d4_is_string(t))
-        goto out;
+        goto out_err;
 
     memset(targetBuffer, 0, strSize);
     memcpy( targetBuffer, str, size < strSize ? size : strSize );
@@ -179,8 +192,13 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
                   cast_struct(t)->dataPort,
                   cast_token(t)->location + i
               );
-        if(ret<0) goto out;
+        if(ret<0) goto out_err;
     }
+
+    goto out;
+
+out_err:
+    retval = -1;
 
 out:
     free(targetBuffer);
@@ -208,7 +226,7 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
     struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
 
     if (!c)
-        goto out;
+        goto out_err;
 
     // if all zeros, there is no checksum
     if (!(d4_struct->checkedRangeStartIndex || d4_struct->checkedRangeEndIndex || d4_struct->checkValueIndex))
@@ -243,6 +261,10 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
     }
 
     cmos_obj_register_write_callback(c, update_checksum, d, free);
+    goto out;
+out_err:
+    // really should do something here
+
 out:
     return;
 }
@@ -258,7 +280,7 @@ void __internal add_d4_tokens(struct token_table *t)
         while (token->tokenId != TokenTypeEOT) {
             struct token_obj *n = calloc(1, sizeof(struct token_obj));
             if (!n)
-                goto out;
+                goto out_err;
 
             n->token_ptr = token;
             n->smbios_structure = s;
@@ -267,6 +289,9 @@ void __internal add_d4_tokens(struct token_table *t)
             token++;
         }
     }
+    goto out;
+out_err:
+    // really should do something here
 out:
     return;
 }

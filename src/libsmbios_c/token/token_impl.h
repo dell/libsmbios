@@ -45,7 +45,7 @@ enum // Token types
 
 struct token_obj
 {
-    const char* (*get_type)(const struct token_obj*);
+    int (*get_type)(const struct token_obj*);
     int (*get_id)(const struct token_obj*);
     int (*is_bool)(const struct token_obj*);
     int (*is_string)(const struct token_obj*);
@@ -53,7 +53,7 @@ struct token_obj
     int (*is_active)(const struct token_obj*);
     int (*activate)(const struct token_obj*);
 
-    char* (*get_string)(const struct token_obj*);
+    char* (*get_string)(const struct token_obj*, size_t *len);
     int (*get_string_len)(const struct token_obj*);
     int (*set_string)(const struct token_obj*, const char *, size_t size);
 

@@ -100,13 +100,20 @@ const struct token_obj *token_table_get_next_by_id(const struct token_table *t, 
         return defret;\
     }
 
-makeit( const char *, 0, get_type )
+makeit( int, 0, get_type )
 makeit( u16, 0, get_id )
 makeit( bool, 0, is_active )
 makeit( int, 0, activate )
-makeit( char *, 0, get_string )
 makeit( bool, 0, is_bool )
 makeit( bool, 0, is_string )
+
+
+char * token_obj_get_string (const struct token_obj *t, size_t *len)
+{
+    dbg_printf("%s\n", __PRETTY_FUNCTION__);
+    if (t) return t-> get_string (t, len);
+    return 0;
+}
 
 int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t size)
 {
@@ -152,13 +159,27 @@ out:\
         return defret;  \
     }
 
+makeit2(int, 0, get_type)
 makeit2(bool, 0, is_bool)
 makeit2(bool, 0, is_active)
 makeit2(int, 0, activate)
 makeit2(bool, 0, is_string)
-makeit2(char *, 0, get_string)
 makeit2(const void *, 0, get_ptr)
 makeit2(const struct smbios_struct *, 0, get_smbios_struct)
+
+char * token_get_string (u16 id, size_t *len)
+{
+    struct token_table *table = 0;
+    const struct token_obj *token = 0;
+    dbg_printf("%s\n", __PRETTY_FUNCTION__);
+    table = token_factory(TOKEN_GET_SINGLETON);
+    if (!table) goto out;
+    token = token_table_get_next_by_id(table, 0, id);
+    if (!token) goto out;
+    return token_obj_get_string(token, len);
+out:
+    return 0;
+}
 
 int token_set_string(u16 id, const char *newstr, size_t size)
 {
