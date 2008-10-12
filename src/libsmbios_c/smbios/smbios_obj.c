@@ -38,7 +38,7 @@
 
 // static vars
 static struct smbios_table singleton; // auto-init to 0
-
+#include <stdio.h>
 struct smbios_table *smbios_table_factory(int flags, ...)
 {
     struct smbios_table *toReturn = 0;
@@ -58,7 +58,7 @@ struct smbios_table *smbios_table_factory(int flags, ...)
 
     init_smbios_struct(toReturn);
 
-    if (! flags & SMBIOS_NO_FIXUPS)
+    if (!(flags & SMBIOS_NO_FIXUPS))
         do_smbios_fixups(toReturn);
 
 out:
