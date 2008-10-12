@@ -3,7 +3,8 @@ CLEANFILES+= testResults.xml src/cppunit/.libs
 
 EXTRA_DIST += \
  	src/cppunit/runtests.sh	\
-	src/cppunit/test_data
+	src/cppunit/test_data	\
+	src/cppunit/system_dumps
 
 TESTS = src/cppunit/runtests.sh
 
