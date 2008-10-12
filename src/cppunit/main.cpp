@@ -89,7 +89,7 @@ size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
     size_t written = fwrite(ptr, size, nmemb, stream); 
     // TODO: handle short write
-    if (written < (size * nmemb))
+    if (written < nmemb)
         throw std::exception();
     return written;
 }
