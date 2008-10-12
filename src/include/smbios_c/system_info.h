@@ -33,11 +33,14 @@ EXTERN_C_BEGIN;
 //
 //////////////////////////////////////////////////////////////////////////
 
-//! Return a string representing the version of the libsmbios library.
-/** Returns the current version of the SMBIOS library as a string
+/** Return a string representing the version of the libsmbios library.
+ * This string is statically allocated in the library, so there is no need to
+ * free it when done.
  */
 const char *smbios_get_library_version_string();
+//! Return a number representing the major version of the libsmbios library.
 int smbios_get_library_version_major();
+//! Return a number representing the minor version of the libsmbios library.
 int smbios_get_library_version_minor();
 
 
@@ -47,11 +50,51 @@ int smbios_get_library_version_minor();
  * system within Dell's product line.
  */
 int   sysinfo_get_dell_system_id();
+
+/** Return a buffer containing the system vendor name.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing vendor name. Deallocate with
+ * sysinfo_string_free() when done.
+ */
 char *sysinfo_get_vendor_name();
+
+/** Return a buffer containing the system name.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing system name. Deallocate with
+ * sysinfo_string_free() when done.
+ */
 char *sysinfo_get_system_name();
+
+/** Return a buffer containing the system bios version string.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing system bios version string. Deallocate
+ * with sysinfo_string_free() when done.
+ */
 char *sysinfo_get_bios_version();
+
+/** Return a buffer containing the system asset tag string.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing system asset tag string. Deallocate
+ * with sysinfo_string_free() when done.
+ */
 char *sysinfo_get_asset_tag();
+
+/** Return a buffer containing the system service tag string.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing system service tag string. Deallocate
+ * with sysinfo_string_free() when done.
+ */
 char *sysinfo_get_service_tag();
+
+/** Free string.
+ * Use this function to deallocate the strings returned by other functions in
+ * this header.
+ */
 void sysinfo_string_free(void *);
 
 EXTERN_C_END;
