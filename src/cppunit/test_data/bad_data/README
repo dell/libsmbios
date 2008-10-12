@@ -1,4 +1,0 @@
-
-This directory contains data files that have purposefully been messed up to test some of the validation routines.
-
-DO NOT USE for regular tests as they will fail.
