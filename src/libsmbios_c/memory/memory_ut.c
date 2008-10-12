@@ -66,11 +66,11 @@ static int UT_read_fn(const struct memory_access_obj *this, u8 *buffer, u64 offs
     if (ret)
         goto err_out;
 
-    size_t bytesRead = fread( buffer, 1, length, private_data->fd );
+    size_t recsRead = fread( buffer, length, 1, private_data->fd );
 
     // TODO: handle short reads
     retval = -3;
-    if ((length != bytesRead))
+    if ((1 != recsRead))
         goto err_out;
 
     retval = 0;
@@ -113,8 +113,8 @@ static int UT_write_fn(const struct memory_access_obj *this, u8 *buffer, u64 off
     if(ret)
         goto err_out;
 
-    size_t bytesWritten = fwrite( buffer, length, 1, private_data->fd );
-    if( 1 != bytesWritten )
+    size_t recsWritten = fwrite( buffer, length, 1, private_data->fd );
+    if( 1 != recsWritten )
         goto err_out;
 
     retval = 0;
