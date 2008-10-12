@@ -14,7 +14,7 @@ reconstruct_memdump() {
     source_dir=$1
     target_dir=$2
 
-    [ ! -e $target_dir/memdump.dat ] || return
+    [ ! -e $target_dir/memdump.dat ] || return 0
 
     dd if=/dev/zero of=$target_dir/memdump.dat bs=1 count=1 conv=notrunc seek=$(( 0x100000 - 1 )) > /dev/null 2>&1
 
