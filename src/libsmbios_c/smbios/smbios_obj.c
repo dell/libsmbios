@@ -303,6 +303,7 @@ bool __internal validate_dmi_tep( const struct dmi_table_entry_point *dmiTEP, bo
     if(memcmp(dmiTEP->anchor,"_DMI_",5)!=0) // Checking intermediate anchor string
         retval = false;  // validation failed
 
+    fnprintf("DMI TEP csum %d.\n", (int)checksum);
     if(checksum) // Checking entry point structure checksum
         retval = false;  // validation failed
 
@@ -346,6 +347,7 @@ bool __internal validate_smbios_tep( const struct smbios_table_entry_point *temp
 
     validate_dmi_tep( &(tempTEP->dmi), strict);
 
+    fnprintf("SMBIOS TEP csum %d.\n", (int)checksum);
     if(checksum) // Checking entry point structure checksum
         retval = false;  // validation failed
 
