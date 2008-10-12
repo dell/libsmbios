@@ -57,8 +57,8 @@ bool DLL_SPEC token_is_string(u16 id);
 /** Get a new buffer containing the token string value.
  * @param id token id to get
  * @param len pointer to size_t where final string size will be stored. Size
- * does not include final '\0', but may not always be equal to strlen() if cmos
- * has embedded '\0' chars. You must use token_free_string() to free this
+ * does not include final '\\0', but may not always be equal to strlen() if cmos
+ * has embedded '\\0' chars. You must use token_free_string() to free this
  * buffer, or memory will leak.
  * @return pointer to allocated buffer (note: use token_free_string() to free
  * this value). 0 on failure.
