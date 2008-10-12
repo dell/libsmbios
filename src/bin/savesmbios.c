@@ -3,16 +3,16 @@
  *
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -20,29 +20,83 @@
 
 //#include <unistd.h>    // getopt()
 #include <string.h>
+#include <stdlib.h>
 
 #include "smbios_c/obj/memory.h"
+#include "smbios_c/memory.h"
 #include "smbios_c/obj/smbios.h"
+#include "smbios_c/system_info.h"
 
+#include "getopts.h"
+
+const char *sysstrDumpFile = "sysstr.dat";
 const char *smbiosDumpFile = "smbios.dat";
-void dump_smbios_table(struct smbios_table *table, FILE *fd );
+const char *idByteDumpFile = "idbyte.dat";
+void dump_smbios_table(const char *smbiosDumpFile);
+void dumpMem( const char *fn, size_t offset, size_t len);
+
+struct options opts[] =
+    {
+        {
+            254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1
+        },
+        { 255, "version", "Display libsmbios version information", "v", 0 },
+        { 0, NULL, NULL, NULL, 0 }
+    };
+
+
 
 int
 main (int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
+    int c=0;
+    char *args = 0;
+    while ( (c=getopts(argc, argv, opts, &args)) != 0 )
+    {
+        switch(c)
+        {
+        case 254:
+            // This is for unit testing. You can specify a file that
+            // contains a dump of memory to use instead of reading
+            // directly from RAM.
+            memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, args);
+            break;
+        case 255:
+            printf("Libsmbios:    %s\n", smbios_get_library_version_string());
+            exit(0);
+            break;
+        default:
+            break;
+        }
+        free(args);
+    }
 
-    FILE *smbiosDumpFD;
-    smbiosDumpFD = fopen( smbiosDumpFile, "w+" );
+    printf("Libsmbios:    %s\n", smbios_get_library_version_string());
 
-    struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
-    dump_smbios_table(table, smbiosDumpFD);
-    smbios_table_free(table);
+    // SMBIOS TABLE
+    dump_smbios_table(smbiosDumpFile);
 
-    fclose(smbiosDumpFD);
+    // ID BYTE STRUCT
+    // system string at 0xFE076 "Dell System"
+    dumpMem(sysstrDumpFile, 0xFE076, strlen("Dell System"));
+    // two byte structure at 0xFE840  (except diamond)
+    dumpMem(idByteDumpFile, 0xFE840, 12);
+
+
+    // CMOS
 }
 
+void dumpMem( const char *fn, size_t offset, size_t len)
+{
+    FILE *fd = fopen( fn, "w+" );
+    u8 *buf = calloc(1, len);
+    memory_read(buf, offset, len);
+    int recs = fwrite(buf, len, 1, fd);
+    if (recs != 1)
+        ; // nada
+    free(buf);
+    fclose(fd);
+}
 
 #if defined(_MSC_VER)
 #pragma pack(push,1)
@@ -83,22 +137,57 @@ struct my_smbios_table
     struct table *table;
 };
 
-void dump_smbios_table(struct smbios_table *table, FILE *fd )
+void dump_smbios_table(const char *smbiosDumpFile)
 {
+    FILE *fd = fopen( smbiosDumpFile, "w+" );
+    struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON | SMBIOS_NO_FIXUPS);
     struct smbios_table_entry_point tep;
     struct my_smbios_table *my = (struct my_smbios_table *)table;
     memcpy(&tep, & (my->tep), sizeof(my->tep));
-    tep.dmi.table_address = 0xF0000UL + sizeof(tep);
+    tep.dmi.table_address = 0xE0000UL + sizeof(tep);
+
+    // fixup checksum
+    tep.checksum = 0;
+    tep.dmi.checksum = 0;
+
+    u8 checksum = 0;
+    const u8 *ptr = (const u8*)(&(tep.dmi));
+    for( unsigned int i = 0; i < sizeof(tep.dmi); ++i )
+        checksum = checksum + ptr[i];
+    tep.dmi.checksum = ~checksum + 1;
+
+    checksum = 0;
+    ptr = (const u8*)(&tep);
+    for( unsigned int i = 0; (i < (unsigned int)(tep.eps_length)) && (i < sizeof(tep)); ++i )
+        checksum = checksum + ptr[i];
+    tep.checksum = ~checksum + 1;
+
+
+    printf("dumping table header.\n");
     int ret = fwrite(&tep, sizeof(tep), 1, fd);
-    if (ret != sizeof(tep))
-        goto out;
+    if (ret != 1)  // one item
+        goto out_err_header;
+
+    printf("dumping table.\n");
     ret = fwrite(my->table, tep.dmi.table_length, 1, fd);
-    if (ret != tep.dmi.table_length)
-        goto out;
+    if (ret != 1)  // one item
+        goto out_err_table;
 
     printf("dumped table.\n");
     printf("table length: %d\n", tep.dmi.table_length);
+
+    goto out;
+out_err_header:
+    printf("error dumping header ret(%d) sizeof(tep): %zd\n", ret, sizeof(tep));
+    goto out;
+
+out_err_table:
+    printf("error dumping table\n");
+    goto out;
+
 out:
+    smbios_table_free(table);
+    fclose(fd);
     return;
 }
 
