@@ -107,6 +107,44 @@ struct indexed_io_access_structure
     struct   indexed_io_token  tokens[];
 }
 LIBSMBIOS_C_PACKED_ATTR;
+
+struct dell_protected_value_1_structure
+{  /* 0xD5 structure */
+    u8	     type;
+    u8	     length;
+    u16	     handle;
+    u16      tokenId;
+    u8       valueLen;
+    u8       valueFormat;
+    u16      validationKey;
+    u16      indexPort;
+    u16      dataPort;
+    u8       checkType;
+    u8       valueStartIndex;
+    u8       checkIndex;
+}
+LIBSMBIOS_C_PACKED_ATTR;
+
+struct dell_protected_value_2_structure
+{  /* 0xD6 structure */
+    u8	     type;
+    u8	     length;
+    u16	     handle;
+    u16      tokenId;
+    u8       valueLen;
+    u8       valueFormat;
+    u16      validationKey;
+    u16      indexPort;
+    u16      dataPort;
+    u8       checkType;
+    u8       valueStartIndex;
+    u8       checkIndex;
+    u8       rangeCheckType;
+    u8       rangeCheckStart;
+    u8       rangeCheckEnd;
+    u8       rangeCheckIndex;
+}
+LIBSMBIOS_C_PACKED_ATTR;
 #if defined(_MSC_VER)
 #pragma pack(pop)
 #endif
