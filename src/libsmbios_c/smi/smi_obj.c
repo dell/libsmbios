@@ -46,7 +46,7 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
     va_list ap;
     struct dell_smi_obj *toReturn = 0;
 
-    dbg_printf("DEBUG: dell_smi_factory()\n");
+    fnprintf("\n");
 
     if (flags==DELL_SMI_DEFAULTS)
         flags = DELL_SMI_GET_SINGLETON;
@@ -63,10 +63,12 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
     {
         va_start(ap, flags);
         init_fn fn = va_arg(ap, init_fn);
+        fnprintf("call fn pointer: %p\n", fn);
         fn(toReturn);
         va_end(ap);
     } else
     {
+        fnprintf("default init\n");
         init_dell_smi_obj(toReturn);
     }
 
@@ -78,34 +80,43 @@ out:
 
 void dell_smi_obj_free(struct dell_smi_obj *m)
 {
+    fnprintf("\n");
     if (m != &singleton)
         _smi_free(m);
 
     // can do special cleanup for singleton, but none necessary atm
 }
 
-void dell_smi_obj_set_class(struct dell_smi_obj *this, u16 class)
+void dell_smi_obj_set_class(struct dell_smi_obj *this, u16 smi_class)
 {
-    this->class = class;
+    fnprintf("\n");
+    this->smi_class = smi_class;
 }
 
-void dell_smi_obj_set_select(struct dell_smi_obj *this, u16 select)
+void dell_smi_obj_set_select(struct dell_smi_obj *this, u16 smi_select)
 {
-    this->select = select;
+    fnprintf("\n");
+    this->smi_select = smi_select;
 }
 
 void dell_smi_obj_set_arg(struct dell_smi_obj *this, u8 argno, u32 value)
 {
+    fnprintf("\n");
+    free(this->physical_buffers[argno]);
+    this->physical_buffers[argno] = 0;
+
     this->arg[argno] = value;
 }
 
 u32  dell_smi_obj_get_res(struct dell_smi_obj *this, u8 argno)
 {
+    fnprintf("\n");
     return this->res[argno];
 }
 
 u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *this, u8 argno, size_t size)
 {
+    fnprintf("\n");
     if (argno>3)
         return 0;
 
@@ -116,6 +127,7 @@ u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *this, u8 argno, size_t size)
 
 void dell_smi_obj_execute(struct dell_smi_obj *this)
 {
+    fnprintf("\n");
     this->execute(this);
 }
 
@@ -127,6 +139,7 @@ void dell_smi_obj_execute(struct dell_smi_obj *this)
 
 void __internal _smi_free(struct dell_smi_obj *this)
 {
+    fnprintf("\n");
     this->initialized=0;
     for (int i=0;i<4;++i)
     {
@@ -140,6 +153,7 @@ void __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
 {
     fnprintf("\n");
     this->initialized = 1;
+    this->res[0] = -3; //default to 'not handled'
 }
 
 

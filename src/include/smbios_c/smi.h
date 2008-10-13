@@ -24,6 +24,17 @@
 
 EXTERN_C_BEGIN;
 
+enum {
+    CB_ARG1 = 0,
+    CB_ARG2 = 1,
+    CB_ARG3 = 2,
+    CB_ARG4 = 3,
+    CB_RES1 = 0,
+    CB_RES2 = 1,
+    CB_RES3 = 2,
+    CB_RES4 = 3,
+};
+
 void dell_smi_calling_interface_simple(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 
 EXTERN_C_END;

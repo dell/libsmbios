@@ -34,8 +34,8 @@ struct dell_smi_obj
 {
     int initialized;
     int (*execute)(struct dell_smi_obj *this);
-    u16 class;
-    u16 select;
+    u16 smi_class;
+    u16 smi_select;
     u32 arg[4];
     u32 res[4];
     u8 *physical_buffers[4];
