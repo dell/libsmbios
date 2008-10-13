@@ -111,7 +111,7 @@ sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
 out_dellLEDCtl_LDADD = out/libsmbios.la out/libgetopt.la
 
-noinst_PROGRAMS += out/smbios_cmos_save_to_file
+sbin_PROGRAMS += out/smbios_cmos_save_to_file
 out_smbios_cmos_save_to_file_SOURCES = src/bin/smbios_cmos_save_to_file.c
 out_smbios_cmos_save_to_file_LDADD = out/libsmbios_c.la out/libgetopt.la
 
