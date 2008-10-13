@@ -198,17 +198,30 @@ void testCsmbios::testVariousAccessors()
         throw skip_test();
     }
 
-    const string biosVendorStrSmbios( smbios_struct_get_string_from_offset(s, 4) ); // BIOS VENDOR
-    const string versionStrSmbios( smbios_struct_get_string_from_offset(s, 5) ); // BIOS VERSION
-    const string releaseStrSmbios( smbios_struct_get_string_from_offset(s, 8) ); // RELEASE DATE
+    string biosVendorStrSmbios( smbios_struct_get_string_from_offset(s, 4) ); // BIOS VENDOR
+    string versionStrSmbios( smbios_struct_get_string_from_offset(s, 5) ); // BIOS VERSION
+    string releaseStrSmbios( smbios_struct_get_string_from_offset(s, 8) ); // RELEASE DATE
 
-    const string biosVendorStrSmbios2( smbios_struct_get_string_number(s, 1) ); //BIOS VENDOR
-    const string versionStrSmbios2( smbios_struct_get_string_number(s, 2) ); //BIOS VERSION
-    const string releaseStrSmbios2( smbios_struct_get_string_number(s, 3) ); //RELEASE DATE
+    strip_trailing_whitespace(biosVendorStrSmbios);
+    strip_trailing_whitespace(versionStrSmbios);
+    strip_trailing_whitespace(releaseStrSmbios);
+
+    string biosVendorStrSmbios2( smbios_struct_get_string_number(s, 1) ); //BIOS VENDOR
+    string versionStrSmbios2( smbios_struct_get_string_number(s, 2) ); //BIOS VERSION
+    string releaseStrSmbios2( smbios_struct_get_string_number(s, 3) ); //RELEASE DATE
+
+    strip_trailing_whitespace(biosVendorStrSmbios2);
+    strip_trailing_whitespace(versionStrSmbios2);
+    strip_trailing_whitespace(releaseStrSmbios2);
 
     char *versionStrLib_raw = sysinfo_get_bios_version();
     const string versionStrLib(versionStrLib_raw);
     sysinfo_string_free(versionStrLib_raw);
+
+    //cout << "versionStr: '" << versionStr << "'" << endl;
+    //cout << "versionStrLib: '" << versionStrLib << "'" << endl;
+    //cout << "versionStrSmbios: '" << versionStrSmbios << "'" << endl;
+    //cout << "versionStrSmbios2: '" << versionStrSmbios2 << "'" << endl;
 
     CPPUNIT_ASSERT_EQUAL( versionStr, versionStrLib );
     CPPUNIT_ASSERT_EQUAL( versionStr, versionStrSmbios );

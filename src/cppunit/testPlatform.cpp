@@ -654,13 +654,20 @@ void testPlatform::testVariousAccessors()
         throw skip_test();
     }
 
-    const string string1( getString_FromItem(*item, 4) ); // BIOS VENDOR
-    const string string2( getString_FromItem(*item, 5) ); // BIOS VERSION
-    const string string3( getString_FromItem(*item, 8) ); // RELEASE DATE
+    string string1( getString_FromItem(*item, 4) ); // BIOS VENDOR
+    string string2( getString_FromItem(*item, 5) ); // BIOS VERSION
+    string string3( getString_FromItem(*item, 8) ); // RELEASE DATE
 
-    const string string4( item->getStringByStringNumber(1) ); //BIOS VENDOR
-    const string string5( item->getStringByStringNumber(2) ); //BIOS VERSION
-    const string string6( item->getStringByStringNumber(3) ); //RELEASE DATE
+    string string4( item->getStringByStringNumber(1) ); //BIOS VENDOR
+    string string5( item->getStringByStringNumber(2) ); //BIOS VERSION
+    string string6( item->getStringByStringNumber(3) ); //RELEASE DATE
+
+    strip_trailing_whitespace(string1);
+    strip_trailing_whitespace(string2);
+    strip_trailing_whitespace(string3);
+    strip_trailing_whitespace(string4);
+    strip_trailing_whitespace(string5);
+    strip_trailing_whitespace(string6);
 
     CPPUNIT_ASSERT_EQUAL( vendorStr, string1 );
     CPPUNIT_ASSERT_EQUAL( versionStr, string2 );

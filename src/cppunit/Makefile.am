@@ -11,9 +11,9 @@ TESTS = src/cppunit/runtests.sh
 # convenience library for test stuff
 noinst_LTLIBRARIES += out/libtestmain.la
 out_libtestmain_la_SOURCES = src/cppunit/outputctl.h src/cppunit/main.cpp src/cppunit/main.h
-out_libtestmain_la_LIBADD =  $(CPPUNIT_LIBS)
+out_libtestmain_la_LIBADD =  $(CPPUNIT_LIBS) out/libsmbios.la out/libsmbios_c.la
 out_libtestmain_la_CXXFLAGS = $(AM_CXXFLAGS)
-out_libtestmain_la_LDFLAGS = -static
+out_libtestmain_la_LDFLAGS = -static $(AM_LDFLAGS)
 
 # convenience library for XML stuff
 noinst_LTLIBRARIES += out/libxmlutil.la
@@ -26,43 +26,43 @@ TEST_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(LIBXML2_CFLAGS) -I$(top_src
 
 check_PROGRAMS += out/testRbu
 out_testRbu_SOURCES = src/cppunit/testRbu.h src/cppunit/testRbu.cpp
-out_testRbu_LDADD = out/libsmbios.la out/libxmlutil.la out/libtestmain.la
+out_testRbu_LDADD = out/libxmlutil.la out/libtestmain.la
 out_testRbu_LDFLAGS = $(AM_LDFLAGS) -static
 out_testRbu_CXXFLAGS = $(TEST_CXXFLAGS)
 
 check_PROGRAMS += out/testPlatform
 out_testPlatform_SOURCES = src/cppunit/testPlatform.h src/cppunit/testPlatform.cpp
-out_testPlatform_LDADD = out/libsmbios.la out/libxmlutil.la out/libtestmain.la
+out_testPlatform_LDADD = out/libxmlutil.la out/libtestmain.la
 out_testPlatform_LDFLAGS = $(AM_LDFLAGS) -static
 out_testPlatform_CXXFLAGS = $(TEST_CXXFLAGS)
 
 check_PROGRAMS += out/testStandalone
 out_testStandalone_SOURCES = src/cppunit/testStandalone.h src/cppunit/testStandalone.cpp
-out_testStandalone_LDADD = out/libsmbios.la out/libxmlutil.la out/libtestmain.la
+out_testStandalone_LDADD = out/libxmlutil.la out/libtestmain.la
 out_testStandalone_LDFLAGS = $(AM_LDFLAGS) -static
 out_testStandalone_CXXFLAGS = $(TEST_CXXFLAGS)
 
 check_PROGRAMS += out/testC_smbios
 out_testC_smbios_SOURCES = src/cppunit/testC_smbios.h src/cppunit/testC_smbios.cpp
-out_testC_smbios_LDADD = out/libsmbios_c.la out/libxmlutil.la out/libtestmain.la
+out_testC_smbios_LDADD = out/libxmlutil.la out/libtestmain.la
 out_testC_smbios_LDFLAGS = $(AM_LDFLAGS) -static
 out_testC_smbios_CXXFLAGS = $(TEST_CXXFLAGS)
 
 check_PROGRAMS += out/testC_token
 out_testC_token_SOURCES = src/cppunit/testC_token.h src/cppunit/testC_token.cpp
-out_testC_token_LDADD = out/libsmbios_c.la out/libxmlutil.la out/libtestmain.la
+out_testC_token_LDADD = out/libxmlutil.la out/libtestmain.la
 out_testC_token_LDFLAGS = $(AM_LDFLAGS) -static
 out_testC_token_CXXFLAGS = $(TEST_CXXFLAGS)
 
 check_PROGRAMS += out/testC_smi
 out_testC_smi_SOURCES = src/cppunit/testC_smi.h src/cppunit/testC_smi.cpp
-out_testC_smi_LDADD = out/libsmbios_c.la out/libtestmain.la
+out_testC_smi_LDADD = out/libtestmain.la
 out_testC_smi_LDFLAGS = $(AM_LDFLAGS) -static
 out_testC_smi_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS)
 
 check_PROGRAMS += out/testC_memory_cmos
 out_testC_memory_cmos_SOURCES = src/cppunit/testC_memory_cmos.h src/cppunit/testC_memory_cmos.cpp
-out_testC_memory_cmos_LDADD = out/libsmbios_c.la out/libtestmain.la
+out_testC_memory_cmos_LDADD = out/libtestmain.la
 out_testC_memory_cmos_LDFLAGS = $(AM_LDFLAGS) -static
 out_testC_memory_cmos_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS)
 

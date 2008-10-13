@@ -28,6 +28,12 @@
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/XmlOutputter.h>
 
+#include "smbios/IMemory.h"
+#include "smbios/ICmosRW.h"
+#include "smbios_c/obj/memory.h"
+#include "smbios_c/obj/cmos.h"
+#include "main.h"
+
 using namespace std;
 
 int global_argc;
@@ -61,6 +67,47 @@ main (int argc, char **argv)
 
     // need to use _reverse_ logic here because the shell is backwards!
     return !wasSuccessful;
+}
+
+string setupMemoryForUnitTest(string testdir, string writedir)
+{
+    string memdumpOrigFile = testdir + "/memdump.dat";
+    string memdumpCopyFile = writedir + "/memdump-copy.dat";
+    copyFile( memdumpCopyFile, memdumpOrigFile );
+
+    // C++
+    memory::MemoryFactory::getFactory()->setParameter("memFile", memdumpCopyFile);
+    memory::MemoryFactory::getFactory()->setMode( memory::MemoryFactory::UnitTestMode );
+
+    // C
+    memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
+
+    return memdumpCopyFile;
+}
+
+string setupCmosForUnitTest(string testdir, string writedir)
+{
+    string cmosOrigFile = testdir + "/cmos.dat";
+    string cmosCopyFile = writedir + "/cmos-copy.dat";
+    copyFile( cmosCopyFile, cmosOrigFile );
+
+    // C++
+    cmos::  CmosRWFactory::getFactory()->setParameter("cmosMapFile", cmosCopyFile);
+    cmos::  CmosRWFactory::getFactory()->setMode( factory::IFactory::UnitTestMode );
+
+    // C
+    cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
+
+
+    return cmosCopyFile;
+}
+
+string &strip_trailing_whitespace(string &s)
+{
+    while (  s[ s.length() - 1 ] == ' ' )
+        s.erase( s.length() - 1, 1 );
+
+    return s;
 }
 
 void copyFile( string dstFile, string srcFile )
