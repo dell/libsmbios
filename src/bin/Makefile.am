@@ -71,10 +71,6 @@ sbin_PROGRAMS += out/activateCmosToken
 out_activateCmosToken_SOURCES = src/bin/activateCmosToken.cpp
 out_activateCmosToken_LDADD = out/libsmbios.la out/libgetopt.la
 
-noinst_PROGRAMS += out/createUnitTestFiles
-out_createUnitTestFiles_SOURCES = src/bin/createUnitTestFiles.cpp
-out_createUnitTestFiles_LDADD = out/libsmbios.la out/libgetopt.la
-
 noinst_PROGRAMS += out/disable_console_redir
 out_disable_console_redir_SOURCES = src/bin/disable_console_redir.cpp
 out_disable_console_redir_LDADD = out/libsmbios.la out/libgetopt.la
@@ -115,8 +111,8 @@ sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
 out_dellLEDCtl_LDADD = out/libsmbios.la out/libgetopt.la
 
-noinst_PROGRAMS += out/savesmbios
-out_savesmbios_SOURCES = src/bin/savesmbios.c
-out_savesmbios_LDADD = out/libsmbios_c.la out/libgetopt.la
+noinst_PROGRAMS += out/smbios_cmos_save_to_file
+out_smbios_cmos_save_to_file_SOURCES = src/bin/smbios_cmos_save_to_file.c
+out_smbios_cmos_save_to_file_LDADD = out/libsmbios_c.la out/libgetopt.la
 
 

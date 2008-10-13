@@ -174,16 +174,16 @@ rm -rf %{buildroot}
 # may or may not work
 %{_sbindir}/dellLEDCtl
 %{_sbindir}/activateCmosToken
-#%{_sbindir}/ascii2enUS_scancode
-#%{_sbindir}/createUnitTestFiles
-#%{_sbindir}/disable_console_redir
-#%{_sbindir}/dumpCmos
 %{_sbindir}/getPasswordFormat
 %{_sbindir}/isCmosTokenActive
-#%{_sbindir}/probes
-#%{_sbindir}/smitest
 %{_sbindir}/stateByteCtl
 %{_sbindir}/upBootCtl
+%{_sbindir}/smbios_cmos_save_to_file
+#%{_sbindir}/ascii2enUS_scancode
+#%{_sbindir}/disable_console_redir
+#%{_sbindir}/dumpCmos
+#%{_sbindir}/probes
+#%{_sbindir}/smitest
 #%{_sbindir}/dumpSmbios
 
 # ./ChangeLog is appended by configure

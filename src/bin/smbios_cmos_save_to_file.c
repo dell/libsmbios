@@ -82,14 +82,14 @@ main (int argc, char **argv)
     // SMBIOS TABLE
     dump_smbios_table(smbiosDumpFile);
 
+    // CMOS
+    smbios_walk(dumpCmos, (void*)cmosDumpFile);
+
     // ID BYTE STRUCT
     // system string at 0xFE076 "Dell System"
     dumpMem(sysstrDumpFile, 0xFE076, strlen("Dell System"));
     // two byte structure at 0xFE840  (except diamond)
     dumpMem(idByteDumpFile, 0xFE840, 12);
-
-    // CMOS
-    smbios_walk(dumpCmos, (void*)cmosDumpFile);
 }
 
 void dumpCmosIndexPort(const char *fn, u32 indexPort, u32 dataPort)
