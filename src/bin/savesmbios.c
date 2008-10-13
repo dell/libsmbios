@@ -22,9 +22,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "smbios_c/obj/cmos.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/memory.h"
 #include "smbios_c/obj/smbios.h"
+#include "smbios_c/smbios.h"
+#include "smbios_c/obj/token.h"
 #include "smbios_c/system_info.h"
 
 #include "getopts.h"
@@ -32,19 +35,19 @@
 const char *sysstrDumpFile = "sysstr.dat";
 const char *smbiosDumpFile = "smbios.dat";
 const char *idByteDumpFile = "idbyte.dat";
+const char *cmosDumpFile = "cmos.dat";
+
 void dump_smbios_table(const char *smbiosDumpFile);
 void dumpMem( const char *fn, size_t offset, size_t len);
+void dumpCmos(const struct smbios_struct *structure, void *userdata);
 
 struct options opts[] =
     {
-        {
-            254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1
-        },
+        { 253, "cmos_file", "Debug: CMOS dump file to use instead of physical cmos", "c", 1 },
+        { 254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1 },
         { 255, "version", "Display libsmbios version information", "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
     };
-
-
 
 int
 main (int argc, char **argv)
@@ -55,6 +58,9 @@ main (int argc, char **argv)
     {
         switch(c)
         {
+        case 253:
+            cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, args);
+            break;
         case 254:
             // This is for unit testing. You can specify a file that
             // contains a dump of memory to use instead of reading
@@ -82,8 +88,73 @@ main (int argc, char **argv)
     // two byte structure at 0xFE840  (except diamond)
     dumpMem(idByteDumpFile, 0xFE840, 12);
 
-
     // CMOS
+    smbios_walk(dumpCmos, (void*)cmosDumpFile);
+}
+
+void dumpCmosIndexPort(const char *fn, u32 indexPort, u32 dataPort)
+{
+    struct cmos_access_obj *cmos=0;
+    struct cmos_access_obj *dump=0;
+
+    printf("Dumping CMOS index(%d) data(%d)\n", indexPort, dataPort);
+
+    // ensure file exists
+    FILE *fd = fopen(cmosDumpFile, "a+");
+    fclose(fd);
+
+    cmos = cmos_obj_factory(CMOS_GET_SINGLETON);
+    dump = cmos_obj_factory(CMOS_GET_NEW | CMOS_UNIT_TEST_MODE, fn);
+
+    for (int i=0; i<256; i++)
+    {
+        u8 byte;
+        int ret=cmos_obj_read_byte(cmos, &byte, indexPort, dataPort, i);
+        if (ret!=0)
+            continue;
+
+        ret = cmos_obj_write_byte(dump, byte, indexPort, dataPort, i);
+        if (ret!=0)
+            continue;
+    }
+
+    cmos_obj_free(dump);
+    cmos_obj_free(cmos);
+}
+
+void dumpCmos(const struct smbios_struct *structure, void *userdata)
+{
+    u32 indexPort = 0, dataPort = 0;
+    struct indexed_io_access_structure *d4 = 0;
+    struct dell_protected_value_1_structure *d5 = 0;
+    struct dell_protected_value_2_structure *d6 = 0;
+    switch (smbios_struct_get_type(structure))
+    {
+        case 0xD4: 
+            d4 = (struct indexed_io_access_structure *)structure;
+            indexPort = d4->indexPort;
+            dataPort = d4->dataPort;
+            break;
+
+        case 0xD5:
+            d5 = (struct dell_protected_value_1_structure *)structure;
+            indexPort = d5->indexPort;
+            dataPort = d5->dataPort;
+            break;
+
+        case 0xD6:
+            d6 = (struct dell_protected_value_2_structure *)structure;
+            indexPort = d6->indexPort;
+            dataPort = d6->dataPort;
+            break;
+
+        default:
+            goto out;
+    }
+
+    dumpCmosIndexPort((const char *)userdata, indexPort, dataPort);
+out:
+    return;
 }
 
 void dumpMem( const char *fn, size_t offset, size_t len)
