@@ -63,6 +63,8 @@ run_test testRbu           $DIR/test_data/rbu  "\n\nRunning test for RBU"
 run_test testStandalone    $DIR/test_data/opti "\n\nRunning Standalone tests."
 run_test testC_smi         $DIR/test_data/opti "\n\nRunning SMI tests."
 
+if [ "$TEST_STANDALONE_ONLY" = "1" ]; then exit 0; fi
+
 for i in $DIR/test_data/opti $DIR/system_dumps/* ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i ] || continue
     run_test testC_token  $i "\n\nRunning TOKEN test for $i"
