@@ -58,15 +58,12 @@ static unsigned char dell_decode_digit( char tagval )
 }
 
 // decodes tag in-place
-static void dell_decode_service_tag( char *tag, int len )
+// see encoding function for nice ascii art representation.
+static void dell_decode_service_tag( char *new_tag, char *tag, int len )
 {
-    // see encoding function for nice ascii art representation.
-    //
+    memcpy(new_tag, tag, len);
     if( ((tag)[0] & (1<<7)) == (1<<7) )
     {
-        char new_tag[SVC_TAG_LEN_MAX + 1] = {0,};
-
-        // yuck.
         new_tag[6] = dell_decode_digit( (tag[4] & 0x1F) );
         new_tag[5] = dell_decode_digit( ((tag[3] & 0x03)<<3) | ((tag[4]>>5) & 0x07) );
         new_tag[4] = dell_decode_digit( ((tag[3] & 0x7C)>>2) );
@@ -74,9 +71,7 @@ static void dell_decode_service_tag( char *tag, int len )
         new_tag[2] = dell_decode_digit( (((tag[1] & 0x01)<<4) | ((tag[2]>>4) & 0xF)) & 0x1F);
         new_tag[1] = dell_decode_digit( ((tag[1] & 0x3E)>>1) & 0x1F );
         new_tag[0] = (tag[0] ^ (1<<7));
-
         memset(tag, 0, len);
-        strncpy(tag, new_tag, len < SVC_TAG_LEN_MAX ? len : SVC_TAG_LEN_MAX);
     }
 }
 
@@ -158,6 +153,7 @@ __internal char *getServiceTagFromCMOSToken()
 {
     const struct smbios_struct *s;
     char *tempval = 0;
+    char *tag = 0;
     u16 indexPort, dataPort;
     u8  location;
     u8 csum = 0;
@@ -170,18 +166,26 @@ __internal char *getServiceTagFromCMOSToken()
     const struct token_obj *token = token_table_get_next_by_id(table, 0, Cmos_Service_Token);
 
     // Step 1: Get tag from CMOS
-    dbg_printf("getServiceTagFromCMOSToken() - get string\n");
-    tempval = token_obj_get_string(token, 0);
+    fnprintf("- get string\n");
+    size_t len = 0;
+    tempval = token_obj_get_string(token, &len);  // allocates mem
     if (!tempval)
         goto out_err;
 
+    //fnprintf("- current string: '%s', len: %zd, strlen %zd, tagsize %d", tempval, len, strlen(tempval), SVC_TAG_CMOS_LEN_MAX);
+
+    // if we got a value, we have to allocate a larger buffer to hold the result
+    tag = calloc(1, SVC_TAG_LEN_MAX + 1);
+
     // Step 2: Decode 7-char tag from 5-char CMOS value
-    dbg_printf("getServiceTagFromCMOSToken() - decode string\n");
-    dell_decode_service_tag( tempval, SVC_TAG_LEN_MAX + 1 );
-    dbg_printf("getServiceTagFromCMOSToken() - GOT: '%s'\n", tempval);
+    fnprintf("- decode string\n");
+    dell_decode_service_tag(tag, tempval, len);
+    free(tempval);
+    tempval = 0;
+    fnprintf("- GOT: '%s'\n", tag);
 
     // Step 3: Make sure checksum is good before returning value
-    dbg_printf("getServiceTagFromCMOSToken() - csum\n");
+    fnprintf("- csum\n");
     s = token_obj_get_smbios_struct(token);
     indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
     dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
@@ -202,26 +206,26 @@ __internal char *getServiceTagFromCMOSToken()
     if (ret<0)
         goto out_err;
 
-    dbg_printf("getServiceTagFromCMOSToken() - got: %x  calc: %x\n", csum, byte);
+    fnprintf("- got: %x  calc: %x\n", csum, byte);
     if (csum - byte) // bad (should be zero)
         goto out_err;
 
-    dbg_printf("GOT CMOS TAG: %s\n", tempval);
+    fnprintf("GOT CMOS TAG: %s\n", tempval);
     goto out;
 
 out_err:
-    dbg_printf("getServiceTagFromCMOSToken() - out_err\n");
-    free(tempval);
-    tempval = 0;
+    fnprintf("- out_err\n");
+    free(tag);
+    tag = 0;
 
 out:
-    dbg_printf("getServiceTagFromCMOSToken() - out\n");
-    return tempval;
+    fnprintf("- out\n");
+    return tag;
 }
 
 __internal char *getServiceTagFromSysInfo()
 {
-    dbg_printf("getServiceTagFromSysInfo()\n");
+    fnprintf("\n");
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Serial_Number_Offset);
 }
 
