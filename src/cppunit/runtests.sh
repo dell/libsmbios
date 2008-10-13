@@ -20,17 +20,17 @@ reconstruct_memdump() {
 
     # start with smbios, since it should be 0xE0000
     if [ -e $source_dir/smbios.dat ]; then
-        echo "laying down smbios table."
+        #echo "laying down smbios table."
         dd if=$source_dir/smbios.dat of=$target_dir/memdump.dat bs=1 conv=notrunc seek=$(( 0xE0000 )) > /dev/null 2>&1
     fi
 
     if [ -e $source_dir/sysstr.dat ]; then
-        echo "laying down system string"
+        #echo "laying down system string"
         dd if=$source_dir/sysstr.dat of=$target_dir/memdump.dat bs=1 conv=notrunc seek=$(( 0xFE076 )) > /dev/null 2>&1
     fi
 
     if [ -e $source_dir/idbyte.dat ]; then
-        echo "laying down id byte"
+        #echo "laying down id byte"
         dd if=$source_dir/idbyte.dat of=$target_dir/memdump.dat bs=1 conv=notrunc seek=$(( 0xFE840 )) > /dev/null 2>&1
     fi
 
