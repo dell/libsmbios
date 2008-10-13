@@ -48,38 +48,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testStandalone);
 
 void testStandalone::setUp()
 {
-    string writeDirectory = getWritableDirectory();
+    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
+    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
 
-    // copy the memdump.dat file. We do not write to it, but rw open will fail
-    // if we do not copy it
-    string memdumpOrigFile = getTestDirectory() + "/memdump.dat";
-    string memdumpCopyFile = writeDirectory + "/memdump-copy.dat";
-    copyFile( memdumpCopyFile, memdumpOrigFile );
-
-    // copy the CMOS file. We are going to write to it and do not wan to mess up
-    // the pristine unit test version
-    string cmosOrigFile = getTestDirectory() + "/cmos.dat";
-    string cmosCopyFile = writeDirectory + "/cmos-copy.dat";
-    copyFile( cmosCopyFile, cmosOrigFile );
-
-    // Smi output file.
-    string smiOutput = writeDirectory + "/smi-output.dat";
-
-    // normal users of the smbios classes need not
-    // set the four parameters below. They should all be set inside the factory
-    // properly by default. We override stuff here to have
-    // the smbios, cmos, etc classes use file dumps instead of
-    // real memory/cmos/etc.
-    smbios::SmbiosFactory::getFactory()->setParameter("memFile", memdumpCopyFile);
     smbios::SmbiosFactory::getFactory()->setParameter("offset", 0);
     smbios::SmbiosFactory::getFactory()->setMode(smbios::SmbiosFactory::UnitTestMode);
 
-    cmos::  CmosRWFactory::getFactory()->setParameter("cmosMapFile", cmosCopyFile);
-    cmos::  CmosRWFactory::getFactory()->setMode( factory::IFactory::UnitTestMode );
-
-    memory::MemoryFactory::getFactory()->setParameter("memFile", memdumpCopyFile);
-    memory::MemoryFactory::getFactory()->setMode( memory::MemoryFactory::UnitTestMode );
-
+    string smiOutput = getWritableDirectory() + "/smi-output.dat";
     smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
     smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
 }

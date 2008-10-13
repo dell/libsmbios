@@ -47,28 +47,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testCsmbios);
 
 void testCsmbios::setUp()
 {
-    string writeDirectory = getWritableDirectory();
-    string testInput = getTestDirectory() + "/testInput.xml";
-
-    // copy the memdump.dat file. We do not write to it, but rw open will fail
-    // if we do not copy it
-    string memdumpOrigFile = getTestDirectory() + "/memdump.dat";
-    string memdumpCopyFile = writeDirectory + "/memdump-copy.dat";
-    copyFile( memdumpCopyFile, memdumpOrigFile );
-
-    // copy the CMOS file. We are going to write to it and do not wan to mess up
-    // the pristine unit test version
-    string cmosOrigFile = getTestDirectory() + "/cmos.dat";
-    string cmosCopyFile = writeDirectory + "/cmos-copy.dat";
-    copyFile( cmosCopyFile, cmosOrigFile );
-
-    memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
-    cmos_obj_factory(CMOS_UNIT_TEST_MODE | CMOS_GET_SINGLETON, cmosCopyFile.c_str());
+    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
+    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
 
     doc = 0;
     parser = 0;
     InitXML();
     parser = xmlutils::getParser();
+    string testInput = getTestDirectory() + "/testInput.xml";
     compatXmlReadFile(parser, doc, testInput.c_str());
 }
 
@@ -165,8 +151,6 @@ void testCsmbios::testSmbiosConstruct()
 
     STD_TEST_END("");
 }
-
-
 
 void testCsmbios::testVariousAccessors()
 {

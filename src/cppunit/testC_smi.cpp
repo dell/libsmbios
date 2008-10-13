@@ -44,15 +44,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testCsmi);
 
 void testCsmi::setUp()
 {
-    string writeDirectory = getWritableDirectory();
-
-    // copy the memdump.dat file. We do not write to it, but rw open will fail
-    // if we do not copy it
-    string memdumpOrigFile = getTestDirectory() + "/memdump.dat";
-    string memdumpCopyFile = writeDirectory + "/memdump-copy.dat";
-    copyFile( memdumpCopyFile, memdumpOrigFile );
-
-    memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, memdumpCopyFile.c_str());
+    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
+    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
 }
 
 void testCsmi::tearDown()
