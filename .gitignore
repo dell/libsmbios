@@ -7,25 +7,36 @@
 .deps
 #.*.swp
 
-# AUTOTOOL FILES
-build/compile
-build/config.guess
-build/config.sub
-build/depcomp
-build/install-sh
-build/ltmain.sh
-build/missing
-libtool
-
-# BINARIES
-
-# GENERATED FILES
-Makefile
-Makefile.in
-aclocal.m4
-config.log
-config.status
-configure
-
 # UNIT TEST
 testResults.xml
+
+
+# autogen files
+configure
+aclocal.m4
+Makefile.in
+ABOUT-NLS
+autom4te.cache/
+m4/
+pkg/compile
+pkg/config.guess
+pkg/config.h.in
+pkg/config.h.in~
+pkg/config.rpath
+pkg/config.sub
+pkg/depcomp
+pkg/install-sh
+pkg/ltmain.sh
+pkg/missing
+pkg/mkinstalldirs
+pkg/mkinstalldirs~
+po/Makefile.in.in
+po/Makevars.template
+po/Rules-quot
+po/boldquot.sed
+po/en@boldquot.header
+po/en@quot.header
+po/insert-header.sin
+po/quot.sed
+po/remove-potcdate.sin
+
