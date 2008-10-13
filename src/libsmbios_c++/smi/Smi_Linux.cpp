@@ -48,7 +48,7 @@ namespace smi
     {
         size_t written = fwrite(ptr, size, nmemb, stream); 
         // TODO: handle short write
-        if (written < (size * nmemb))
+        if (written < nmemb)
             throw smbios::InternalErrorImpl("Short write to file handle");
         return written;
     }

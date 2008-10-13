@@ -169,7 +169,7 @@ namespace memory
             fd = 0;
             throw outOfBounds;
         }
-        size_t bytesRead = fread( buffer, 1, length, fd );
+        size_t recordsRead = fread( buffer, length, 1, fd );
 
         if (reopenHint>0)
         {
@@ -178,7 +178,7 @@ namespace memory
         }
 
         // TODO: handle short reads
-        if ((length != bytesRead))
+        if ((1 != recordsRead))
         {
             AccessErrorImpl accessError;
             accessError.setMessageString(_("Read error trying to read memory. OS Error: %(err)s"));
@@ -223,13 +223,13 @@ namespace memory
             fd = 0;
             throw outOfBounds;
         }
-        size_t bytesRead = fwrite( &byte, 1, 1, fd );
+        size_t recordsWritten = fwrite( &byte, 1, 1, fd );
         if (reopenHint > 0)
         {
             fclose(fd);
             fd = 0;
         }
-        if( 1 != bytesRead )
+        if( 1 != recordsWritten )
         {
             AccessErrorImpl accessError;
             accessError.setMessageString(_("Error trying to write memory. OS Error: %(err)s"));

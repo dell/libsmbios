@@ -60,7 +60,7 @@ const int RBU_PACKET_SIZE = 4096;
     {
         size_t written = fwrite(ptr, size, nmemb, stream); 
         // TODO: handle short write
-        if (written < (size * nmemb))
+        if (written < nmemb)
             throw RbuDriverIOErrorImpl("short write");
         return written;
     }

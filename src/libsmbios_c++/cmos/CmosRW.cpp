@@ -127,9 +127,9 @@ namespace cmos
             throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
         fseek (fh, static_cast<long>(realOffset), SEEK_SET);
-        size_t numBytes = fread (&retval, 1, sizeof (retval), fh); // only used in unit tests, so isnt critical
+        size_t numRecs = fread (&retval, sizeof (retval), 1, fh); // only used in unit tests, so isnt critical
         fclose (fh);
-        if (numBytes != sizeof(retval))
+        if (numRecs != 1)
             throw std::exception(); // short read. there isnt really a good exception to throw here.
 
         return retval;
@@ -149,11 +149,11 @@ namespace cmos
             throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
         fseek (fh, static_cast<long>(realOffset), SEEK_SET);
-        size_t written = fwrite (&byte, 1, sizeof (byte), fh);
+        size_t recs = fwrite (&byte, sizeof (byte), 1, fh);
         fclose (fh);
         fflush(NULL);
 
-        if (written < sizeof(byte))
+        if (recs < 1)
             throw std::exception(); // short write. there isnt really a good exception to throw here.
 
         if(! isNotifySuppressed() )
