@@ -43,6 +43,11 @@ void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 
     dell_smi_obj_execute(smi);
 
+    fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
+    fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
+    fnprintf(" cbRES3: %d\n", dell_smi_obj_get_res(smi, cbRES3));
+    fnprintf(" cbRES4: %d\n", dell_smi_obj_get_res(smi, cbRES4));
+
     res[cbRES1] = dell_smi_obj_get_res(smi, cbRES1);
     res[cbRES2] = dell_smi_obj_get_res(smi, cbRES2);
     res[cbRES3] = dell_smi_obj_get_res(smi, cbRES3);
@@ -63,11 +68,6 @@ int get_property_ownership_tag(char *tagBuf, size_t size)
 
     fnprintf("dell_smi_obj_execute()\n");
     dell_smi_obj_execute(smi);
-
-    fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
-    fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
-    fnprintf(" cbRES3: %d\n", dell_smi_obj_get_res(smi, cbRES3));
-    fnprintf(" cbRES4: %d\n", dell_smi_obj_get_res(smi, cbRES4));
 
     int retval = dell_smi_obj_get_res(smi, cbRES1);
     if (retval != 0)
@@ -96,17 +96,12 @@ int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size
 
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
     dell_smi_obj_set_select(smi, 1); // 1 == write
-    u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, 80);
+    u8 *buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, 80);
     dell_smi_obj_set_arg(smi, cbARG2, security_key);
     strncpy((char *)buf, newTag, 80);
 
     fnprintf("dell_smi_obj_execute()\n");
     dell_smi_obj_execute(smi);
-
-    fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
-    fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
-    fnprintf(" cbRES3: %d\n", dell_smi_obj_get_res(smi, cbRES3));
-    fnprintf(" cbRES4: %d\n", dell_smi_obj_get_res(smi, cbRES4));
 
     int retval = dell_smi_obj_get_res(smi, cbRES1);
 

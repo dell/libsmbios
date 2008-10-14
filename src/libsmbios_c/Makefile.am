@@ -25,6 +25,7 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/smbios/smbios_obj.c			\
     src/libsmbios_c/smi/smi.c				\
     src/libsmbios_c/smi/smi_obj.c			\
+    src/libsmbios_c/smi/smi_password.c			\
     src/libsmbios_c/smi/smi_linux.c			\
     src/libsmbios_c/smi/smi_impl.h			\
     src/libsmbios_c/system_info/id_byte.c		\
