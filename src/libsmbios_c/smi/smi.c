@@ -64,14 +64,13 @@ int get_property_ownership_tag(char *tagBuf, size_t size)
     fnprintf("dell_smi_obj_execute()\n");
     dell_smi_obj_execute(smi);
 
-    int retval = dell_smi_obj_get_res(smi, cbRES1);
-
     fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
     fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
     fnprintf(" cbRES3: %d\n", dell_smi_obj_get_res(smi, cbRES3));
     fnprintf(" cbRES4: %d\n", dell_smi_obj_get_res(smi, cbRES4));
 
-    if (dell_smi_obj_get_res(smi, cbRES1) != 0)
+    int retval = dell_smi_obj_get_res(smi, cbRES1);
+    if (retval != 0)
         goto out;
 
     fnprintf("copy to return value\n");
@@ -85,9 +84,35 @@ out:
     return retval;
 }
 
-int set_property_ownership_tag(const char *assword, const char *newTag, size_t size)
+u32 get_security_key(const char *password)
 {
     return 0;
+}
+
+int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size)
+{
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    fnprintf("\n");
+
+    dell_smi_obj_set_class(smi, 20); //class 20 == property tag
+    dell_smi_obj_set_select(smi, 1); // 1 == write
+    u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, 80);
+    dell_smi_obj_set_arg(smi, cbARG2, security_key);
+    strncpy((char *)buf, newTag, 80);
+
+    fnprintf("dell_smi_obj_execute()\n");
+    dell_smi_obj_execute(smi);
+
+    fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
+    fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
+    fnprintf(" cbRES3: %d\n", dell_smi_obj_get_res(smi, cbRES3));
+    fnprintf(" cbRES4: %d\n", dell_smi_obj_get_res(smi, cbRES4));
+
+    int retval = dell_smi_obj_get_res(smi, cbRES1);
+
+    fnprintf(" - out\n");
+    dell_smi_obj_free(smi);
+    return retval;
 }
 
 static int read_setting(u16 select, u32 location, u32 *minValue, u32 *maxValue)

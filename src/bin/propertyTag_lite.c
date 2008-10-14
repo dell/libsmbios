@@ -79,5 +79,14 @@ main (int argc, char **argv)
     get_property_ownership_tag(propertyTag, PROP_TAG_SIZE);
     printf("Existing Property Ownership Tag: %s\n", propertyTag);
 
+    if(new_tag)
+    {
+        int ret = set_property_ownership_tag(0, new_tag, strlen(new_tag));
+        if(ret==0)
+            printf("changed tag successfully\n");
+        else
+            printf("tag change failed\n");
+    }
+
     return retval;
 }
