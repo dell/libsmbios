@@ -22,6 +22,8 @@
 #include "smbios_c/smi.h"
 #include "smbios_c/types.h"
 
+#include "smbios_c/config/abi_prefix.h"
+
 EXTERN_C_BEGIN;
 
 #if defined(DEBUG_SMI_C)
@@ -30,20 +32,80 @@ EXTERN_C_BEGIN;
 #   define dbg_printf _dbg_printf
 #endif
 
+#define KERNEL_SMI_MAGIC_NUMBER (0x534D4931)   /* "SMI1" */
+#define DELL_CALLINTF_SMI_MAGIC_NUMBER   (0x42534931)  /* "BSI1" */
+
+enum {
+    class_user_password =  9,
+    class_admin_password = 10,
+};
+
+#if defined(_MSC_VER)
+#pragma pack(push,1)
+#endif
+/* cut and paste from kernel sources */
+struct callintf_cmd
+{
+    u32 magic;
+    u32 ebx;
+    u32 ecx;
+    u16 command_address;
+    u8  command_code;
+    u8  reserved;
+    u8  command_buffer_start[];
+}
+LIBSMBIOS_C_PACKED_ATTR;
+
+
+struct smi_cmd_buffer
+{
+    u16 smi_class;
+    u16 smi_select;
+    union {  /* to match BIOS docs, can use exact arg names specified in doc */
+        u32	     arg[4];
+        struct
+        {
+            u32 cbARG1;
+            u32 cbARG2;
+            u32 cbARG3;
+            u32 cbARG4;
+        };
+    };
+    union {  /* to match BIOS docs, can use exact res names specified in doc */
+        u32      res[4];
+        struct
+        {
+            s32 cbRES1;
+            s32 cbRES2;
+            s32 cbRES3;
+            s32 cbRES4;
+        };
+    };
+}
+LIBSMBIOS_C_PACKED_ATTR;
+
+#if defined(_MSC_VER)
+#pragma pack(pop)
+#endif
+
 struct dell_smi_obj
 {
     int initialized;
-    int (*execute)(struct dell_smi_obj *this);
-    u16 smi_class;
-    u16 smi_select;
-    u32 arg[4];
-    u32 res[4];
-    u8 *physical_buffers[4];
+    u16 command_address;
+    u8  command_code;
+    int (*execute)(struct dell_smi_obj *);
+    struct smi_cmd_buffer smi_buf;
+    u8 *physical_buffer[4];
+    size_t physical_buffer_size[4];
 };
 
 void __internal init_dell_smi_obj(struct dell_smi_obj *);
 void __internal init_dell_smi_obj_std(struct dell_smi_obj *);
 
+
+
 EXTERN_C_END;
+
+#include "smbios_c/config/abi_suffix.h"
 
 #endif /* SMBIOS_IMPL_H */

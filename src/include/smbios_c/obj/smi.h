@@ -41,7 +41,10 @@ void dell_smi_obj_set_class(struct dell_smi_obj *, u16 );
 void dell_smi_obj_set_select(struct dell_smi_obj *, u16 );
 void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
 u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
-u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *, u8 argno, size_t size);
+u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
+u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
+u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
+u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
 void dell_smi_obj_execute(struct dell_smi_obj *);
 
 //u32  dell_smi_get_authentication_key(const char *pass);

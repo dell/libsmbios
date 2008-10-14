@@ -28,8 +28,8 @@
 
 // public
 #include "smbios_c/obj/smi.h"
+#include "smbios_c/smbios.h"
 #include "smbios_c/smi.h"
-#include "smbios_c/types.h"
 
 // private
 #include "smi_impl.h"
@@ -90,40 +90,86 @@ void dell_smi_obj_free(struct dell_smi_obj *m)
 void dell_smi_obj_set_class(struct dell_smi_obj *this, u16 smi_class)
 {
     fnprintf("\n");
-    this->smi_class = smi_class;
+    this->smi_buf.smi_class = smi_class;
 }
 
 void dell_smi_obj_set_select(struct dell_smi_obj *this, u16 smi_select)
 {
     fnprintf("\n");
-    this->smi_select = smi_select;
+    this->smi_buf.smi_select = smi_select;
 }
 
 void dell_smi_obj_set_arg(struct dell_smi_obj *this, u8 argno, u32 value)
 {
     fnprintf("\n");
-    free(this->physical_buffers[argno]);
-    this->physical_buffers[argno] = 0;
+    free(this->physical_buffer[argno]);
+    this->physical_buffer[argno] = 0;
+    this->physical_buffer_size[argno] = 0;
 
-    this->arg[argno] = value;
+    this->smi_buf.arg[argno] = value;
 }
 
 u32  dell_smi_obj_get_res(struct dell_smi_obj *this, u8 argno)
 {
     fnprintf("\n");
-    return this->res[argno];
+    return this->smi_buf.res[argno];
 }
 
-u8  *dell_smi_obj_make_buffer(struct dell_smi_obj *this, u8 argno, size_t size)
+static u8 * dell_smi_obj_make_buffer_X(struct dell_smi_obj *this, u8 argno, size_t size)
 {
     fnprintf("\n");
     if (argno>3)
         return 0;
 
-    free(this->physical_buffers[argno]);
-    this->physical_buffers[argno] = calloc(1, size);
-    return this->physical_buffers[argno];
+    this->smi_buf.arg[argno] = 0;
+    free(this->physical_buffer[argno]);
+    this->physical_buffer[argno] = calloc(1, size);
+    this->physical_buffer_size[argno] = size;
+    return this->physical_buffer[argno];
 }
+
+const char *bufpat = "DSCI";
+u8 * dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *this, u8 argno, size_t size)
+{
+    // allocate 4 extra bytes to hold size marker at the beginning
+    u8 *buf = dell_smi_obj_make_buffer_X(this, argno, size + sizeof(u32));
+    if(buf)
+    {
+        // write buffer pattern
+        for (int i=0; i<size+4; i++)
+            buf[i] = bufpat[i%4];
+
+        // write size of remaining bytes
+        memcpy(buf, &size, sizeof(u32));
+        buf += sizeof(u32);
+    }
+    return buf;
+}
+
+u8 * dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *this, u8 argno, size_t size)
+{
+    return dell_smi_obj_make_buffer_X(this, argno, size);
+}
+
+u8 * dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *this, u8 argno, size_t size)
+{
+    u8 smbios_ver = 1;
+    // look in smbios struct 0xD0 (Revisions and IDs) to find the Dell SMBIOS implementation version
+    //  offset 4 of the struct == dell major version
+    struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xd0);
+    smbios_struct_get_data(s, &(smbios_ver), 0x04, sizeof(u8));
+
+    if (smbios_ver >= 2)
+        return dell_smi_obj_make_buffer_frombios_withheader(this, argno, size);
+    else
+        return dell_smi_obj_make_buffer_frombios_withoutheader(this, argno, size);
+}
+
+u8 * dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *this, u8 argno, size_t size)
+{
+    return dell_smi_obj_make_buffer_X(this, argno, size);
+}
+
 
 void dell_smi_obj_execute(struct dell_smi_obj *this)
 {
@@ -143,8 +189,9 @@ void __internal _smi_free(struct dell_smi_obj *this)
     this->initialized=0;
     for (int i=0;i<4;++i)
     {
-        free(this->physical_buffers[i]);
-        this->physical_buffers[i]=0;
+        free(this->physical_buffer[i]);
+        this->physical_buffer[i]=0;
+        this->physical_buffer_size[i] = 0;
     }
     free(this);
 }
@@ -152,8 +199,13 @@ void __internal _smi_free(struct dell_smi_obj *this)
 void __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
 {
     fnprintf("\n");
+    this->smi_buf.res[0] = -3; //default to 'not handled'
+
+    struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xda);
+    smbios_struct_get_data(s, &(this->command_address), 4, sizeof(u16));
+    smbios_struct_get_data(s, &(this->command_code), 6, sizeof(u8));
+
     this->initialized = 1;
-    this->res[0] = -3; //default to 'not handled'
 }
 
 

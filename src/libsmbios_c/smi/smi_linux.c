@@ -22,8 +22,10 @@
 #include "smbios_c/compat.h"
 
 // system
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/file.h>  // flock
 
 // public
 #include "smbios_c/obj/smi.h"
@@ -34,9 +36,254 @@
 
 // forward declarations
 
+const char *sysfs_basedir             = "/sys/devices/platform/dcdbas/";
+const char *smi_data_fn               = "smi_data";
+const char *smi_data_buf_phys_addr_fn = "smi_data_buf_phys_addr";
+const char *smi_data_buf_size_fn      = "smi_data_buf_size";
+const char *smi_request_fn            = "smi_request";
+
+#define bufsize 256
+
+// not in header file. for private use by unit tests.
+void set_basedir(const char *newdir)
+{
+    sysfs_basedir = newdir;
+}
+
+u32 __internal get_phys_buf_addr()
+{
+    char fn[bufsize] = {0,};
+    FILE *fd = 0;
+    u32 physaddr = 0;
+    char linebuf[bufsize] = {0,};
+
+    fnprintf("\n");
+
+    strcat(fn, sysfs_basedir);
+    strcat(fn, smi_data_buf_phys_addr_fn);
+    fd = fopen(fn, "rb");
+    if (!fd)
+        goto out;
+
+    fseek(fd, 0L, 0);
+    size_t numBytes = fread(linebuf, 1, bufsize, fd);
+    if (!numBytes)
+        goto out_close;
+
+    physaddr = strtoll(linebuf, NULL, 16);
+
+out_close:
+    fclose(fd);
+    fflush(NULL);
+
+out:
+    return physaddr;
+}
+
+// returns physaddr
+u32 __internal set_phys_buf_size(u32 newsize)
+{
+    char fn[bufsize] = {0,};
+    FILE *fd = 0;
+    char linebuf[bufsize] = {0,};
+    u32 phys_buf_addr=0;
+
+    fnprintf("\n");
+
+    strcat(fn, sysfs_basedir);
+    strcat(fn, smi_data_buf_size_fn);
+    fd = fopen(fn, "w+b");
+    if (!fd)
+        goto out;
+
+    snprintf(linebuf, bufsize, "%d", newsize);
+    size_t recs = fwrite(linebuf, strlen(linebuf)+1, 1, fd);
+    if (recs != 1)
+        goto out;
+
+    fclose(fd);
+
+    fflush(NULL);
+
+    phys_buf_addr = get_phys_buf_addr();
+    goto out;
+
+out:
+    return phys_buf_addr;
+}
+
+void __internal write_smi_data(u8 *buffer, size_t size)
+{
+    char fn[bufsize] = {0,};
+    FILE *fd = 0;
+
+    fnprintf("\n");
+
+    strcat(fn, sysfs_basedir);
+    strcat(fn, smi_data_fn);
+
+    fnprintf("open data file: '%s'\n", fn);
+
+    fd = fopen(fn, "w+b");
+    if (!fd)
+        goto out;
+
+    size_t recs = fwrite(buffer, 1, size, fd);
+    UNREFERENCED_PARAMETER(recs);
+    fnprintf("wrote %zd recs\nclose()\n", recs);
+    fclose(fd);
+    fnprintf("fflush()\n");
+    fflush(NULL);
+out:
+    fnprintf("return\n");
+    return;
+}
+
+void __internal trigger_smi(FILE *fd)
+{
+    fnprintf("\n");
+
+    if (!fd)
+        goto out;
+
+    size_t recs = fwrite("1", 1, 2, fd);
+    UNREFERENCED_PARAMETER(recs);
+    fflush(NULL);
+
+out:
+    return;
+}
+
+void __internal get_smi_results(u8 *buffer, size_t size)
+{
+    char fn[bufsize] = {0,};
+    FILE *fd = 0;
+
+    fnprintf("\n");
+
+    strcat(fn, sysfs_basedir);
+    strcat(fn, smi_data_fn);
+    fd = fopen(fn, "rb");
+    if (!fd)
+        goto out;
+
+    size_t recs = fread(buffer, size, 1, fd);
+    UNREFERENCED_PARAMETER(recs);
+    fclose(fd);
+out:
+    return;
+}
+
+FILE *open_request_file()
+{
+    char fn[bufsize] = {0,};
+    FILE *fd = 0;
+    strcat(fn, sysfs_basedir);
+    strcat(fn, smi_request_fn);
+    fnprintf("open request file: '%s'\n", fn);
+    fd = fopen(fn, "w+b");
+    if(fd)
+        flock( fileno(fd), LOCK_EX );
+    return fd;
+}
+
+
+#define TO_KERNEL_BUF true
+#define FROM_KERNEL_BUF false
+
+void copy_phys_bufs(struct dell_smi_obj *this, struct callintf_cmd *kernel_buf, u32 physaddr, bool direction)
+{
+    u32 curoffset = sizeof(this->smi_buf) + sizeof(struct callintf_cmd);
+
+    u8 *dest = 0;
+    u8 *source = 0;
+
+    fnprintf(" sizeof(this->smi_buf)==%zd   sizeof(struct callintf_cmd)==%zd  \n", sizeof(this->smi_buf), sizeof(struct callintf_cmd));
+    fnprintf(" kernel_buf %p\n", kernel_buf);
+
+    for (int i=0;i<4;i++)
+    {
+        if (! this->physical_buffer[i])
+            continue;
+
+        fnprintf("copy buffer[%d] size==%zd\n", i, this->physical_buffer_size[i]);
+        fnprintf("current offset==%d\n", curoffset);
+
+        source = this->physical_buffer[i];
+        dest = (u8*)kernel_buf + curoffset;
+        if (direction == FROM_KERNEL_BUF)
+        {
+            source = (u8*)kernel_buf + curoffset;
+            dest = this->physical_buffer[i];
+        }
+
+        this->smi_buf.arg[i] = curoffset + physaddr;
+        memcpy(dest, source, this->physical_buffer_size[i]);
+        curoffset += this->physical_buffer_size[i];
+    }
+}
+
+
 int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 {
-    fnprintf("FOO!\n");
+    struct callintf_cmd *kernel_buf;
+    size_t alloc_size = sizeof(struct callintf_cmd) + sizeof(this->smi_buf);
+
+    fnprintf("\n");
+
+    // calculate buffer space needed
+    for(int i=0; i<4; i++)
+        alloc_size += this->physical_buffer_size[i];
+
+    // allocate buffer
+    fnprintf(" allocate buffer: %zd\n", alloc_size);
+    u8 *buffer = calloc(1, alloc_size);
+    kernel_buf = (struct callintf_cmd *)buffer;
+
+    // LOCK
+    FILE *fd = open_request_file();
+    if (!fd)
+        goto err_out;
+
+    // set phys buf size
+    u32 physaddr = set_phys_buf_size(alloc_size);
+
+    // setup kernel args
+    kernel_buf->magic = KERNEL_SMI_MAGIC_NUMBER;
+    kernel_buf->ebx = 0;
+    kernel_buf->ecx   = DELL_CALLINTF_SMI_MAGIC_NUMBER;
+    kernel_buf->command_address = this->command_address;
+    kernel_buf->command_code = this->command_code;
+
+    // copy in each physical addr buf
+    copy_phys_bufs(this, kernel_buf, physaddr, TO_KERNEL_BUF);
+
+    // setup std smi args
+    memcpy(kernel_buf->command_buffer_start, &(this->smi_buf), sizeof(this->smi_buf));
+
+    // write the whole thing to the smi file
+    fnprintf(" write smi data\n");
+    write_smi_data(buffer, alloc_size);
+
+    // trigger smi
+    fnprintf(" trigger smi\n");
+    trigger_smi(fd);
+
+    // copy results back
+    fnprintf(" read smi results\n");
+    get_smi_results(buffer, alloc_size);
+
+    // unlock
+    flock( fileno(fd), LOCK_UN );
+
+    // update our physical address bufs
+    memcpy(&(this->smi_buf), kernel_buf->command_buffer_start, sizeof(this->smi_buf));
+
+    // update smi buffer
+    copy_phys_bufs(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
+
+err_out:
+    free(buffer);
     return -1;
 }
 

@@ -57,12 +57,14 @@ public:
     // base smbios test
     void testSmiConstruct();
     void testSmiBuffer();
+    void testLinuxSmi();
 
     // make sure to put this at the end...
     CPPUNIT_TEST_SUITE (testCsmi);
 
     CPPUNIT_TEST (testSmiConstruct);
     CPPUNIT_TEST (testSmiBuffer);
+    CPPUNIT_TEST (testLinuxSmi);
 
     CPPUNIT_TEST_SUITE_END ();
 };

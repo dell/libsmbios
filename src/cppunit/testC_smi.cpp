@@ -43,50 +43,79 @@ using namespace std;
 // Register the test
 CPPUNIT_TEST_SUITE_REGISTRATION (testCsmi);
 
-// keep this struct in sync with what is in smi_impl.h
+// keep these struct in sync with what is in smi_impl.h
+struct UT_smi_cmd_buffer
+{
+    u16 smi_class;
+    u16 smi_select;
+    union {  /* to match BIOS docs, can use exact arg names specified in doc */
+        u32      arg[4];
+        struct
+        {
+            u32 cbARG1;
+            u32 cbARG2;
+            u32 cbARG3;
+            u32 cbARG4;
+        };
+    };
+    union {  /* to match BIOS docs, can use exact res names specified in doc */
+        u32      res[4];
+        struct
+        {
+            s32 cbRES1;
+            s32 cbRES2;
+            s32 cbRES3;
+            s32 cbRES4;
+        };
+    };
+}
+LIBSMBIOS_C_PACKED_ATTR;
+
+// keep these struct in sync with what is in smi_impl.h
 struct UT_dell_smi_obj
 {
     int initialized;
+    u16 command_address;
+    u8  command_code;
     int (*execute)(struct dell_smi_obj *);
-    u16 smi_class;
-    u16 smi_select;
-    u32 arg[4];
-    u32 res[4];
-    u8 *physical_buffers[4];
+    struct UT_smi_cmd_buffer smi_buf;
+    u8 *physical_buffer[4];
+    size_t physical_buffer_size[4];
 };
+
 
 int smi_ut_exec(struct dell_smi_obj *smi)
 {
     struct UT_dell_smi_obj *ut_smi = (struct UT_dell_smi_obj *)smi;
 
-    switch(ut_smi->smi_class){
+    switch(ut_smi->smi_buf.smi_class){
     case 0x01:
-        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->arg[CB_ARG1] );
-        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->arg[CB_ARG2] );
-        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->arg[CB_ARG3] );
-        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->arg[CB_ARG4] );
-        ut_smi->res[CB_RES1] = 1;
-        ut_smi->res[CB_RES2] = 1;
-        ut_smi->res[CB_RES3] = 1;
-        ut_smi->res[CB_RES4] = 1;
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG1] );
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG2] );
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG3] );
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG4] );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->smi_buf.cbARG1 );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->smi_buf.cbARG2 );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->smi_buf.cbARG3 );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x01, ut_smi->smi_buf.cbARG4 );
+        ut_smi->smi_buf.cbRES1 = 1;
+        ut_smi->smi_buf.cbRES2 = 1;
+        ut_smi->smi_buf.cbRES3 = 1;
+        ut_smi->smi_buf.cbRES4 = 1;
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG1] );
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG2] );
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG3] );
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG4] );
         break;
     case 0x02:
-        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->arg[CB_ARG1] );
-        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->arg[CB_ARG2] );
-        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->arg[CB_ARG3] );
-        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->arg[CB_ARG4] );
-        ut_smi->res[CB_RES1] = 2;
-        ut_smi->res[CB_RES2] = 2;
-        ut_smi->res[CB_RES3] = 2;
-        ut_smi->res[CB_RES4] = 2;
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG1] );
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG2] );
-        memset(ut_smi->physical_buffers[CB_ARG3], 'a', 32);
-        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffers[CB_ARG4] );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->smi_buf.cbARG1 );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->smi_buf.cbARG2 );
+        CPPUNIT_ASSERT_EQUAL( (u32)0x00, ut_smi->smi_buf.cbARG3 ); // phys buf ptr arg == 0
+        CPPUNIT_ASSERT_EQUAL( (u32)0x02, ut_smi->smi_buf.cbARG4 );
+        ut_smi->smi_buf.cbRES1 = 2;
+        ut_smi->smi_buf.cbRES2 = 2;
+        ut_smi->smi_buf.cbRES3 = 2;
+        ut_smi->smi_buf.cbRES4 = 2;
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG1] );
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG2] );
+        memset(ut_smi->physical_buffer[cbARG3], 'a', 32);
+        CPPUNIT_ASSERT_EQUAL( (u8*)0, ut_smi->physical_buffer[cbARG4] );
         break;
     default:
         break;
@@ -119,22 +148,22 @@ void testCsmi::testSmiConstruct()
 
     dell_smi_obj_set_class(smi, 0x01);
     dell_smi_obj_set_select(smi, 0x01);
-    dell_smi_obj_set_arg(smi, CB_ARG1, 0x01);
-    dell_smi_obj_set_arg(smi, CB_ARG2, 0x01);
-    dell_smi_obj_set_arg(smi, CB_ARG3, 0x01);
-    dell_smi_obj_set_arg(smi, CB_ARG4, 0x01);
+    dell_smi_obj_set_arg(smi, cbARG1, 0x01);
+    dell_smi_obj_set_arg(smi, cbARG2, 0x01);
+    dell_smi_obj_set_arg(smi, cbARG3, 0x01);
+    dell_smi_obj_set_arg(smi, cbARG4, 0x01);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, CB_RES1));
-    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, CB_RES2));
-    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, CB_RES3));
-    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, CB_RES4));
+    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES2));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
 
     dell_smi_obj_execute(smi);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, CB_RES1));
-    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, CB_RES2));
-    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, CB_RES3));
-    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, CB_RES4));
+    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, cbRES2));
+    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, cbRES3));
+    CPPUNIT_ASSERT_EQUAL( (u32)1, dell_smi_obj_get_res(smi, cbRES4));
 
     dell_smi_obj_free(smi);
     STD_TEST_END("");
@@ -147,31 +176,89 @@ void testCsmi::testSmiBuffer()
 
     dell_smi_obj_set_class(smi, 0x02);
     dell_smi_obj_set_select(smi, 0x02);
-    dell_smi_obj_set_arg(smi, CB_ARG1, 0x02);
-    dell_smi_obj_set_arg(smi, CB_ARG2, 0x02);
-    dell_smi_obj_set_arg(smi, CB_ARG3, 0x02);
-    dell_smi_obj_set_arg(smi, CB_ARG4, 0x02);
+    dell_smi_obj_set_arg(smi, cbARG1, 0x02);
+    dell_smi_obj_set_arg(smi, cbARG2, 0x02);
+    dell_smi_obj_set_arg(smi, cbARG3, 0x02);
+    dell_smi_obj_set_arg(smi, cbARG4, 0x02);
 
-    u8 *buf = dell_smi_obj_make_buffer(smi, CB_ARG3, 32);
+    u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG3, 33);
     memset(buf, 'z', 32);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, CB_RES1));
-    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, CB_RES2));
-    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, CB_RES3));
-    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, CB_RES4));
+    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES2));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
 
     dell_smi_obj_execute(smi);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, CB_RES1));
-    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, CB_RES2));
-    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, CB_RES3));
-    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, CB_RES4));
+    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES2));
+    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES3));
+    CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES4));
 
     CPPUNIT_ASSERT_EQUAL( (u8)'a', buf[0] );
+    CPPUNIT_ASSERT_EQUAL( (u8)'a', buf[31] );
 
     dell_smi_obj_free(smi);
     STD_TEST_END("");
 }
+
+// private for unit test only
+extern "C" {
+void set_basedir(const char *newdir);
+}
+
+void testCsmi::testLinuxSmi()
+{
+    STD_TEST_START(getTestName().c_str() << "  ");
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+
+    string d = getWritableDirectory() + "/";
+    cout << "set_basedir(" << d << ")" << endl;
+    set_basedir(d.c_str());
+
+    cout << "set_class" << endl;
+    dell_smi_obj_set_class(smi, 0x03);
+    dell_smi_obj_set_select(smi, 0x03);
+    dell_smi_obj_set_arg(smi, cbARG1, 0x03);
+    dell_smi_obj_set_arg(smi, cbARG2, 0x03);
+    dell_smi_obj_set_arg(smi, cbARG3, 0x03);
+    dell_smi_obj_set_arg(smi, cbARG4, 0x03);
+
+    cout << "make_buffer" << endl;
+    u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG4, 32);
+    memset(buf, 'z', 24);
+
+    buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG3, 32);
+    memset(buf, 'o', 24);
+
+    buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG2, 32);
+    memset(buf, 'm', 24);
+
+    buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, 32);
+    memset(buf, 'a', 24);
+
+    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES2));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
+
+    cout << "execute" << endl;
+    dell_smi_obj_execute(smi);
+
+    //CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES1));
+    //CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES2));
+    //CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES3));
+    //CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES4));
+
+    //CPPUNIT_ASSERT_EQUAL( (u8)'a', buf[0] );
+    //CPPUNIT_ASSERT_EQUAL( (u8)'a', buf[31] );
+
+    dell_smi_obj_free(smi);
+    STD_TEST_END("");
+}
+
+
 
 
 
