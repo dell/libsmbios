@@ -70,6 +70,18 @@ install-exec-hook:
 	    perl -p -i -e 's|^PKGLIBEXECDIR\s*=.*|PKGLIBEXECDIR="$(pkglibexecdir)"|' $$file        ;\
 	done
 
+.PHONY: upload_buildservice
+upload_buildservice: dist
+	[ -n "$(PROJECT)" ] || (echo "Must specify PROJECT"; exit 1)
+	osc co $(PROJECT) $(PACKAGE)
+	rm -f $(PROJECT)/$(PACKAGE)/*.tar.gz
+	rm -f $(PROJECT)/$(PACKAGE)/*.spec
+	cp ${PACKAGE}*.tar.gz $(PROJECT)/$(PACKAGE)
+	cp */${PACKAGE}.spec $(PROJECT)/$(PACKAGE)
+	cd $(PROJECT)/$(PACKAGE); osc addremove
+	cd $(PROJECT)/$(PACKAGE); yes | osc updatepacmetafromspec
+	cd $(PROJECT)/$(PACKAGE); osc ci -m "scripted source update"
+
 TOPDIR := $(shell cd $(top_builddir);pwd)
 BUILDDIR = $(TOPDIR)/_rpmbuild
 RPMDIR = $(TOPDIR)
@@ -78,23 +90,22 @@ SPECFILE= $(TOPDIR)/pkg/$(PACKAGE_NAME).spec
 SPECDIR = $(TOPDIR)/pkg
 SRCRPMDIR = $(TOPDIR)
 
-AM_RPM_DEFINES = --define "_topdir $(TOPDIR)" \
+RPM_DEFINES = --define "_topdir $(TOPDIR)" \
 		--define "_builddir $(BUILDDIR)" \
 		--define "_rpmdir $(RPMDIR)" \
 		--define "_sourcedir $(SOURCEDIR)" \
 		--define "_specdir $(SPECDIR)" \
-		--define "_srcrpmdir $(SRCRPMDIR)" \
-		$(RPM_DEFINES)
+		--define "_srcrpmdir $(SRCRPMDIR)"
 
 .PHONY: rpm srpm
 rpm: dist
 	mkdir -p $(BUILDDIR)
-	rpmbuild $(AM_RPM_DEFINES) -ba --nodeps $(SPECFILE)
+	rpmbuild $(RPM_DEFINES) -ba --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
 
 srpm: dist
 	mkdir -p $(BUILDDIR)
-	rpmbuild $(AM_RPM_DEFINES) -bs --nodeps $(SPECFILE)
+	rpmbuild $(RPM_DEFINES) -bs --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
 
 # This updates the debian version information, similar to how specfile for RPM

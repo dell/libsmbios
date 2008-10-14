@@ -44,12 +44,7 @@ DISTCLEANFILES += ./po/stamp-po
 clean-generic:
 	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
 
-.PHONY: obs_upload valgrind
-obs-upload: dist
-	@[ -n "$(PROJECT)" ] || echo "You must specify the PROJECT variable"
-	@[ -n "$(PROJECT)" ] || exit 1
-	$(top_srcdir)/pkg/obs-upload.sh $(PROJECT) $(PACKAGE)
-
+.PHONY: valgrind
 valgrind: $(check_PROGRAMS)
 	VALGRIND="valgrind -v --leak-check=full --error-exitcode=1" make check-TESTS
 
