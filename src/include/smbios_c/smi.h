@@ -38,16 +38,16 @@ enum {
 void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 
 // prepackaged smi functions
-int getPropertyOwnershipTag(char *tagBuf, size_t size);
-int setPropertyOwnershipTag(const char *assword, const char *newTag, size_t size);
+int get_property_ownership_tag(char *tagBuf, size_t size);
+int set_property_ownership_tag(const char *assword, const char *newTag, size_t size);
 
-int readNVStorage         (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
-int readBatteryModeSetting(u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
-int readACModeSetting     (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
+int read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
+int read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
+int read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
 
-int writeNVStorage         (const char *password, u32 location, u32 value);
-int writeBatteryModeSetting(const char *password, u32 location, u32 value);
-int writeACModeSetting     (const char *password, u32 location, u32 value);
+int write_nv_storage         (const char *password, u32 location, u32 value);
+int write_battery_mode_setting(const char *password, u32 location, u32 value);
+int write_ac_mode_setting     (const char *password, u32 location, u32 value);
 
 EXTERN_C_END;
 
