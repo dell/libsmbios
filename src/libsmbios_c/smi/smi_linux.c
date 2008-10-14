@@ -178,12 +178,18 @@ FILE *open_request_file()
 {
     char fn[bufsize] = {0,};
     FILE *fd = 0;
+    int ret;
     strcat(fn, sysfs_basedir);
     strcat(fn, smi_request_fn);
     fnprintf("open request file: '%s'\n", fn);
-    fd = fopen(fn, "w+b");
+    fd = fopen(fn, "wb");
     if(fd)
         flock( fileno(fd), LOCK_EX );
+    if(fd)
+        ret = fwrite("0", 1, 1, fd);
+
+    fnprintf("got fd for request file: %p\n", fd);
+    UNREFERENCED_PARAMETER(ret);
     return fd;
 }
 
@@ -241,11 +247,13 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     kernel_buf = (struct callintf_cmd *)buffer;
 
     // LOCK
+    fnprintf(" open_request_file()\n");
     FILE *fd = open_request_file();
     if (!fd)
         goto err_out;
 
     // set phys buf size
+    fnprintf(" set buffer size\n");
     u32 physaddr = set_phys_buf_size(alloc_size);
 
     // setup kernel args
@@ -282,7 +290,12 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     // update smi buffer
     copy_phys_bufs(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
 
+    goto out;
+
 err_out:
+    fnprintf(" err_out\n");
+
+out:
     free(buffer);
     return -1;
 }
