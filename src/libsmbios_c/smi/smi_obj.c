@@ -133,6 +133,7 @@ u8 * dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *this, u8 
 {
     // allocate 4 extra bytes to hold size marker at the beginning
     u8 *buf = dell_smi_obj_make_buffer_X(this, argno, size + sizeof(u32));
+    fnprintf("\n");
     if(buf)
     {
         // write buffer pattern
@@ -148,6 +149,7 @@ u8 * dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *this, u8 
 
 u8 * dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *this, u8 argno, size_t size)
 {
+    fnprintf("\n");
     return dell_smi_obj_make_buffer_X(this, argno, size);
 }
 
@@ -158,6 +160,8 @@ u8 * dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *this, u8 argno,
     //  offset 4 of the struct == dell major version
     struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xd0);
     smbios_struct_get_data(s, &(smbios_ver), 0x04, sizeof(u8));
+
+    fnprintf("dell smbios ver: %d\n", smbios_ver);
 
     if (smbios_ver >= 2)
         return dell_smi_obj_make_buffer_frombios_withheader(this, argno, size);

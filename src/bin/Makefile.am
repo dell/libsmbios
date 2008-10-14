@@ -64,6 +64,10 @@ noinst_PROGRAMS += out/getSystemId_lite
 out_getSystemId_lite_SOURCES = src/bin/getSystemId_lite.c 
 out_getSystemId_lite_LDADD = out/libsmbios_c.la out/libgetopt.la
 
+noinst_PROGRAMS += out/propertyTag_lite
+out_propertyTag_lite_SOURCES = src/bin/propertyTag_lite.cpp
+out_propertyTag_lite_LDADD = out/libsmbios_c.la out/libgetopt.la
+
 
 
 
