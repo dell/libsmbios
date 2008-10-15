@@ -92,14 +92,26 @@ char * DLL_SPEC sysinfo_get_asset_tag();
  */
 char * DLL_SPEC sysinfo_get_service_tag();
 
+/** copy property ownership tag into user-supplied buffer.
+ * @param tagBuf  user must allocate 81-byte null-filled buffer to hold tag
+ * @param size  indicates size of buffer. If smaller buffer is passed, result may be truncated
+ * @return 0 on success
+ */
+int DLL_SPEC sysinfo_get_property_ownership_tag(char *tagBuf, size_t size);
+
+/** Set system property ownership tag
+ * @param security_key  if system is password protected, this must be passed
+ * @param newTag buffer holding new tag
+ * @param size size of buffer
+ * @return  0 on success
+ */
+int DLL_SPEC sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size);
+
 /** Free string.
  * Use this function to deallocate the strings returned by other functions in
  * this header.
  */
 void DLL_SPEC  sysinfo_string_free(void *);
-
-int DLL_SPEC sysinfo_get_property_ownership_tag(char *tagBuf, size_t size);
-int DLL_SPEC sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size);
 
 EXTERN_C_END;
 
