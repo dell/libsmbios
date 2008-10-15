@@ -76,21 +76,28 @@ static int _da_is_active(const struct token_obj *t)
     return ret;
 }
 
+// wonky to get around GCC error: "cast from pointer to integer of different size"
+// as well as "warning: dereferencing type-punned pointer will break strict-aliasing rules"
+// should be just security_key = (u16)t->private_data;
+union void_u16 {
+    void *ptr;
+    u16   val;
+};
+
 static int _da_activate(const struct token_obj *t)
 {
     fnprintf("\n");
-    // wonky to get around GCC error: "cast from pointer to integer of different size"
-    // should be just security_key = (u16)t->private_data;
-    u16 *indirect = (u16*)&(t->private_data);
-    u16 security_key = *indirect;
-    dell_smi_write_nv_storage(security_key, cast_token(t)->location, cast_token(t)->value);
+    union void_u16 indirect;
+    indirect.ptr = t->private_data;
+    dell_smi_write_nv_storage(indirect.val, cast_token(t)->location, cast_token(t)->value);
     return 0;
 }
 
 static int _da_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
 {
-    u16 *indirect = (u16*)&(t->private_data);
-    return dell_smi_get_security_key(pass_ascii, pass_scan, indirect);
+    union void_u16 indirect;
+    indirect.ptr = t->private_data;
+    return dell_smi_get_security_key(pass_ascii, pass_scan, &(indirect.val));
 }
 
 void __internal init_da_token(struct token_obj *t)
