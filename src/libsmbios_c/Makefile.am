@@ -37,4 +37,5 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/token/checksum.c			\
     src/libsmbios_c/token/token.c			\
     src/libsmbios_c/token/token_d4.c			\
+    src/libsmbios_c/token/token_da.c			\
     src/libsmbios_c/token/token_impl.h

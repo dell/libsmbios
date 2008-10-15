@@ -218,6 +218,7 @@ void __internal init_d4_token(struct token_obj *t)
     t->get_string_len = _d4_get_string_len;
     t->set_string = _d4_set_string;
     t->try_password = 0;
+    t->private_data = 0;
 }
 
 void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)

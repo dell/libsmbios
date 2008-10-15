@@ -84,11 +84,6 @@ out:
     return retval;
 }
 
-u32 get_security_key(const char *password)
-{
-    return 0;
-}
-
 int sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
@@ -115,41 +110,47 @@ static int read_setting(u16 select, u32 location, u32 *minValue, u32 *maxValue)
     u32 args[4] = {location, 0,}, res[4] = {0,};
     dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
     if(minValue)
-        *minValue = res[2];
+        *minValue = res[cbARG3];
     if(maxValue)
-        *maxValue = res[3];
-    return res[1]; // current value
+        *maxValue = res[cbARG4];
+    return res[cbARG2]; // current value
 }
 
-int read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue)
+int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue)
 {
     return read_setting(0, location, minValue, maxValue); // 0 = select code for nv storage
 }
 
-int read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue)
+int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue)
 {
     return read_setting(1, location, minValue, maxValue); // 1 = select code for battery mode
 }
 
-int read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue)
+int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue)
 {
     return read_setting(2, location, minValue, maxValue); // 2 = select code for ac mode
 }
 
-
-int writeNVStorage         (const char *password, u32 location, u32 value)
+static int write_setting(u16 security_key, u16 select, u32 location, u32 value)
 {
-    return 0;
+    u32 args[4] = {location, value, security_key}, res[4] = {0,};
+    dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
+    return res[cbRES1];
 }
 
-int writeBatteryModeSetting(const char *password, u32 location, u32 value)
+int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value)
 {
-    return 0;
+    return write_setting(security_key, 0, location, value);
 }
 
-int writeACModeSetting     (const char *password, u32 location, u32 value)
+int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value)
 {
-    return 0;
+    return write_setting(security_key, 1, location, value);
+}
+
+int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value)
+{
+    return write_setting(security_key, 2, location, value);
 }
 
 

@@ -92,6 +92,7 @@ struct indexed_io_token
     };
 }
 LIBSMBIOS_C_PACKED_ATTR;
+
 struct indexed_io_access_structure
 { /* 0xD4 structure */
     u8	     type;

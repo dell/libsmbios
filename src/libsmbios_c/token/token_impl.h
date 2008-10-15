@@ -62,6 +62,7 @@ struct token_obj
     const struct smbios_struct *smbios_structure;
     void *token_ptr;
     struct token_obj *next;
+    void *private_data;
 };
 
 struct token_table
@@ -98,7 +99,7 @@ struct calling_interface_structure
     u16      cmdIOAddress;
     u8       cmdIOCode;
     u32      supportedCmds;
-    struct   calling_interface_token  first_token[];
+    struct   calling_interface_token  tokens[];
 }
 LIBSMBIOS_C_PACKED_ATTR;
 

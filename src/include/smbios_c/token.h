@@ -83,6 +83,10 @@ void DLL_SPEC token_free_string(char *);
  */
 const struct smbios_struct * DLL_SPEC token_get_smbios_struct(u16 id);
 
+/** Get a pointer to the actual token structure
+ */
+const void * DLL_SPEC token_get_ptr(u16 id);
+
 EXTERN_C_END;
 
 // always should be last thing in header file

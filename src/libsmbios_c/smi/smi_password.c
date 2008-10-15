@@ -30,8 +30,6 @@
 // private
 #include "smi_impl.h"
 
-
-
 __internal int password_installed(int which);
 __internal int verify_password(int which, const char *password, u16 *security_key);
 __internal int change_password(int which, const char *oldpw, const char *newpw);
@@ -80,6 +78,11 @@ function must first acquire a proper Security Key. It does this by performing th
    otherwise, subsequent set functions protected by the User Password will be rejected by the
    BIOS if it supports the Security Key feature.
 */
+
+u32 dell_smi_get_security_key(const char *password)
+{
+    return 0;
+}
 
 
 
