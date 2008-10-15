@@ -21,6 +21,7 @@
 
 // include smbios_c/compat.h first
 #include "smbios_c/compat.h"
+#include "smbios_c/types.h"
 
 EXTERN_C_BEGIN;
 
@@ -96,6 +97,9 @@ char * DLL_SPEC sysinfo_get_service_tag();
  * this header.
  */
 void DLL_SPEC  sysinfo_string_free(void *);
+
+int DLL_SPEC sysinfo_get_property_ownership_tag(char *tagBuf, size_t size);
+int DLL_SPEC sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size);
 
 EXTERN_C_END;
 

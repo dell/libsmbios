@@ -35,6 +35,11 @@ def _errorOnZero(result, func, args):
         raise Exception, ("returned error")
     return result
  
+def _errorOnNegative(result, func, args):
+    if result is None or result < 0:
+        raise Exception, ("returned error")
+    return result
+
 #    const char *smbios_get_library_version_string(); 
 _libsmbios_c.smbios_get_library_version_string.argtypes = []
 _libsmbios_c.smbios_get_library_version_string.restype = ctypes.c_char_p
@@ -78,6 +83,25 @@ _mk_simple_sysinfo_str_fn("get_bios_version")
 _mk_simple_sysinfo_str_fn("get_asset_tag")
 _mk_simple_sysinfo_str_fn("get_service_tag")
 
+
+#int get_property_ownership_tag(char *tagBuf, size_t size);
+_libsmbios_c.sysinfo_get_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
+_libsmbios_c.sysinfo_get_property_ownership_tag.restype = ctypes.c_int
+_libsmbios_c.sysinfo_get_property_ownership_tag.errcheck=_errorOnNegative
+def get_property_ownership_tag():
+    buf = ctypes.create_string_buffer(81)
+    _libsmbios_c.sysinfo_get_property_ownership_tag(buf, len(buf)-1)
+    return buf.value
+__all__.append("get_property_ownership_tag")
+
+#int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
+_libsmbios_c.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_uint16, ctypes.c_char_p, ctypes.c_size_t]
+_libsmbios_c.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
+_libsmbios_c.sysinfo_set_property_ownership_tag.errcheck=_errorOnNegative
+def set_property_ownership_tag(newtag, key=0):
+    return _libsmbios_c.sysinfo_set_property_ownership_tag(key, newtag, len(newtag))
+__all__.append("set_property_ownership_tag")
+
 if __name__ == "__main__":
     exitRet = 0
     def pr(s, f):
@@ -113,6 +137,7 @@ if __name__ == "__main__":
     pr("Product Name: %s", get_system_name)
     pr("BIOS Version: %s", get_bios_version)
     pr("Vendor:       %s", get_vendor_name)
+    pr("Property Ownership Tag: %s", get_property_ownership_tag)
 
     import sys
     sys.exit(exitRet)

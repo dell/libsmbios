@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "smbios_c/smi.h"  // only needed if you want to use fake input (memdump.dat)
 #include "smbios_c/system_info.h" // this is the main header to include to use the C interface
 #include "getopts.h"
 
@@ -73,12 +72,12 @@ main (int argc, char **argv)
     }
 
     char propertyTag[PROP_TAG_SIZE + 1] = { 0, };
-    get_property_ownership_tag(propertyTag, PROP_TAG_SIZE);
+    sysinfo_get_property_ownership_tag(propertyTag, PROP_TAG_SIZE);
     printf("Existing Property Ownership Tag: %s\n", propertyTag);
 
     if(new_tag)
     {
-        int ret = set_property_ownership_tag(0, new_tag, strlen(new_tag));
+        int ret = sysinfo_set_property_ownership_tag(0, new_tag, strlen(new_tag));
         if(ret==0)
             printf("changed tag successfully\n");
         else

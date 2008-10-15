@@ -38,7 +38,7 @@ enum {
 void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 
 // prepackaged smi functions
-enum { DELL_SMI_PASSWORD_EITHER = 0, DELL_SMI_PASSWORD_USER = 9, DELL_SMI_PASSWORD_ADMIN = 10 };
+enum { DELL_SMI_PASSWORD_ANY = 0, DELL_SMI_PASSWORD_USER = 9, DELL_SMI_PASSWORD_ADMIN = 10, DELL_SMI_PASSWORD_OWNER = 12 };
 int dell_smi_is_password_present(int which);
 int dell_smi_password_verify(int which, const char *pass_ascii, const char *pass_scancode, u16 *security_key);
 
@@ -47,16 +47,13 @@ int dell_smi_password_max_len(int which);
 int dell_smi_password_min_len(int which);
 int dell_smi_password_change(int which, const char *oldpass, const char *newpass);
 
-int get_property_ownership_tag(char *tagBuf, size_t size);
-int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
-
 int read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
 int read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
 int read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
 
-int write_nv_storage         (u32 security_key, u32 location, u32 value);
-int write_battery_mode_setting(u32 security_key, u32 location, u32 value);
-int write_ac_mode_setting     (u32 security_key, u32 location, u32 value);
+int write_nv_storage         (u16 security_key, u32 location, u32 value);
+int write_battery_mode_setting(u16 security_key, u32 location, u32 value);
+int write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
 
 EXTERN_C_END;
 

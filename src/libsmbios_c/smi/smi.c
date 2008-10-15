@@ -57,7 +57,7 @@ void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 }
 
 // prepackaged smi functions
-int get_property_ownership_tag(char *tagBuf, size_t size)
+int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
     fnprintf("\n");
@@ -89,7 +89,7 @@ u32 get_security_key(const char *password)
     return 0;
 }
 
-int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size)
+int sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
     fnprintf(" new tag request: '%s'\n", newTag);
