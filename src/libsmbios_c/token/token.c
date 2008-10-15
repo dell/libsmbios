@@ -122,10 +122,10 @@ int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t s
     return 0;
 }
 
-int token_obj_try_password(const struct token_obj *t, const char *password)
+int token_obj_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
 {
     if (t)
-        return t->try_password (t, password);
+        return t->try_password (t, pass_ascii, pass_scan);
     return 0;
 }
 

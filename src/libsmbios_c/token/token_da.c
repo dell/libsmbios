@@ -87,10 +87,10 @@ static int _da_activate(const struct token_obj *t)
     return 0;
 }
 
-static int _da_try_password(const struct token_obj *t, const char *str)
+static int _da_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
 {
-    // TODO: hook this up to get_security_key function.
-    return 0;
+    u16 *indirect = (u16*)&(t->private_data);
+    return dell_smi_get_security_key(pass_ascii, pass_scan, indirect);
 }
 
 void __internal init_da_token(struct token_obj *t)

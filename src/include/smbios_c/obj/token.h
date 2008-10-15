@@ -75,7 +75,7 @@ char* token_obj_get_string(const struct token_obj *, size_t *len);
 int token_obj_set_string(const struct token_obj *, const char *, size_t size);
 
 const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *);
-int token_obj_try_password(const struct token_obj *, const char *);
+int token_obj_try_password(const struct token_obj *, const char *pass_ascii, const char *pass_scancode);
 const void *token_obj_get_ptr(const struct token_obj *t);
 
 #if defined(_MSC_VER)

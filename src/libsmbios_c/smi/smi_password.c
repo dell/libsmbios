@@ -30,10 +30,14 @@
 // private
 #include "smi_impl.h"
 
+struct smi_password_properties {
+    u8 installed, minlen, maxlen, characteristics, minalpha, minnumeric, minspecial, maxrepeat;
+};
+
 __internal int password_installed(int which);
-__internal int verify_password(int which, const char *password, u16 *security_key);
+__internal int verify_password(int which, const char *pass_scancode, u16 *security_key);
 __internal int change_password(int which, const char *oldpw, const char *newpw);
-__internal int get_password_properties_2(int which, u8 *installed, u8 *minlen, u8 *maxlen, u8 *characteristics, u8 *minalpha, u8 *minnumeric, u8 *minspecial, u8 *maxrepeat);
+__internal int get_password_properties_2(int which, struct smi_password_properties *p);
 __internal int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *security_key);
 __internal int change_password_2(int which, const char *oldpw, const char *newpw, size_t maxpwlen);
 
@@ -79,9 +83,87 @@ function must first acquire a proper Security Key. It does this by performing th
    BIOS if it supports the Security Key feature.
 */
 
-u32 dell_smi_get_security_key(const char *password)
+#define USER_PASS_INSTALLED         1
+#define USER_PASS_NOT_INSTALLED     2
+#define ADMIN_PASS_INSTALLED        0
+#define ADMIN_PASS_NOT_INSTALLED    1
+
+// subtle: return codes are different, so we cant do this as a loop. :(
+int dell_smi_get_security_key(const char *pass_ascii, const char *pass_scancode, u16 *key)
 {
-    return 0;
+    int tmpret;
+    u16 security_key = 0;
+    const char *whichpw = 0;
+    int return_code = 0;
+
+    // step 1:  is admin password installed
+    struct smi_password_properties p = {0,};
+    tmpret = get_password_properties_2(DELL_SMI_PASSWORD_ADMIN, &p);
+    if (tmpret == 0)
+        goto try_old_installed_admin;
+
+    if (p.installed != ADMIN_PASS_INSTALLED)
+        goto step3;
+
+try_old_installed_admin:
+    tmpret = password_installed(DELL_SMI_PASSWORD_ADMIN);
+    if (tmpret != 0)
+        goto step3;
+
+    // step 2a: verify admin password (new method)
+    whichpw = pass_scancode;
+    if (p.characteristics & (1<<SMI_PASSWORD_CHARACTERISTIC_BIT_ASCII))
+        whichpw = pass_ascii;
+    tmpret = verify_password_2(DELL_SMI_PASSWORD_ADMIN, whichpw, p.maxlen, &security_key);
+    if (tmpret==0) // correct, security key set
+        goto out;
+    if (tmpret==2)
+        fnprintf("PASSWORD WAS INCORRECT\n");
+
+    // step 2b: verify admin password (new method)
+    tmpret = verify_password(DELL_SMI_PASSWORD_ADMIN, pass_scancode, &security_key);
+    if (tmpret==0) // correct, security key set
+        goto out;
+    if (tmpret==2)
+        fnprintf("PASSWORD WAS INCORRECT\n");
+
+step3:
+    // step 1:  is USER password installed
+    tmpret = get_password_properties_2(DELL_SMI_PASSWORD_USER, &p);
+    if (tmpret == 0)
+        goto try_old_installed_user;
+
+    if (p.installed != USER_PASS_INSTALLED)
+        goto step3;
+
+try_old_installed_user:
+    tmpret = password_installed(DELL_SMI_PASSWORD_USER);
+    if (tmpret != 0)
+        goto out;  // no passwords installed at all
+
+    // step 2a: verify user password (new method)
+    whichpw = pass_scancode;
+    if (p.characteristics & (1<<SMI_PASSWORD_CHARACTERISTIC_BIT_ASCII))
+        whichpw = pass_ascii;
+    tmpret = verify_password_2(DELL_SMI_PASSWORD_USER, whichpw, p.maxlen, &security_key);
+    if (tmpret==0) // correct, security key set
+        goto out;
+    if (tmpret==2)
+        fnprintf("PASSWORD WAS INCORRECT\n");
+
+    // step 2b: verify user password (new method)
+    tmpret = verify_password(DELL_SMI_PASSWORD_USER, pass_scancode, &security_key);
+    if (tmpret==0) // correct, security key set
+        goto out;
+    if (tmpret==2)
+        fnprintf("PASSWORD WAS INCORRECT\n");
+
+    // if we got here, everything failed.
+    return_code = -1;
+
+out:
+    *key = security_key;
+    return return_code;
 }
 
 
@@ -158,11 +240,10 @@ int change_password(int which, const char *oldpw_scancode, const char *newpw_sca
 
 #define getbyte(name, byte, from) \
     do {\
-        if (name)   \
-            *name = (from & (0xFF << (byte * 8))) >> (byte * 8); \
+        p->name = (from & (0xFF << (byte * 8))) >> (byte * 8); \
     } while (0)
 
-int get_password_properties_2(int which, u8 *installed, u8 *minlen, u8 *maxlen, u8 *characteristics, u8 *minalpha, u8 *minnumeric, u8 *minspecial, u8 *maxrepeat)
+int get_password_properties_2(int which, struct smi_password_properties *p)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
     fnprintf("\n");

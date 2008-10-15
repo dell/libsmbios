@@ -57,7 +57,7 @@ struct token_obj
     int (*get_string_len)(const struct token_obj*);
     int (*set_string)(const struct token_obj*, const char *, size_t size);
 
-    int (*try_password)(const struct token_obj *, const char *);
+    int (*try_password)(const struct token_obj *, const char *ascii, const char *scancode);
 
     const struct smbios_struct *smbios_structure;
     void *token_ptr;
