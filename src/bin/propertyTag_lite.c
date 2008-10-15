@@ -28,9 +28,7 @@
 
 struct options opts[] =
     {
-        {
-            250, "set", "Set Dell Property Tag", "s", 1
-        },
+        { 250, "set", "Set Dell Property Tag", "s", 1 },
         { 252, "password", "BIOS setup password", "p", 1 },
         { 249, "rawpassword", "Do not auto-convert password to scancodes", NULL, 0 },
         { 255, "version", "Display libsmbios version information", "v", 0 },
@@ -72,7 +70,6 @@ main (int argc, char **argv)
         default:
             break;
         }
-        free(args);
     }
 
     char propertyTag[PROP_TAG_SIZE + 1] = { 0, };
