@@ -88,10 +88,34 @@ __all__.append("read_ac_mode_setting")
 
 
 #int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value);
+_libsmbios_c.dell_smi_write_nv_storage.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
+_libsmbios_c.dell_smi_write_nv_storage.restype = ctypes.c_int
+_libsmbios_c.dell_smi_write_nv_storage.errcheck=_errorOnNegative
+write_nv_storage = _libsmbios_c.dell_smi_write_nv_storage
+__all__.append("write_nv_storage")
+
 #int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);
+_libsmbios_c.dell_smi_write_battery_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
+_libsmbios_c.dell_smi_write_battery_mode_setting.restype = ctypes.c_int
+_libsmbios_c.dell_smi_write_battery_mode_setting.errcheck=_errorOnNegative
+write_battery_mode_setting = _libsmbios_c.dell_smi_write_battery_mode_setting
+__all__.append("write_battery_mode_setting")
+
 #int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
-#
+_libsmbios_c.dell_smi_write_ac_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
+_libsmbios_c.dell_smi_write_ac_mode_setting.restype = ctypes.c_int
+_libsmbios_c.dell_smi_write_ac_mode_setting.errcheck=_errorOnNegative
+write_ac_mode_setting = _libsmbios_c.dell_smi_write_ac_mode_setting
+__all__.append("write_ac_mode_setting")
+
 #int dell_smi_get_security_key(const char *pass_ascii, const char *pass_scancode, u16 *security_key);
+_libsmbios_c.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
+_libsmbios_c.dell_smi_get_security_key.restype = ctypes.c_int
+def get_security_key(password_ascii, password_scancode):
+    key = ctypes.c_uint32(0)
+    cur = _libsmbios_c.dell_smi_get_security_key(password_ascii, password_scancode, key)
+    return key
+__all__.append("get_security_key")
 
 
 
