@@ -54,6 +54,9 @@ __internal int change_password_2(int which, const char *oldpw, const char *newpw
 #define SMI_PASSWORD_CHARACTERISTIC_BIT_ALPHANUMERIC_ONLY 1
 #define SMI_PASSWORD_CHARACTERISTIC_BIT_CANNOT_DELETE     2
 
+#define SMI_PASSWORD_TYPE_ASCII     1
+#define SMI_PASSWORD_TYPE_SCANCODE  0
+
 #define SMI_SELECT_PASSWORD_INSTALLED   0
 #define SMI_SELECT_VERIFY_PASSWORD      1
 #define SMI_SELECT_CHANGE_PASSWORD      2
@@ -83,90 +86,181 @@ function must first acquire a proper Security Key. It does this by performing th
    BIOS if it supports the Security Key feature.
 */
 
-#define USER_PASS_INSTALLED         1
-#define USER_PASS_NOT_INSTALLED     2
-#define ADMIN_PASS_INSTALLED        0
-#define ADMIN_PASS_NOT_INSTALLED    1
-
-// subtle: return codes are different, so we cant do this as a loop. :(
-int dell_smi_get_security_key(const char *pass_ascii, const char *pass_scancode, u16 *key)
+int dell_smi_get_security_key(const char *password, u16 *key)
 {
     int tmpret;
     u16 security_key = 0;
-    const char *whichpw = 0;
     int return_code = 0;
 
-    // step 1:  is admin password installed
-    struct smi_password_properties p = {0,};
-    tmpret = get_password_properties_2(DELL_SMI_PASSWORD_ADMIN, &p);
-    if (tmpret == 0)
-        goto try_old_installed_admin;
+    int pass_to_check[] = {DELL_SMI_PASSWORD_ADMIN, DELL_SMI_PASSWORD_USER};
+    int numpass = sizeof(pass_to_check)/sizeof(pass_to_check[0]);
 
-    if (p.installed != ADMIN_PASS_INSTALLED)
-        goto step3;
+    fnprintf("\n");
 
-try_old_installed_admin:
-    tmpret = password_installed(DELL_SMI_PASSWORD_ADMIN);
-    if (tmpret != 0)
-        goto step3;
+    // step 1:  is password installed
+    for (int i=0; i<numpass; i++)
+    {
+        int which = pass_to_check[i];
+        fnprintf("check %d\n", which);
 
-    // step 2a: verify admin password (new method)
-    whichpw = pass_scancode;
-    if (p.characteristics & (1<<SMI_PASSWORD_CHARACTERISTIC_BIT_ASCII))
-        whichpw = pass_ascii;
-    tmpret = verify_password_2(DELL_SMI_PASSWORD_ADMIN, whichpw, p.maxlen, &security_key);
-    if (tmpret==0) // correct, security key set
-        goto out;
-    if (tmpret==2)
-        fnprintf("PASSWORD WAS INCORRECT\n");
+        // try new func first
+        struct smi_password_properties p = {0,};
+        tmpret = get_password_properties_2(which, &p);
+        // if function succeeded and password *not* installed, skip
+        fnprintf("after get_password_properties_2: tmpret(%d)  p.installed(%d)\n", tmpret, p.installed);
+        if (tmpret == 0 && p.installed != 0)
+            continue;
 
-    // step 2b: verify admin password (new method)
-    tmpret = verify_password(DELL_SMI_PASSWORD_ADMIN, pass_scancode, &security_key);
-    if (tmpret==0) // correct, security key set
-        goto out;
-    if (tmpret==2)
-        fnprintf("PASSWORD WAS INCORRECT\n");
+        tmpret = password_installed(which);
+        fnprintf("after password_installed: tmpret(%d)\n", tmpret);
+        if (!(tmpret == 0 || tmpret == 2))
+            continue;
 
-step3:
-    // step 1:  is USER password installed
-    tmpret = get_password_properties_2(DELL_SMI_PASSWORD_USER, &p);
-    if (tmpret == 0)
-        goto try_old_installed_user;
+        // step 2a: verify admin password (new method)
+        tmpret = verify_password_2(which, password, p.maxlen, &security_key);
+        fnprintf("after verify_password_2: tmpret(%d)  security_key(%d)\n", tmpret, security_key);
+        if (tmpret==0) // correct, security key set
+        {
+            return_code = 0;
+            goto out;
+        }
+        if (tmpret==2)
+            return_code = -1; // incorrect password
 
-    if (p.installed != USER_PASS_INSTALLED)
-        goto step3;
+        // step 2b: verify admin password (old method)
+        tmpret = verify_password(which, password, &security_key);
+        fnprintf("after verify_password: tmpret(%d)  security_key(%d)\n", tmpret, security_key);
+        if (tmpret==0) // correct, security key set
+        {
+            return_code = 0;
+            goto out;
+        }
+        if (tmpret==2)
+            return_code = -1; // incorrect password
 
-try_old_installed_user:
-    tmpret = password_installed(DELL_SMI_PASSWORD_USER);
-    if (tmpret != 0)
-        goto out;  // no passwords installed at all
-
-    // step 2a: verify user password (new method)
-    whichpw = pass_scancode;
-    if (p.characteristics & (1<<SMI_PASSWORD_CHARACTERISTIC_BIT_ASCII))
-        whichpw = pass_ascii;
-    tmpret = verify_password_2(DELL_SMI_PASSWORD_USER, whichpw, p.maxlen, &security_key);
-    if (tmpret==0) // correct, security key set
-        goto out;
-    if (tmpret==2)
-        fnprintf("PASSWORD WAS INCORRECT\n");
-
-    // step 2b: verify user password (new method)
-    tmpret = verify_password(DELL_SMI_PASSWORD_USER, pass_scancode, &security_key);
-    if (tmpret==0) // correct, security key set
-        goto out;
-    if (tmpret==2)
-        fnprintf("PASSWORD WAS INCORRECT\n");
-
-    // if we got here, everything failed.
-    return_code = -1;
+        fnprintf("end of loop\n");
+    }
 
 out:
-    *key = security_key;
+    if (key)
+        *key = security_key;
     return return_code;
 }
 
 
+
+bool dell_smi_is_password_present(int which)
+{
+    // try new func first
+    bool retval = false;
+    struct smi_password_properties p = {0,};
+    int tmpret = get_password_properties_2(which, &p);
+    // if function succeeded and password *not* installed, skip
+    if (tmpret == 0 && p.installed == 0)
+        goto out;
+
+    // then try old
+    tmpret = password_installed(which);
+    if (!(tmpret == 0 || tmpret == 2))
+        goto out;
+
+    retval = true;
+out:
+    return retval;
+}
+
+int dell_smi_password_verify(int which, const char *password)
+{
+    int retval = 2;
+    struct smi_password_properties p = {0,};
+    int tmpret = get_password_properties_2(which, &p);
+    if (tmpret == 0 && p.installed != 0)
+        // if function succeeded and password *not* installed, skip
+        goto out;
+    else if (tmpret == 0)
+    {
+        // else _2 function is valid, so use it.
+        tmpret = verify_password_2(which, password, p.maxlen, 0);
+        retval = 1;
+        if (tmpret==0) // correct, security key set
+            goto out;
+
+        retval = 0; // incorrect password
+        if (tmpret==2)
+            goto out;
+    }
+
+
+    tmpret = password_installed(which);
+    if (tmpret == 0 && tmpret == 2)
+        // function succeeded and password not installed
+        goto out;
+    else if (tmpret == 0)
+    {
+        tmpret = verify_password(which, password, 0);
+        retval = 1;
+        if (tmpret==0) // correct, security key set
+            goto out;
+        retval = 0; // incorrect password
+        if (tmpret==2)
+            goto out;
+    }
+
+out:
+    return retval;
+}
+
+int dell_smi_password_format(int which)
+{
+    int retval = SMI_PASSWORD_TYPE_SCANCODE;
+    struct smi_password_properties p = {0,};
+    int tmpret = get_password_properties_2(which, &p);
+    if (tmpret == 0)
+        if (p.characteristics & 1)
+            retval = SMI_PASSWORD_TYPE_ASCII;
+
+    return retval;
+}
+
+int dell_smi_password_max_len(int which)
+{
+    int retval = 8;
+    struct smi_password_properties p = {0,};
+    int tmpret = get_password_properties_2(which, &p);
+    if (tmpret == 0)
+        retval = p.maxlen;
+    return retval;
+}
+
+int dell_smi_password_min_len(int which)
+{
+    int retval = 0;
+    struct smi_password_properties p = {0,};
+    int tmpret = get_password_properties_2(which, &p);
+    if (tmpret == 0)
+        retval = p.minlen;
+    return retval;
+}
+
+int dell_smi_password_change(int which, const char *oldpass, const char *newpass)
+{
+    // try old fn first
+    int ret = change_password(which, oldpass, newpass);
+    if (ret >= 0)
+        // either it succeeded or failed, but this function was valid, no need to try other
+        goto done;
+
+    // try new fn if that failed.
+    int maxlen = dell_smi_password_max_len(which);
+    ret = change_password_2(which, oldpass, newpass, maxlen);
+
+done:
+    return ret;
+}
+
+/*************************************/
+/********* private stuff *************/
+/*************************************/
 
 
 int password_installed(int which)
@@ -202,7 +296,7 @@ int verify_password(int which, const char *password_scancodes, u16 *security_key
     dell_smi_obj_execute(smi);
     int retval = dell_smi_obj_get_res(smi, cbRES1);
 
-    if (retval == SMI_PASSWORD_CORRECT)
+    if (retval == SMI_PASSWORD_CORRECT && security_key)
         *security_key = (u16)dell_smi_obj_get_res(smi, cbRES2);
 
     dell_smi_obj_free(smi);
@@ -223,8 +317,8 @@ int change_password(int which, const char *oldpw_scancode, const char *newpw_sca
     for (int i=0; i<strlen(oldpw_scancode) && i < sizeof(arg)/2; ++i)
         ((u8*)arg)[i] = oldpw_scancode[i];
 
-    for (int i=sizeof(arg)/2; i<strlen(newpw_scancode) && i < sizeof(arg); ++i)
-        ((u8*)arg)[i] = newpw_scancode[i];
+    for (int i=0; i<strlen(newpw_scancode) && i < sizeof(arg)/2; ++i)
+        ((u8*)arg)[i + sizeof(arg)/2 ] = newpw_scancode[i];
 
     dell_smi_obj_set_arg(smi, cbARG1, arg[0]);
     dell_smi_obj_set_arg(smi, cbARG2, arg[1]);
@@ -287,7 +381,7 @@ int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *sec
 
     int retval = dell_smi_obj_get_res(smi, cbRES1);
 
-    if (retval == SMI_PASSWORD_CORRECT)
+    if (retval == SMI_PASSWORD_CORRECT && security_key)
         *security_key = (u16)dell_smi_obj_get_res(smi, cbRES2);
 
     dell_smi_obj_free(smi);

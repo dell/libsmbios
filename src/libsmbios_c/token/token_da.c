@@ -97,7 +97,10 @@ static int _da_try_password(const struct token_obj *t, const char *pass_ascii, c
 {
     union void_u16 indirect;
     indirect.ptr = t->private_data;
-    return dell_smi_get_security_key(pass_ascii, pass_scan, &(indirect.val));
+    const char *whichpw = pass_scan;
+    if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
+        whichpw=pass_ascii;
+    return dell_smi_get_security_key(whichpw, &(indirect.val));
 }
 
 void __internal init_da_token(struct token_obj *t)

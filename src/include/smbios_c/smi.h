@@ -45,20 +45,16 @@ int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value
 int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);
 int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
 
-int dell_smi_get_security_key(const char *pass_ascii, const char *pass_scancode, u16 *security_key);
-
-
-// prepackaged smi functions
+// password related functions
 enum { DELL_SMI_PASSWORD_ANY = 0, DELL_SMI_PASSWORD_USER = 9, DELL_SMI_PASSWORD_ADMIN = 10, DELL_SMI_PASSWORD_OWNER = 12 };
-int dell_smi_is_password_present(int which);
-int dell_smi_password_verify(int which, const char *pass_ascii, const char *pass_scancode, u16 *security_key);
-
+enum { DELL_SMI_PASSWORD_FMT_SCANCODE = 0, DELL_SMI_PASSWORD_FMT_ASCII = 1 };
 int dell_smi_password_format(int which);
+int dell_smi_get_security_key(const char *password, u16 *security_key);
+bool dell_smi_is_password_present(int which);
+int dell_smi_password_verify(int which, const char *password);
 int dell_smi_password_max_len(int which);
 int dell_smi_password_min_len(int which);
 int dell_smi_password_change(int which, const char *oldpass, const char *newpass);
-
-
 
 EXTERN_C_END;
 

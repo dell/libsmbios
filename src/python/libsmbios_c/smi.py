@@ -40,8 +40,12 @@ def _errorOnNegative(result, func, args):
         raise Exception, ("returned error")
     return result
 
-
+# define type that can be used for arg/res:  u32 arg[4]
 array_4_u32 = ctypes.c_int32 * 4
+
+# check ctypes bool support. If it doesnt exist, fake it.
+if not getattr(ctypes, "c_bool", None):
+    ctypes.c_bool = ctypes.c_uint8
 
 #void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 _libsmbios_c.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
@@ -108,14 +112,95 @@ _libsmbios_c.dell_smi_write_ac_mode_setting.errcheck=_errorOnNegative
 write_ac_mode_setting = _libsmbios_c.dell_smi_write_ac_mode_setting
 __all__.append("write_ac_mode_setting")
 
-#int dell_smi_get_security_key(const char *pass_ascii, const char *pass_scancode, u16 *security_key);
-_libsmbios_c.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
+#int dell_smi_get_security_key(const char *pass_scancode, u16 *security_key);
+_libsmbios_c.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
 _libsmbios_c.dell_smi_get_security_key.restype = ctypes.c_int
-def get_security_key(password_ascii, password_scancode):
-    key = ctypes.c_uint32(0)
-    cur = _libsmbios_c.dell_smi_get_security_key(password_ascii, password_scancode, key)
-    return key
+_libsmbios_c.dell_smi_get_security_key.errcheck=_errorOnNegative
+def get_security_key(password):
+    key = ctypes.c_uint16(0)
+    cur = _libsmbios_c.dell_smi_get_security_key(password, key)
+    return cur, key.value
 __all__.append("get_security_key")
 
 
+DELL_SMI_PASSWORD_USER = 9
+DELL_SMI_PASSWORD_ADMIN = 10
+DELL_SMI_PASSWORD_OWNER = 12
+DELL_SMI_PASSWORD_FMT_SCANCODE = 0
+DELL_SMI_PASSWORD_FMT_ASCII = 1
 
+#int dell_smi_password_format(int which);
+_libsmbios_c.dell_smi_password_format.argtypes = [ctypes.c_int]
+_libsmbios_c.dell_smi_password_format.restype = ctypes.c_int
+password_format = _libsmbios_c.dell_smi_password_format
+__all__.append("password_format")
+
+#bool dell_smi_is_password_present(int which);
+_libsmbios_c.dell_smi_is_password_present.argtypes = [ctypes.c_int]
+_libsmbios_c.dell_smi_is_password_present.restype = ctypes.c_bool
+is_password_present = _libsmbios_c.dell_smi_is_password_present
+__all__.append("is_password_present")
+
+#int dell_smi_password_verify(int which, const char *password);
+# returns:  0==failed, 1==correct password, 2==no password installed
+_libsmbios_c.dell_smi_password_verify.argtypes = [ctypes.c_int, ctypes.c_char_p]
+_libsmbios_c.dell_smi_password_verify.restype = ctypes.c_int
+password_verify = _libsmbios_c.dell_smi_password_verify
+__all__.append("password_verify")
+
+#int dell_smi_password_max_len(int which);
+_libsmbios_c.dell_smi_password_max_len.argtypes = [ctypes.c_int]
+_libsmbios_c.dell_smi_password_max_len.restype = ctypes.c_int
+password_max_len = _libsmbios_c.dell_smi_password_max_len
+__all__.append("password_max_len")
+
+#int dell_smi_password_min_len(int which);
+_libsmbios_c.dell_smi_password_min_len.argtypes = [ctypes.c_int]
+_libsmbios_c.dell_smi_password_min_len.restype = ctypes.c_int
+password_min_len = _libsmbios_c.dell_smi_password_min_len
+__all__.append("password_min_len")
+
+#int dell_smi_password_change(int which, const char *oldpass, const char *newpass);
+_libsmbios_c.dell_smi_password_change.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_char_p]
+_libsmbios_c.dell_smi_password_change.restype = ctypes.c_int
+password_change = _libsmbios_c.dell_smi_password_change
+__all__.append("password_change")
+
+
+def asc_to_scancode(s):
+    return "".join([ chr(asc_to_scancode_map[ord(i)]) for i in s ])
+
+asc_to_scancode_map = [
+        0x03, 0x1E, 0x30, 0x46,  0x20, 0x12, 0x21, 0x22,
+        0x0E, 0x0F, 0x1C, 0x25,  0x26, 0x1C, 0x31, 0x18,
+        0x19, 0x10, 0x13, 0x1F,  0x14, 0x16, 0x2F, 0x11,
+        0x2D, 0x15, 0x2C, 0x1A,  0x2B, 0x1B, 0x07, 0x0C,
+        0x39, 0x02, 0x28, 0x04,  0x05, 0x06, 0x08, 0x28,
+        0x0A, 0x0B, 0x09, 0x0D,  0x33, 0x0C, 0x34, 0x35,
+        0x0B, 0x02, 0x03, 0x04,  0x05, 0x06, 0x07, 0x08,
+        0x09, 0x0A, 0x27, 0x27,  0x33, 0x0D, 0x34, 0x35,
+        0x03, 0x1E, 0x30, 0x2E,  0x20, 0x12, 0x21, 0x22,
+        0x23, 0x17, 0x24, 0x25,  0x26, 0x32, 0x31, 0x18,
+        0x19, 0x10, 0x13, 0x1F,  0x14, 0x16, 0x2F, 0x11,
+        0x2D, 0x15, 0x2C, 0x1A,  0x2B, 0x1B, 0x07, 0x0C,
+        0x29, 0x1E, 0x30, 0x2E,  0x20, 0x12, 0x21, 0x22,
+        0x23, 0x17, 0x24, 0x25,  0x26, 0x32, 0x31, 0x18,
+        0x19, 0x10, 0x13, 0x1F,  0x14, 0x16, 0x2F, 0x11,
+        0x2D, 0x15, 0x2C, 0x1A,  0x2B, 0x1B, 0x29, 0x0E,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0x00, 0x00
+    ]
