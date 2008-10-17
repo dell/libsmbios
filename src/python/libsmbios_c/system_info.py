@@ -91,7 +91,7 @@ _libsmbios_c.sysinfo_get_property_ownership_tag.errcheck=_errorOnNegative
 def get_property_ownership_tag():
     buf = ctypes.create_string_buffer(81)
     _libsmbios_c.sysinfo_get_property_ownership_tag(buf, len(buf)-1)
-    return buf.value
+    return buf.value.strip()
 __all__.append("get_property_ownership_tag")
 
 #int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
