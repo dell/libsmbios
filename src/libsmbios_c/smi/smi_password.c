@@ -287,8 +287,9 @@ int verify_password(int which, const char *password_scancodes, u16 *security_key
     dell_smi_obj_set_select(smi, SMI_SELECT_VERIFY_PASSWORD);
 
     // copy password into arg
-    for (int i=0; i<strlen(password_scancodes) && i < sizeof(arg); ++i)
-        ((u8*)arg)[i] = password_scancodes[i];
+    if (password_scancodes)
+        for (int i=0; i<strlen(password_scancodes) && i < sizeof(arg); ++i)
+            ((u8*)arg)[i] = password_scancodes[i];
 
     dell_smi_obj_set_arg(smi, cbARG1, arg[0]);
     dell_smi_obj_set_arg(smi, cbARG2, arg[1]);
@@ -314,11 +315,13 @@ int change_password(int which, const char *oldpw_scancode, const char *newpw_sca
     dell_smi_obj_set_select(smi, SMI_SELECT_CHANGE_PASSWORD);
 
     // copy password into arg
-    for (int i=0; i<strlen(oldpw_scancode) && i < sizeof(arg)/2; ++i)
-        ((u8*)arg)[i] = oldpw_scancode[i];
+    if (oldpw_scancode)
+        for (int i=0; i<strlen(oldpw_scancode) && i < sizeof(arg)/2; ++i)
+            ((u8*)arg)[i] = oldpw_scancode[i];
 
-    for (int i=0; i<strlen(newpw_scancode) && i < sizeof(arg)/2; ++i)
-        ((u8*)arg)[i + sizeof(arg)/2 ] = newpw_scancode[i];
+    if (newpw_scancode)
+        for (int i=0; i<strlen(newpw_scancode) && i < sizeof(arg)/2; ++i)
+            ((u8*)arg)[i + sizeof(arg)/2 ] = newpw_scancode[i];
 
     dell_smi_obj_set_arg(smi, cbARG1, arg[0]);
     dell_smi_obj_set_arg(smi, cbARG2, arg[1]);
@@ -340,13 +343,17 @@ int change_password(int which, const char *oldpw_scancode, const char *newpw_sca
 int get_password_properties_2(int which, struct smi_password_properties *p)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    int retval = -10;
     fnprintf("\n");
+
+    if (!p)
+        goto out;
 
     dell_smi_obj_set_class(smi, which);
     dell_smi_obj_set_select(smi, SMI_SELECT_GET_PASSWORD_PROPERTIES_II);
 
     dell_smi_obj_execute(smi);
-    int retval = dell_smi_obj_get_res(smi, cbRES1);
+    retval = dell_smi_obj_get_res(smi, cbRES1);
     if (retval != 0)
         goto out;
 
@@ -375,7 +382,8 @@ int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *sec
 
     u8 *buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, maxpwlen);
 
-    strncpy((char *)buf, password, maxpwlen);
+    if (password)
+        strncpy((char *)buf, password, maxpwlen);
 
     dell_smi_obj_execute(smi);
 
@@ -398,8 +406,11 @@ int change_password_2(int which, const char *oldpw, const char *newpw, size_t ma
 
     u8 *buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, maxpwlen * 2);
 
-    strncpy((char *)buf, oldpw, maxpwlen);
-    strncpy((char *)buf + maxpwlen, newpw, maxpwlen);
+    if (oldpw)
+        strncpy((char *)buf, oldpw, maxpwlen);
+
+    if (newpw)
+        strncpy((char *)buf + maxpwlen, newpw, maxpwlen);
 
     dell_smi_obj_execute(smi);
 
