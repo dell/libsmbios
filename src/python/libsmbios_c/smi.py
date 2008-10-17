@@ -167,6 +167,8 @@ password_change = _libsmbios_c.dell_smi_password_change
 __all__.append("password_change")
 
 
+
+# for testing only. It only does en_US, which is just wrong.
 def asc_to_scancode(s):
     return "".join([ chr(asc_to_scancode_map[ord(i)]) for i in s ])
 
