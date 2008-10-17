@@ -77,6 +77,7 @@ int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
     memset(tagBuf, 0, size);
     strncpy( tagBuf, (const char*)buf, size < 80 ? size:80);
     tagBuf[size-1] = '\0';
+    fnprintf("tag: -->%s<--\n", tagBuf);
 
 out:
     fnprintf(" - out\n");

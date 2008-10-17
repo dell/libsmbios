@@ -101,7 +101,7 @@ void dell_smi_obj_set_select(struct dell_smi_obj *this, u16 smi_select)
 
 void dell_smi_obj_set_arg(struct dell_smi_obj *this, u8 argno, u32 value)
 {
-    fnprintf(" %d -> %d\n", argno, value);
+    fnprintf(" %d -> 0x%x\n", argno, value);
     free(this->physical_buffer[argno]);
     this->physical_buffer[argno] = 0;
     this->physical_buffer_size[argno] = 0;
@@ -111,7 +111,7 @@ void dell_smi_obj_set_arg(struct dell_smi_obj *this, u8 argno, u32 value)
 
 u32  dell_smi_obj_get_res(struct dell_smi_obj *this, u8 argno)
 {
-    fnprintf(" %d = %d\n", argno, this->smi_buf.res[argno]);
+    fnprintf(" %d = 0x%x\n", argno, this->smi_buf.res[argno]);
     return this->smi_buf.res[argno];
 }
 
