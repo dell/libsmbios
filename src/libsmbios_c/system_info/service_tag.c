@@ -27,6 +27,7 @@
 #include "smbios_c/obj/token.h"
 #include "smbios_c/cmos.h"
 #include "smbios_c/system_info.h"
+#include "smbios_c/smi.h"
 #include "dell_magic.h"
 #include "_impl.h"
 
@@ -231,9 +232,34 @@ __internal char *getServiceTagFromSysInfo()
 
 __internal char *getServiceTagFromSysEncl()
 {
-    dbg_printf("getServiceTagFromSysEncl()\n");
+    fnprintf("\n");
     return smbios_struct_get_string_from_table(System_Enclosure_or_Chassis_Structure, System_Enclosure_or_Chassis_Service_Offset);
 }
+
+
+/* only for service/asset tags. */
+__internal char *getTagFromSMI(u16 select)
+{
+    u32 args[4] = {0,}, res[4] = {0,};
+    dell_simple_ci_smi(11, select, args, res);
+
+    char *retval = calloc(1, 13);
+    memcpy(retval, (u8 *)(&(res[1])), sizeof(res));
+
+    for(size_t i=strlen(retval)-1; i>=0 && retval[i]==0xFF; --i)
+        retval[i] = '\0';
+
+    return retval;
+}
+
+
+__internal char *getServiceTagFromSMI()
+{
+    fnprintf("\n");
+    return getTagFromSMI( 2 ); /* Read service tag select code */
+}
+
+
 
 // Code for getting the service tag from one of many locations
 struct DellGetServiceTagFunctions
@@ -243,7 +269,7 @@ struct DellGetServiceTagFunctions
 
 /* try dynamic functions first to make sure we get current data. */
 DellGetServiceTagFunctions[] = {
-                                   //{&getServiceTagFromSMI,},       // SMI Token
+                                   {&getServiceTagFromSMI,},       // SMI Token
                                    {&getServiceTagFromCMOSToken,}, // CMOS Token
                                    {&getServiceTagFromSysInfo,},   // SMBIOS System Information Item
                                    {&getServiceTagFromSysEncl,},   // SMBIOS System Enclosure Item
