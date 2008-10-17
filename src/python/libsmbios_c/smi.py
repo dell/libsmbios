@@ -17,17 +17,81 @@ import exceptions
 
 from _common import *
 
-__all__ = []
+__all__ = ["DellSmi", "DELL_SMI_DEFAULTS", "DELL_SMI_GET_SINGLETON", "DELL_SMI_GET_NEW", "DELL_SMI_UNIT_TEST_MODE"]
+__all__.extend( [ "cbARG1", "cbARG2", "cbARG3", "cbARG4", "cbRES1", "cbRES2", "cbRES3", "cbRES4", ])
+
+cbARG1=0
+cbARG2=1
+cbARG3=2
+cbARG4=3
+cbRES1=0
+cbRES2=1
+cbRES3=2
+cbRES4=3
+DELL_SMI_DEFAULTS      =0x0000
+DELL_SMI_GET_SINGLETON =0x0001
+DELL_SMI_GET_NEW       =0x0002
+DELL_SMI_UNIT_TEST_MODE=0x0004
+
+def DellSmi(flags=DELL_SMI_GET_NEW, *args):
+    if _DellSmi._instance is None:
+        _DellSmi._instance = _DellSmi( flags, *args)
+    return _DellSmi._instance
+
+class _DellSmi(object):
+    _instance = None
+    def __init__(self, *args, **kargs):
+        self._smiobj = _libsmbios_c.dell_smi_factory(*args)
+        self.bufs = [0,0,0,0]
+
+    def __del__(self):
+        _libsmbios_c.dell_smi_obj_free(self._smiobj)
+
+    def setClass(self, smiclass):
+        _libsmbios_c.dell_smi_obj_set_class(self._smiobj, smiclass)
+
+    def setSelect(self, select):
+        _libsmbios_c.dell_smi_obj_set_select(self._smiobj, select)
+
+    def setArg(self, arg, val):
+        _libsmbios_c.dell_smi_obj_set_arg(self._smiobj, arg, val)
+
+    def getRes(self, res):
+        return _libsmbios_c.dell_smi_obj_get_res(self._smiobj, res)
+
+    def buffer_frombios_auto(self, arg, size):
+        self.bufs[arg] = _libsmbios_c.dell_smi_obj_make_buffer_frombios_auto(self._smiobj, arg, size)
+        return self.bufs[arg]
+
+    def buffer_frombios_withheader(self, arg, size):
+        self.bufs[arg] = _libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader(self._smiobj, arg, size)
+        return self.bufs[arg]
+
+    def buffer_frombios_withoutheader(self, arg, size):
+        self.bufs[arg] = _libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader(self._smiobj, arg, size)
+        return self.bufs[arg]
+
+    def buffer_tobios(self, arg, size, buf):
+        self.bufs[arg] = _libsmbios_c.dell_smi_obj_make_buffer_tobios(self._smiobj, arg, size)
+        if len(buf) < size: size = len(buf)
+        ctypes.memmove( self.bufs[arg], buf, size )
+
+    def execute(self):
+        _libsmbios_c.dell_smi_obj_execute(self._smiobj)
+
+    def getBufContents(self, arg):
+        return self.bufs[arg]
+
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
 
-# define type that can be used for arg/res:  u32 arg[4]
-array_4_u32 = ctypes.c_int32 * 4
-
 # check ctypes bool support. If it doesnt exist, fake it.
 if not getattr(ctypes, "c_bool", None):
     ctypes.c_bool = ctypes.c_uint8
+
+# define type that can be used for arg/res:  u32 arg[4]
+array_4_u32 = ctypes.c_int32 * 4
 
 #void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 _libsmbios_c.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
@@ -42,8 +106,8 @@ __all__.append("dell_simple_ci_smi")
 #int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
 _libsmbios_c.dell_smi_read_nv_storage.restype = ctypes.c_int
 _libsmbios_c.dell_smi_read_nv_storage.argtypes = [
-        ctypes.c_uint32, 
-        ctypes.POINTER(ctypes.c_uint32), 
+        ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32)]
 def read_nv_storage(location):
     min = ctypes.c_uint32(0)
@@ -147,6 +211,68 @@ _libsmbios_c.dell_smi_password_change.argtypes = [ctypes.c_int, ctypes.c_char_p,
 _libsmbios_c.dell_smi_password_change.restype = ctypes.c_int
 password_change = _libsmbios_c.dell_smi_password_change
 __all__.append("password_change")
+
+
+################################################################################
+################################################################################
+###                                                                          ###
+###        SMI Object functions, not exported                                ###
+###                                                                          ###
+################################################################################
+################################################################################
+
+#struct dell_smi_obj;
+class _dell_smi_obj(ctypes.Structure): pass
+
+#struct dell_smi_obj *dell_smi_factory(int flags, ...);
+# dont define argtypes because this is a varargs function...
+#_libsmbios_c.dell_smi_factory.argtypes = [ctypes.c_int, ]
+_libsmbios_c.dell_smi_factory.restype = ctypes.POINTER(_dell_smi_obj)
+_libsmbios_c.dell_smi_factory.errcheck = errorOnZeroFN()
+
+#void dell_smi_obj_free(struct dell_smi_obj *);
+_libsmbios_c.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
+_libsmbios_c.dell_smi_obj_free.restype = None
+
+#void dell_smi_obj_set_class(struct dell_smi_obj *, u16 );
+_libsmbios_c.dell_smi_obj_set_class.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint16 ]
+_libsmbios_c.dell_smi_obj_set_class.restype = None
+
+#void dell_smi_obj_set_select(struct dell_smi_obj *, u16 );
+_libsmbios_c.dell_smi_obj_set_select.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint16 ]
+_libsmbios_c.dell_smi_obj_set_select.restype = None
+
+#void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
+_libsmbios_c.dell_smi_obj_set_arg.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_uint32 ]
+_libsmbios_c.dell_smi_obj_set_arg.restype = None
+
+#u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
+_libsmbios_c.dell_smi_obj_get_res.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8 ]
+_libsmbios_c.dell_smi_obj_get_res.restype = ctypes.c_uint32
+
+#u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.restype = ctypes.c_void_p
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN()
+
+#u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.restype = ctypes.c_void_p
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN()
+
+#u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.restype = ctypes.c_void_p
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN()
+
+#u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
+_libsmbios_c.dell_smi_obj_make_buffer_tobios.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+_libsmbios_c.dell_smi_obj_make_buffer_tobios.restype = ctypes.c_void_p
+_libsmbios_c.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN()
+
+#void dell_smi_obj_execute(struct dell_smi_obj *);
+_libsmbios_c.dell_smi_obj_execute.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
+_libsmbios_c.dell_smi_obj_execute.restype = None
 
 
 
