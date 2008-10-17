@@ -15,30 +15,12 @@ systeminfo:
 import ctypes
 import exceptions
 
+from _common import *
+
 __all__ = []
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
-
-class Exception(exceptions.Exception): pass
-
-def _freeLibString(result, func, args):
-    pystr = ctypes.cast(result, ctypes.c_char_p).value
-    if pystr is None:
-        raise Exception("null string returned")
-
-    _libsmbios_c.sysinfo_string_free(result)
-    return pystr
-
-def _errorOnZero(result, func, args):
-    if result is None or result == 0:
-        raise Exception, ("returned error")
-    return result
- 
-def _errorOnNegative(result, func, args):
-    if result is None or result < 0:
-        raise Exception, ("returned error")
-    return result
 
 # define type that can be used for arg/res:  u32 arg[4]
 array_4_u32 = ctypes.c_int32 * 4
@@ -94,28 +76,28 @@ __all__.append("read_ac_mode_setting")
 #int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value);
 _libsmbios_c.dell_smi_write_nv_storage.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
 _libsmbios_c.dell_smi_write_nv_storage.restype = ctypes.c_int
-_libsmbios_c.dell_smi_write_nv_storage.errcheck=_errorOnNegative
+_libsmbios_c.dell_smi_write_nv_storage.errcheck=errorOnNegativeFN()
 write_nv_storage = _libsmbios_c.dell_smi_write_nv_storage
 __all__.append("write_nv_storage")
 
 #int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);
 _libsmbios_c.dell_smi_write_battery_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
 _libsmbios_c.dell_smi_write_battery_mode_setting.restype = ctypes.c_int
-_libsmbios_c.dell_smi_write_battery_mode_setting.errcheck=_errorOnNegative
+_libsmbios_c.dell_smi_write_battery_mode_setting.errcheck=errorOnNegativeFN()
 write_battery_mode_setting = _libsmbios_c.dell_smi_write_battery_mode_setting
 __all__.append("write_battery_mode_setting")
 
 #int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
 _libsmbios_c.dell_smi_write_ac_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
 _libsmbios_c.dell_smi_write_ac_mode_setting.restype = ctypes.c_int
-_libsmbios_c.dell_smi_write_ac_mode_setting.errcheck=_errorOnNegative
+_libsmbios_c.dell_smi_write_ac_mode_setting.errcheck=errorOnNegativeFN()
 write_ac_mode_setting = _libsmbios_c.dell_smi_write_ac_mode_setting
 __all__.append("write_ac_mode_setting")
 
 #int dell_smi_get_security_key(const char *pass_scancode, u16 *security_key);
 _libsmbios_c.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
 _libsmbios_c.dell_smi_get_security_key.restype = ctypes.c_int
-_libsmbios_c.dell_smi_get_security_key.errcheck=_errorOnNegative
+_libsmbios_c.dell_smi_get_security_key.errcheck=errorOnNegativeFN()
 def get_security_key(password):
     key = ctypes.c_uint16(0)
     cur = _libsmbios_c.dell_smi_get_security_key(password, key)
