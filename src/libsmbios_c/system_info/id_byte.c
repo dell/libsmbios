@@ -156,7 +156,7 @@ __internal u16 get_id_byte_from_rev_and_id_structure ()
 
 //The code for detecting ID byte in case of Diamond is left out.
 //  need to write a function for it.
-struct DellIdByteFunctions
+static struct DellIdByteFunctions
 {
     u16 (*f_ptr)();
 }

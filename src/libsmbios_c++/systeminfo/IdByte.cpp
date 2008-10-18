@@ -180,7 +180,7 @@ static u16 getIdByteFromRevItem ()
 
 //The code for detecting ID byte in case of Diamond is left out.
 //  need to write a function for it.
-struct DellIdByteFunctions
+static struct DellIdByteFunctions
 {
     u16 (*f_ptr)();
 }
