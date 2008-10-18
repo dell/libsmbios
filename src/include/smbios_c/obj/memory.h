@@ -41,7 +41,7 @@ int  memory_obj_read(const struct memory_access_obj *, void *buffer, u64 offset,
 int  memory_obj_write(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
 
 // format error string
-size_t memory_obj_fmt_err(const struct memory_access_obj *, char *buf, size_t len);
+const char *memory_obj_strerror(const struct memory_access_obj *m);
 
 // helper
 s64  memory_obj_search(const struct memory_access_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);

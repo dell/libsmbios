@@ -64,32 +64,37 @@ s64 DLL_SPEC memory_search(const char *pat, size_t patlen, u64 start, u64 end, u
 // Following calls must be properly nested in equal pairs
 
 /** Optimize memory device access - request memory device be kept open between calls.
- * By default, the memory device is closed between subsequent calls to read/write.
- * This is to prevent file descriptor leakage by the libsmbios library. At times, however,
- * the overhead of reopening the memory device file on every access is simply too great. This
- * happens, for example, on memory searches, and can add considerable overhead. This function
- * requests that the memory subsystem leave the device open between calls.
- * Must be properly nested with memory_suggest_close().
+ * By default, the memory device is closed between subsequent calls to
+ * read/write.  This is to prevent file descriptor leakage by the libsmbios
+ * library. At times, however, the overhead of reopening the memory device file
+ * on every access is simply too great. This happens, for example, on memory
+ * searches, and can add considerable overhead. This function requests that the
+ * memory subsystem leave the device open between calls.  Must be properly
+ * nested with memory_suggest_close().
  *
  * No parameters, no return.
  */
 void DLL_SPEC memory_suggest_leave_open();
 
 /** Optimize memory device access - request memory device be closed between calls.
- * By default, the memory device is closed between subsequent calls to read/write.
- * This is to prevent file descriptor leakage by the libsmbios library. At times, however,
- * the overhead of reopening the memory device file on every access is simply too great. This
- * happens, for example, on memory searches, and can add considerable overhead. This function
- * cancels a previous request to leave the device open between calls.
- * Must be properly nested with memory_suggest_leave_open().
+ * By default, the memory device is closed between subsequent calls to
+ * read/write.  This is to prevent file descriptor leakage by the libsmbios
+ * library. At times, however, the overhead of reopening the memory device file
+ * on every access is simply too great. This happens, for example, on memory
+ * searches, and can add considerable overhead. This function cancels a
+ * previous request to leave the device open between calls.  Must be properly
+ * nested with memory_suggest_leave_open().
  *
  * No parameters, no return.
  */
 void DLL_SPEC memory_suggest_close();
 
-// not yet implemented
-//// format error string
-//size_t memory_fmt_err(char *buf, size_t len);
+/** Returns string describing the last error condition.
+ * Can return 0. The buffer used is guaranteed to be valid until the next call
+ * to any memory_* function. Copy the contents if you need it longer.
+ */
+const char *memory_strerror();
+
 
 EXTERN_C_END;
 

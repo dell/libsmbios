@@ -38,6 +38,7 @@ struct linux_data
     char *filename;
     FILE *fd;
     int mem_errno;
+    char *mem_errstring;
     bool rw;
     void *lastMapping;
     u64 lastMappedOffset;
@@ -196,6 +197,15 @@ out:
     return retval;
 }
 
+static const char * linux_strerror(const struct memory_access_obj *this)
+{
+#if 0
+    if (! this->private_data->mem_errstring)
+         ;//this->private_data->mem_errstring
+#endif
+    return 0;
+}
+
 static int linux_read_fn(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length)
 {
     return copy_mmap(this, buffer, offset, length, READ_MMAP);
@@ -206,29 +216,30 @@ static int linux_write_fn(const struct memory_access_obj *this, u8 *buffer, u64 
     return copy_mmap(this, buffer, offset, length, WRITE_MMAP);
 }
 
-static void linux_free(struct memory_access_obj *this)
-{
-    struct linux_data *private_data = (struct linux_data *)this->private_data;
-    fnprintf("\n");
-
-    free(private_data->filename);
-    private_data->filename = 0;
-
-    closefds(private_data);
-
-    free(private_data);
-    this->private_data = 0;
-    this->initialized=0;
-}
-
 static void linux_cleanup(struct memory_access_obj *this)
 {
     struct linux_data *private_data = (struct linux_data *)this->private_data;
 
     closefds(private_data);
 
+    free(private_data->mem_errstring);
+    private_data->mem_errstring = 0;
     private_data->mem_errno = 0;
     private_data->rw = 0;
+}
+
+static void linux_free(struct memory_access_obj *this)
+{
+    struct linux_data *private_data = (struct linux_data *)this->private_data;
+    fnprintf("\n");
+
+    linux_cleanup(this);
+
+    free(private_data->filename);
+    private_data->filename = 0;
+    free(private_data);
+    this->private_data = 0;
+    this->initialized=0;
 }
 
 __internal void init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
@@ -252,6 +263,7 @@ __internal void init_mem_struct_filename(struct memory_access_obj *m, const char
     m->read_fn = linux_read_fn;
     m->write_fn = linux_write_fn;
     m->cleanup = linux_cleanup;
+    m->strerror = linux_strerror;
     m->close = 1;
     m->initialized = 1;
 }

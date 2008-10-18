@@ -36,6 +36,7 @@ struct memory_access_obj
     int (*write_fn)(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length);
     void (*free)(struct memory_access_obj *this);
     void (*cleanup)(struct memory_access_obj *this); // called instead of ->free for singleton
+    const char *(*strerror)(const struct memory_access_obj *this);
     void *private_data;
     int close;
 };
