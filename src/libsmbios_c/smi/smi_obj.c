@@ -178,7 +178,9 @@ u8 * dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *this, u8 argno, size_t
 void dell_smi_obj_execute(struct dell_smi_obj *this)
 {
     fnprintf("\n");
-    this->execute(this);
+    this->smi_buf.res[0] = -3; //default to 'not handled'
+    if (this->execute)
+        this->execute(this);
 }
 
 /**************************************************
@@ -203,7 +205,6 @@ void __internal _smi_free(struct dell_smi_obj *this)
 void __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
 {
     fnprintf("\n");
-    this->smi_buf.res[0] = -3; //default to 'not handled'
 
     struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xda);
     smbios_struct_get_data(s, &(this->command_address), 4, sizeof(u16));

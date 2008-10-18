@@ -124,7 +124,7 @@ int smi_ut_exec(struct dell_smi_obj *smi)
     return 0;
 }
 
-int smi_ut_init_fn(struct dell_smi_obj *smi)
+static int smi_ut_init_fn(struct dell_smi_obj *smi)
 {
     struct UT_dell_smi_obj *ut_smi = (struct UT_dell_smi_obj *)smi;
     ut_smi->execute = smi_ut_exec;
@@ -153,7 +153,7 @@ void testCsmi::testSmiConstruct()
     dell_smi_obj_set_arg(smi, cbARG3, 0x01);
     dell_smi_obj_set_arg(smi, cbARG4, 0x01);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES1));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES2));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
@@ -184,7 +184,7 @@ void testCsmi::testSmiBuffer()
     u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG3, 33);
     memset(buf, 'z', 32);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES1));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES2));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
@@ -238,7 +238,7 @@ void testCsmi::testLinuxSmi()
     buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, 32);
     memset(buf, 'a', 24);
 
-    CPPUNIT_ASSERT_EQUAL( (u32)-3, dell_smi_obj_get_res(smi, cbRES1));
+    CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES1));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES2));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
