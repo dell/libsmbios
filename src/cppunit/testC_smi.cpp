@@ -214,10 +214,8 @@ void testCsmi::testLinuxSmi()
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
 
     string d = getWritableDirectory() + "/";
-    cout << "set_basedir(" << d << ")" << endl;
     set_basedir(d.c_str());
 
-    cout << "set_class" << endl;
     dell_smi_obj_set_class(smi, 0x03);
     dell_smi_obj_set_select(smi, 0x03);
     dell_smi_obj_set_arg(smi, cbARG1, 0x03);
@@ -225,7 +223,6 @@ void testCsmi::testLinuxSmi()
     dell_smi_obj_set_arg(smi, cbARG3, 0x03);
     dell_smi_obj_set_arg(smi, cbARG4, 0x03);
 
-    cout << "make_buffer" << endl;
     u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG4, 32);
     memset(buf, 'z', 24);
 
@@ -243,7 +240,6 @@ void testCsmi::testLinuxSmi()
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES3));
     CPPUNIT_ASSERT_EQUAL( (u32)0, dell_smi_obj_get_res(smi, cbRES4));
 
-    cout << "execute" << endl;
     dell_smi_obj_execute(smi);
 
     //CPPUNIT_ASSERT_EQUAL( (u32)2, dell_smi_obj_get_res(smi, cbRES1));

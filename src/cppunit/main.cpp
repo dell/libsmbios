@@ -110,7 +110,6 @@ void set_basedir(const char *newdir);
 
 static int smi_ut_init_fn(struct dell_smi_obj *smi)
 {
-    cout << __PRETTY_FUNCTION__ << endl;
     return 0;
 }
 
@@ -118,14 +117,10 @@ void setupSmiForUnitTest(string testdir, string writedir)
 {
     string d = writedir + "/";
     struct dell_smi_obj *smi = 0;
-    cout << __PRETTY_FUNCTION__ << endl;
-    cout << "set_basedir(" << d.c_str() << ");\n" << endl;
     set_basedir(d.c_str());
 
-    cout << "dell_smi_factory()" << endl;
     smi = dell_smi_factory(DELL_SMI_GET_SINGLETON | DELL_SMI_UNIT_TEST_MODE, smi_ut_init_fn);
 
-    cout << "dell_smi_obj_free()" << endl;
     dell_smi_obj_free(smi);
 }
 
