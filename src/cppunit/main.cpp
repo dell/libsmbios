@@ -103,11 +103,6 @@ string setupCmosForUnitTest(string testdir, string writedir)
     return cmosCopyFile;
 }
 
-// private for unit test only
-extern "C" {
-void set_basedir(const char *newdir);
-}
-
 static int smi_ut_init_fn(struct dell_smi_obj *smi)
 {
     return 0;
@@ -117,10 +112,7 @@ void setupSmiForUnitTest(string testdir, string writedir)
 {
     string d = writedir + "/";
     struct dell_smi_obj *smi = 0;
-    set_basedir(d.c_str());
-
     smi = dell_smi_factory(DELL_SMI_GET_SINGLETON | DELL_SMI_UNIT_TEST_MODE, smi_ut_init_fn);
-
     dell_smi_obj_free(smi);
 }
 
