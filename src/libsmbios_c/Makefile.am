@@ -8,6 +8,8 @@ EXTRA_DIST += src/include/smbios_c
 EXTRA_DIST += src/libsmbios_c/common
 
 out_libsmbios_c_la_SOURCES = \
+    src/libsmbios_c/common/strlcpy.c			\
+    src/libsmbios_c/common/strlcat.c			\
     src/libsmbios_c/cmos/cmos_impl.h			\
     src/libsmbios_c/cmos/cmos.c				\
     src/libsmbios_c/cmos/cmos_ut.c			\
