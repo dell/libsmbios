@@ -240,15 +240,20 @@ __internal char *getServiceTagFromSysEncl()
 /* only for service/asset tags. */
 __internal char *getTagFromSMI(u16 select)
 {
-    u32 args[4] = {0,}, res[4] = {0,};
+    u32 args[4] = {0,0,0,0}, res[4] = {0,0,0,0};
+    char *retval = 0;
     dell_simple_ci_smi(11, select, args, res);
 
-    char *retval = calloc(1, 13);
+    if (res[0] != 0)
+        goto out;
+
+    retval = calloc(1, 13); // smi function can hold at most 12 bytes, add one for '\0'
     memcpy(retval, (u8 *)(&(res[1])), sizeof(res));
 
     for(size_t i=strlen(retval)-1; i>=0 && retval[i]==0xFF; --i)
         retval[i] = '\0';
 
+out:
     return retval;
 }
 
