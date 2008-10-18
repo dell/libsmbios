@@ -305,10 +305,11 @@ char *sysinfo_get_service_tag()
 
 
 /* only for service/asset tags. */
-__internal void setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
+__internal u32 setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
 {
     u32 args[4] = {0,}, res[4] = {0,};
     strncpy((char *)args, newTag, 12);
     args[3] = security_key;
     dell_simple_ci_smi(11, select, args, res);
+    return res[0];
 }
