@@ -84,6 +84,19 @@ char * DLL_SPEC sysinfo_get_bios_version();
  */
 char * DLL_SPEC sysinfo_get_asset_tag();
 
+/** set the system asset tag.
+ * Note some systems store password in ascii and some store keyboard scancodes. Thus you must pass both.
+ * @param assetTag  null-terminated new asset tag string
+ * @param pass_ascii password to use in ascii (can be null for no pass)
+ * @param pass_scancode keyboard scancode values for password (can be null for no pass)
+ * @return
+ *   0 == success
+ *  -1 == general failure
+ *  -2 == password incorrect
+ */
+int DLL_SPEC sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode);
+
+
 /** Return a buffer containing the system service tag string.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
  * will leak.
@@ -100,12 +113,12 @@ char * DLL_SPEC sysinfo_get_service_tag();
 int DLL_SPEC sysinfo_get_property_ownership_tag(char *tagBuf, size_t size);
 
 /** Set system property ownership tag
- * @param security_key  if system is password protected, this must be passed
  * @param newTag buffer holding new tag
- * @param size size of buffer
- * @return  0 on success
+ * @param pass_ascii    password as ascii bytes
+ * @param pass_scancode password as keyboard scancodes
+ * @return  0 on success, -1 general failure, -2 bad password
  */
-int DLL_SPEC sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size);
+int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode);
 
 /** Free string.
  * Use this function to deallocate the strings returned by other functions in

@@ -57,6 +57,7 @@ void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 }
 
 // prepackaged smi functions
+#define PROPERTY_TAG_LEN 80
 int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
@@ -64,7 +65,8 @@ int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
 
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
     dell_smi_obj_set_select(smi, 0); // 0 == read
-    u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, 80);
+    // allocate one extra byte to ensure it is zero terminated
+    u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, PROPERTY_TAG_LEN + 1);
 
     fnprintf("dell_smi_obj_execute()\n");
     dell_smi_obj_execute(smi);
@@ -75,7 +77,7 @@ int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
 
     fnprintf("copy to return value\n");
     memset(tagBuf, 0, size);
-    strncpy( tagBuf, (const char*)buf, size < 80 ? size:80);
+    strncpy(tagBuf, (const char*)buf, size); // strncpy with size guaranteed to be ok
     tagBuf[size-1] = '\0';
     fnprintf("tag: -->%s<--\n", tagBuf);
 
@@ -85,24 +87,38 @@ out:
     return retval;
 }
 
-int sysinfo_set_property_ownership_tag(u16 security_key, const char *newTag, size_t size)
+int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    u16 security_key = 0;
+    const char *whichpw = pass_scancode;
+    u8 *buf;
+    int retval;
+
     fnprintf(" new tag request: '%s'\n", newTag);
+
+    if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
+        whichpw=pass_ascii;
+    int ret = dell_smi_get_security_key(whichpw, &security_key);
+    retval = -2;
+    if (ret)  // bad password
+        goto out;
 
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
     dell_smi_obj_set_select(smi, 1); // 1 == write
-    u8 *buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, 80);
+    buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, PROPERTY_TAG_LEN); // max property tag size
     dell_smi_obj_set_arg(smi, cbARG2, security_key);
-    strncpy((char *)buf, newTag, 80);
+    strncpy((char *)buf, newTag, PROPERTY_TAG_LEN);
 
     fnprintf("dell_smi_obj_execute()\n");
     dell_smi_obj_execute(smi);
 
-    int retval = dell_smi_obj_get_res(smi, cbRES1);
+    retval = dell_smi_obj_get_res(smi, cbRES1);
 
     fnprintf(" - out\n");
     dell_smi_obj_free(smi);
+
+out:
     return retval;
 }
 

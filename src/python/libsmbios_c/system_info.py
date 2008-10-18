@@ -83,6 +83,13 @@ _mk_simple_sysinfo_str_fn("get_bios_version")
 _mk_simple_sysinfo_str_fn("get_asset_tag")
 _mk_simple_sysinfo_str_fn("get_service_tag")
 
+#_mk_simple_sysinfo_str_fn("set_asset_tag")
+_libsmbios_c.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+_libsmbios_c.sysinfo_set_asset_tag.restype = ctypes.c_int
+_libsmbios_c.sysinfo_set_asset_tag.errcheck=_errorOnNegative
+def set_asset_tag(newtag, pass_ascii=None, pass_scancode=None):
+    return _libsmbios_c.sysinfo_set_asset_tag(newtag, pass_ascii, pass_scancode)
+__all__.append("set_asset_tag")
 
 #int get_property_ownership_tag(char *tagBuf, size_t size);
 _libsmbios_c.sysinfo_get_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
@@ -95,11 +102,11 @@ def get_property_ownership_tag():
 __all__.append("get_property_ownership_tag")
 
 #int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
-_libsmbios_c.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_uint16, ctypes.c_char_p, ctypes.c_size_t]
+_libsmbios_c.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 _libsmbios_c.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
 _libsmbios_c.sysinfo_set_property_ownership_tag.errcheck=_errorOnNegative
-def set_property_ownership_tag(newtag, key=0):
-    return _libsmbios_c.sysinfo_set_property_ownership_tag(key, newtag, len(newtag))
+def set_property_ownership_tag(newtag, pass_ascii=None, pass_scancode=None):
+    return _libsmbios_c.sysinfo_set_property_ownership_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_property_ownership_tag")
 
 if __name__ == "__main__":
