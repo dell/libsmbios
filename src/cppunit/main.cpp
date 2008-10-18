@@ -3,16 +3,16 @@
  *
  * Copyright (C) 2005 Dell Inc.
  *  by Michael Brown <Michael_E_Brown@dell.com>
- * Licensed under the Open Software License version 2.1 
- * 
- * Alternatively, you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published 
- * by the Free Software Foundation; either version 2 of the License, 
+ * Licensed under the Open Software License version 2.1
+ *
+ * Alternatively, you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  */
 
@@ -32,6 +32,7 @@
 #include "smbios/ICmosRW.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
+#include "smbios_c/obj/smi.h"
 #include "main.h"
 
 using namespace std;
@@ -102,6 +103,32 @@ string setupCmosForUnitTest(string testdir, string writedir)
     return cmosCopyFile;
 }
 
+// private for unit test only
+extern "C" {
+void set_basedir(const char *newdir);
+}
+
+static int smi_ut_init_fn(struct dell_smi_obj *smi)
+{
+    cout << __PRETTY_FUNCTION__ << endl;
+    return 0;
+}
+
+void setupSmiForUnitTest(string testdir, string writedir)
+{
+    string d = writedir + "/";
+    struct dell_smi_obj *smi = 0;
+    cout << __PRETTY_FUNCTION__ << endl;
+    cout << "set_basedir(" << d.c_str() << ");\n" << endl;
+    set_basedir(d.c_str());
+
+    cout << "dell_smi_factory()" << endl;
+    smi = dell_smi_factory(DELL_SMI_GET_SINGLETON | DELL_SMI_UNIT_TEST_MODE, smi_ut_init_fn);
+
+    cout << "dell_smi_obj_free()" << endl;
+    dell_smi_obj_free(smi);
+}
+
 string &strip_trailing_whitespace(string &s)
 {
     while (  s[ s.length() - 1 ] == ' ' )
@@ -134,7 +161,7 @@ bool fileExists(string fileName)
 
 size_t FWRITE(const void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
-    size_t written = fwrite(ptr, size, nmemb, stream); 
+    size_t written = fwrite(ptr, size, nmemb, stream);
     // TODO: handle short write
     if (written < nmemb)
         throw std::exception();

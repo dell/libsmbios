@@ -21,6 +21,7 @@
 
 std::string setupMemoryForUnitTest(std::string testdir, std::string writedir);
 std::string setupCmosForUnitTest(std::string testdir, std::string writedir);
+void setupSmiForUnitTest(std::string testdir, std::string writedir);
 std::string &strip_trailing_whitespace(std::string &s);
 void copyFile( std::string dstFile, std::string srcFile );
 bool fileExists(std::string fileName);

@@ -49,6 +49,7 @@ void testCsmbios::setUp()
 {
     string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
     string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
+    setupSmiForUnitTest(getTestDirectory(), getWritableDirectory());
 
     doc = 0;
     parser = 0;
