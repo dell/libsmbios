@@ -80,7 +80,7 @@ struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *ta
     const u8 *data = 0;
 
     //If we are called on an uninitialized smbiosBuffer, return 0;
-    if (0 == table->table || (cur && 0x7f == cur->type))
+    if (!table || 0 == table->table || (cur && 0x7f == cur->type))
         goto out1;
 
     data = (u8*)table->table;
@@ -144,17 +144,23 @@ struct smbios_struct *smbios_table_get_next_struct_by_handle(const struct smbios
 
 u8 smbios_struct_get_type(const struct smbios_struct *s)
 {
-    return s->type;
+    if (s)
+        return s->type;
+    return 0;
 }
 
 u8 smbios_struct_get_length(const struct smbios_struct *s)
 {
-    return s->length;
+    if (s)
+        return s->length;
+    return 0;
 }
 
 u16 smbios_struct_get_handle(const struct smbios_struct *s)
 {
-    return s->handle;
+    if (s)
+        return s->handle;
+    return 0;
 }
 
 int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len)
@@ -162,6 +168,9 @@ int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset,
     int retval = -1;
 
     dbg_printf("smbios_struct_get_data(%p, %p, %d, %ld)\n", s, dest, offset, len);
+
+    if (!s)
+        goto out;
 
     if (offset > smbios_struct_get_length(s))
         goto out;
@@ -186,12 +195,16 @@ const char *smbios_struct_get_string_from_offset(const struct smbios_struct *s, 
 
     dbg_printf("smbios_struct_get_string_from_offset()\n");
 
+    if (!s)
+        goto out;
+
     if (smbios_struct_get_data(s, &strnum, offset, sizeof(strnum)) >= 0)
     {
         dbg_printf("string offset: %d  which: %d\n", offset, strnum);
         retval = smbios_struct_get_string_number(s, strnum);
     }
 
+out:
     dbg_printf("string: %s\n", retval);
     return retval;
 }
@@ -203,7 +216,9 @@ const char *smbios_struct_get_string_number(const struct smbios_struct *s, u8 wh
 
     dbg_printf("smbios_struct_get_string_number(%p, %d)\n", s, which);
 
-    if (!which)     //strings are numbered beginning with 1
+    //strings are numbered beginning with 1
+    // bail if passed null smbios_struct, or user tries to get string 0
+    if (!which || !s)
         goto out;
 
     string_pointer = (const char *)(s);
@@ -234,10 +249,10 @@ out:
 void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbios_struct *, void *userdata), void *userdata)
 {
     const struct smbios_struct *s = smbios_table_get_next_struct(table, 0);
-    do {
+    while(s) {
         fn(s, userdata);
         s = smbios_table_get_next_struct(table, s);
-    }while(s);
+    };
 }
 
 
@@ -249,6 +264,9 @@ void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbio
 
 void __internal _smbios_table_free(struct smbios_table *this)
 {
+    if (!this)
+        goto out;
+
     memset(&this->tep, 0, sizeof(this->tep));
 
     free(this->table);
@@ -256,6 +274,7 @@ void __internal _smbios_table_free(struct smbios_table *this)
 
     this->initialized=0;
 
+out:
     free(this);
 }
 
