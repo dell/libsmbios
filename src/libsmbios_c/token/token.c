@@ -194,6 +194,20 @@ out:
     return 0;
 }
 
+int token_try_password(u16 id, const char *pass_ascii, const char *pass_scancode)
+{
+    struct token_table *table = 0;
+    const struct token_obj *token = 0;
+    table = token_factory(TOKEN_GET_SINGLETON);
+    if (!table) goto out;
+    token = token_table_get_next_by_id(table, 0, id);
+    if (!token) goto out;
+    return token -> try_password (token, pass_ascii, pass_scancode);
+out:
+    return 0;
+}
+
+
 
 /**************************************************
  *

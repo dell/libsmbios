@@ -40,10 +40,12 @@ int DLL_SPEC token_get_type(u16 id);
  * @return true if token is bool, false if otherwise
  */
 bool DLL_SPEC token_is_bool(u16 id);
+
 /** Check if a boolean token is currently set.
  * @return true if token is active (set), false if otherwise
  */
 bool DLL_SPEC token_is_active(u16 id);
+
 /** Activate a boolean token.
  * @return 0 on success, <0 on failure.
  */
@@ -87,9 +89,11 @@ const struct smbios_struct * DLL_SPEC token_get_smbios_struct(u16 id);
  */
 const void * DLL_SPEC token_get_ptr(u16 id);
 
-EXTERN_C_END;
+/** For tokens that are password protected, check password
+ */
+int token_try_password(u16 id, const char *pass_ascii, const char *pass_scancode);
 
-// always should be last thing in header file
-#include "smbios_c/config/abi_suffix.h"
+
+EXTERN_C_END;
 
 #endif  /* TOKEN_H */
