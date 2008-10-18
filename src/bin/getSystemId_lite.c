@@ -89,6 +89,15 @@ main (int argc, char **argv)
     }
     sysinfo_string_free(str);
 
+    str    = sysinfo_get_asset_tag();
+    if(str)
+        printf("Aset Tag:  %s\n", str);
+    else
+    {
+        printf("Error getting the Aset Tag:  unknown error\n");
+        retval = 1;
+    }
+    sysinfo_string_free(str);
 
     str   = sysinfo_get_system_name();
     if(str)
