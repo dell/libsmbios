@@ -82,17 +82,22 @@ namespace smi
                 cmdIOCode = getU8_FromItem(*item, 6);
                 ret = new DellCallingInterfaceSmiImpl(strategyPtr, cmdIOAddress, cmdIOCode);
             } catch(...) {
+                delete strategyPtr;
                 throw SmiExceptionImpl(_("Could not automatically setup up magic io"));
             }
 
             break;
         default:
+            delete strategyPtr;
             throw InvalidSmiModeImpl(_("Unknown smi factory mode requested"));
             break;
         }
 
         if( ! ret )
+        {
+            delete strategyPtr;
             throw InvalidSmiModeImpl(_("Could not allocate SMI object"));
+        }
 
         std::auto_ptr<IDellCallingInterfaceSmi> foo(ret);
         return foo;
