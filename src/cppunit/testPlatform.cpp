@@ -52,14 +52,10 @@ void testPlatform::setUp()
 {
     string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
     string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
+    setupSmiForUnitTest(getTestDirectory(), getWritableDirectory());
 
     smbios::SmbiosFactory::getFactory()->setParameter("offset", 0);
     smbios::SmbiosFactory::getFactory()->setMode(smbios::SmbiosFactory::UnitTestMode);
-
-    // Smi output file.
-    string smiOutput = getWritableDirectory() + "/smi-output.dat";
-    smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
-    smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
 
     doc = 0;
     parser = 0;

@@ -30,6 +30,7 @@
 
 #include "smbios/IMemory.h"
 #include "smbios/ICmosRW.h"
+#include "smbios/ISmi.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/obj/smi.h"
@@ -110,10 +111,16 @@ static int smi_ut_init_fn(struct dell_smi_obj *smi)
 
 void setupSmiForUnitTest(string testdir, string writedir)
 {
+    // C
     string d = writedir + "/";
     struct dell_smi_obj *smi = 0;
     smi = dell_smi_factory(DELL_SMI_GET_SINGLETON | DELL_SMI_UNIT_TEST_MODE, smi_ut_init_fn);
     dell_smi_obj_free(smi);
+
+    // C++
+    string smiOutput = writedir + "/smi-output.dat";
+    smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
+    smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
 }
 
 string &strip_trailing_whitespace(string &s)
