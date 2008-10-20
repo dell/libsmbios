@@ -250,8 +250,9 @@ __internal char *getTagFromSMI(u16 select)
     retval = calloc(1, 13); // smi function can hold at most 12 bytes, add one for '\0'
     memcpy(retval, (u8 *)(&(res[1])), sizeof(res));
 
-    for(size_t i=strlen(retval)-1; i>=0 && retval[i]==0xFF; --i)
-        retval[i] = '\0';
+    for(size_t i=strlen(retval); i; --i)
+        if ((unsigned char)(retval[i])==0xFF)
+            retval[i] = '\0';
 
 out:
     return retval;
