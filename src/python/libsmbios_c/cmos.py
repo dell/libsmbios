@@ -34,7 +34,7 @@ class _CmosAccess(object):
     _instance = None
     def __init__(self, *args):
         self._memobj = _libsmbios_c.cmos_obj_factory(*args)
-            
+
     def __del__(self):
         _libsmbios_c.cmos_obj_free(self._memobj)
 

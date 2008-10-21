@@ -24,7 +24,7 @@ MEMORY_GET_SINGLETON =0x0001
 MEMORY_GET_NEW       =0x0002
 MEMORY_UNIT_TEST_MODE=0x0004
 
-def MemoryAccess(flags=MEMORY_GET_NEW, factory_args=None):
+def MemoryAccess(flags=MEMORY_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
     if _MemoryAccess._instance is None:
         _MemoryAccess._instance = _MemoryAccess( flags, *factory_args)
