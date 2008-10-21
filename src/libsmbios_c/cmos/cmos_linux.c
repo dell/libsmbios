@@ -65,14 +65,18 @@ static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 index
 
 static void linux_cleanup(struct cmos_access_obj *this)
 {
+    fnprintf("\n");
     struct linux_data *private_data = (struct linux_data *)this->private_data;
-    free(private_data->errstring);
-    private_data->errstring = 0;
-    private_data->last_errno = 0;
+    if(private_data) {
+        free(private_data->errstring);
+        private_data->errstring = 0;
+        private_data->last_errno = 0;
+    }
 }
 
 static void linux_free(struct cmos_access_obj *this)
 {
+    fnprintf("\n");
     struct linux_data *private_data = (struct linux_data *)this->private_data;
     linux_cleanup(this);
     free(private_data);
@@ -86,6 +90,7 @@ int __internal init_cmos_struct(struct cmos_access_obj *m)
     struct linux_data *private_data = 0;
     size_t curstrsize = 0;
 
+    fnprintf("\n");
     if(iopl(3) < 0)
         goto out_noprivs;
 
@@ -109,7 +114,7 @@ int __internal init_cmos_struct(struct cmos_access_obj *m)
     return 0;
 
 out_noprivs:
-    fnprintf("out_allocfail:\n");
+    fnprintf("out_noprivs:\n");
     errbuf = cmos_get_module_error_buf();
     if (errbuf)
     {
@@ -129,7 +134,6 @@ out_allocfail:
     errbuf = cmos_get_module_error_buf();
     if (errbuf)
         strlcpy(errbuf, _("There was an allocation failure while trying to construct the memory object."), ERROR_BUFSIZE);
-    fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
     linux_free(m);
     return -1;
 }
