@@ -40,7 +40,7 @@ static struct memory_access_obj singleton; // auto-init to 0
 static char *module_error_buf; // auto-init to 0
 static bool atexitreg;
 
-void return_mem(void)
+static void return_mem(void)
 {
     fnprintf("\n");
     free(module_error_buf);
