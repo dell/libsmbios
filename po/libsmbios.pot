@@ -1,0 +1,49 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Dell, Inc
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
+"POT-Creation-Date: 2008-10-21 12:10-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/libsmbios_c/memory/memory_linux.c:166
+msgid "Could not (re)open file. File: "
+msgstr ""
+
+#: src/libsmbios_c/memory/memory_linux.c:177
+msgid "The mmap() call returned mapping of -1 (failure). File: "
+msgstr ""
+
+#: src/libsmbios_c/memory/memory_linux.c:199
+#: src/libsmbios_c/memory/memory_linux.c:311
+msgid ""
+"\n"
+"The OS Error string was: "
+msgstr ""
+
+#: src/libsmbios_c/memory/memory_linux.c:308
+msgid ""
+"File open error during memory object construction. The filename:\n"
+"\t"
+msgstr ""
+
+#: src/libsmbios_c/memory/memory_linux.c:325
+msgid ""
+"There was an allocation failure while trying to construct the memory object."
+msgstr ""
+
+#: src/libsmbios_c/memory/memory_obj.c:159
+msgid ""
+"The OS-specific module in use does not define a strerror function to get the "
+"error string."
+msgstr ""
