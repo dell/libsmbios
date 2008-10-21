@@ -33,6 +33,7 @@
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/types.h"
 #include "memory_impl.h"
+#include "internal_strl.h"
 
 // usually want to include this last
 #include "libsmbios_c_intlize.h"
@@ -258,7 +259,13 @@ static void linux_free(struct memory_access_obj *this)
 
 __internal int init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
 {
+    char *errbuf=0;
+    size_t curstrsize;
     struct linux_data *private_data = (struct linux_data *)calloc(1, sizeof(struct linux_data));
+    if (!private_data)
+        goto out_allocfail;
+
+    fnprintf("\n");
 
     // must be power of 2, >= getpagesize()
     private_data->mappingSize = getpagesize() * 16;  // 64k
@@ -268,12 +275,17 @@ __internal int init_mem_struct_filename(struct memory_access_obj *m, const char 
 
     private_data->lastMappedOffset = -1;
     private_data->filename = (char *)calloc(1, strlen(fn) + 1);
+    if (!private_data->filename)
+        goto out_allocfail;
+
     private_data->rw = 0;
     strcat(private_data->filename, fn);
 
     // allocate space for error buffer now. Can optimize this later once api
     // settles
     private_data->mem_errstring = calloc(1, ERROR_BUFSIZE);
+    if (!private_data->mem_errstring)
+        goto out_allocfail;
 
     m->private_data = private_data;
     m->free = linux_free;
@@ -284,6 +296,38 @@ __internal int init_mem_struct_filename(struct memory_access_obj *m, const char 
     m->close = 1;
     m->initialized = 1;
 
+    if (!reopen(private_data, false))
+        goto out_filefail;
+    closefds(private_data);
+
+    goto out;
+out_filefail:
+    fnprintf("out_filefail:\n");
+    errbuf = memory_get_module_error_buf();
+    if (errbuf){
+        strlcpy(errbuf, _("File open error during memory object construction. The filename:\n\t"), ERROR_BUFSIZE);
+
+        strlcat(errbuf, private_data->filename, ERROR_BUFSIZE);
+        strlcat(errbuf, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
+        curstrsize = strlen(errbuf);
+        if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
+            strerror_r(errno, errbuf + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+    }
+    fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
+    linux_free(m);
+    return -1;
+
+out_allocfail:
+    // if any allocations failed, roll everything back. This should be safe.
+    fnprintf("out_allocfail:\n");
+    errbuf = memory_get_module_error_buf();
+    if (errbuf)
+        strlcpy(errbuf, _("There was an allocation failure while trying to construct the memory object."), ERROR_BUFSIZE);
+    fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
+    linux_free(m);
+    return -1;
+
+out:
     return 0;
 }
 

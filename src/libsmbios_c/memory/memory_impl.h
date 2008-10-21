@@ -43,8 +43,9 @@ struct memory_access_obj
     int close;
 };
 
-int __internal init_mem_struct(struct memory_access_obj *m);
-int __internal init_mem_struct_filename(struct memory_access_obj *m, const char *fn);
+__internal int init_mem_struct(struct memory_access_obj *m);
+__internal int init_mem_struct_filename(struct memory_access_obj *m, const char *fn);
+__internal char * memory_get_module_error_buf();
 
 EXTERN_C_END;
 

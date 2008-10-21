@@ -33,14 +33,43 @@
 // private
 #include "memory_impl.h"
 
+// usually want to include this last
+#include "libsmbios_c_intlize.h"
+
 static struct memory_access_obj singleton; // auto-init to 0
-static const char *module_error_buf; // auto-init to 0
+static char *module_error_buf; // auto-init to 0
+static bool atexitreg;
+
+void return_mem(void)
+{
+    fnprintf("\n");
+    free(module_error_buf);
+    module_error_buf = 0;
+}
+
+char *memory_get_module_error_buf()
+{
+    fnprintf("\n");
+    if (module_error_buf)
+        goto out;
+
+    module_error_buf = calloc(1, ERROR_BUFSIZE);
+
+out:
+    if (!atexitreg){
+        atexitreg = true;
+        atexit(return_mem);
+    }
+    return module_error_buf;
+}
 
 struct memory_access_obj *memory_obj_factory(int flags, ...)
 {
     va_list ap;
     struct memory_access_obj *toReturn = 0;
     int ret;
+
+    return_mem();
 
     if (flags==MEMORY_DEFAULTS)
         flags = MEMORY_GET_SINGLETON;
@@ -69,6 +98,7 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     //err_out:
     // init_mem_* functions are responsible for free-ing memory if they return
     // failure
+    fnprintf(" Ugh: ERROR - freeing\n");
     free(toReturn);
     toReturn = 0;
 
