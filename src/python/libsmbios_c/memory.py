@@ -57,17 +57,14 @@ class _memory_access_obj(ctypes.Structure): pass
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.memory_obj_strerror.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
 _libsmbios_c.memory_obj_strerror.restype = ctypes.c_char_p
-def _strerror(result, func, args):
-    # all pass memory_access_obj as first arg
-    _obj = args[0]
-    _str = _libsmbios_c.memory_obj_strerror(_obj)
-    return Exception(_str)
+def _strerror(obj):
+    return Exception(_libsmbios_c.memory_obj_strerror(obj))
 
 #struct memory_access_obj *memory_obj_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.memory_obj_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.memory_obj_factory.restype = ctypes.POINTER(_memory_access_obj)
-_libsmbios_c.memory_obj_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: Exception(_libsmbios_c.memory_obj_strerror(r)))
+_libsmbios_c.memory_obj_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _strerror(r))
 
 #void memory_obj_free(struct memory_access_obj *);
 _libsmbios_c.memory_obj_free.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
@@ -76,12 +73,12 @@ _libsmbios_c.memory_obj_free.restype = None
 #int  memory_obj_read(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
 _libsmbios_c.memory_obj_read.argtypes = [ ctypes.POINTER(_memory_access_obj), ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t ]
 _libsmbios_c.memory_obj_read.restype = ctypes.c_int
-_libsmbios_c.memory_obj_read.errcheck = errorOnNegativeFN(_strerror)
+_libsmbios_c.memory_obj_read.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
 
 #int  memory_obj_write(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
 _libsmbios_c.memory_obj_write.argtypes = [ ctypes.POINTER(_memory_access_obj), ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t ]
 _libsmbios_c.memory_obj_write.restype = ctypes.c_int
-_libsmbios_c.memory_obj_write.errcheck = errorOnNegativeFN(_strerror)
+_libsmbios_c.memory_obj_write.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
 
 #s64  memory_obj_search(const struct memory_access_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 #void  memory_obj_suggest_leave_open(struct memory_access_obj *);
