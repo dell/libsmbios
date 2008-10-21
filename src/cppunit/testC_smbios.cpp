@@ -47,9 +47,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testCsmbios);
 
 void testCsmbios::setUp()
 {
-    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
-    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
-    setupSmiForUnitTest(getTestDirectory(), getWritableDirectory());
+    setupForUnitTesting(getTestDirectory(), getWritableDirectory());
 
     doc = 0;
     parser = 0;
@@ -61,6 +59,7 @@ void testCsmbios::setUp()
 
 void testCsmbios::tearDown()
 {
+    reset();
     if (parser)
         xmlFreeParser(parser);
 

@@ -133,12 +133,12 @@ static int smi_ut_init_fn(struct dell_smi_obj *smi)
 
 void testCsmi::setUp()
 {
-    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
-    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
+    setupForUnitTesting(getTestDirectory(), getWritableDirectory());
 }
 
 void testCsmi::tearDown()
 {
+    reset();
 }
 
 void testCsmi::testSmiConstruct()

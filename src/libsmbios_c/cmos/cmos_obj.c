@@ -31,13 +31,41 @@
 
 // private
 #include "cmos_impl.h"
+#include "libsmbios_c_intlize.h"
 
 struct cmos_access_obj singleton; // auto-init to 0
+static char *module_error_buf; // auto-init to 0
+static bool atexitreg;
+
+static void return_mem(void)
+{
+    fnprintf("\n");
+    free(module_error_buf);
+    module_error_buf = 0;
+}
+
+char *cmos_get_module_error_buf()
+{
+    fnprintf("\n");
+    if (module_error_buf)
+        goto out;
+
+    module_error_buf = calloc(1, ERROR_BUFSIZE);
+
+out:
+    if (!atexitreg){
+        atexitreg = true;
+        atexit(return_mem);
+    }
+    return module_error_buf;
+}
+
 
 struct cmos_access_obj *cmos_obj_factory(int flags, ...)
 {
     va_list ap;
     struct cmos_access_obj *toReturn = 0;
+    int ret;
 
     if (flags==CMOS_DEFAULTS)
         flags = CMOS_GET_SINGLETON;
@@ -53,34 +81,73 @@ struct cmos_access_obj *cmos_obj_factory(int flags, ...)
     if (flags & CMOS_UNIT_TEST_MODE)
     {
         va_start(ap, flags);
-        init_cmos_struct_filename(toReturn, va_arg(ap, const char *));
+        ret = init_cmos_struct_filename(toReturn, va_arg(ap, const char *));
         va_end(ap);
     } else
     {
-        init_cmos_struct(toReturn);
+        ret = init_cmos_struct(toReturn);
     }
+
+    if (ret==0)
+        goto out;
+
+    // fail
+    free(toReturn);
+    toReturn = 0;
 
 out:
     return toReturn;
 }
 
+const char *cmos_obj_strerror(const struct cmos_access_obj *m)
+{
+    const char * retval = 0;
+    if (m) {
+        if (m->strerror)
+            retval = m->strerror(m);
+        else
+            retval = _("The OS-specific module in use does not define a strerror function to get the error string.");
+    } else {
+        retval = module_error_buf;
+    }
+
+    return retval;
+}
+
 int  cmos_obj_read_byte(const struct cmos_access_obj *m, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
-    return m->read_fn(m, byte, indexPort, dataPort, offset);
+    int retval = -6;  // bad *buffer ptr
+    if (!m)
+        retval = -5; // bad memory_access_obj
+
+    if (m && byte)
+        retval = m->read_fn(m, byte, indexPort, dataPort, offset);
+
+    return retval;
 }
 
 int  cmos_obj_write_byte(const struct cmos_access_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
-    int temp = m->write_fn(m, byte, indexPort, dataPort, offset);
+    int retval = -6;  // bad *buffer ptr
+    if (!m)
+        goto out;
+
+    retval = m->write_fn(m, byte, indexPort, dataPort, offset);
     cmos_obj_run_callbacks(m, true);
-    return temp;
+
+out:
+    return retval;
 }
 
 void __internal _cmos_obj_free(struct cmos_access_obj *m)
 {
-    struct callback *ptr = m->cb_list_head;
+    struct callback *ptr = 0;
     struct callback *next = 0;
 
+    if (!m)
+        goto out;
+
+    ptr = m->cb_list_head;
     // free callback list
     while(ptr)
     {
@@ -98,24 +165,32 @@ void __internal _cmos_obj_free(struct cmos_access_obj *m)
 
     m->free(m);
 
-    free(m);
+out:
+    free(m);  //free(0) is legal;
 }
 
 void cmos_obj_free(struct cmos_access_obj *m)
 {
+    if (!m) goto out;
     if (m != &singleton)
         _cmos_obj_free(m);
     else
         m->cleanup(m);
+out:
+    return;
 }
 
 void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_callback cb_fn, void *userdata, void (*destructor)(void *))
 {
-    struct callback *ptr = m->cb_list_head;
+    struct callback *ptr = 0;
     struct callback *new = 0;
-    dbg_printf("%s\n", __PRETTY_FUNCTION__);
 
-    dbg_printf("%s - loop\n", __PRETTY_FUNCTION__);
+    if(!m || !cb_fn)
+        goto out;
+
+    fnprintf(" loop\n");
+
+    ptr = m->cb_list_head;
     while(ptr && ptr->next)
     {
         // dont add duplicates
@@ -125,14 +200,14 @@ void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_call
         ptr = ptr->next;
     }
 
-    dbg_printf("%s - allocate\n", __PRETTY_FUNCTION__);
+    fnprintf(" allocate\n");
     new = calloc(1, sizeof(struct callback));
     new->cb_fn = cb_fn;
     new->userdata = userdata;
     new->destructor = destructor;
     new->next = 0;
 
-    dbg_printf("%s - join %p\n", __PRETTY_FUNCTION__, ptr);
+    fnprintf(" join %p\n", ptr);
     if (ptr)
         ptr->next = new;
     else
@@ -144,14 +219,20 @@ out:
 
 int cmos_obj_run_callbacks(const struct cmos_access_obj *m, bool do_update)
 {
-    int retval = 0;
-    const struct callback *ptr = m->cb_list_head;
-    dbg_printf("%s\n", __PRETTY_FUNCTION__);
+    int retval = -1;
+    const struct callback *ptr = 0;
+
+    if (!m)
+        goto out;
+
+    fnprintf("\n");
+    retval = 0;
+    ptr = m->cb_list_head;
     if(!ptr)
         goto out;
 
     do{
-        dbg_printf("%s - ptr->cb_fn %p\n", __PRETTY_FUNCTION__, ptr->cb_fn);
+        fnprintf(" ptr->cb_fn %p\n", ptr->cb_fn);
         retval |= ptr->cb_fn(m, do_update, ptr->userdata);
         ptr = ptr->next;
     } while (ptr);
@@ -162,6 +243,8 @@ out:
 
 void __internal _init_cmos_std_stuff(struct cmos_access_obj *m)
 {
-    m->initialized = 1;
-    m->cb_list_head = 0;
+    if (m) {
+        m->initialized = 1;
+        m->cb_list_head = 0;
+    }
 }

@@ -38,7 +38,9 @@ void   cmos_obj_free(struct cmos_access_obj *);
 
 int     cmos_obj_read_byte(const struct cmos_access_obj *, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
 int    cmos_obj_write_byte(const struct cmos_access_obj *, u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
-size_t cmos_obj_fmt_err(const struct cmos_access_obj *, char *buf, size_t len);
+
+// format error string
+const char *cmos_obj_strerror(const struct cmos_access_obj *m);
 
 // useful for checksums, etc
 typedef int (*cmos_write_callback)(const struct cmos_access_obj *, bool, void *);

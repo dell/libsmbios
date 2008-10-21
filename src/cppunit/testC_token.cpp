@@ -46,9 +46,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testCtoken);
 
 void testCtoken::setUp()
 {
-    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
-    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
-    setupSmiForUnitTest(getTestDirectory(), getWritableDirectory());
+    setupForUnitTesting(getTestDirectory(), getWritableDirectory());
 
     doc = 0;
     parser = 0;
@@ -60,6 +58,7 @@ void testCtoken::setUp()
 
 void testCtoken::tearDown()
 {
+    reset();
     if (parser)
         xmlFreeParser(parser);
 

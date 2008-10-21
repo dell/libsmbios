@@ -50,12 +50,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION (testPlatform);
 
 void testPlatform::setUp()
 {
-    string memdumpCopyFile = setupMemoryForUnitTest(getTestDirectory(), getWritableDirectory());
-    string cmosCopyFile = setupCmosForUnitTest(getTestDirectory(), getWritableDirectory());
-    setupSmiForUnitTest(getTestDirectory(), getWritableDirectory());
-
-    smbios::SmbiosFactory::getFactory()->setParameter("offset", 0);
-    smbios::SmbiosFactory::getFactory()->setMode(smbios::SmbiosFactory::UnitTestMode);
+    setupForUnitTesting(getTestDirectory(), getWritableDirectory());
 
     doc = 0;
     parser = 0;
@@ -71,15 +66,7 @@ void testPlatform::tearDown()
     // unit test may accidentally get the wrong objects.
     // Lifetime rules: CmosTokenTable cannot live longer than the ISmbiosTable
     // object used in its construction.
-    smbios::TokenTableFactory::getFactory()->reset();
-
-    smbios::SmbiosFactory::getFactory()->reset();
-
-    memory::MemoryFactory::getFactory()->reset();
-
-    cmos::CmosRWFactory::getFactory()->reset();
-
-    smi::SmiFactory::getFactory()->reset();
+    reset();
 
     if (parser)
         xmlFreeParser(parser);
