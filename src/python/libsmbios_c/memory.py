@@ -61,13 +61,13 @@ def _strerror(result, func, args):
     # all pass memory_access_obj as first arg
     _obj = args[0]
     _str = _libsmbios_c.memory_obj_strerror(_obj)
-    raise Exception(_str)
+    return Exception(_str)
 
 #struct memory_access_obj *memory_obj_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.memory_obj_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.memory_obj_factory.restype = ctypes.POINTER(_memory_access_obj)
-_libsmbios_c.memory_obj_factory.errcheck = errorOnZeroFN(_strerror)
+_libsmbios_c.memory_obj_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: Exception(_libsmbios_c.memory_obj_strerror(r)))
 
 #void memory_obj_free(struct memory_access_obj *);
 _libsmbios_c.memory_obj_free.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
