@@ -29,6 +29,8 @@ EXTERN_C_BEGIN;
 #   define dbg_printf _dbg_printf
 #endif
 
+#define ERROR_BUFSIZE 1024
+
 struct memory_access_obj
 {
     int initialized;
@@ -41,8 +43,8 @@ struct memory_access_obj
     int close;
 };
 
-void __internal init_mem_struct(struct memory_access_obj *m);
-void __internal init_mem_struct_filename(struct memory_access_obj *m, const char *fn);
+int __internal init_mem_struct(struct memory_access_obj *m);
+int __internal init_mem_struct_filename(struct memory_access_obj *m, const char *fn);
 
 EXTERN_C_END;
 

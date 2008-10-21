@@ -39,6 +39,7 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
 {
     va_list ap;
     struct memory_access_obj *toReturn = 0;
+    int ret;
 
     if (flags==MEMORY_DEFAULTS)
         flags = MEMORY_GET_SINGLETON;
@@ -54,12 +55,21 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     if (flags & MEMORY_UNIT_TEST_MODE)
     {
         va_start(ap, flags);
-        init_mem_struct_filename(toReturn, va_arg(ap, const char *));
+        ret = init_mem_struct_filename(toReturn, va_arg(ap, const char *));
         va_end(ap);
     } else
     {
-        init_mem_struct(toReturn);
+        ret = init_mem_struct(toReturn);
     }
+
+    if (ret == 0)
+        goto out;
+
+    //err_out:
+    // init_mem_* functions are responsible for free-ing memory if they return
+    // failure
+    free(toReturn);
+    toReturn = 0;
 
 out:
     return toReturn;
@@ -67,32 +77,40 @@ out:
 
 void  memory_obj_suggest_leave_open(struct memory_access_obj *this)
 {
-    this->close--;
+    if (this)
+        this->close--;
 }
 
 void  memory_obj_suggest_close(struct memory_access_obj *this)
 {
-    this->close++;
+    if (this)
+        this->close++;
 }
 
 bool  memory_obj_should_close(const struct memory_access_obj *this)
 {
-    return this->close > 0;
+    if (this)
+        return this->close > 0;
+    return true;
 }
 
 int  memory_obj_read(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
-    return m->read_fn(m, (u8 *)buffer, offset, length);
+    if(m)
+        return m->read_fn(m, (u8 *)buffer, offset, length);
+    return -5;
 }
 
 int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
-    return m->write_fn(m, (u8 *)buffer, offset, length);
+    if(m)
+        return m->write_fn(m, (u8 *)buffer, offset, length);
+    return -5;
 }
 
 const char *memory_obj_strerror(const struct memory_access_obj *m)
 {
-    if (m->strerror)
+    if (m && m->strerror)
         return m->strerror(m);
     return 0;
 }
@@ -100,6 +118,7 @@ const char *memory_obj_strerror(const struct memory_access_obj *m)
 void memory_obj_free(struct memory_access_obj *m)
 {
     fnprintf("  m(%p)  singleton(%p)\n", m, &singleton);
+    if (!m) goto out;
     if (m != &singleton)
     {
         m->free(m);
@@ -107,19 +126,24 @@ void memory_obj_free(struct memory_access_obj *m)
     }
     else
         m->cleanup(m);
+out:
+    return;
 }
 
 s64  memory_obj_search(const struct memory_access_obj *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
 {
     u8 *buf = calloc(1, patlen);
     u64 cur = start;
+    int ret;
     memory_obj_suggest_leave_open((struct memory_access_obj *)m);
 
     memset(buf, 0, patlen);
 
     while ( (cur + patlen) < end)
     {
-        memory_obj_read(m, buf, cur, patlen);
+        ret = memory_obj_read(m, buf, cur, patlen);
+        if(ret != 0)
+            goto err_out;
 
         if (memcmp (buf, pat, patlen) == 0)
             goto out;
@@ -129,7 +153,12 @@ s64  memory_obj_search(const struct memory_access_obj *m, const char *pat, size_
 
     // bad stuff happened if we got to here and cur > end
     if ((cur + patlen) >= end)
-        cur = -1;
+        goto err_out;
+
+    goto out;
+
+err_out:
+    cur = -1;
 
 out:
     memory_obj_suggest_close((struct memory_access_obj *)m);

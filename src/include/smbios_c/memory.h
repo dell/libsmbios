@@ -93,7 +93,7 @@ void DLL_SPEC memory_suggest_close();
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any memory_* function. Copy the contents if you need it longer.
  */
-const char *memory_strerror();
+const char * DLL_SPEC memory_strerror();
 
 
 EXTERN_C_END;

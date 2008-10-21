@@ -67,3 +67,12 @@ s64  memory_search(const char *pat, size_t patlen, u64 start, u64 end, u64 strid
     memory_obj_free(m);
     return retval;
 }
+
+const char * DLL_SPEC memory_strerror()
+{
+    struct memory_access_obj *m = memory_obj_factory(MEMORY_GET_SINGLETON);
+    const char * retval = memory_obj_strerror(m);
+    memory_obj_free(m);
+    return retval;
+}
+

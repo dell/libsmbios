@@ -28,10 +28,13 @@
 #include <string.h>     // memcpy
 #include <errno.h>
 #include <sys/mman.h>   // mmap
+#include "internal_strl.h"
 
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/types.h"
 #include "memory_impl.h"
+
+#define _(X) X
 
 struct linux_data
 {
@@ -150,12 +153,15 @@ static int copy_mmap(const struct memory_access_obj *this, u8 *buffer, u64 offse
     struct linux_data *private_data = (struct linux_data *)this->private_data;
     private_data->mem_errno = errno = 0;
     int retval = -1;
+    const char *error = 0;
+    size_t curstrsize;
 
     size_t bytesCopied = 0;
 
     fnprintf("buffer(%p) offset(%lld) length(%zd) rw(%d)\n", buffer, offset, length, rw);
     fnprintf("->rw: %d  fd: %p\n", private_data->rw, private_data->fd);
 
+    error = _("Could not (re)open file. File: ");
     if( (rw && !private_data->rw) || !private_data->fd)
         if (!reopen(private_data, rw))
             goto err_out;
@@ -166,6 +172,7 @@ static int copy_mmap(const struct memory_access_obj *this, u8 *buffer, u64 offse
         fnprintf("\tLOOP: bytesCopied(%zd) length(%zd)\n", bytesCopied, length);
         remap(private_data, offset + bytesCopied, rw);
         fnprintf("\tlastMapping(%p)\n", private_data->lastMapping);
+        error = _("The mmap() call returned mapping of -1 (failure). File: ");
         if (private_data->lastMapping == (void *)-1)
             goto err_out;
 
@@ -185,6 +192,13 @@ err_out:
     perror("ERR_OUT: ");
     fnprintf("%s\n", strerror(errno));
     private_data->mem_errno = errno;
+    strlcpy(private_data->mem_errstring, error, ERROR_BUFSIZE);
+    strlcat(private_data->mem_errstring, private_data->filename, ERROR_BUFSIZE);
+    strlcat(private_data->mem_errstring, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
+    curstrsize = strlen(private_data->mem_errstring);
+    if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
+        strerror_r(errno, private_data->mem_errstring + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+
     if (private_data->lastMapping == (void*)-1)
         private_data->lastMapping = 0;
 
@@ -197,13 +211,12 @@ out:
     return retval;
 }
 
+// we do error string stuff really stupid way for now. can try to optimize
+// later once everything works.
 static const char * linux_strerror(const struct memory_access_obj *this)
 {
-#if 0
-    if (! this->private_data->mem_errstring)
-         ;//this->private_data->mem_errstring
-#endif
-    return 0;
+    struct linux_data *private_data = (struct linux_data *)this->private_data;
+    return private_data->mem_errstring;
 }
 
 static int linux_read_fn(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length)
@@ -242,21 +255,24 @@ static void linux_free(struct memory_access_obj *this)
     this->initialized=0;
 }
 
-__internal void init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
+__internal int init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
 {
     struct linux_data *private_data = (struct linux_data *)calloc(1, sizeof(struct linux_data));
 
     // must be power of 2, >= getpagesize()
+    private_data->mappingSize = getpagesize() * 16;  // 64k
     if (getpagesize() > 4096)
-        private_data->mappingSize = getpagesize();  // 64k
-    else
-        private_data->mappingSize = getpagesize() * 16;  // 64k
-    fnprintf("mappingSize(%lld)\n", private_data->mappingSize);
+        private_data->mappingSize = getpagesize();  // page size. How big? Who knows...
+    fnprintf("mappingSize(%lld)\n", private_data->mappingSize); // this will tell if we care.
 
     private_data->lastMappedOffset = -1;
     private_data->filename = (char *)calloc(1, strlen(fn) + 1);
     private_data->rw = 0;
     strcat(private_data->filename, fn);
+
+    // allocate space for error buffer now. Can optimize this later once api
+    // settles
+    private_data->mem_errstring = calloc(1, ERROR_BUFSIZE);
 
     m->private_data = private_data;
     m->free = linux_free;
@@ -266,11 +282,13 @@ __internal void init_mem_struct_filename(struct memory_access_obj *m, const char
     m->strerror = linux_strerror;
     m->close = 1;
     m->initialized = 1;
+
+    return 0;
 }
 
-__internal void init_mem_struct(struct memory_access_obj *m)
+__internal int init_mem_struct(struct memory_access_obj *m)
 {
-   init_mem_struct_filename(m, "/dev/mem");
+   return init_mem_struct_filename(m, "/dev/mem");
 }
 
 
