@@ -123,6 +123,12 @@ const char * DLL_SPEC smbios_struct_get_string_from_offset(const struct smbios_s
  */
 const char * DLL_SPEC smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 
+/** Returns string describing the last error condition.
+ * Can return 0. The buffer used is guaranteed to be valid until the next call
+ * to any smbios_* function. Copy the contents if you need it longer.
+ */
+const char * DLL_SPEC smbios_strerror();
+
 EXTERN_C_END;
 
 #endif  /* SMBIOS_H */

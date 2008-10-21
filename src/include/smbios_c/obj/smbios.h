@@ -46,6 +46,7 @@ void smbios_table_free(struct smbios_table *);
 // not yet implemented
 //// format error string
 //size_t smbios_fmt_err(struct smbios_table *, char *buf, size_t len);
+const char * DLL_SPEC smbios_table_strerror(const struct smbios_table *);
 
 // visitor pattern
 void smbios_table_walk(struct smbios_table *, void (*smbios_table_walk_fn)(const struct smbios_struct *, void *userdata), void *userdata);

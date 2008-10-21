@@ -24,24 +24,53 @@
 // system
 #include <stdlib.h>
 #include <string.h>
+//#include <stdio.h>
 
 // public
 #include "smbios_c/memory.h"
 #include "smbios_c/obj/smbios.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
+#include "internal_strl.h"
 
 // private
 #include "smbios_impl.h"
+#include "libsmbios_c_intlize.h"
 
 // forward declarations
 
 // static vars
 static struct smbios_table singleton; // auto-init to 0
-#include <stdio.h>
+static char *module_error_buf; // auto-init to 0
+static bool atexitreg;
+
+static void return_mem(void)
+{
+    fnprintf("\n");
+    free(module_error_buf);
+    module_error_buf = 0;
+}
+
+static char *smbios_get_module_error_buf()
+{
+    fnprintf("\n");
+    if (module_error_buf)
+        goto out;
+
+    module_error_buf = calloc(1, ERROR_BUFSIZE);
+
+out:
+    if (!atexitreg){
+        atexitreg = true;
+        atexit(return_mem);
+    }
+    return module_error_buf;
+}
+
 struct smbios_table *smbios_table_factory(int flags, ...)
 {
     struct smbios_table *toReturn = 0;
+    int ret;
 
     dbg_printf("DEBUG: smbios_table_factory()\n");
 
@@ -56,10 +85,18 @@ struct smbios_table *smbios_table_factory(int flags, ...)
     if (toReturn->initialized)
         goto out;
 
-    init_smbios_struct(toReturn);
+    ret = init_smbios_struct(toReturn);
+    if (ret)
+        goto out_init_fail;
 
     if (!(flags & SMBIOS_NO_FIXUPS))
         do_smbios_fixups(toReturn);
+
+    goto out;
+
+out_init_fail:
+    free (toReturn);
+    toReturn = 0;
 
 out:
     return toReturn;
@@ -74,6 +111,10 @@ void smbios_table_free(struct smbios_table *m)
     // can do special cleanup for singleton, but none necessary atm
 }
 
+const char *smbios_table_strerror(const struct smbios_table *m)
+{
+    return m->errstring;
+}
 
 struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *table, const struct smbios_struct *cur)
 {
@@ -269,6 +310,9 @@ void __internal _smbios_table_free(struct smbios_table *this)
 
     memset(&this->tep, 0, sizeof(this->tep));
 
+    free(this->errstring);
+    this->errstring = 0;
+
     free(this->table);
     this->table = 0;
 
@@ -278,27 +322,44 @@ out:
     free(this);
 }
 
-void __internal init_smbios_struct(struct smbios_table *m)
+int __internal init_smbios_struct(struct smbios_table *m)
 {
+    char *errbuf;
+    char *error = _("Allocation error trying to allocate memory for error string. (ironic, yes?) ");
     m->initialized = 1;
+    m->errstring = calloc(1, ERROR_BUFSIZE);
+    if (!m->errstring)
+        goto out_fail;
 
     dbg_printf("DEBUG: smbios_table_factory()\n");
+    error = _("Could not instantiate SMBIOS table. The errors from the low-level modules were:");
 
     // smbios efi strategy
     if (smbios_get_table_efi(m) >= 0)
-        return;
+        return 0;
 
     // smbios memory strategy
     if (smbios_get_table_memory(m) >= 0)
-        return;
+        return 0;
 
     // smbios WMI strategy (windows only)
     if (smbios_get_table_wmi(m) >= 0)
-        return;
+        return 0;
 
     // smbios firmware tables strategy (windows only)
     if (smbios_get_table_firm_tables(m) >= 0)
-        return;
+        return 0;
+
+    // fall through to failure...
+
+out_fail:
+    errbuf = smbios_get_module_error_buf();
+    if (errbuf){
+        strlcpy(errbuf, error, ERROR_BUFSIZE);
+        strlcat(errbuf, m->errstring, ERROR_BUFSIZE);
+    }
+    _smbios_table_free(m);
+    return -1;
 }
 
 
@@ -444,21 +505,26 @@ out:
 int __internal smbios_get_table_memory(struct smbios_table *m)
 {
     int retval = -1; //fail
+    const char *error = _("Could not find Table Entry Point.");
 
     dbg_printf("DEBUG: smbios_get_table_memory()\n");
 
     if (!smbios_get_tep_memory(m, false))
-        goto out;
+        goto out_err;
 
+    error = _("Found table entry point but could not read table from memory. ");
     size_t len = m->tep.dmi.table_length;
     m->table = (struct table*)calloc(1, len);
     retval = memory_read(m->table, m->tep.dmi.table_address, len);
-    if (retval == 0)
-        goto out;
+    if (retval != 0)
+        goto out_err; // success
 
-    // fail
+    goto out;
+
+out_err:
     free(m->table);
     m->table = 0;
+    strlcat (m->errstring, error, ERROR_BUFSIZE);
 
 out:
     return retval;

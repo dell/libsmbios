@@ -206,6 +206,8 @@ struct my_smbios_table
     int initialized;
     struct smbios_table_entry_point tep;
     struct table *table;
+    int last_errno;
+    char *errstring;
 };
 
 void dump_smbios_table(const char *smbiosDumpFile)

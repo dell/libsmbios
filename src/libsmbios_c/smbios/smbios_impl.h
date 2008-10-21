@@ -29,6 +29,8 @@ EXTERN_C_BEGIN;
 #   define dbg_printf _dbg_printf
 #endif
 
+#define ERROR_BUFSIZE 1024
+
 #define E_BLOCK_START 0xE0000UL
 #define F_BLOCK_START 0xF0000UL
 #define F_BLOCK_END   0xFFFFFUL
@@ -79,9 +81,11 @@ struct smbios_table
     int initialized;
     struct smbios_table_entry_point tep;
     struct table *table;
+    int last_errno;
+    char *errstring;
 };
 
-void __internal init_smbios_struct(struct smbios_table *m);
+int __internal init_smbios_struct(struct smbios_table *m);
 void __internal _smbios_table_free(struct smbios_table *this);
 void __internal do_smbios_fixups(struct smbios_table *);
 int __internal smbios_get_table_memory(struct smbios_table *m);

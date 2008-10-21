@@ -68,3 +68,12 @@ struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_struc
     smbios_table_free(table);
     return ret;
 }
+
+
+const char *smbios_strerror(const struct smbios_struct *cur)
+{
+    struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
+    const char *ret = smbios_table_strerror(table);
+    smbios_table_free(table);
+    return ret;
+}
