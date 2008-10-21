@@ -127,16 +127,26 @@ bool  memory_obj_should_close(const struct memory_access_obj *this)
 
 int  memory_obj_read(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
-    if(m)
-        return m->read_fn(m, (u8 *)buffer, offset, length);
-    return -5;
+    int retval = -6;  // bad *buffer ptr
+    if (!m)
+        retval = -5; // bad memory_access_obj
+
+    if (m && buffer)
+        retval = m->read_fn(m, (u8 *)buffer, offset, length);
+
+    return retval ;
 }
 
 int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
-    if(m)
-        return m->write_fn(m, (u8 *)buffer, offset, length);
-    return -5;
+    int retval = -6;  // bad *buffer ptr
+    if (!m)
+        retval = -5; // bad memory_access_obj
+
+    if (m && buffer)
+        retval = m->write_fn(m, (u8 *)buffer, offset, length);
+
+    return retval;
 }
 
 const char *memory_obj_strerror(const struct memory_access_obj *m)

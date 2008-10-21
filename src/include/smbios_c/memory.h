@@ -33,6 +33,9 @@ EXTERN_C_BEGIN;
  *  @param offset  starting memory offset
  *  @param length  how many bytes of memory to copy
  *  @return  0 on success, < 0 on failure
+ *          -1 general failure
+ *          -5 bad memory_access_object (could not instantiate singleton?)
+ *          -6 bad buffer pointer
  */
 int DLL_SPEC memory_read(void *buffer, u64 offset, size_t length);
 
@@ -45,6 +48,9 @@ int DLL_SPEC memory_read(void *buffer, u64 offset, size_t length);
  *  @param offset  starting memory offset
  *  @param length  how many bytes of memory to copy
  *  @return  0 on success, < 0 on failure
+ *          -1 general failure
+ *          -5 bad memory_access_object (could not instantiate singleton?)
+ *          -6 bad buffer pointer
  */
 int DLL_SPEC memory_write(void *buffer, u64 offset, size_t length);
 
