@@ -34,7 +34,8 @@
 #include "smbios_c/types.h"
 #include "memory_impl.h"
 
-#define _(X) X
+// usually want to include this last
+#include "libsmbios_c_intlize.h"
 
 struct linux_data
 {

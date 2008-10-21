@@ -34,6 +34,7 @@
 #include "memory_impl.h"
 
 static struct memory_access_obj singleton; // auto-init to 0
+static const char *module_error_buf; // auto-init to 0
 
 struct memory_access_obj *memory_obj_factory(int flags, ...)
 {
@@ -110,9 +111,17 @@ int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offse
 
 const char *memory_obj_strerror(const struct memory_access_obj *m)
 {
-    if (m && m->strerror)
-        return m->strerror(m);
-    return 0;
+    const char * retval = 0;
+    if (m) {
+        if (m->strerror)
+            retval = m->strerror(m);
+        else
+            retval = _("The OS-specific module in use does not define a strerror function to get the error string.");
+    } else {
+        retval = module_error_buf;
+    }
+
+    return retval;
 }
 
 void memory_obj_free(struct memory_access_obj *m)
