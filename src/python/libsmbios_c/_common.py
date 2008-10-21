@@ -35,7 +35,7 @@ def errorOnZeroFN(exception_fn=None):
     def _fn(result, func, args):
         if result is None or result == 0:
             if exception_fn is not None:
-                raise exception_fn()
+                raise exception_fn(result, func, args)
             else:
                 raise Exception, ("returned error")
         return result
@@ -45,7 +45,7 @@ def errorOnNegativeFN(exception_fn=None):
     def _fn(result, func, args):
         if result is None or result < 0:
             if exception_fn is not None:
-                raise exception_fn()
+                raise exception_fn(result, func, args)
             else:
                 raise Exception, ("returned error")
         return result
