@@ -52,3 +52,12 @@ int cmos_run_callbacks(bool do_update)
     cmos_obj_free(c);
     return retval;
 }
+
+const char * cmos_strerror()
+{
+    struct cmos_access_obj *m = cmos_obj_factory(CMOS_GET_SINGLETON);
+    const char * retval = cmos_obj_strerror(m);
+    cmos_obj_free(m);
+    return retval;
+}
+

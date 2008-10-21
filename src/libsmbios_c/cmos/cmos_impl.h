@@ -30,6 +30,8 @@ EXTERN_C_BEGIN;
 #   define dbg_printf _dbg_printf
 #endif
 
+#define ERROR_BUFSIZE 1024
+
 struct callback
 {
     cmos_write_callback cb_fn;
@@ -45,16 +47,20 @@ struct cmos_access_obj
     int (*write_fn)(const struct cmos_access_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset);
     void (*free)(struct cmos_access_obj *this);
     void (*cleanup)(struct cmos_access_obj *this); // called instead of ->free for singleton
+    const char *(*strerror)(const struct cmos_access_obj *this);
     struct callback *cb_list_head;
     void *private_data;
 };
 
 // regular one
-void __internal init_cmos_struct(struct cmos_access_obj *m);
-void __internal _init_cmos_std_stuff(struct cmos_access_obj *m);  // base class constructor
+__internal int init_cmos_struct(struct cmos_access_obj *m);
+__internal void _init_cmos_std_stuff(struct cmos_access_obj *m);  // base class constructor
 
 // unit test one
-void __internal init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn);
+__internal int init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn);
+
+// other funcs
+__internal char *cmos_get_module_error_buf();
 
 EXTERN_C_END;
 

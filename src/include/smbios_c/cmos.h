@@ -55,8 +55,14 @@ int DLL_SPEC cmos_write_byte(u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
  */
 int DLL_SPEC cmos_run_callbacks(bool do_update);
 
-// not yet implemented
-//size_t cmos_fmt_err(const struct cmos_obj *, char *buf, size_t len);
+/** Returns string describing the last error condition.
+ * Can return 0. The buffer used is guaranteed to be valid until the next call
+ * to any cmos_* function. Copy the contents if you need it longer.
+ */
+const char * DLL_SPEC cmos_strerror();
+
+
+
 
 EXTERN_C_END;
 
