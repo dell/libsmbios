@@ -19,9 +19,9 @@
 #ifndef _STDFUNCS_H
 #define _STDFUNCS_H
 
-std::string setupMemoryForUnitTest(std::string testdir, std::string writedir);
-std::string setupCmosForUnitTest(std::string testdir, std::string writedir);
-void setupSmiForUnitTest(std::string testdir, std::string writedir);
+void setupForUnitTesting(std::string testdir, std::string writedir);
+void reset();
+
 std::string &strip_trailing_whitespace(std::string &s);
 void copyFile( std::string dstFile, std::string srcFile );
 bool fileExists(std::string fileName);

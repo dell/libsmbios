@@ -31,6 +31,8 @@
 #include "smbios/IMemory.h"
 #include "smbios/ICmosRW.h"
 #include "smbios/ISmi.h"
+#include "smbios/ISmbios.h"
+#include "smbios/IToken.h"
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/obj/smi.h"
@@ -71,6 +73,11 @@ main (int argc, char **argv)
     return !wasSuccessful;
 }
 
+static int smi_ut_init_fn(struct dell_smi_obj *smi)
+{
+    return 0;
+}
+
 string setupMemoryForUnitTest(string testdir, string writedir)
 {
     string memdumpOrigFile = testdir + "/memdump.dat";
@@ -104,9 +111,11 @@ string setupCmosForUnitTest(string testdir, string writedir)
     return cmosCopyFile;
 }
 
-static int smi_ut_init_fn(struct dell_smi_obj *smi)
+
+void setupSmbiosForUnitTest()
 {
-    return 0;
+    smbios::SmbiosFactory::getFactory()->setParameter("offset", 0);
+    smbios::SmbiosFactory::getFactory()->setMode(smbios::SmbiosFactory::UnitTestMode);
 }
 
 void setupSmiForUnitTest(string testdir, string writedir)
@@ -121,6 +130,23 @@ void setupSmiForUnitTest(string testdir, string writedir)
     string smiOutput = writedir + "/smi-output.dat";
     smi::SmiFactory::getFactory()->setParameter("smiFile", smiOutput);
     smi::SmiFactory::getFactory()->setMode( smi::SmiFactory::UnitTestMode );
+}
+
+void setupForUnitTesting(string testdir, string writedir)
+{
+    setupMemoryForUnitTest(testdir, writedir);
+    setupCmosForUnitTest(testdir, writedir);
+    setupSmiForUnitTest(testdir, writedir);
+    setupSmbiosForUnitTest();
+}
+
+void reset()
+{
+    smbios::TokenTableFactory::getFactory()->reset();
+    smbios::SmbiosFactory::getFactory()->reset();
+    memory::MemoryFactory::getFactory()->reset();
+    cmos::CmosRWFactory::getFactory()->reset();
+    smi::SmiFactory::getFactory()->reset();
 }
 
 string &strip_trailing_whitespace(string &s)
