@@ -5,11 +5,20 @@ out_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISIO
 out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
 
 EXTRA_DIST += src/include/smbios_c
-EXTRA_DIST += src/libsmbios_c/common
 
 out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/common/strlcpy.c			\
     src/libsmbios_c/common/strlcat.c			\
+    src/libsmbios_c/common/select_compiler_config.h	\
+    src/libsmbios_c/common/libsmbios_c_intlize.h	\
+    src/libsmbios_c/common/internal_strl.h		\
+    src/libsmbios_c/common/platform/linux.h		\
+    src/libsmbios_c/common/platform/win64.h		\
+    src/libsmbios_c/common/platform/win32.h		\
+    src/libsmbios_c/common/compiler/visualc.h		\
+    src/libsmbios_c/common/compiler/gcc.h		\
+    src/libsmbios_c/common/libsmbios_c_source.h		\
+    src/libsmbios_c/common/select_platform_config.h	\
     src/libsmbios_c/cmos/cmos_impl.h			\
     src/libsmbios_c/cmos/cmos.c				\
     src/libsmbios_c/cmos/cmos_ut.c			\
@@ -41,3 +50,5 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/token/token_d4.c			\
     src/libsmbios_c/token/token_da.c			\
     src/libsmbios_c/token/token_impl.h
+
+
