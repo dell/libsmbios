@@ -29,6 +29,7 @@ AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror 
 include Makefile-std
 include src/libsmbios_c++/Makefile.am
 include src/libsmbios_c/Makefile.am
+include src/python/Makefile.am
 include src/bin/Makefile.am
 include src/cppunit/Makefile.am
 

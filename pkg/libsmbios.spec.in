@@ -33,6 +33,9 @@
     %define doxygen_BR doxygen
 %endif
 
+# per fedora python packaging guidelines
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
 Name: libsmbios_c++
 Version: %{release_version}
 Release: 1%{?dist}
@@ -69,6 +72,14 @@ Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 This package provides the C-based libsmbios library, with a C interface.
+
+%package -n libsmbios_c-python
+Summary: Python interface to Libsmbios C library
+Group: System Environment/Libraries
+Requires: libsmbios_c
+
+%description -n libsmbios_c-python
+This package provides a Python interface to libsmbios
 
 
 %package -n smbios-utils
@@ -115,7 +126,7 @@ This package contains some sample binaries that use libsmbios.
 %prep
 %setup -q -n libsmbios-%{version}
 find . -type d -exec chmod -f 755 {} \;
-find doc src pkg -type f -exec chmod -f 644 {} \;
+find doc src -type f -exec chmod -f 644 {} \;
 chmod 755 src/cppunit/*.sh
 
 %build
@@ -171,6 +182,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios_c.so.*
+
+%files -n libsmbios_c-python
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
+%{python_sitelib}/*
 
 %files -n libsmbios_c++-devel
 %defattr(-,root,root,-)
