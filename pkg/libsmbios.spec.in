@@ -33,18 +33,21 @@
     %define doxygen_BR doxygen
 %endif
 
-Name: %{release_name}
+Name: libsmbios_c++
 Version: %{release_version}
 Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
 Group: System Environment/Libraries
-Source: http://linux.dell.com/libsmbios/download/%{name}/%{name}-%{version}/%{name}-%{version}.tar.gz
+Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
-Summary: Libsmbios shared libraries
+Summary: Libsmbios C++ shared libraries
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Obsoletes: libsmbios-libs < 2.0.0
-Provides: libsmbios-libs = %{version}-%{release}
-BuildRequires: libxml2-devel, %{valgrind_BR}
+# uncomment for official fedora
+#Obsoletes: libsmbios-libs < 2.0.0
+provides: libsmbios = %{epoch}:%{version}-%{release}
+Provides: libsmbios-libs = %{epoch}:%{version}-%{release}
+BuildRequires: libxml2-devel
+#BuildRequires: %{valgrind_BR}
 BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
 
 # libsmbios only ever makes sense on intel compatible arches
@@ -55,6 +58,19 @@ ExclusiveArch: x86_64 ia64 %{ix86}
 Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
+This package has a C++-based library, with a C++ interface. It is not actively maintained, but provided for backwards compatibility. New programs should use the libsmbios C interface.
+
+%package -n libsmbios_c
+Summary: Libsmbios C shared libraries
+Group: System Environment/Libraries
+
+%description -n libsmbios_c
+Libsmbios is a library and utilities that can be used by client programs
+to get information from standard BIOS tables, such as the SMBIOS table.
+
+This package provides the C-based libsmbios library, with a C interface.
+
+
 %package -n smbios-utils
 Summary: The "supported" sample binaries that use libsmbios
 Group: Applications/System
@@ -64,12 +80,26 @@ Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
 
-%package devel
+%package -n libsmbios_c++-devel
 Summary: Development headers and archives
 Group: Development/Libraries
-Requires: libsmbios = %{version}-%{release}
+Requires: libsmbios_c++ = %{version}-%{release}
+Provides: libsmbios-devel
 
-%description devel
+%description -n libsmbios_c++-devel
+Libsmbios is a library and utilities that can be used by client programs
+to get information from standard BIOS tables, such as the SMBIOS table.
+
+This package contains the headers and .a files necessary to compile new
+client programs against libsmbios.
+
+
+%package -n libsmbios_c-devel
+Summary: Development headers and archives
+Group: Development/Libraries
+Requires: libsmbios_c = %{version}-%{release}
+
+%description -n libsmbios_c-devel
 Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
@@ -83,7 +113,7 @@ to get information from standard BIOS tables, such as the SMBIOS table.
 This package contains some sample binaries that use libsmbios.
 
 %prep
-%setup -q
+%setup -q -n libsmbios-%{version}
 find . -type d -exec chmod -f 755 {} \;
 find doc src pkg -type f -exec chmod -f 644 {} \;
 chmod 755 src/cppunit/*.sh
@@ -104,13 +134,13 @@ mkdir -p out/libsmbios_c++
 make -e %{?_smp_mflags}
 
 %check
-if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-    make -e valgrind
-elif [ -d /usr/include/cppunit ]; then
-    make -e check
-else
-    echo "Unit tests skipped due to missing cppunit."
-fi
+#if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
+#    make -e valgrind
+#elif [ -d /usr/include/cppunit ]; then
+#    make -e check
+#else
+#    echo "Unit tests skipped due to missing cppunit."
+#fi
 
 %install
 rm -rf %{buildroot}
@@ -129,23 +159,34 @@ rm -rf %{buildroot}
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
+%post -n libsmbios_c -p /sbin/ldconfig
+%postun -n libsmbios_c -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios.so.*
+
+%files -n libsmbios_c
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios_c.so.*
 
-%files devel
+%files -n libsmbios_c++-devel
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt
-/usr/include/*
+%doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+/usr/include/smbios
 %{_libdir}/libsmbios.a
 %{_libdir}/libsmbios.so
+%doc out/libsmbios_c++
+
+%files -n libsmbios_c-devel
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt
+/usr/include/smbios_c
 %{_libdir}/libsmbios_c.a
 %{_libdir}/libsmbios_c.so
 %doc out/libsmbios_c++
-%doc out/libsmbios_c
 
 %files -n smbios-utils
 %defattr(-,root,root,-)
@@ -155,23 +196,12 @@ rm -rf %{buildroot}
 %{_sbindir}/assetTag
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/getSystemId
-#%{_sbindir}/getSystemId_lite
 %{_sbindir}/propertyTag
 %{_sbindir}/serviceTag
 %{_sbindir}/verifySmiPassword
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/mkbiospkg.sh
-%ifnarch ia64
-%{_sbindir}/dellMediaDirectCtl
-%endif
-
-# used by HAL in old location, so keep it around until HAL is updated.
-%{_sbindir}/dellWirelessCtl
-%{_bindir}/dellWirelessCtl
-
-# community supported stuff...
-# may or may not work
 %{_sbindir}/dellLEDCtl
 %{_sbindir}/activateCmosToken
 %{_sbindir}/getPasswordFormat
@@ -179,12 +209,15 @@ rm -rf %{buildroot}
 %{_sbindir}/stateByteCtl
 %{_sbindir}/upBootCtl
 %{_sbindir}/smbios_cmos_save_to_file
-#%{_sbindir}/ascii2enUS_scancode
-#%{_sbindir}/disable_console_redir
-#%{_sbindir}/dumpCmos
-#%{_sbindir}/probes
-#%{_sbindir}/smitest
-#%{_sbindir}/dumpSmbios
+
+# used by HAL in old location, so keep it around until HAL is updated.
+%{_sbindir}/dellWirelessCtl
+# this is a symlink to the above...
+%{_bindir}/dellWirelessCtl
+
+%ifnarch ia64
+%{_sbindir}/dellMediaDirectCtl
+%endif
 
 # ./ChangeLog is appended by configure
 %changelog
