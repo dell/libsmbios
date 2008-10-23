@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-21 12:10-0500\n"
+"POT-Creation-Date: 2008-10-23 09:54-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,25 +25,70 @@ msgid "The mmap() call returned mapping of -1 (failure). File: "
 msgstr ""
 
 #: src/libsmbios_c/memory/memory_linux.c:199
-#: src/libsmbios_c/memory/memory_linux.c:311
+#: src/libsmbios_c/memory/memory_linux.c:323
 msgid ""
 "\n"
 "The OS Error string was: "
 msgstr ""
 
-#: src/libsmbios_c/memory/memory_linux.c:308
+#: src/libsmbios_c/memory/memory_linux.c:320
 msgid ""
 "File open error during memory object construction. The filename:\n"
 "\t"
 msgstr ""
 
-#: src/libsmbios_c/memory/memory_linux.c:325
+#: src/libsmbios_c/memory/memory_linux.c:337
+#: src/libsmbios_c/cmos/cmos_linux.c:136
 msgid ""
 "There was an allocation failure while trying to construct the memory object."
 msgstr ""
 
-#: src/libsmbios_c/memory/memory_obj.c:159
+#: src/libsmbios_c/memory/memory_obj.c:176 src/libsmbios_c/cmos/cmos_obj.c:114
 msgid ""
 "The OS-specific module in use does not define a strerror function to get the "
 "error string."
+msgstr ""
+
+#: src/libsmbios_c/cmos/cmos_linux.c:121
+msgid "Error trying to raise IO Privilege level.\n"
+msgstr ""
+
+#: src/libsmbios_c/cmos/cmos_linux.c:122
+msgid "The OS Error string was: "
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:338
+msgid ""
+"Allocation error trying to allocate memory for error string. (ironic, "
+"yes?) \n"
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:345
+msgid ""
+"Could not instantiate SMBIOS table. The errors from the low-level modules "
+"were:\n"
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:470
+msgid "Could not read physical memory. Lowlevel error was:\n"
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:481
+msgid "Found _DMI_ anchor but could not parse legacy DMI structure."
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:496
+msgid "Found _SM_ anchor but could not parse SMBIOS structure."
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:509
+msgid "Did not find smbios table entry point in memory."
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:538
+msgid "Could not find Table Entry Point."
+msgstr ""
+
+#: src/libsmbios_c/smbios/smbios_obj.c:545
+msgid "Found table entry point but could not read table from memory. "
 msgstr ""
