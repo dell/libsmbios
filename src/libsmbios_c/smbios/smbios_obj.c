@@ -117,7 +117,13 @@ void smbios_table_free(struct smbios_table *m)
 
 const char *smbios_table_strerror(const struct smbios_table *m)
 {
-    return m->errstring;
+    const char * retval = 0;
+    if (m)
+        retval = m->errstring;
+    else
+        retval = module_error_buf;
+
+    return retval;
 }
 
 struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *table, const struct smbios_struct *cur)
@@ -362,7 +368,7 @@ out_fail:
         strlcpy(errbuf, error, ERROR_BUFSIZE);
         strlcat(errbuf, m->errstring, ERROR_BUFSIZE);
     }
-    _smbios_table_free(m);
+    smbios_table_free(m);
     return -1;
 }
 
