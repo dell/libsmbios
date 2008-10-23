@@ -213,6 +213,17 @@ out:
     return retval;
 }
 
+static void linux_clearerr(const struct memory_access_obj *this)
+{
+    struct linux_data *private_data = 0;
+    if (this)
+    {
+        private_data = (struct linux_data *)this->private_data;
+        if (private_data->mem_errstring)
+            memset(private_data->mem_errstring, 0, ERROR_BUFSIZE);
+    }
+}
+
 // we do error string stuff really stupid way for now. can try to optimize
 // later once everything works.
 static const char * linux_strerror(const struct memory_access_obj *this)
@@ -293,6 +304,7 @@ __internal int init_mem_struct_filename(struct memory_access_obj *m, const char 
     m->write_fn = linux_write_fn;
     m->cleanup = linux_cleanup;
     m->strerror = linux_strerror;
+    m->clearerr = linux_clearerr;
     m->close = 1;
     m->initialized = 1;
 

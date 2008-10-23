@@ -72,7 +72,7 @@ struct smbios_table *smbios_table_factory(int flags, ...)
     struct smbios_table *toReturn = 0;
     int ret;
 
-    dbg_printf("DEBUG: smbios_table_factory()\n");
+    fnprintf("\n");
 
     if (flags==SMBIOS_DEFAULTS)
         flags = SMBIOS_GET_SINGLETON;
@@ -95,7 +95,11 @@ struct smbios_table *smbios_table_factory(int flags, ...)
     goto out;
 
 out_init_fail:
-    free (toReturn);
+    if (! (flags & SMBIOS_GET_SINGLETON))
+        free(toReturn); // cant free statically allocated:
+    else
+        // zero it instead
+        memset(&singleton, 0, sizeof(singleton));
     toReturn = 0;
 
 out:
@@ -331,7 +335,7 @@ int __internal init_smbios_struct(struct smbios_table *m)
     if (!m->errstring)
         goto out_fail;
 
-    dbg_printf("DEBUG: smbios_table_factory()\n");
+    fnprintf("\n");
     error = _("Could not instantiate SMBIOS table. The errors from the low-level modules were:");
 
     // smbios efi strategy
@@ -444,9 +448,11 @@ bool __internal validate_smbios_tep( const struct smbios_table_entry_point *temp
 
 int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
 {
-    int retval = 1;
-
+    int retval = 0;
     unsigned long fp = E_BLOCK_START;
+    const char *errstring;
+
+    fnprintf("\n");
 
     // tell the memory subsystem that it can optimize here and
     // keep memory open while we scan rather than open/close/open/close/...
@@ -455,14 +461,18 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
 
     struct smbios_table_entry_point tempTEP;
     memset(&tempTEP, 0, sizeof(tempTEP));
+    errstring = _("Could not read physical memory. Lowlevel error was:");
     while ( (fp + sizeof(tempTEP)) < F_BLOCK_END)
     {
-        memory_read(&tempTEP, fp, sizeof(tempTEP));
+        int ret = memory_read(&tempTEP, fp, sizeof(tempTEP));
+        if (ret)
+            goto out_memerr;
 
         // search for promising looking headers
         // first, look for old-style DMI header
         if (memcmp (&tempTEP, "_DMI_", 5) == 0)
         {
+            errstring = _("Found _DMI_ anchor but could not parse legacy DMI structure.");
             dbg_printf("Found _DMI_ anchor. Trying to parse legacy DMI structure.\n");
             struct dmi_table_entry_point *dmiTEP = (struct dmi_table_entry_point *)(&tempTEP);
             memmove(&(tempTEP.dmi), &dmiTEP, sizeof(struct dmi_table_entry_point));
@@ -477,7 +487,8 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
         // occur before _DMI_ in memory
         if ((memcmp (&tempTEP, "_SM_", 4) == 0))
         {
-            dbg_printf("Found _SM_ anchor. Trying to parse legacy DMI structure.\n");
+            errstring = _("Found _SM_ anchor but could not parse SMBIOS structure.");
+            dbg_printf("Found _SM_ anchor. Trying to parse SMBIOS structure.\n");
             if(validate_smbios_tep(&tempTEP, strict))
                 break;
         }
@@ -489,15 +500,28 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
     memory_suggest_close();
 
     // bad stuff happened if we got to here and fp > 0xFFFFFL
+    errstring = _("Did not find smbios table entry point in memory.");
     if ((fp + sizeof(tempTEP)) >= F_BLOCK_END)
-    {
-        retval = 0;
-        goto out;
-    }
+        goto out_notfound;
 
     memcpy( &table->tep, &tempTEP, sizeof(table->tep) );
+    retval = 1;
+    goto out;
+
+out_memerr:
+    fnprintf("out_memerr: %s\n", errstring);
+    strlcat (table->errstring, errstring, ERROR_BUFSIZE);
+    fnprintf(" ->memory_strerror()\n");
+    strlcat (table->errstring, memory_strerror(), ERROR_BUFSIZE);
+    goto out;
+
+out_notfound:
+    fnprintf("out_notfound\n");
+    strlcat (table->errstring, errstring, ERROR_BUFSIZE);
+    goto out;
 
 out:
+    fnprintf("out\n");
     return retval;
 }
 
@@ -507,7 +531,7 @@ int __internal smbios_get_table_memory(struct smbios_table *m)
     int retval = -1; //fail
     const char *error = _("Could not find Table Entry Point.");
 
-    dbg_printf("DEBUG: smbios_get_table_memory()\n");
+    fnprintf("\n");
 
     if (!smbios_get_tep_memory(m, false))
         goto out_err;
@@ -522,10 +546,12 @@ int __internal smbios_get_table_memory(struct smbios_table *m)
     goto out;
 
 out_err:
+    fnprintf(" out_err\n");
     free(m->table);
     m->table = 0;
     strlcat (m->errstring, error, ERROR_BUFSIZE);
 
 out:
+    fnprintf(" out\n");
     return retval;
 }

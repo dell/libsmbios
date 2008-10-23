@@ -39,6 +39,7 @@ struct memory_access_obj
     void (*free)(struct memory_access_obj *this);
     void (*cleanup)(struct memory_access_obj *this); // called instead of ->free for singleton
     const char *(*strerror)(const struct memory_access_obj *this);
+    void (*clearerr)(const struct memory_access_obj *this);
     void *private_data;
     int close;
 };

@@ -69,8 +69,10 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     struct memory_access_obj *toReturn = 0;
     int ret;
 
+    fnprintf("1\n");
     return_mem();
 
+    fnprintf("2\n");
     if (flags==MEMORY_DEFAULTS)
         flags = MEMORY_GET_SINGLETON;
 
@@ -99,27 +101,40 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     // init_mem_* functions are responsible for free-ing memory if they return
     // failure
     fnprintf(" Ugh: ERROR - freeing\n");
-    free(toReturn);
+    if (! (flags & MEMORY_GET_SINGLETON))
+        free(toReturn); // cant free statically allocated:
+    else
+        // zero it instead
+        memset(&singleton, 0, sizeof(singleton));
     toReturn = 0;
 
 out:
     return toReturn;
 }
 
+static void clear_err(const struct memory_access_obj *this)
+{
+    if (this && this->clearerr)
+        this->clearerr(this);
+}
+
 void  memory_obj_suggest_leave_open(struct memory_access_obj *this)
 {
+    clear_err(this);
     if (this)
         this->close--;
 }
 
 void  memory_obj_suggest_close(struct memory_access_obj *this)
 {
+    clear_err(this);
     if (this)
         this->close++;
 }
 
 bool  memory_obj_should_close(const struct memory_access_obj *this)
 {
+    clear_err(this);
     if (this)
         return this->close > 0;
     return true;
@@ -127,6 +142,7 @@ bool  memory_obj_should_close(const struct memory_access_obj *this)
 
 int  memory_obj_read(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
+    clear_err(m);
     int retval = -6;  // bad *buffer ptr
     if (!m)
         retval = -5; // bad memory_access_obj
@@ -139,6 +155,7 @@ int  memory_obj_read(const struct memory_access_obj *m, void *buffer, u64 offset
 
 int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offset, size_t length)
 {
+    clear_err(m);
     int retval = -6;  // bad *buffer ptr
     if (!m)
         retval = -5; // bad memory_access_obj
@@ -166,6 +183,7 @@ const char *memory_obj_strerror(const struct memory_access_obj *m)
 
 void memory_obj_free(struct memory_access_obj *m)
 {
+    clear_err(m);
     fnprintf("  m(%p)  singleton(%p)\n", m, &singleton);
     if (!m) goto out;
     if (m != &singleton)

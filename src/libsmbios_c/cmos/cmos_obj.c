@@ -24,6 +24,7 @@
 // system
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 
 // public
 #include "smbios_c/cmos.h"
@@ -92,7 +93,11 @@ struct cmos_access_obj *cmos_obj_factory(int flags, ...)
         goto out;
 
     // fail
-    free(toReturn);
+    if (! (flags & CMOS_GET_SINGLETON))
+        free(toReturn); // cant free statically allocated:
+    else
+        // zero it instead
+        memset(&singleton, 0, sizeof(singleton));
     toReturn = 0;
 
 out:
