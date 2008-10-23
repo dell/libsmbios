@@ -247,8 +247,8 @@ __internal char *getTagFromSMI(u16 select)
     if (res[0] != 0)
         goto out;
 
-    retval = calloc(1, 13); // smi function can hold at most 12 bytes, add one for '\0'
-    memcpy(retval, (u8 *)(&(res[1])), sizeof(res));
+    retval = calloc(1, MAX_SMI_TAG_SIZE + 1); // smi function can hold at most 12 bytes, add one for '\0'
+    memcpy(retval, (u8 *)(&(res[1])), MAX_SMI_TAG_SIZE);
 
     for(size_t i=strlen(retval); i; --i)
         if ((unsigned char)(retval[i])==0xFF)
@@ -314,7 +314,7 @@ char *sysinfo_get_service_tag()
 __internal u32 setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
 {
     u32 args[4] = {0,}, res[4] = {0,};
-    strncpy((char *)args, newTag, 12);
+    strncpy((char *)args, newTag, MAX_SMI_TAG_SIZE);
     args[3] = security_key;
     dell_simple_ci_smi(11, select, args, res);
     return res[0];

@@ -24,6 +24,8 @@
 #   define dbg_printf _dbg_printf
 #endif
 
+#define MAX_SMI_TAG_SIZE 12
+
 __internal char * smbios_struct_get_string_from_table(u8 type, u8 offset);
 __internal void strip_trailing_whitespace( char *str );
 __internal char *getTagFromSMI(u16 select);
