@@ -1,4 +1,6 @@
 # List of source files which contain translatable strings.
-
 src/libsmbios_c/memory/memory_linux.c
 src/libsmbios_c/memory/memory_obj.c
+src/libsmbios_c/cmos/cmos_linux.c
+src/libsmbios_c/cmos/cmos_obj.c
+src/libsmbios_c/smbios/smbios_obj.c
