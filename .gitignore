@@ -19,6 +19,7 @@ ABOUT-NLS
 autom4te.cache/
 m4/
 pkg/compile
+pkg/py-compile
 pkg/config.guess
 pkg/config.h.in
 pkg/config.h.in~
