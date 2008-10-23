@@ -335,14 +335,14 @@ out:
 int __internal init_smbios_struct(struct smbios_table *m)
 {
     char *errbuf;
-    char *error = _("Allocation error trying to allocate memory for error string. (ironic, yes?) ");
+    char *error = _("Allocation error trying to allocate memory for error string. (ironic, yes?) \n");
     m->initialized = 1;
     m->errstring = calloc(1, ERROR_BUFSIZE);
     if (!m->errstring)
         goto out_fail;
 
     fnprintf("\n");
-    error = _("Could not instantiate SMBIOS table. The errors from the low-level modules were:");
+    error = _("Could not instantiate SMBIOS table. The errors from the low-level modules were:\n");
 
     // smbios efi strategy
     if (smbios_get_table_efi(m) >= 0)
@@ -467,7 +467,7 @@ int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
 
     struct smbios_table_entry_point tempTEP;
     memset(&tempTEP, 0, sizeof(tempTEP));
-    errstring = _("Could not read physical memory. Lowlevel error was:");
+    errstring = _("Could not read physical memory. Lowlevel error was:\n");
     while ( (fp + sizeof(tempTEP)) < F_BLOCK_END)
     {
         int ret = memory_read(&tempTEP, fp, sizeof(tempTEP));
@@ -555,6 +555,8 @@ out_err:
     fnprintf(" out_err\n");
     free(m->table);
     m->table = 0;
+    if (strlen(m->errstring))
+        strlcat(m->errstring, "\n", ERROR_BUFSIZE);
     strlcat (m->errstring, error, ERROR_BUFSIZE);
 
 out:

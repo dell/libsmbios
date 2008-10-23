@@ -33,6 +33,7 @@ def SmbiosTable(flags=SMBIOS_GET_SINGLETON, factory_args=None):
 class _SmbiosTable(object):
     _instance = None
     def __init__(self, *args):
+        self._memobj = None
         self._memobj = _libsmbios_c.smbios_table_factory(*args)
 
     def __del__(self):
