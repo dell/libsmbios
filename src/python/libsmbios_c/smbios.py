@@ -17,7 +17,7 @@ import exceptions
 
 from _common import *
 
-__all__ = ["SmbiosAccess", "SMBIOS_DEFAULTS", "SMBIOS_GET_SINGLETON", "SMBIOS_GET_NEW", "SMBIOS_UNIT_TEST_MODE"]
+__all__ = ["SmbiosTable", "SMBIOS_DEFAULTS", "SMBIOS_GET_SINGLETON", "SMBIOS_GET_NEW", "SMBIOS_UNIT_TEST_MODE"]
 
 SMBIOS_DEFAULTS      =0x0000
 SMBIOS_GET_SINGLETON =0x0001
