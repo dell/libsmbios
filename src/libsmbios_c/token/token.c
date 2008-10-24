@@ -40,11 +40,11 @@ void __internal _token_table_free(struct token_table *);
 // static vars
 static struct token_table singleton; // auto-init to 0
 
-struct token_table *token_factory(int flags, ...)
+struct token_table *token_table_factory(int flags, ...)
 {
     struct token_table *toReturn = 0;
 
-    dbg_printf("DEBUG: token_factory()\n");
+    fnprintf("\n");
 
     if (flags==TOKEN_DEFAULTS)
         flags = TOKEN_GET_SINGLETON;
@@ -70,6 +70,21 @@ void token_table_free(struct token_table *m)
         _token_table_free(m);
 
     // can do special cleanup for singleton, but none necessary atm
+}
+
+const char * DLL_SPEC token_table_strerror(const struct token_table *table)
+{
+    return 0;
+}
+
+const char * DLL_SPEC token_obj_strerror(const struct token_obj *tok)
+{
+    return 0;
+}
+
+const char * DLL_SPEC token_strerror()
+{
+    return 0;
 }
 
 const struct token_obj *token_table_get_next(const struct token_table *t, const struct token_obj *cur)
@@ -150,7 +165,7 @@ void token_free_string(char *s)
         struct token_table *table = 0;              \
         const struct token_obj *token = 0;          \
         dbg_printf("%s\n", __PRETTY_FUNCTION__);       \
-        table = token_factory(TOKEN_GET_SINGLETON); \
+        table = token_table_factory(TOKEN_GET_SINGLETON); \
         if (!table) goto out;                       \
         token = token_table_get_next_by_id(table, 0, id); \
         if (!token) goto out;                       \
@@ -172,7 +187,7 @@ char * token_get_string (u16 id, size_t *len)
     struct token_table *table = 0;
     const struct token_obj *token = 0;
     dbg_printf("%s\n", __PRETTY_FUNCTION__);
-    table = token_factory(TOKEN_GET_SINGLETON);
+    table = token_table_factory(TOKEN_GET_SINGLETON);
     if (!table) goto out;
     token = token_table_get_next_by_id(table, 0, id);
     if (!token) goto out;
@@ -185,7 +200,7 @@ int token_set_string(u16 id, const char *newstr, size_t size)
 {
     struct token_table *table = 0;
     const struct token_obj *token = 0;
-    table = token_factory(TOKEN_GET_SINGLETON);
+    table = token_table_factory(TOKEN_GET_SINGLETON);
     if (!table) goto out;
     token = token_table_get_next_by_id(table, 0, id);
     if (!token) goto out;
@@ -198,7 +213,7 @@ int token_try_password(u16 id, const char *pass_ascii, const char *pass_scancode
 {
     struct token_table *table = 0;
     const struct token_obj *token = 0;
-    table = token_factory(TOKEN_GET_SINGLETON);
+    table = token_table_factory(TOKEN_GET_SINGLETON);
     if (!table) goto out;
     token = token_table_get_next_by_id(table, 0, id);
     if (!token) goto out;

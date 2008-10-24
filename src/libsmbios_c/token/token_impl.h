@@ -59,6 +59,8 @@ struct token_obj
 
     int (*try_password)(const struct token_obj *, const char *ascii, const char *scancode);
 
+    const char *(*strerror)(const struct token_obj*);
+
     const struct smbios_struct *smbios_structure;
     void *token_ptr;
     struct token_obj *next;
