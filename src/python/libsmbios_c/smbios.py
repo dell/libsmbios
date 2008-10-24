@@ -26,10 +26,10 @@ SMBIOS_UNIT_TEST_MODE=0x0004
 
 class SmbiosStructure(ctypes.Structure): 
     def getString(self, off):
-        pass
+        return _libsmbios_c.smbios_struct_get_string_from_offset(self, off)
 
     def getStringNumber(self, num):
-        pass
+        return _libsmbios_c.smbios_struct_get_string_number(self, num)
 
     def getType(self):
         return _libsmbios_c.smbios_struct_get_type(self)
@@ -40,8 +40,11 @@ class SmbiosStructure(ctypes.Structure):
     def getHandle(self):
         return _libsmbios_c.smbios_struct_get_handle(self)
 
+    # use struct module to pull data out
     def getData(self, offset, len):
-        pass
+        buf = ctypes.create_string_buffer(len)
+        _libsmbios_c.smbios_struct_get_data(self, buf, offset, len)
+        return buf.raw
 
 def SmbiosTable(flags=SMBIOS_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
@@ -67,15 +70,29 @@ class _SmbiosTable(object):
             else:
                 raise exceptions.StopIteration("hit end of table.")
 
-    def byType(self, type):
+    def iterByType(self, t):
         cur = ctypes.POINTER(SmbiosStructure)()
         while 1:
             cur =_libsmbios_c.smbios_table_get_next_struct( self._tableobj, cur )
             if bool(cur):
-                if cur.contents.getType() == type:
+                if cur.contents.getType() == t:
                     yield cur.contents
             else:
                 raise exceptions.StopIteration("hit end of table.")
+
+    def getStructureByHandle(self, handle):
+        cur = ctypes.POINTER(SmbiosStructure)()
+        cur =_libsmbios_c.smbios_table_get_next_struct_by_handle( self._tableobj, cur, handle )
+        if not bool(cur):
+            raise exceptions.Exception("no such handle %s" % handle)
+        return cur.contents
+
+    def getStructureByType(self, t):
+        cur = ctypes.POINTER(SmbiosStructure)()
+        cur =_libsmbios_c.smbios_table_get_next_struct_by_type( self._tableobj, cur, t )
+        if not bool(cur):
+            raise exceptions.Exception("no such type %s" % t)
+        return cur.contents
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
@@ -105,7 +122,14 @@ _libsmbios_c.smbios_table_free.restype = None
 #struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
 _libsmbios_c.smbios_table_get_next_struct.argtypes = [ ctypes.POINTER(_smbios_table), ctypes.POINTER(SmbiosStructure) ]
 _libsmbios_c.smbios_table_get_next_struct.restype = ctypes.POINTER(SmbiosStructure)
-_libsmbios_c.smbios_table_get_next_struct.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.StopIteration)
+
+#struct smbios_struct *smbios_table_get_next_struct_by_type(const struct smbios_table *, const struct smbios_struct *cur);
+_libsmbios_c.smbios_table_get_next_struct_by_type.argtypes = [ ctypes.POINTER(_smbios_table), ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
+_libsmbios_c.smbios_table_get_next_struct_by_type.restype = ctypes.POINTER(SmbiosStructure)
+
+#struct smbios_struct *smbios_table_get_next_struct_by_handle(const struct smbios_table *, const struct smbios_struct *cur);
+_libsmbios_c.smbios_table_get_next_struct_by_handle.argtypes = [ ctypes.POINTER(_smbios_table), ctypes.POINTER(SmbiosStructure), ctypes.c_uint16 ]
+_libsmbios_c.smbios_table_get_next_struct_by_handle.restype = ctypes.POINTER(SmbiosStructure)
 
 #u8 DLL_SPEC smbios_struct_get_type(const struct smbios_struct *);
 _libsmbios_c.smbios_struct_get_type.argtypes = [ ctypes.POINTER(SmbiosStructure) ]
@@ -130,6 +154,9 @@ _libsmbios_c.smbios_struct_get_string_number.restype = ctypes.c_char_p
 _libsmbios_c.smbios_struct_get_string_number.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.Exception("String number %d doesnt exist" % a[1]))
 
 #int DLL_SPEC smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
+_libsmbios_c.smbios_struct_get_data.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_void_p, ctypes.c_uint8, ctypes.c_size_t ]
+_libsmbios_c.smbios_struct_get_data.restype = ctypes.c_int
+_libsmbios_c.smbios_struct_get_data.errcheck = errorOnNegativeFN(lambda r,f,a: exceptions.Exception("something bad happened"))
 
 
 
