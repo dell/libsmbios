@@ -25,6 +25,7 @@
 
 #include "smbios_c/smbios.h"
 #include "smbios_c/obj/token.h"
+#include "smbios_c/token.h"
 #include "smbios_c/cmos.h"
 #include "smbios_c/system_info.h"
 #include "smbios_c/smi.h"
@@ -163,13 +164,10 @@ __internal char *getServiceTagFromCMOSToken()
 
     fnprintf("\n");
 
-    struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
-    const struct token_obj *token = token_table_get_next_by_id(table, 0, Cmos_Service_Token);
-
     // Step 1: Get tag from CMOS
     fnprintf("- get string\n");
     size_t len = 0;
-    tempval = token_obj_get_string(token, &len);  // allocates mem
+    tempval = token_get_string(Cmos_Service_Token, &len);  // allocates mem
     if (!tempval)
         goto out_err;
 
@@ -187,10 +185,10 @@ __internal char *getServiceTagFromCMOSToken()
 
     // Step 3: Make sure checksum is good before returning value
     fnprintf("- csum\n");
-    s = token_obj_get_smbios_struct(token);
+    s = token_get_smbios_struct(Cmos_Service_Token);
     indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
     dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
-    location = ((struct indexed_io_token *)token_obj_get_ptr(token))->location;
+    location = ((struct indexed_io_token *)token_get_ptr(Cmos_Service_Token))->location;
 
     // calc checksum
     for( u32 i = 0; i < SVC_TAG_CMOS_LEN_MAX; i++)
