@@ -7,7 +7,7 @@
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
-"""dumpCmos [-x /path/to/token.xml]"""
+"""dumpCmos"""
 
 from __future__ import generators
 
@@ -167,10 +167,6 @@ class TokenTranslatorCsv(TokenTranslator):
                 sys.stderr.write("Skipping '%s' due to IOError.\n" % cvsfile)
                 sys.stderr.write("The error message was: %s" % e)
                 continue
-
-class TokenTranslatorXml(TokenTranslator):
-    def __init__(self, *args, **kargs):
-        super(TokenTranslatorXml,self).__init__(self, *args, **kargs)
 
 
 def tokenInfo(tokenObj, action):
