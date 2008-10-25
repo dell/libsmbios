@@ -97,15 +97,10 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     if (ret == 0)
         goto out;
 
-    //err_out:
     // init_mem_* functions are responsible for free-ing memory if they return
     // failure
-    fnprintf(" Ugh: ERROR - freeing\n");
-    if (! (flags & MEMORY_GET_SINGLETON))
-        free(toReturn); // cant free statically allocated:
-    else
-        // zero it instead
-        memset(&singleton, 0, sizeof(singleton));
+    memset(toReturn, 0, sizeof(struct memory_access_obj));
+    memory_obj_free(toReturn);
     toReturn = 0;
 
 out:
@@ -114,8 +109,8 @@ out:
 
 static void clear_err(const struct memory_access_obj *this)
 {
-    if (this && this->clearerr)
-        this->clearerr(this);
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
 }
 
 void  memory_obj_suggest_leave_open(struct memory_access_obj *this)
@@ -169,14 +164,10 @@ int  memory_obj_write(const struct memory_access_obj *m, void *buffer, u64 offse
 const char *memory_obj_strerror(const struct memory_access_obj *m)
 {
     const char * retval = 0;
-    if (m) {
-        if (m->strerror)
-            retval = m->strerror(m);
-        else
-            retval = _("The OS-specific module in use does not define a strerror function to get the error string.");
-    } else {
+    if (m)
+        retval = m->errstring;
+    else
         retval = module_error_buf;
-    }
 
     return retval;
 }
@@ -188,11 +179,13 @@ void memory_obj_free(struct memory_access_obj *m)
     if (!m) goto out;
     if (m != &singleton)
     {
-        m->free(m);
+        if (m->free)
+            m->free(m);
         free(m);
     }
     else
-        m->cleanup(m);
+        if (m->cleanup)
+            m->cleanup(m);
 out:
     return;
 }

@@ -43,7 +43,6 @@ struct linux_data
     char *filename;
     FILE *fd;
     int mem_errno;
-    char *mem_errstring;
     bool rw;
     void *lastMapping;
     u64 lastMappedOffset;
@@ -194,12 +193,12 @@ err_out:
     perror("ERR_OUT: ");
     fnprintf("%s\n", strerror(errno));
     private_data->mem_errno = errno;
-    strlcpy(private_data->mem_errstring, error, ERROR_BUFSIZE);
-    strlcat(private_data->mem_errstring, private_data->filename, ERROR_BUFSIZE);
-    strlcat(private_data->mem_errstring, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
-    curstrsize = strlen(private_data->mem_errstring);
+    strlcpy(this->errstring, error, ERROR_BUFSIZE);
+    strlcat(this->errstring, private_data->filename, ERROR_BUFSIZE);
+    strlcat(this->errstring, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
+    curstrsize = strlen(this->errstring);
     if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
-        strerror_r(errno, private_data->mem_errstring + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+        strerror_r(errno, this->errstring + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
 
     if (private_data->lastMapping == (void*)-1)
         private_data->lastMapping = 0;
@@ -211,25 +210,6 @@ out:
         closefds(private_data);
 
     return retval;
-}
-
-static void linux_clearerr(const struct memory_access_obj *this)
-{
-    struct linux_data *private_data = 0;
-    if (this)
-    {
-        private_data = (struct linux_data *)this->private_data;
-        if (private_data->mem_errstring)
-            memset(private_data->mem_errstring, 0, ERROR_BUFSIZE);
-    }
-}
-
-// we do error string stuff really stupid way for now. can try to optimize
-// later once everything works.
-static const char * linux_strerror(const struct memory_access_obj *this)
-{
-    struct linux_data *private_data = (struct linux_data *)this->private_data;
-    return private_data->mem_errstring;
 }
 
 static int linux_read_fn(const struct memory_access_obj *this, u8 *buffer, u64 offset, size_t length)
@@ -248,8 +228,6 @@ static void linux_cleanup(struct memory_access_obj *this)
 
     closefds(private_data);
 
-    free(private_data->mem_errstring);
-    private_data->mem_errstring = 0;
     private_data->mem_errno = 0;
     private_data->rw = 0;
 }
@@ -261,10 +239,15 @@ static void linux_free(struct memory_access_obj *this)
 
     linux_cleanup(this);
 
+    free(this->errstring);
+    this->errstring = 0;
+
     free(private_data->filename);
     private_data->filename = 0;
+
     free(private_data);
     this->private_data = 0;
+
     this->initialized=0;
 }
 
@@ -294,8 +277,8 @@ __internal int init_mem_struct_filename(struct memory_access_obj *m, const char 
 
     // allocate space for error buffer now. Can optimize this later once api
     // settles
-    private_data->mem_errstring = calloc(1, ERROR_BUFSIZE);
-    if (!private_data->mem_errstring)
+    m->errstring = calloc(1, ERROR_BUFSIZE);
+    if (!m->errstring)
         goto out_allocfail;
 
     m->private_data = private_data;
@@ -303,8 +286,6 @@ __internal int init_mem_struct_filename(struct memory_access_obj *m, const char 
     m->read_fn = linux_read_fn;
     m->write_fn = linux_write_fn;
     m->cleanup = linux_cleanup;
-    m->strerror = linux_strerror;
-    m->clearerr = linux_clearerr;
     m->close = 1;
     m->initialized = 1;
 
