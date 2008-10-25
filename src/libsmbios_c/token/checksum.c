@@ -38,8 +38,12 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
     int retval = -1;
     struct checksum_details *data = (struct checksum_details *)userdata;
 
+    fnprintf(" BEGIN: start 0x%x end 0x%x location 0x%x indexPort 0x%x\n", data->start, data->end, data->csumloc,  data->indexPort);
+
     u16 wordRetval = data->csum_fn(c, data->start, data->end, data->indexPort, data->dataPort);
     const u8 *csum = (const u8 *)(&wordRetval);
+
+    fnprintf(" calculated 0x%x\n", wordRetval);
 
     u32 actualcsum = 0;
     for( int i=0; i<data->csumlen; ++i )
@@ -52,26 +56,29 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
         actualcsum = (actualcsum << 8) | byte;
     }
 
-#ifdef DEBUG_TOKEN_C
-    if (actualcsum != wordRetval)
-    {
-        u8 byteC = byteChecksum(c, data->start, data->end, data->indexPort, data->dataPort);
-        u16 C = wordChecksum(c, data->start, data->end, data->indexPort, data->dataPort);
-        u16 Cn = wordChecksum_n(c, data->start, data->end, data->indexPort, data->dataPort);
-        u16 Crc = wordCrc(c, data->start, data->end, data->indexPort, data->dataPort);
-        dbg_printf("%s - start %d end %d location %d indexPort %x\n", __PRETTY_FUNCTION__, data->start, data->end, data->csumloc,  data->indexPort);
-        dbg_printf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
-        dbg_printf("%s - byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", __PRETTY_FUNCTION__, byteC, C, Cn, Crc);
-    }
+    fnprintf(" actual 0x%x (len %d)\n", actualcsum, data->csumlen);
+
+#if 0
+    u8 byteC = byteChecksum(c, data->start, data->end, data->indexPort, data->dataPort);
+    u16 C = wordChecksum(c, data->start, data->end, data->indexPort, data->dataPort);
+    u16 Cn = wordChecksum_n(c, data->start, data->end, data->indexPort, data->dataPort);
+    u16 Crc = wordCrc(c, data->start, data->end, data->indexPort, data->dataPort);
+    fnprintf(" byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", byteC, C, Cn, Crc);
 #endif
 
     if(do_update && actualcsum != wordRetval)
+    {
+        // write new checksum
+        fnprintf("REWRITE CSUM\n");
         for( int i=0; i<data->csumlen; ++i )
         {
             int ret = cmos_obj_write_byte(c, data->indexPort, data->dataPort, data->csumloc+i, csum[data->csumlen -i -1]);
             if (ret)
                 goto out;
         }
+        // re-run callbacks since we may have written checksum in middle of another checksumed area
+        cmos_obj_run_callbacks(c, do_update);
+    }
 
     retval = 1;
     if (actualcsum != wordRetval)
@@ -80,6 +87,7 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
     retval = 0;
 
 out:
+    fnprintf("END\n");
     return retval;
 }
 

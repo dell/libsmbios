@@ -53,11 +53,13 @@ static int linux_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 index
 {
     outb_p (offset, indexPort);
     *byte = (inb_p (dataPort));
+    fnprintf(" cmos read offset 0x%x = 0x%x\n", offset, *byte);
     return 0;
 }
 
 static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
+    fnprintf(" cmos write: offset 0x%x = 0x%x\n", offset, byte);
     outb_p (offset, indexPort);
     outb_p (byte, dataPort);
     return 0;
