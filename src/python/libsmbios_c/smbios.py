@@ -146,7 +146,7 @@ _libsmbios_c.smbios_struct_get_handle.restype = ctypes.c_uint16
 #const char * DLL_SPEC smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
 _libsmbios_c.smbios_struct_get_string_from_offset.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
 _libsmbios_c.smbios_struct_get_string_from_offset.restype = ctypes.c_char_p
-_libsmbios_c.smbios_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.Exception("String from offset %d doesnt exist" % a[1]))
+_libsmbios_c.smbios_struct_get_string_from_offset.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.Exception("String from offset %d doesnt exist" % a[1]))
 
 #const char * DLL_SPEC smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 _libsmbios_c.smbios_struct_get_string_number.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
