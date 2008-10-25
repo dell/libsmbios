@@ -68,6 +68,10 @@ class _TokenTable(object):
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
 
+# check ctypes bool support. If it doesnt exist, fake it.
+if not getattr(ctypes, "c_bool", None):
+    ctypes.c_bool = ctypes.c_uint8
+
 #struct token_table;
 class _token_table(ctypes.Structure): pass
 
