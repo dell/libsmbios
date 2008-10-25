@@ -65,7 +65,7 @@ static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 index
 
 static void linux_cleanup(struct cmos_access_obj *this)
 {
-    fnprintf("\n");
+    fnprintf(" cmos\n");
     struct linux_data *private_data = (struct linux_data *)this->private_data;
     if(private_data) {
         free(private_data->errstring);

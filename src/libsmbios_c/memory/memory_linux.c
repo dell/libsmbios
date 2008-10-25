@@ -225,6 +225,7 @@ static int linux_write_fn(const struct memory_access_obj *this, u8 *buffer, u64 
 static void linux_cleanup(struct memory_access_obj *this)
 {
     struct linux_data *private_data = (struct linux_data *)this->private_data;
+    fnprintf(" memory\n");
 
     closefds(private_data);
 

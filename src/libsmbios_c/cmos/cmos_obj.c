@@ -137,8 +137,11 @@ int  cmos_obj_write_byte(const struct cmos_access_obj *m, u8 byte, u32 indexPort
     if (!m)
         goto out;
 
+    ((struct cmos_access_obj *)m)->write_lock++;
     retval = m->write_fn(m, byte, indexPort, dataPort, offset);
-    cmos_obj_run_callbacks(m, true);
+    if (m->write_lock == 1)
+        cmos_obj_run_callbacks(m, true);
+    ((struct cmos_access_obj *)m)->write_lock--;
 
 out:
     return retval;

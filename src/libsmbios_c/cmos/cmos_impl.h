@@ -50,6 +50,7 @@ struct cmos_access_obj
     const char *(*strerror)(const struct cmos_access_obj *this);
     struct callback *cb_list_head;
     void *private_data;
+    int write_lock;
 };
 
 // regular one
