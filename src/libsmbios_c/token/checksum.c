@@ -38,14 +38,14 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
     int retval = -1;
     struct checksum_details *data = (struct checksum_details *)userdata;
 
-    u16 wordRetval = data->csum_fn(data->start, data->end, data->indexPort, data->dataPort);
+    u16 wordRetval = data->csum_fn(c, data->start, data->end, data->indexPort, data->dataPort);
     const u8 *csum = (const u8 *)(&wordRetval);
 
     u32 actualcsum = 0;
     for( int i=0; i<data->csumlen; ++i )
     {
         u8 byte;
-        int ret = cmos_read_byte(&byte, data->indexPort, data->dataPort, data->csumloc+i);
+        int ret = cmos_obj_read_byte(c, &byte, data->indexPort, data->dataPort, data->csumloc+i);
         if (ret)
             goto out;
 
@@ -55,10 +55,10 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
 #ifdef DEBUG_TOKEN_C
     if (actualcsum != wordRetval)
     {
-        u8 byteC = byteChecksum(data->start, data->end, data->indexPort, data->dataPort);
-        u16 C = wordChecksum(data->start, data->end, data->indexPort, data->dataPort);
-        u16 Cn = wordChecksum_n(data->start, data->end, data->indexPort, data->dataPort);
-        u16 Crc = wordCrc(data->start, data->end, data->indexPort, data->dataPort);
+        u8 byteC = byteChecksum(c, data->start, data->end, data->indexPort, data->dataPort);
+        u16 C = wordChecksum(c, data->start, data->end, data->indexPort, data->dataPort);
+        u16 Cn = wordChecksum_n(c, data->start, data->end, data->indexPort, data->dataPort);
+        u16 Crc = wordCrc(c, data->start, data->end, data->indexPort, data->dataPort);
         dbg_printf("%s - start %d end %d location %d indexPort %x\n", __PRETTY_FUNCTION__, data->start, data->end, data->csumloc,  data->indexPort);
         dbg_printf("%s - actual %x (%d), calculated %x\n", __PRETTY_FUNCTION__, actualcsum, data->csumlen, wordRetval);
         dbg_printf("%s - byte(%x) wordcsum(%x) wordcsum_n(%x) wordCrc(%x)\n", __PRETTY_FUNCTION__, byteC, C, Cn, Crc);
@@ -68,7 +68,7 @@ __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, 
     if(do_update && actualcsum != wordRetval)
         for( int i=0; i<data->csumlen; ++i )
         {
-            int ret = cmos_write_byte( data->indexPort, data->dataPort, data->csumloc+i, csum[data->csumlen -i -1]);
+            int ret = cmos_obj_write_byte(c, data->indexPort, data->dataPort, data->csumloc+i, csum[data->csumlen -i -1]);
             if (ret)
                 goto out;
         }
@@ -83,12 +83,12 @@ out:
     return retval;
 }
 
-__internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort )
+__internal u16 byteChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort )
 {
     u8 running_checksum=0;
     u8 byte;
     for( u32 i = start; i <= end; i++) {
-        if(cmos_read_byte(&byte, indexPort, dataPort, i ))
+        if(cmos_obj_read_byte(c, &byte, indexPort, dataPort, i ))
             goto out;
         running_checksum += byte;
     }
@@ -96,12 +96,12 @@ out:
     return running_checksum;
 }
 
-__internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort)
+__internal u16 wordChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
     u16 running_checksum=0;
     u8 byte;
     for( u32 i = start; i <= end; i++) {
-        if(cmos_read_byte(&byte, indexPort, dataPort, i ))
+        if(cmos_obj_read_byte(c, &byte, indexPort, dataPort, i ))
             goto out;
         running_checksum += byte;
     }
@@ -109,19 +109,19 @@ out:
     return running_checksum;
 }
 
-__internal u16 wordChecksum_n( u32 start, u32 end, u32 indexPort, u32 dataPort)
+__internal u16 wordChecksum_n(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
-    return (~wordChecksum(start, end, indexPort, dataPort)) + 1;
+    return (~wordChecksum(c, start, end, indexPort, dataPort)) + 1;
 }
 
-__internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort )
+__internal u16 wordCrc(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort )
 {
     u16 running_crc=0;
     u8 byte;
 
     for( u32 i = start; i <= end; i++)
     {
-        if(cmos_read_byte(&byte, indexPort, dataPort, i ))
+        if(cmos_obj_read_byte(c, &byte, indexPort, dataPort, i ))
             goto out;
         running_crc ^= byte;
 

@@ -122,10 +122,10 @@ enum  // protected value format types
 
 struct cmos_access_obj; // forward declare so we dont have to include cmos.h
 
-__internal u16 byteChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort );
-__internal u16 wordChecksum( u32 start, u32 end, u32 indexPort, u32 dataPort);
-__internal u16 wordChecksum_n( u32 start, u32 end, u32 indexPort, u32 dataPort);
-__internal u16 wordCrc( u32 start, u32 end, u32 indexPort, u32 dataPort );
+__internal u16 byteChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
+__internal u16 wordChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort);
+__internal u16 wordChecksum_n(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort);
+__internal u16 wordCrc(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
 __internal int update_checksum(const struct cmos_access_obj *c, bool do_update, void *userdata);
 
 struct checksum_details
@@ -137,7 +137,7 @@ struct checksum_details
     u32 indexPort;
     u32 dataPort;
     u32 checkType;
-    u16 (*csum_fn)( u32 start, u32 end, u32 indexPort, u32 dataPort );
+    u16 (*csum_fn)(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
 };
 
 EXTERN_C_END;
