@@ -95,11 +95,8 @@ struct smbios_table *smbios_table_factory(int flags, ...)
     goto out;
 
 out_init_fail:
-    if (! (flags & SMBIOS_GET_SINGLETON))
-        free(toReturn); // cant free statically allocated:
-    else
-        // zero it instead
-        memset(&singleton, 0, sizeof(singleton));
+    memset(toReturn, 0, sizeof(struct smbios_table));
+    smbios_table_free(toReturn);
     toReturn = 0;
 
 out:
