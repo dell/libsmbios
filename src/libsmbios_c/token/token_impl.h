@@ -30,6 +30,8 @@ EXTERN_C_BEGIN;
 #   define dbg_printf _dbg_printf
 #endif
 
+#define ERROR_BUFSIZE 1024
+
 enum  // Smbios Structure types
 {
     DellIndexedIoTokenType = 0xD4,
@@ -64,6 +66,7 @@ struct token_obj
     const struct smbios_struct *smbios_structure;
     void *token_ptr;
     struct token_obj *next;
+    char *errstring;
     void *private_data;
 };
 
@@ -72,10 +75,11 @@ struct token_table
     int initialized;
     struct smbios_table *smbios_table;
     struct token_obj *list_head;
+    char *errstring;
 };
 
-void __internal add_token(struct token_table *t, struct token_obj *o);
-void __internal add_d4_tokens(struct token_table *t);
+__internal void add_token(struct token_table *t, struct token_obj *o);
+__internal int add_d4_tokens(struct token_table *t);
 
 
 #if defined(_MSC_VER)

@@ -31,6 +31,8 @@
 #include "smbios_c/obj/smbios.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/types.h"
+#include "libsmbios_c_intlize.h"
+#include "internal_strl.h"
 
 // private
 #include "token_impl.h"
@@ -221,10 +223,11 @@ void __internal init_d4_token(struct token_obj *t)
     t->private_data = 0;
 }
 
-void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
+int setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
 {
     struct checksum_details *d = 0;
     struct cmos_access_obj *c = cmos_obj_factory(CMOS_GET_SINGLETON);
+    int retval = 0;
 
     if (!c)
         goto out_err;
@@ -265,20 +268,27 @@ void setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
     goto out;
 out_err:
     // really should do something here
+    retval = -1;
 
 out:
-    return;
+    return retval;
 }
 
-void __internal add_d4_tokens(struct token_table *t)
+int __internal add_d4_tokens(struct token_table *t)
 {
+    int retval = 0, ret;
+    const char *error;
     smbios_table_for_each_struct_type(t->smbios_table, s, 0xD4) {
         struct indexed_io_access_structure *d4_struct = (struct indexed_io_access_structure*)s;
         struct indexed_io_token *token = d4_struct->tokens;
 
-        setup_d4_checksum(d4_struct);
+        error =  _("Error trying to set up CMOS checksum routines.\n");
+        ret = setup_d4_checksum(d4_struct);
+        if (ret)
+            goto out_err;
 
         while (token->tokenId != TokenTypeEOT) {
+            error =   _("Allocation failure while trying to create token object.");
             struct token_obj *n = calloc(1, sizeof(struct token_obj));
             if (!n)
                 goto out_err;
@@ -292,9 +302,10 @@ void __internal add_d4_tokens(struct token_table *t)
     }
     goto out;
 out_err:
-    // really should do something here
+    strlcat(t->errstring, error, ERROR_BUFSIZE);
+    retval = -1;
 out:
-    return;
+    return retval;
 }
 
 

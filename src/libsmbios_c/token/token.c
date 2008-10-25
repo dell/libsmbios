@@ -27,139 +27,16 @@
 
 // public
 #include "smbios_c/obj/smbios.h"
+#include "smbios_c/obj/token.h"
 #include "smbios_c/smbios.h"
+#include "smbios_c/token.h"
 #include "smbios_c/types.h"
 
 // private
 #include "token_impl.h"
 
-// forward declarations
-void __internal init_token_table(struct token_table *);
-void __internal _token_table_free(struct token_table *);
 
-// static vars
-static struct token_table singleton; // auto-init to 0
-
-struct token_table *token_table_factory(int flags, ...)
-{
-    struct token_table *toReturn = 0;
-
-    fnprintf("\n");
-
-    if (flags==TOKEN_DEFAULTS)
-        flags = TOKEN_GET_SINGLETON;
-
-    if (flags & TOKEN_GET_SINGLETON)
-        toReturn = &singleton;
-    else
-        toReturn = (struct token_table *)calloc(1, sizeof(struct token_table));
-
-    if (toReturn->initialized)
-        goto out;
-
-    init_token_table(toReturn);
-
-out:
-    return toReturn;
-}
-
-
-void token_table_free(struct token_table *m)
-{
-    if (m != &singleton)
-        _token_table_free(m);
-
-    // can do special cleanup for singleton, but none necessary atm
-}
-
-const char * DLL_SPEC token_table_strerror(const struct token_table *table)
-{
-    return 0;
-}
-
-const char * DLL_SPEC token_obj_strerror(const struct token_obj *tok)
-{
-    return 0;
-}
-
-const char * DLL_SPEC token_strerror()
-{
-    return 0;
-}
-
-const struct token_obj *token_table_get_next(const struct token_table *t, const struct token_obj *cur)
-{
-    if (!cur)
-        return t->list_head;
-
-    return cur->next;
-}
-
-const struct token_obj *token_table_get_next_by_id(const struct token_table *t, const struct token_obj *cur, u16 id)
-{
-    dbg_printf("%s\n", __PRETTY_FUNCTION__);
-    do {
-        cur = token_table_get_next(t, cur);
-        dbg_printf("look for %d, got %d\n", id, token_obj_get_id(cur));
-        if (cur && token_obj_get_id(cur) == id)
-            break;
-    } while ( cur );
-    return cur;
-}
-
-#define makeit(ret, defret, callname) \
-    ret token_obj_##callname (const struct token_obj *t)    \
-    {\
-        dbg_printf("%s\n", __PRETTY_FUNCTION__);       \
-        if (t) return t-> callname (t);     \
-        return defret;\
-    }
-
-makeit( int, 0, get_type )
-makeit( u16, 0, get_id )
-makeit( bool, 0, is_active )
-makeit( int, 0, activate )
-makeit( bool, 0, is_bool )
-makeit( bool, 0, is_string )
-
-
-char * token_obj_get_string (const struct token_obj *t, size_t *len)
-{
-    dbg_printf("%s\n", __PRETTY_FUNCTION__);
-    if (t) return t-> get_string (t, len);
-    return 0;
-}
-
-int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t size)
-{
-    if (t)
-        return t->set_string (t, newstr, size);
-    return 0;
-}
-
-int token_obj_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
-{
-    if (t)
-        return t->try_password (t, pass_ascii, pass_scan);
-    return 0;
-}
-
-const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *t)
-{
-    return t->smbios_structure;
-}
-
-const void *token_obj_get_ptr(const struct token_obj *t)
-{
-    return t->token_ptr;
-}
-
-void token_free_string(char *s)
-{
-    free(s);
-}
-
-#define makeit2(ret, defret, callname)\
+#define make_token_fn(ret, defret, callname)\
     ret token_##callname (u16 id)    \
     {\
         struct token_table *table = 0;              \
@@ -174,13 +51,13 @@ out:\
         return defret;  \
     }
 
-makeit2(int, 0, get_type)
-makeit2(bool, 0, is_bool)
-makeit2(bool, 0, is_active)
-makeit2(int, 0, activate)
-makeit2(bool, 0, is_string)
-makeit2(const void *, 0, get_ptr)
-makeit2(const struct smbios_struct *, 0, get_smbios_struct)
+make_token_fn(int, 0, get_type)
+make_token_fn(bool, 0, is_bool)
+make_token_fn(bool, 0, is_active)
+make_token_fn(int, 0, activate)
+make_token_fn(bool, 0, is_string)
+make_token_fn(const void *, 0, get_ptr)
+make_token_fn(const struct smbios_struct *, 0, get_smbios_struct)
 
 char * token_get_string (u16 id, size_t *len)
 {
@@ -222,56 +99,5 @@ out:
     return 0;
 }
 
-
-
-/**************************************************
- *
- * Internal functions
- *
- **************************************************/
-
-void __internal _token_table_free(struct token_table *this)
-{
-    struct token_obj *ptr = this->list_head;
-    struct token_obj *next = 0;
-
-    smbios_table_free(this->smbios_table);
-
-    while(ptr)
-    {
-        next = 0;
-        if (ptr->next)
-            next = ptr->next;
-
-        free(ptr);
-        ptr = next;
-    }
-
-    this->list_head = 0;
-}
-
-void __internal add_token(struct token_table *t, struct token_obj *o)
-{
-    struct token_obj *ptr = t->list_head;
-
-    while(ptr && ptr->next)
-        ptr = ptr->next;
-
-    if(ptr)
-        ptr->next = o;
-    else
-        t->list_head = o;
-}
-
-void __internal init_token_table(struct token_table *t)
-{
-    struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON);
-
-    t->smbios_table = table;
-
-    add_d4_tokens(t);
-
-    t->initialized = 1;
-}
 
 
