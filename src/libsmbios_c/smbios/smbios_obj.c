@@ -363,7 +363,8 @@ out_fail:
     errbuf = smbios_get_module_error_buf();
     if (errbuf){
         strlcpy(errbuf, error, ERROR_BUFSIZE);
-        strlcat(errbuf, m->errstring, ERROR_BUFSIZE);
+        if (m->errstring)
+            strlcat(errbuf, m->errstring, ERROR_BUFSIZE);
     }
     smbios_table_free(m);
     return -1;
