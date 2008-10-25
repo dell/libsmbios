@@ -121,7 +121,7 @@ void testCtoken::testTokenConstruct()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
+    struct token_table *table = token_table_factory(TOKEN_GET_SINGLETON);
 
     token_table_for_each(table, token){
         token_obj_get_type(token);
@@ -138,7 +138,7 @@ void testCtoken::testTokenChecksums()
 {
     STD_TEST_START_CHECKSKIP(getTestName().c_str() << "  ");
 
-    struct token_table *table = token_factory(TOKEN_GET_SINGLETON);
+    struct token_table *table = token_table_factory(TOKEN_GET_SINGLETON);
 
     int ret = cmos_run_callbacks(false);
 
