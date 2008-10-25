@@ -13,6 +13,7 @@ from __future__ import generators
 
 # import arranged alphabetically
 import csv
+import fnmatch
 from optparse import OptionParser
 import os
 import StringIO
@@ -79,13 +80,10 @@ def command_parse():
     parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
                       help="Do not auto-convert password to scancodes.")
 
-    parser.add_option("-c", '--token-csv', action="append", type="string", dest="token_csv",
+    parser.add_option('--token-csv', action="append", type="string", dest="token_csv",
                       help="path to the token.csv file.", default=[TOKENLIST_CSV,])
     parser.add_option('--token-blacklist-csv', action="append", dest="token_blacklist_csv",
                       help="Path to token blacklist file.", default=[TOKENBLACKLIST_CSV])
-    parser.add_option("-x", '--token-xml', action="store", type="string", dest="token_xml",
-                      help="path to the token.xml file.",
-                      default=None)
     parser.add_option('--memory-dat', action="store", type="string", dest="memory_dat",
                       help="Path to a memory dump file to use instead of real RAM",
                       default=None)
@@ -236,25 +234,22 @@ def dumpTokens(tokenTable, tokenXlator, options):
                 continue
 
         if options.token_name is not None:
-            if translatedToken.name != options.token_name:
+            if not fnmatch.fnmatch(translatedToken.name.lower(), options.token_name.lower()):
                 continue
             if options.token_setting is not None:
                 if translatedToken.setting != options.token_setting:
                     continue
 
         sys.stdout.write( "="*80 + "\n" )
-        print "    Token ID: %s" % translatedToken.id
-        print "        Name: %s" % translatedToken.name
-        print "     Setting: %s" % translatedToken.setting
+        print "  Token: %s - %s (%s)" % (translatedToken.id, translatedToken.name, translatedToken.setting)
 
         try:
             (e, type, value) = tokenInfo(token, "dump-tokens")
-            print "        type: %s" % type
-            print "       value: %s" % makePrintable(value)
+            print "  value: %s = %s" % (type, makePrintable(value))
         except RuntimeError, e:
             pass
 
-        desc = "        Desc: "
+        desc = "   Desc: "
         sys.stdout.write(desc)
         wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
         print
@@ -272,7 +267,7 @@ def getTokenObj(tokenTable, tokenXlator, options):
             translatedToken = tokenXlator(token)
         except BlacklistedToken, e:
             pass
-        if translatedToken.name != options.token_name:
+        if not fnmatch.fnmatch(translatedToken.name.lower(), options.token_name.lower()):
             continue
         if translatedToken.setting != options.token_setting:
             continue
