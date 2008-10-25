@@ -1,0 +1,378 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2005 Dell Computer Corporation
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""dumpCmos [-x /path/to/token.xml]"""
+
+from __future__ import generators
+
+# import arranged alphabetically
+import csv
+from optparse import OptionParser
+import os
+import StringIO
+import string
+import sys
+import traceback
+
+# the following vars are all substituted on install
+__VERSION__="uninstalled-version"
+PKGDATADIR=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "doc")
+TOKENLIST_CSV=os.path.join(PKGDATADIR, "token_list.csv")
+TOKENBLACKLIST_CSV=os.path.join(PKGDATADIR, "token_blacklist.csv")
+PYTHONDIR=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+# end vars
+
+# import all mock.* modules after this.
+sys.path.insert(0,PYTHONDIR)
+
+import libsmbios_c.token as tok
+
+class CmdlineError(Exception): pass
+class BlacklistedToken(Exception): pass
+
+def command_parse():
+    parser = OptionParser(usage=__doc__, version=__VERSION__)
+
+    parser.add_option("-d", '--dump-tokens', action="store_const", dest="action",
+                      help="Action: dump token table", const="dump-tokens", default="dump-tokens")
+
+    parser.add_option('--is-string', action="store_const", dest="action",
+                      help="Action: return true if specified token is a string.",
+                      const="is-string")
+
+    parser.add_option('--is-bool', action="store_const", dest="action",
+                      help="Action: return true if specified token is a bool.",
+                      const="is-bool")
+
+    parser.add_option('--is-active', action="store_const", dest="action",
+                      help="Action: return true if specified bool token is active.",
+                      const="is-active")
+
+    parser.add_option('--get-string', action="store_const", dest="action",
+                      help="Action: get string token value.",
+                      const="get-string")
+
+    parser.add_option('--activate', action="store_const", dest="action",
+                      help="Action: activate specified bool token.",
+                      const="activate")
+
+    parser.add_option('--set-string', action="store_const", dest="action",
+                      help="Action: set string token value.",
+                      const="set-string")
+
+    parser.add_option("-i", '--token-id', "--token", action="store", dest="token_id",
+                      help="Filter only token with ID.", default=None)
+    parser.add_option("-n", '--token-name', action="store", dest="token_name",
+                      help="Filter only token with name.", default=None)
+    parser.add_option("-s", '--token-setting', action="store", dest="token_setting",
+                      help="Filter only token with setting.", default=None)
+
+
+    parser.add_option('--password', action="store", dest="password",
+                      help="BIOS Setup password for set/activate operations.")
+    parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
+                      help="Do not auto-convert password to scancodes.")
+
+    parser.add_option("-c", '--token-csv', action="append", type="string", dest="token_csv",
+                      help="path to the token.csv file.", default=[TOKENLIST_CSV,])
+    parser.add_option('--token-blacklist-csv', action="append", dest="token_blacklist_csv",
+                      help="Path to token blacklist file.", default=[TOKENBLACKLIST_CSV])
+    parser.add_option("-x", '--token-xml', action="store", type="string", dest="token_xml",
+                      help="path to the token.xml file.",
+                      default=None)
+    parser.add_option('--memory-dat', action="store", type="string", dest="memory_dat",
+                      help="Path to a memory dump file to use instead of real RAM",
+                      default=None)
+    parser.add_option('--cmos-dat', action="store", type="string", dest="cmos_dat",
+                      help="Path to a CMOS dump file to use instead of real CMOS",
+                      default=None)
+    return parser.parse_args()
+
+class CommentedFile:
+    def __init__(self, f, commentstring="#"):
+        self.f = f
+        self.commentstring = commentstring
+
+    def next(self):
+        line = self.f.next()
+        while line[0] in self.commentstring:
+            line = self.f.next()
+        return line
+
+    def __iter__(self):
+        return self
+
+class translatedToken(object):
+    id = ""
+    name = "unknown"
+    setting = "unknown"
+    description = "unknown"
+    spec = "unknown"
+    def __init__(self, tokenObj):
+        self.id = "0x%04x" % tokenObj.getId()
+
+class TokenTranslator(object):
+    def __init__(self, *args, **kargs):
+        self.tokens={}
+        self.blacklist_tokens={}
+        self.honorBlacklist=kargs.get('honorBlacklist',1)
+        #print "add internal blacklist"
+        self.addToList(csv.DictReader(CommentedFile(StringIO.StringIO(INTERNAL_BLACKLIST))), self.blacklist_tokens)
+
+        #print "add file blacklist"
+        for csvfile in kargs.get('csvblacklist',[]):
+            try:
+                csvdict = csv.DictReader(CommentedFile(open(csvfile, "rb")))
+                self.addToList(csvdict, self.blacklist_tokens)
+            except IOError, e:
+                pass
+
+    def __call__(self, tokenObj):
+        retval = translatedToken(tokenObj)
+        if self.tokens.get(retval.id) is not None:
+            retval.name = self.tokens[retval.id]["Attribute Name"]
+            retval.setting = self.tokens[retval.id]["Attribute Setting"]
+            retval.description = self.tokens[retval.id]["Description"]
+            retval.spec = self.tokens[retval.id]["Spec"]
+        if self.blacklist_tokens.get(retval.id) and self.honorBlacklist:
+            raise BlacklistedToken, self.blacklist_tokens[retval.id]['Reason']
+        return retval
+
+    def addToList(self, csvdict, whichlist):
+        for line in csvdict:
+            try:
+                val =  "0x%04x" % int(line["Token Value"],16)
+                line["Token Value"] = val
+                whichlist[val] = line
+#                if whichlist == self.blacklist_tokens:
+#                    print "add blacklist: (%s) = %s" % (val, line)
+            except Exception, e:
+                print "="*79
+                print "Ignoring parsing error in CSV file:"
+                traceback.print_exc()
+                print "="*79
+
+class TokenTranslatorCsv(TokenTranslator):
+    def __init__(self, *args, **kargs):
+        super(TokenTranslatorCsv,self).__init__(self, *args, **kargs)
+        for csvfile in kargs.get('csvlist', []):
+            try:
+                csvdict = csv.DictReader(CommentedFile(open(csvfile, "rb")))
+                self.addToList(csvdict, self.tokens)
+            except IOError, e:
+                sys.stderr.write("Skipping '%s' due to IOError.\n" % cvsfile)
+                sys.stderr.write("The error message was: %s" % e)
+                continue
+
+class TokenTranslatorXml(TokenTranslator):
+    def __init__(self, *args, **kargs):
+        super(TokenTranslatorXml,self).__init__(self, *args, **kargs)
+
+
+def tokenInfo(tokenObj, action):
+    exit_code=1
+
+    type = "<wierd unknown type>"
+    value = "<unknown value>"
+    if tokenObj.isString():
+        if action == "is-string": exit_code = 0
+        type = "string"
+        value = tokenObj.getString()
+
+    elif tokenObj.isBool():
+        if action == "is-bool": exit_code = 0
+        type="bool"
+        value="false"
+        if tokenObj.isActive():
+            if action == "is-active": exit_code = 0
+            value="true"
+
+    return (exit_code, type, value)
+
+def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
+    sys.stdout.write(" "*first_line_indent)
+    chars_printed = first_line_start
+    for c in s:
+        sys.stdout.write(c)
+        chars_printed = chars_printed + 1
+        if chars_printed > line_len:
+            sys.stdout.write("\n")
+            chars_printed=indent
+            sys.stdout.write(" "*indent)
+
+def makePrintable(s):
+    printable = 1
+    for ch in s:
+        if ch not in string.printable:
+            printable=0
+
+    if printable:
+        return s
+
+    else:
+        retstr=""
+        i = 0
+        for ch in s:
+            i = i+1
+            retstr = retstr + "0x%02x" % ord(ch)
+        return retstr
+
+def dumpTokens(tokenTable, tokenXlator, options):
+     for token in tokenTable:
+        try:
+            translatedToken = tokenXlator(token)
+        except BlacklistedToken, e:
+            #sys.stdout.write( "="*80 + "\n" )
+            #print "Not dumping blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
+            continue
+        if options.token_id is not None:
+            if translatedToken.id != options.token_id:
+                continue
+
+        if options.token_name is not None:
+            if translatedToken.name != options.token_name:
+                continue
+            if options.token_setting is not None:
+                if translatedToken.setting != options.token_setting:
+                    continue
+
+        sys.stdout.write( "="*80 + "\n" )
+        print "    Token ID: %s" % translatedToken.id
+        print "        Name: %s" % translatedToken.name
+        print "     Setting: %s" % translatedToken.setting
+
+        try:
+            (e, type, value) = tokenInfo(token, "dump-tokens")
+            print "        type: %s" % type
+            print "       value: %s" % makePrintable(value)
+        except RuntimeError, e:
+            pass
+
+        desc = "        Desc: "
+        sys.stdout.write(desc)
+        wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
+        print
+
+def getTokenObj(tokenTable, tokenXlator, options):
+    if options.token_id:
+        options.token_id = int(options.token_id, 0)
+        return tokenTable[options.token_id]
+
+    if options.token_name is None or options.token_setting is None:
+        raise CmdlineError, "require token-id or token name/setting pair."
+
+    for token in tokenTable:
+        try:
+            translatedToken = tokenXlator(token)
+        except BlacklistedToken, e:
+            pass
+        if translatedToken.name != options.token_name:
+            continue
+        if translatedToken.setting != options.token_setting:
+            continue
+
+        return token
+
+    raise CmdlineError, "token not found. Name(%s) Setting(%s)." % (
+            options.token_name, options.token_setting)
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+
+    if options.memory_dat is not None:
+        import libsmbios_c.memory as mem
+        mem.MemoryAccess( flags= mem.MEMORY_GET_SINGLETON | mem.MEMORY_UNIT_TEST_MODE, factory_args=(options.memory_dat,))
+
+    if options.cmos_dat is not None:
+        import libsmbios_c.cmos as cmos
+        cmos.CmosAccess( flags= cmos.CMOS_GET_SINGLETON | cmos.CMOS_UNIT_TEST_MODE, factory_args=(options.cmos_dat,))
+
+    tokenXlator = TokenTranslatorCsv(csvlist=options.token_csv, csvblacklist=options.token_blacklist_csv)
+
+    tokenTable = tok.TokenTable()
+
+    if options.action == "dump-tokens":
+        dumpTokens(tokenTable, tokenXlator, options)
+        return exit_code
+
+    tokenObj = getTokenObj(tokenTable, tokenXlator, options)
+
+    if options.action == "set-string":
+        (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
+        print "Original Values"
+        print "        type: %s" % type
+        print "       value: %s" % makePrintable(value)
+        print
+        print "Setting string value ..."
+        tokenObj.setString(args[0])
+        (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
+        options.action="dump-tokens"
+        print "New values"
+
+    if options.action == "activate":
+        (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
+        print "Original Values"
+        print "        type: %s" % type
+        print "       value: %s" % makePrintable(value)
+        print
+        print "Activating token..."
+        tokenObj.activate()
+        options.action="dump-tokens"
+        print "New values"
+
+    if options.action in ("is-bool", "is-string", "is-active", "get-string", "dump-tokens"):
+        (exit_code, type, value) = tokenInfo(tokenObj, options.action)
+        print "        type: %s" % type
+        print "       value: %s" % makePrintable(value)
+
+    return exit_code
+
+INTERNAL_BLACKLIST = \
+"""\
+"Token Value","Reason"
+# blacklist:
+#   - raid shadow copy (0x00CD, 0x00CE, 0x00CF, 0x00D0)
+0x00CD,"Manufacturing use."
+0x00CE,"Manufacturing use."
+0x00CF,"Manufacturing use."
+0x00D0,"Manufacturing use."
+
+#   - sata controller shadow copy ( 0x013a 0x013b 0x013c 0x013d 0x01FF)
+0x013A,"Manufacturing use."
+0x013B,"Manufacturing use."
+0x013C,"Manufacturing use."
+0x013D,"Manufacturing use."
+0x01FF,"Manufacturing use."
+
+#   - management driver  (0x0058, 0x0059)
+0x0058,"Management driver use."
+0x0059,"Management driver use."
+0x8004,"dangerous - hard system power down."
+
+#   - absolute security rom (0x0175, 0x0176)
+0x0175,"dangerous - permanent write once"
+0x0176,"dangerous - permanent write once"
+
+#   - manufacturing mode (0x4026, 0x4027)
+0x4026,"Manufacturing mode."
+0x4027,"Manufacturing mode."
+
+#   - cmos location for post (0x9000, 0x9001)
+0x9000,"Manufacturing use."
+0x9001,"Manufacturing use."
+
+#   - TPM os enable/disable (0xa0002, 0xa003)
+0xa002,"Manufacturing use."
+0xa003,"Manufacturing use."
+"""
+
+if __name__ == "__main__":
+    sys.exit( main() )
+

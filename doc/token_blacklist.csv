@@ -1,0 +1,35 @@
+"Token Value","Reason"
+# blacklist:
+#   - raid shadow copy (0x00CD, 0x00CE, 0x00CF, 0x00D0)
+0x00CD,"Manufacturing use."
+0x00CE,"Manufacturing use."
+0x00CF,"Manufacturing use."
+0x00D0,"Manufacturing use."
+
+#   - sata controller shadow copy ( 0x013a 0x013b 0x013c 0x013d 0x01FF)
+0x013A,"Manufacturing use."
+0x013B,"Manufacturing use."
+0x013C,"Manufacturing use."
+0x013D,"Manufacturing use."
+0x01FF,"Manufacturing use."
+
+#   - management driver  (0x0058, 0x0059)
+0x0058,"Management driver use."
+0x0059,"Management driver use."
+0x8004,"dangerous - hard system power down."
+
+#   - absolute security rom (0x0175, 0x0176)
+0x0175,"dangerous - permanent write once"
+0x0176,"dangerous - permanent write once"
+
+#   - manufacturing mode (0x4026, 0x4027)
+0x4026,"Manufacturing mode."
+0x4027,"Manufacturing mode."
+
+#   - cmos location for post (0x9000, 0x9001)
+0x9000,"Manufacturing use."
+0x9001,"Manufacturing use."
+
+#   - TPM os enable/disable (0xa0002, 0xa003)
+0xa002,"Manufacturing use."
+0xa003,"Manufacturing use."
