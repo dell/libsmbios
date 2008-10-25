@@ -25,24 +25,38 @@ TOKEN_GET_NEW       =0x0002
 TOKEN_UNIT_TEST_MODE=0x0004
 
 class Token(ctypes.Structure): 
-    def getID(self):
-        pass
+    def getId(self):
+        return _libsmbios_c.token_obj_get_id(self)
+
     def getType(self):
-        pass
+        return _libsmbios_c.token_obj_get_type(self)
+
     def isBool(self):
-        pass
+        return _libsmbios_c.token_obj_is_bool(self)
+
     def isActive(self):
-        pass
+        return _libsmbios_c.token_obj_is_active(self)
+
     def activate(self):
-        pass
+        return _libsmbios_c.token_obj_activate(self)
+
     def isString(self):
-        pass
+        return _libsmbios_c.token_obj_is_string(self)
+
     def getString(self):
-        pass
+        len = ctypes.c_size_t()
+        retstr = _libsmbios_c.token_obj_get_string(self, ctypes.byref(len))
+        # not usually null-terminated, so use string_at with len
+        if bool(retstr): # avoid null-ptr deref
+            return ctypes.string_at( retstr, len.value )
+        else:
+            return None
+
     def setString(self, newstr):
-        pass
+        return _libsmbios_c.token_obj_set_string(self, newstr, len(newstr))
+
     def tryPassword(self, pass_ascii, pass_scancode):
-        pass
+        return _libsmbios_c.token_obj_try_password(self, pass_ascii, pass_scancode)
 
 def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
@@ -60,10 +74,22 @@ class _TokenTable(object):
         _libsmbios_c.token_table_free(self._tableobj)
 
     def __iter__(self):
-        pass
+        cur = ctypes.POINTER(Token)()
+        while 1:
+            cur =_libsmbios_c.token_table_get_next( self._tableobj, cur )
+            if bool(cur):
+                yield cur.contents
+            else:
+                raise exceptions.StopIteration("hit end of table.")
 
-    def getID(self, id):
-        pass
+    def __getitem__(self, id):
+        cur = ctypes.POINTER(Token)()
+        cur =_libsmbios_c.token_table_get_next_by_id( self._tableobj, cur, id )
+        if bool(cur):
+            return cur.contents
+        else:
+            raise exceptions.IndexError("no such ID")
+
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
@@ -126,14 +152,24 @@ _libsmbios_c.token_obj_is_string.argtypes = [ ctypes.POINTER(Token) ]
 _libsmbios_c.token_obj_is_string.restype = ctypes.c_bool
 
 #char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);
+_libsmbios_c.token_obj_get_string.argtypes = [ ctypes.POINTER(Token), ctypes.POINTER(ctypes.c_size_t) ]
+_libsmbios_c.token_obj_get_string.restype = ctypes.c_void_p
 
 #int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);
+_libsmbios_c.token_obj_set_string.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.POINTER(ctypes.c_size_t) ]
+_libsmbios_c.token_obj_set_string.restype = ctypes.c_int
 
 #const struct smbios_struct * DLL_SPEC token_obj_get_smbios_struct(const struct token_obj *);
+#_libsmbios_c.token_obj_get_smbios_struct.argtypes = [ ctypes.POINTER(Token), ]
+#_libsmbios_c.token_obj_get_smbios_struct.restype = ctypes.c_int
 
 #int  DLL_SPEC token_obj_try_password(const struct token_obj *, const char *pass_ascii, const char *pass_scancode);
+_libsmbios_c.token_obj_get_smbios_struct.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.c_char_p ]
+_libsmbios_c.token_obj_get_smbios_struct.restype = ctypes.c_int
 
 #const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
+_libsmbios_c.token_obj_get_ptr.argtypes = [ ctypes.POINTER(Token), ]
+_libsmbios_c.token_obj_get_ptr.restype = ctypes.c_void_p
 
 
 
