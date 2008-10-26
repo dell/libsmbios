@@ -34,40 +34,26 @@ ChangeLog:
 AUTHORS:
 	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
+export RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
+
+DATA_HOOK_REPLACE=
 install-data-hook:
-	for i in $(REPLACE_VARS_ON_INSTALL); do      \
+	for i in $(DATA_HOOK_REPLACE); do      \
 	    file=$(DESTDIR)/$$i                     ;\
-	    perl -p -i -e 's|^__VERSION__\s*=.*|__VERSION__="$(RELEASE_VERSION)"|' $$file ;\
-	    perl -p -i -e 's|^PACKAGE\s*=.*|PACKAGE="$(PACKAGE)"|' $$file        ;\
-	    perl -p -i -e 's|^LOCALEDIR\s*=.*|LOCALEDIR="$(localedir)"|' $$file        ;\
-	    perl -p -i -e 's|^LIBDIR\s*=.*|LIBDIR="$(libdir)"|' $$file        ;\
-	    perl -p -i -e 's|^LIBEXECDIR\s*=.*|LIBEXECDIR="$(libexecdir)"|' $$file        ;\
-	    perl -p -i -e 's|^DATADIR\s*=.*|DATADIR="$(datadir)"|' $$file        ;\
-	    perl -p -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR="$(sysconfdir)"|' $$file        ;\
-	    perl -p -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR="$(pythondir)"|' $$file           ;\
-	    perl -p -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR="$(pkgpythondir)"|' $$file  ;\
-	    perl -p -i -e 's|^PKGDATADIR\s*=.*|PKGDATADIR="$(pkgdatadir)"|' $$file        ;\
-	    perl -p -i -e 's|^PKGCONFDIR\s*=.*|PKGCONFDIR="$(pkgconfdir)/"|' $$file        ;\
-	    perl -p -i -e 's|^PKGGLADEDIR\s*=.*|PKGGLADEDIR="$(pkgdatadir)"|' $$file        ;\
-	    perl -p -i -e 's|^PKGLIBEXECDIR\s*=.*|PKGLIBEXECDIR="$(pkglibexecdir)"|' $$file        ;\
+	    for var in RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir;\
+	    do	\
+	        perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $$file;\
+	    done	;\
 	done
 
+EXEC_HOOK_REPLACE=
 install-exec-hook:
-	for i in $(REPLACE_VARS_ON_INSTALL); do      \
+	for i in $(EXEC_HOOK_REPLACE); do      \
 	    file=$(DESTDIR)/$$i                     ;\
-	    perl -p -i -e 's|^__VERSION__\s*=.*|__VERSION__="$(RELEASE_VERSION)"|' $$file ;\
-	    perl -p -i -e 's|^PACKAGE\s*=.*|PACKAGE="$(PACKAGE)"|' $$file        ;\
-	    perl -p -i -e 's|^LOCALEDIR\s*=.*|LOCALEDIR="$(localedir)"|' $$file        ;\
-	    perl -p -i -e 's|^LIBDIR\s*=.*|LIBDIR="$(libdir)"|' $$file        ;\
-	    perl -p -i -e 's|^LIBEXECDIR\s*=.*|LIBEXECDIR="$(libexecdir)"|' $$file        ;\
-	    perl -p -i -e 's|^DATADIR\s*=.*|DATADIR="$(datadir)"|' $$file        ;\
-	    perl -p -i -e 's|^SYSCONFDIR\s*=.*|SYSCONFDIR="$(sysconfdir)"|' $$file        ;\
-	    perl -p -i -e 's|^PYTHONDIR\s*=.*|PYTHONDIR="$(pythondir)"|' $$file           ;\
-	    perl -p -i -e 's|^PKGPYTHONDIR\s*=.*|PKGPYTHONDIR="$(pkgpythondir)"|' $$file  ;\
-	    perl -p -i -e 's|^PKGDATADIR\s*=.*|PKGDATADIR="$(pkgdatadir)"|' $$file        ;\
-	    perl -p -i -e 's|^PKGCONFDIR\s*=.*|PKGCONFDIR="$(pkgconfdir)"|' $$file        ;\
-	    perl -p -i -e 's|^PKGGLADEDIR\s*=.*|PKGGLADEDIR="$(pkgdatadir)"|' $$file        ;\
-	    perl -p -i -e 's|^PKGLIBEXECDIR\s*=.*|PKGLIBEXECDIR="$(pkglibexecdir)"|' $$file        ;\
+	    for var in RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir;\
+	    do	\
+	        perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $$file;\
+	    done	;\
 	done
 
 .PHONY: upload_buildservice
