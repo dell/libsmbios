@@ -22,15 +22,16 @@ import sys
 import traceback
 
 # the following vars are all substituted on install
-__VERSION__="uninstalled-version"
-PKGDATADIR=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "doc")
-TOKENLIST_CSV=os.path.join(PKGDATADIR, "token_list.csv")
-TOKENBLACKLIST_CSV=os.path.join(PKGDATADIR, "token_blacklist.csv")
-PYTHONDIR=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+RELEASE_VERSION="uninstalled-version"
+pkgdatadir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "doc")
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
 # end vars
 
-# import all mock.* modules after this.
-sys.path.insert(0,PYTHONDIR)
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+__VERSION__=RELEASE_VERSION
+TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
+TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
 
 import libsmbios_c.token as tok
 
