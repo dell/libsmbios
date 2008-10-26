@@ -21,10 +21,12 @@ lib_LTLIBRARIES=
 AM_LDFLAGS = -L$(top_builddir)/out/
 
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
-AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall
+AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
 
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fexceptions
-AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall
+AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
+
+AM_LDADD = $(LIBINTL)
 
 include Makefile-std
 include src/libsmbios_c++/Makefile.am
