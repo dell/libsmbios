@@ -97,6 +97,10 @@ fi
 # media direct, so it's disabled on ia64
 AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
 
+GETTEXT_PACKAGE=libsmbios
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
+
 if test -z "$RELEASE_EXTRALEVEL"; then
     RELEASE_RPM_EXTRALEVEL=%{nil}
 else
