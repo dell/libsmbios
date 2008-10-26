@@ -1,0 +1,125 @@
+# English translations for libsmbios package.
+# Copyright (C) 2008 Dell, Inc
+# This file is distributed under the same license as the libsmbios package.
+# Michael Brown <Michael_E_Brown@dell.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libsmbios 2.2.0\n"
+"Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
+"POT-Creation-Date: 2008-10-25 23:17-0500\n"
+"PO-Revision-Date: 2008-10-26 00:18-0500\n"
+"Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/libsmbios_c/cmos/cmos_linux.c:123
+msgid "Error trying to raise IO Privilege level.\n"
+msgstr "Error trying to raise IO Privilege level.\n"
+
+#: src/libsmbios_c/cmos/cmos_linux.c:124
+msgid "The OS Error string was: "
+msgstr "The OS Error string was: "
+
+#: src/libsmbios_c/cmos/cmos_linux.c:138
+#: src/libsmbios_c/memory/memory_linux.c:319
+msgid ""
+"There was an allocation failure while trying to construct the memory object."
+msgstr ""
+"There was an allocation failure while trying to construct the memory object."
+
+#: src/libsmbios_c/cmos/cmos_obj.c:114
+msgid ""
+"The OS-specific module in use does not define a strerror function to get the "
+"error string."
+msgstr ""
+"The OS-specific module in use does not define a strerror function to get the "
+"error string."
+
+#: src/libsmbios_c/memory/memory_linux.c:165
+msgid "Could not (re)open file. File: "
+msgstr "Could not (re)open file. File: "
+
+#: src/libsmbios_c/memory/memory_linux.c:176
+msgid "The mmap() call returned mapping of -1 (failure). File: "
+msgstr "The mmap() call returned mapping of -1 (failure). File: "
+
+#: src/libsmbios_c/memory/memory_linux.c:198
+#: src/libsmbios_c/memory/memory_linux.c:305
+msgid ""
+"\n"
+"The OS Error string was: "
+msgstr ""
+"\n"
+"The OS Error string was: "
+
+#: src/libsmbios_c/memory/memory_linux.c:302
+msgid ""
+"File open error during memory object construction. The filename:\n"
+"\t"
+msgstr ""
+"File open error during memory object construction. The filename:\n"
+"\t"
+
+#: src/libsmbios_c/smbios/smbios_obj.c:335
+msgid ""
+"Allocation error trying to allocate memory for error string. (ironic, "
+"yes?) \n"
+msgstr ""
+"Allocation error trying to allocate memory for error string. (ironic, "
+"yes?) \n"
+
+#: src/libsmbios_c/smbios/smbios_obj.c:342
+msgid ""
+"Could not instantiate SMBIOS table. The errors from the low-level modules "
+"were:\n"
+msgstr ""
+"Could not instantiate SMBIOS table. The errors from the low-level modules "
+"were:\n"
+
+#: src/libsmbios_c/smbios/smbios_obj.c:468
+msgid "Could not read physical memory. Lowlevel error was:\n"
+msgstr "Could not read physical memory. Lowlevel error was:\n"
+
+#: src/libsmbios_c/smbios/smbios_obj.c:479
+msgid "Found _DMI_ anchor but could not parse legacy DMI structure."
+msgstr "Found _DMI_ anchor but could not parse legacy DMI structure."
+
+#: src/libsmbios_c/smbios/smbios_obj.c:494
+msgid "Found _SM_ anchor but could not parse SMBIOS structure."
+msgstr "Found _SM_ anchor but could not parse SMBIOS structure."
+
+#: src/libsmbios_c/smbios/smbios_obj.c:507
+msgid "Did not find smbios table entry point in memory."
+msgstr "Did not find smbios table entry point in memory."
+
+#: src/libsmbios_c/smbios/smbios_obj.c:536
+msgid "Could not find Table Entry Point."
+msgstr "Could not find Table Entry Point."
+
+#: src/libsmbios_c/smbios/smbios_obj.c:543
+msgid "Found table entry point but could not read table from memory. "
+msgstr "Found table entry point but could not read table from memory. "
+
+#: src/libsmbios_c/token/token_d4.c:285
+msgid "Error trying to set up CMOS checksum routines.\n"
+msgstr "Error trying to set up CMOS checksum routines.\n"
+
+#: src/libsmbios_c/token/token_d4.c:291
+msgid "Allocation failure while trying to create token object."
+msgstr "Allocation failure while trying to create token object."
+
+#: src/libsmbios_c/token/token_obj.c:263
+msgid "Failed to obtain smbios table.\n"
+msgstr "Failed to obtain smbios table.\n"
+
+#: src/libsmbios_c/token/token_obj.c:273
+msgid "Memory allocation failure allocating error string.\n"
+msgstr "Memory allocation failure allocating error string.\n"
+
+#: src/libsmbios_c/token/token_obj.c:278
+msgid "Error while trying to add 0xD4 tokens.\n"
+msgstr "Error while trying to add 0xD4 tokens.\n"
