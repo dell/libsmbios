@@ -9,7 +9,10 @@ out_libgetopt_la_SOURCES = src/bin/getopts.c src/bin/getopts.h
 out_libgetopt_la_CXXFLAGS = $(AM_CXXFLAGS)
 out_libgetopt_la_LDFLAGS = -static
 
-
+dist_sbin_SCRIPTS += src/bin/tokenCtl
+REPLACE_VARS_ON_INSTALL += $(sbindir)/tokenCtl
+pkgdatadir = $(datadir)/smbios-utils
+nodist_pkgdata_DATA = doc/token_list.csv doc/token_blacklist.csv
 
 sbin_PROGRAMS += out/assetTag
 out_assetTag_SOURCES = src/bin/assetTag.cpp 

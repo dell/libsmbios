@@ -83,13 +83,14 @@ This package provides a Python interface to libsmbios
 
 
 %package -n smbios-utils
-Summary: The "supported" sample binaries that use libsmbios
+Summary: Utilities that use libsmbios
 Group: Applications/System
 Requires: libsmbios = %{version}-%{release}
 Obsoletes: libsmbios-bin < 0:2.0.0
 Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
+Requires: libsmbios_c-python = %{version}-%{release}
 
 %package -n libsmbios_c++-devel
 Summary: Development headers and archives
@@ -234,6 +235,11 @@ rm -rf %{buildroot}
 %ifnarch ia64
 %{_sbindir}/dellMediaDirectCtl
 %endif
+
+# python utilities
+%{_sbindir}/tokenCtl
+%{_datadir}/smbios-utils
+
 
 # ./ChangeLog is appended by configure
 %changelog
