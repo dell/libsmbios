@@ -18,6 +18,7 @@ check_PROGRAMS =
 noinst_LTLIBRARIES =
 lib_LTLIBRARIES=
 
+export GETTEXT_PACKAGE
 AM_LDFLAGS = -L$(top_builddir)/out/
 
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4

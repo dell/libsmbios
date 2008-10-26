@@ -36,19 +36,15 @@
 # per fedora python packaging guidelines
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Name: libsmbios_c++
+Name: libsmbios_c
 Version: %{release_version}
 Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
+Summary: Libsmbios C shared libraries
 Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
-Summary: Libsmbios C++ shared libraries
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# uncomment for official fedora
-#Obsoletes: libsmbios-libs < 2.0.0
-provides: libsmbios = %{epoch}:%{version}-%{release}
-Provides: libsmbios-libs = %{epoch}:%{version}-%{release}
 BuildRequires: libxml2-devel
 #BuildRequires: %{valgrind_BR}
 BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
@@ -57,21 +53,25 @@ BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
 # no DMI tables on ppc, s390, etc.
 ExclusiveArch: x86_64 ia64 %{ix86}
 
-%description
-Libsmbios is a library and utilities that can be used by client programs
-to get information from standard BIOS tables, such as the SMBIOS table.
-
-This package has a C++-based library, with a C++ interface. It is not actively maintained, but provided for backwards compatibility. New programs should use the libsmbios C interface.
-
-%package -n libsmbios_c
-Summary: Libsmbios C shared libraries
-Group: System Environment/Libraries
-
 %description -n libsmbios_c
 Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
 This package provides the C-based libsmbios library, with a C interface.
+
+%package -n libsmbios_c++
+Summary: Libsmbios C++ shared libraries
+Group: System Environment/Libraries
+Provides: libsmbios = %{epoch}:%{version}-%{release}
+Provides: libsmbios-libs = %{epoch}:%{version}-%{release}
+# uncomment for official fedora
+#Obsoletes: libsmbios-libs < 2.0.0
+
+%description -n libsmbios_c++
+Libsmbios is a library and utilities that can be used by client programs
+to get information from standard BIOS tables, such as the SMBIOS table.
+
+This package has a C++-based library, with a C++ interface. It is not actively maintained, but provided for backwards compatibility. New programs should use the libsmbios C interface.
 
 %package -n libsmbios_c-python
 Summary: Python interface to Libsmbios C library
@@ -85,12 +85,13 @@ This package provides a Python interface to libsmbios
 %package -n smbios-utils
 Summary: Utilities that use libsmbios
 Group: Applications/System
-Requires: libsmbios = %{version}-%{release}
+Requires: libsmbios_c-python = %{version}-%{release}
+Requires: libsmbios_c = %{version}-%{release}
+Requires: libsmbios_c++ = %{version}-%{release}
 Obsoletes: libsmbios-bin < 0:2.0.0
 Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
-Requires: libsmbios_c-python = %{version}-%{release}
 
 %package -n libsmbios_c++-devel
 Summary: Development headers and archives
@@ -166,20 +167,23 @@ find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
 # backwards compatible:
 ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 
+%find_lang libsmbios
+
+
 %clean
 rm -rf %{buildroot}
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-%post -n libsmbios_c -p /sbin/ldconfig
-%postun -n libsmbios_c -p /sbin/ldconfig
+%post   -n libsmbios_c++ -p /sbin/ldconfig
+%postun -n libsmbios_c++ -p /sbin/ldconfig
+%post   -n libsmbios_c   -p /sbin/ldconfig
+%postun -n libsmbios_c   -p /sbin/ldconfig
 
-%files
+%files -n libsmbios_c++
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios.so.*
 
-%files -n libsmbios_c
+%files -n libsmbios_c -f libsmbios.lang
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{_libdir}/libsmbios_c.so.*
