@@ -30,7 +30,7 @@
 
 #include "smbios_c/compat.h"
 
-#if defined(LIBSMBIOS_HAS_GETTEXT)
+#if defined(LIBSMBIOS_C_HAS_GETTEXT)
 #if HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -38,11 +38,13 @@
 #   define _(String) dgettext (GETTEXT_PACKAGE, String)
 #   define gettext_noop(String) String
 #   define N_(String) gettext_noop (String)
+#   define LIBSMBIOS_C_GETTEXT_DEBUG_STRING "HAS GETTEXT"
 #else
 #   define _(string) string
 #   define N_(string) string
 #   define textdomain(Domain)
 #   define bindtextdomain(Package, Directory)
+#   define LIBSMBIOS_C_GETTEXT_DEBUG_STRING "gettext compiled with stubs and no translation"
 #endif
 
 
