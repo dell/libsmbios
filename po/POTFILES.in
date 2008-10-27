@@ -1,3 +1,4 @@
+src/libsmbios_c/common/common.c
 src/libsmbios_c/cmos/cmos_linux.c
 src/libsmbios_c/cmos/cmos_obj.c
 src/libsmbios_c/memory/memory_linux.c
