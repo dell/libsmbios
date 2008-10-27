@@ -7,6 +7,7 @@ out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
 EXTRA_DIST += src/include/smbios_c
 
 out_libsmbios_c_la_SOURCES = \
+    src/libsmbios_c/common/common.c			\
     src/libsmbios_c/common/strlcpy.c			\
     src/libsmbios_c/common/strlcat.c			\
     src/libsmbios_c/common/select_compiler_config.h	\

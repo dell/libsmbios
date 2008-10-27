@@ -27,11 +27,15 @@
  * needed.
  */
 
+
 #include "smbios_c/compat.h"
 
 #if defined(LIBSMBIOS_HAS_GETTEXT)
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 #   include <libintl.h>
-#   define _(String) gettext (String)
+#   define _(String) dgettext (GETTEXT_PACKAGE, String)
 #   define gettext_noop(String) String
 #   define N_(String) gettext_noop (String)
 #else
