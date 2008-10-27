@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-25 23:17-0500\n"
+"POT-Creation-Date: 2008-10-27 01:19-0500\n"
 "PO-Revision-Date: 2008-10-26 22:34-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: English\n"
@@ -25,9 +25,9 @@ msgid "The OS Error string was: "
 msgstr "The OS Error string was: "
 
 #: src/libsmbios_c/cmos/cmos_linux.c:138
-#: src/libsmbios_c/memory/memory_linux.c:319
+#, fuzzy
 msgid ""
-"There was an allocation failure while trying to construct the memory object."
+"There was an allocation failure while trying to construct the cmos object."
 msgstr ""
 "There was an allocation failure while trying to construct the memory object."
 
@@ -63,6 +63,12 @@ msgid ""
 msgstr ""
 "File open error during memory object construction. The filename:\n"
 "\t"
+
+#: src/libsmbios_c/memory/memory_linux.c:319
+msgid ""
+"There was an allocation failure while trying to construct the memory object."
+msgstr ""
+"There was an allocation failure while trying to construct the memory object."
 
 #: src/libsmbios_c/smbios/smbios_obj.c:335
 msgid ""
@@ -123,3 +129,56 @@ msgstr "Memory allocation failure allocating error string.\n"
 #: src/libsmbios_c/token/token_obj.c:278
 msgid "Error while trying to add 0xD4 tokens.\n"
 msgstr "Error while trying to add 0xD4 tokens.\n"
+
+#: src/python/libsmbios_c/_common.py:36
+msgid "null string returned"
+msgstr ""
+
+#: src/python/libsmbios_c/_common.py:45
+msgid "null pointer returned"
+msgstr ""
+
+#: src/python/libsmbios_c/_common.py:53
+msgid "function returned error value of zero"
+msgstr ""
+
+#: src/python/libsmbios_c/_common.py:60
+msgid "function returned negative error code"
+msgstr ""
+
+#: src/python/libsmbios_c/smbios.py:71 src/python/libsmbios_c/smbios.py:81
+#: src/python/libsmbios_c/token.py:83
+msgid "hit end of table."
+msgstr ""
+
+#: src/python/libsmbios_c/smbios.py:87
+#, python-format
+msgid "no such handle %s"
+msgstr ""
+
+#: src/python/libsmbios_c/smbios.py:94
+#, python-format
+msgid "no such type %s"
+msgstr ""
+
+#: src/python/libsmbios_c/smbios.py:149
+#, python-format
+msgid "String from offset %d doesnt exist"
+msgstr ""
+
+#: src/python/libsmbios_c/smbios.py:154
+#, python-format
+msgid "String number %d doesnt exist"
+msgstr ""
+
+#: src/python/libsmbios_c/smbios.py:159
+msgid "something bad happened"
+msgstr ""
+
+#: src/python/libsmbios_c/system_info.py:46
+msgid "Null ID returned."
+msgstr ""
+
+#: src/python/libsmbios_c/token.py:91
+msgid "no such ID"
+msgstr ""

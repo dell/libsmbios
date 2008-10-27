@@ -135,7 +135,7 @@ out_allocfail:
     fnprintf("out_allocfail:\n");
     errbuf = cmos_get_module_error_buf();
     if (errbuf)
-        strlcpy(errbuf, _("There was an allocation failure while trying to construct the memory object."), ERROR_BUFSIZE);
+        strlcpy(errbuf, _("There was an allocation failure while trying to construct the cmos object."), ERROR_BUFSIZE);
     linux_free(m);
     return -1;
 }
