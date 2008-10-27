@@ -53,7 +53,7 @@ BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
 # no DMI tables on ppc, s390, etc.
 ExclusiveArch: x86_64 ia64 %{ix86}
 
-%description -n libsmbios_c
+%description
 Libsmbios is a library and utilities that can be used by client programs
 to get information from standard BIOS tables, such as the SMBIOS table.
 
