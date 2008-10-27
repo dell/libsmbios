@@ -37,10 +37,15 @@ __VERSION__=RELEASE_VERSION
 TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
 TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
 
-import libsmbios_c.token as tok
-
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+import ctypes
+_libc = ctypes.cdll.LoadLibrary(None)
+_libc.bindtextdomain (GETTEXT_PACKAGE, localedir)
+_libc.textdomain (GETTEXT_PACKAGE)
+
+import libsmbios_c.token as tok
 
 class CmdlineError(Exception): pass
 class BlacklistedToken(Exception): pass
@@ -49,54 +54,54 @@ def command_parse():
     parser = OptionParser(usage=__doc__, version=__VERSION__)
 
     parser.add_option("-d", '--dump-tokens', action="store_const", dest="action",
-                      help="Action: dump token table", const="dump-tokens", default="dump-tokens")
+                      help= _("Action: dump token table"), const="dump-tokens", default="dump-tokens")
 
     parser.add_option('--is-string', action="store_const", dest="action",
-                      help="Action: return true if specified token is a string.",
+                      help=_("Action: return true if specified token is a string."),
                       const="is-string")
 
     parser.add_option('--is-bool', action="store_const", dest="action",
-                      help="Action: return true if specified token is a bool.",
+                      help=_("Action: return true if specified token is a bool."),
                       const="is-bool")
 
     parser.add_option('--is-active', action="store_const", dest="action",
-                      help="Action: return true if specified bool token is active.",
+                      help=_("Action: return true if specified bool token is active."),
                       const="is-active")
 
     parser.add_option('--get-string', action="store_const", dest="action",
-                      help="Action: get string token value.",
+                      help=_("Action: get string token value."),
                       const="get-string")
 
     parser.add_option('--activate', action="store_const", dest="action",
-                      help="Action: activate specified bool token.",
+                      help=_("Action: activate specified bool token."),
                       const="activate")
 
     parser.add_option('--set-string', action="store_const", dest="action",
-                      help="Action: set string token value.",
+                      help=_("Action: set string token value."),
                       const="set-string")
 
     parser.add_option("-i", '--token-id', "--token", action="store", dest="token_id",
-                      help="Filter only token with ID.", default=None)
+                      help=_("Filter only token with ID."), default=None)
     parser.add_option("-n", '--token-name', action="store", dest="token_name",
-                      help="Filter only token with name.", default=None)
+                      help=_("Filter only token with name."), default=None)
     parser.add_option("-s", '--token-setting', action="store", dest="token_setting",
-                      help="Filter only token with setting.", default=None)
+                      help=_("Filter only token with setting."), default=None)
 
 
     parser.add_option('--password', action="store", dest="password",
-                      help="BIOS Setup password for set/activate operations.")
+                      help=_("BIOS Setup password for set/activate operations."))
     parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
-                      help="Do not auto-convert password to scancodes.")
+                      help=_("Do not auto-convert password to scancodes."))
 
     parser.add_option('--token-csv', action="append", type="string", dest="token_csv",
-                      help="path to the token.csv file.", default=[TOKENLIST_CSV,])
+                      help=_("path to the token.csv file."), default=[TOKENLIST_CSV,])
     parser.add_option('--token-blacklist-csv', action="append", dest="token_blacklist_csv",
-                      help="Path to token blacklist file.", default=[TOKENBLACKLIST_CSV])
+                      help=_("Path to token blacklist file."), default=[TOKENBLACKLIST_CSV])
     parser.add_option('--memory-dat', action="store", type="string", dest="memory_dat",
-                      help="Path to a memory dump file to use instead of real RAM",
+                      help=_("Path to a memory dump file to use instead of real RAM"),
                       default=None)
     parser.add_option('--cmos-dat', action="store", type="string", dest="cmos_dat",
-                      help="Path to a CMOS dump file to use instead of real CMOS",
+                      help=_("Path to a CMOS dump file to use instead of real CMOS"),
                       default=None)
     return parser.parse_args()
 
@@ -116,10 +121,10 @@ class CommentedFile:
 
 class translatedToken(object):
     id = ""
-    name = "unknown"
-    setting = "unknown"
-    description = "unknown"
-    spec = "unknown"
+    name = _("unknown")
+    setting = _("unknown")
+    description = _("unknown")
+    spec = _("unknown")
     def __init__(self, tokenObj):
         self.id = "0x%04x" % tokenObj.getId()
 
@@ -160,7 +165,7 @@ class TokenTranslator(object):
 #                    print "add blacklist: (%s) = %s" % (val, line)
             except Exception, e:
                 print "="*79
-                print "Ignoring parsing error in CSV file:"
+                print _("Ignoring parsing error in CSV file:")
                 traceback.print_exc()
                 print "="*79
 
@@ -172,16 +177,16 @@ class TokenTranslatorCsv(TokenTranslator):
                 csvdict = csv.DictReader(CommentedFile(open(csvfile, "rb")))
                 self.addToList(csvdict, self.tokens)
             except IOError, e:
-                sys.stderr.write("Skipping '%s' due to IOError.\n" % cvsfile)
-                sys.stderr.write("The error message was: %s" % e)
+                sys.stderr.write(_("Skipping '%s' due to IOError.\n") % cvsfile)
+                sys.stderr.write(_("The error message was: %s") % e)
                 continue
 
 
 def tokenInfo(tokenObj, action):
     exit_code=1
 
-    type = "<wierd unknown type>"
-    value = "<unknown value>"
+    type = _("<wierd unknown type>")
+    value = _("<unknown value>")
     if tokenObj.isString():
         if action == "is-string": exit_code = 0
         type = "string"
@@ -245,15 +250,15 @@ def dumpTokens(tokenTable, tokenXlator, options):
                     continue
 
         sys.stdout.write( "="*80 + "\n" )
-        print "  Token: %s - %s (%s)" % (translatedToken.id, translatedToken.name, translatedToken.setting)
+        print _("  Token: %s - %s (%s)") % (translatedToken.id, translatedToken.name, translatedToken.setting)
 
         try:
             (e, type, value) = tokenInfo(token, "dump-tokens")
-            print "  value: %s = %s" % (type, makePrintable(value))
+            print _("  value: %s = %s") % (type, makePrintable(value))
         except RuntimeError, e:
             pass
 
-        desc = "   Desc: "
+        desc = _("   Desc: ")
         sys.stdout.write(desc)
         wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
         print
@@ -264,7 +269,7 @@ def getTokenObj(tokenTable, tokenXlator, options):
         return tokenTable[options.token_id]
 
     if options.token_name is None or options.token_setting is None:
-        raise CmdlineError, "require token-id or token name/setting pair."
+        raise CmdlineError, _("require token-id or token name/setting pair.")
 
     for token in tokenTable:
         try:
@@ -278,7 +283,7 @@ def getTokenObj(tokenTable, tokenXlator, options):
 
         return token
 
-    raise CmdlineError, "token not found. Name(%s) Setting(%s)." % (
+    raise CmdlineError, _("token not found. Name(%s) Setting(%s).") % (
             options.token_name, options.token_setting)
 
 def main():
@@ -305,11 +310,11 @@ def main():
 
     if options.action == "set-string":
         (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-        print "Original Values"
-        print "        type: %s" % type
-        print "       value: %s" % makePrintable(value)
+        print _("Original Values")
+        print _("        type: %s") % type
+        print _("       value: %s") % makePrintable(value)
         print
-        print "Setting string value ..."
+        print _("Setting string value ...")
         tokenObj.setString(args[0])
         (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
         options.action="dump-tokens"
@@ -317,19 +322,19 @@ def main():
 
     if options.action == "activate":
         (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-        print "Original Values"
-        print "        type: %s" % type
-        print "       value: %s" % makePrintable(value)
+        print _("Original Values")
+        print _("        type: %s") % type
+        print _("       value: %s") % makePrintable(value)
         print
-        print "Activating token..."
+        print _("Activating token...")
         tokenObj.activate()
         options.action="dump-tokens"
-        print "New values"
+        print _("New values")
 
     if options.action in ("is-bool", "is-string", "is-active", "get-string", "dump-tokens"):
         (exit_code, type, value) = tokenInfo(tokenObj, options.action)
-        print "        type: %s" % type
-        print "       value: %s" % makePrintable(value)
+        print _("        type: %s") % type
+        print _("       value: %s") % makePrintable(value)
 
     return exit_code
 
