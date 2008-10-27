@@ -9,14 +9,14 @@ EXTRA_DIST += \
 TESTS = src/cppunit/runtests.sh
 
 # convenience library for test stuff
-noinst_LTLIBRARIES += out/libtestmain.la
+check_LTLIBRARIES = out/libtestmain.la
 out_libtestmain_la_SOURCES = src/cppunit/outputctl.h src/cppunit/main.cpp src/cppunit/main.h
 out_libtestmain_la_LIBADD =  $(CPPUNIT_LIBS) out/libsmbios.la out/libsmbios_c.la
 out_libtestmain_la_CXXFLAGS = $(AM_CXXFLAGS)
 out_libtestmain_la_LDFLAGS = -static $(AM_LDFLAGS)
 
 # convenience library for XML stuff
-noinst_LTLIBRARIES += out/libxmlutil.la
+check_LTLIBRARIES += out/libxmlutil.la
 out_libxmlutil_la_SOURCES = src/cppunit/XmlUtils.cpp src/cppunit/XmlUtils.h
 out_libxmlutil_la_LIBADD =  $(LIBXML2_LIBS)
 out_libxmlutil_la_CXXFLAGS = $(LIBXML2_CFLAGS) $(AM_CXXFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
