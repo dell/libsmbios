@@ -13,32 +13,14 @@ systeminfo:
 
 # imports (alphabetical)
 import ctypes
-import exceptions
+from exceptions import *
+
+from _common import *
 
 __all__ = []
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
-
-class Exception(exceptions.Exception): pass
-
-def _freeLibString(result, func, args):
-    pystr = ctypes.cast(result, ctypes.c_char_p).value
-    if pystr is None:
-        raise Exception("null string returned")
-
-    _libsmbios_c.sysinfo_string_free(result)
-    return pystr
-
-def _errorOnZero(result, func, args):
-    if result is None or result == 0:
-        raise Exception, ("returned error")
-    return result
- 
-def _errorOnNegative(result, func, args):
-    if result is None or result < 0:
-        raise Exception, ("returned error")
-    return result
 
 #    const char *smbios_get_library_version_string(); 
 _libsmbios_c.smbios_get_library_version_string.argtypes = []
@@ -61,7 +43,7 @@ __all__.append("get_library_version_minor")
 #    const char *sysinfo_get_dell_system_id(); 
 _libsmbios_c.sysinfo_get_dell_system_id.argtypes = []
 _libsmbios_c.sysinfo_get_dell_system_id.restype = ctypes.c_int
-_libsmbios_c.sysinfo_get_dell_system_id.errcheck=_errorOnZero
+_libsmbios_c.sysinfo_get_dell_system_id.errcheck=errorOnZeroFN(lambda r,f,a: Exception( _("Null ID returned.") ))
 get_dell_system_id = _libsmbios_c.sysinfo_get_dell_system_id
 __all__.append("get_dell_system_id")
 
@@ -73,7 +55,7 @@ def _mk_simple_sysinfo_str_fn(name):
     import sys
     getattr(_libsmbios_c,  "sysinfo_%s" % name).argtypes=[]
     getattr(_libsmbios_c,  "sysinfo_%s" % name).restype=ctypes.POINTER(ctypes.c_char)
-    getattr(_libsmbios_c,  "sysinfo_%s" % name).errcheck=_freeLibString
+    getattr(_libsmbios_c,  "sysinfo_%s" % name).errcheck=freeLibStringFN( free_fn=_libsmbios_c.sysinfo_string_free )
     sys.modules[__name__].__dict__[name] = getattr(_libsmbios_c,  "sysinfo_%s" % name)
     __all__.append(name)
 
@@ -86,7 +68,7 @@ _mk_simple_sysinfo_str_fn("get_service_tag")
 #_mk_simple_sysinfo_str_fn("set_asset_tag")
 _libsmbios_c.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 _libsmbios_c.sysinfo_set_asset_tag.restype = ctypes.c_int
-_libsmbios_c.sysinfo_set_asset_tag.errcheck=_errorOnNegative
+_libsmbios_c.sysinfo_set_asset_tag.errcheck=errorOnNegativeFN()
 def set_asset_tag(newtag, pass_ascii=None, pass_scancode=None):
     return _libsmbios_c.sysinfo_set_asset_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_asset_tag")
@@ -94,7 +76,7 @@ __all__.append("set_asset_tag")
 #int get_property_ownership_tag(char *tagBuf, size_t size);
 _libsmbios_c.sysinfo_get_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_size_t]
 _libsmbios_c.sysinfo_get_property_ownership_tag.restype = ctypes.c_int
-_libsmbios_c.sysinfo_get_property_ownership_tag.errcheck=_errorOnNegative
+_libsmbios_c.sysinfo_get_property_ownership_tag.errcheck=errorOnNegativeFN()
 def get_property_ownership_tag():
     buf = ctypes.create_string_buffer(81)
     _libsmbios_c.sysinfo_get_property_ownership_tag(buf, len(buf)-1)
@@ -104,7 +86,7 @@ __all__.append("get_property_ownership_tag")
 #int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
 _libsmbios_c.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 _libsmbios_c.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
-_libsmbios_c.sysinfo_set_property_ownership_tag.errcheck=_errorOnNegative
+_libsmbios_c.sysinfo_set_property_ownership_tag.errcheck=errorOnNegativeFN()
 def set_property_ownership_tag(newtag, pass_ascii=None, pass_scancode=None):
     return _libsmbios_c.sysinfo_set_property_ownership_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_property_ownership_tag")

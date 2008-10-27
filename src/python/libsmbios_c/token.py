@@ -80,7 +80,7 @@ class _TokenTable(object):
             if bool(cur):
                 yield cur.contents
             else:
-                raise exceptions.StopIteration("hit end of table.")
+                raise exceptions.StopIteration( _("hit end of table.") )
 
     def __getitem__(self, id):
         cur = ctypes.POINTER(Token)()
@@ -88,7 +88,7 @@ class _TokenTable(object):
         if bool(cur):
             return cur.contents
         else:
-            raise exceptions.IndexError("no such ID")
+            raise exceptions.IndexError( _("no such ID") )
 
 
 # initialize libsmbios lib

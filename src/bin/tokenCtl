@@ -13,6 +13,8 @@ from __future__ import generators
 
 # import arranged alphabetically
 import csv
+import gettext
+import locale
 import fnmatch
 from optparse import OptionParser
 import os
@@ -23,8 +25,10 @@ import traceback
 
 # the following vars are all substituted on install
 RELEASE_VERSION="uninstalled-version"
+GETTEXT_PACKAGE="libsmbios" #replaced
 pkgdatadir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "doc")
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
 # end vars
 
 # import all local modules after this.
@@ -34,6 +38,9 @@ TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
 TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
 
 import libsmbios_c.token as tok
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
 class CmdlineError(Exception): pass
 class BlacklistedToken(Exception): pass

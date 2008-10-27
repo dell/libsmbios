@@ -13,8 +13,13 @@ _common:
 
 # imports (alphabetical)
 import exceptions
+import os
+import sys
+import ctypes
 
-__all__ = ["freeLibStringFN", "errorOnZeroFN", "errorOnNegativeFN", "errorOnNullPtrFN"]
+__all__ = ["freeLibStringFN", "errorOnZeroFN", "errorOnNegativeFN", "errorOnNullPtrFN", "RELEASE_VERSION", "pkgdatadir", "pythondir", "_" ]
+
+from _vars import *
 
 class Exception(exceptions.Exception): pass
 
@@ -22,13 +27,13 @@ def _doExc(exception_fn, r, f, a, msg):
     if exception_fn is not None:
         raise exception_fn(r, f, a)
     else:
-        raise Exception("null string returned")
+        raise Exception( msg )
 
 def freeLibStringFN(free_fn, exception_fn=None):
     def _fn(result, func, args):
         pystr = ctypes.cast(result, ctypes.c_char_p).value
         if pystr is None:
-            _doExc(exception_fn, result, func, args, "null string returned")
+            _doExc(exception_fn, result, func, args, _("null string returned") )
 
         free_fn(result)
         return pystr
@@ -37,7 +42,7 @@ def freeLibStringFN(free_fn, exception_fn=None):
 def errorOnNullPtrFN(exception_fn=None):
     def _fn(result, func, args):
         if not bool(result): # check for null pointer
-            _doExc(exception_fn, result, func, args, "null string returned")
+            _doExc(exception_fn, result, func, args, _("null pointer returned") )
         return result
     return _fn
 
@@ -45,14 +50,14 @@ def errorOnNullPtrFN(exception_fn=None):
 def errorOnZeroFN(exception_fn=None):
     def _fn(result, func, args):
         if result is None or result == 0:
-            _doExc(exception_fn, result, func, args, "function returned error value of zero")
+            _doExc(exception_fn, result, func, args, _("function returned error value of zero") )
         return result
     return _fn
  
 def errorOnNegativeFN(exception_fn=None):
     def _fn(result, func, args):
         if result is None or result < 0:
-            _doExc(exception_fn, result, func, args, "function returned negative error code")
+            _doExc(exception_fn, result, func, args, _("function returned negative error code") )
         return result
     return _fn
 
