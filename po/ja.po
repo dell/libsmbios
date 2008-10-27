@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-27 01:19-0500\n"
+"POT-Creation-Date: 2008-10-27 02:11-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Japanese\n"
@@ -168,4 +168,144 @@ msgstr ""
 
 #: src/python/libsmbios_c/token.py:91
 msgid "no such ID"
+msgstr ""
+
+#: src/bin/tokenCtl:57
+msgid "Action: dump token table"
+msgstr ""
+
+#: src/bin/tokenCtl:60
+msgid "Action: return true if specified token is a string."
+msgstr ""
+
+#: src/bin/tokenCtl:64
+msgid "Action: return true if specified token is a bool."
+msgstr ""
+
+#: src/bin/tokenCtl:68
+msgid "Action: return true if specified bool token is active."
+msgstr ""
+
+#: src/bin/tokenCtl:72
+msgid "Action: get string token value."
+msgstr ""
+
+#: src/bin/tokenCtl:76
+msgid "Action: activate specified bool token."
+msgstr ""
+
+#: src/bin/tokenCtl:80
+msgid "Action: set string token value."
+msgstr ""
+
+#: src/bin/tokenCtl:84
+msgid "Filter only token with ID."
+msgstr ""
+
+#: src/bin/tokenCtl:86
+msgid "Filter only token with name."
+msgstr ""
+
+#: src/bin/tokenCtl:88
+msgid "Filter only token with setting."
+msgstr ""
+
+#: src/bin/tokenCtl:92
+msgid "BIOS Setup password for set/activate operations."
+msgstr ""
+
+#: src/bin/tokenCtl:94
+msgid "Do not auto-convert password to scancodes."
+msgstr ""
+
+#: src/bin/tokenCtl:97
+msgid "path to the token.csv file."
+msgstr ""
+
+#: src/bin/tokenCtl:99
+msgid "Path to token blacklist file."
+msgstr ""
+
+#: src/bin/tokenCtl:101
+msgid "Path to a memory dump file to use instead of real RAM"
+msgstr ""
+
+#: src/bin/tokenCtl:104
+msgid "Path to a CMOS dump file to use instead of real CMOS"
+msgstr ""
+
+#: src/bin/tokenCtl:124 src/bin/tokenCtl:125 src/bin/tokenCtl:126
+#: src/bin/tokenCtl:127
+msgid "unknown"
+msgstr ""
+
+#: src/bin/tokenCtl:168
+msgid "Ignoring parsing error in CSV file:"
+msgstr ""
+
+#: src/bin/tokenCtl:180
+#, c-format
+msgid "Skipping '%s' due to IOError.\n"
+msgstr ""
+
+#: src/bin/tokenCtl:181
+#, c-format
+msgid "The error message was: %s"
+msgstr ""
+
+#: src/bin/tokenCtl:188
+msgid "<wierd unknown type>"
+msgstr ""
+
+#: src/bin/tokenCtl:189
+msgid "<unknown value>"
+msgstr ""
+
+#: src/bin/tokenCtl:253
+#, c-format
+msgid "  Token: %s - %s (%s)"
+msgstr ""
+
+#: src/bin/tokenCtl:257
+#, c-format
+msgid "  value: %s = %s"
+msgstr ""
+
+#: src/bin/tokenCtl:261
+msgid "   Desc: "
+msgstr ""
+
+#: src/bin/tokenCtl:272
+msgid "require token-id or token name/setting pair."
+msgstr ""
+
+#: src/bin/tokenCtl:286
+#, c-format
+msgid "token not found. Name(%s) Setting(%s)."
+msgstr ""
+
+#: src/bin/tokenCtl:313 src/bin/tokenCtl:325
+msgid "Original Values"
+msgstr ""
+
+#: src/bin/tokenCtl:314 src/bin/tokenCtl:326 src/bin/tokenCtl:336
+#, c-format
+msgid "        type: %s"
+msgstr ""
+
+#: src/bin/tokenCtl:315 src/bin/tokenCtl:327 src/bin/tokenCtl:337
+#, c-format
+msgid "       value: %s"
+msgstr ""
+
+#: src/bin/tokenCtl:317
+msgid "Setting string value ..."
+msgstr ""
+
+#: src/bin/tokenCtl:329
+msgid "Activating token..."
+msgstr ""
+
+#: src/bin/tokenCtl:332
+msgid "New values"
 msgstr ""
