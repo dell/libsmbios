@@ -15,5 +15,7 @@ __attribute__((constructor)) static void lib_initialize (void)
 {
     fnprintf("CONSTRUCTOR: pkg: %s, dir: %s\n", GETTEXT_PACKAGE,LIBSMBIOS_LOCALEDIR);
     bindtextdomain (GETTEXT_PACKAGE, LIBSMBIOS_LOCALEDIR);
+    fnprintf( LIBSMBIOS_C_GETTEXT_DEBUG_STRING "\n");
+    fnprintf( _("This message should be localized if setlocale() has been called and gettext compiled in.\n") );
 }
 
