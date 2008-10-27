@@ -17,9 +17,7 @@
 #define dbg_printf _null_call
 #endif
 
-#define fnprintf(fmt, ...)  dbg_printf( "%s: " fmt, __FUNCTION__, __VA_ARGS__)
-
-
+#define fnprintf(fmt, ...)  do { dbg_printf("%s: ", __FUNCTION__); dbg_printf( fmt, __VA_ARGS__ ); } while(0)
 
 // turn off the warnings before we #include anything
 // 4503: warning: decorated name length exceeded

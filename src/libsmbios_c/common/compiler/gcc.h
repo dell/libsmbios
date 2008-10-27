@@ -12,4 +12,4 @@
 #define dbg_printf _null_call
 #endif
 
-#define fnprintf(fmt, args...)  dbg_printf( "%s: " fmt, __PRETTY_FUNCTION__, ## args)
+#define fnprintf(fmt, args...)  do { dbg_printf("%s: ", __PRETTY_FUNCTION__); dbg_printf( fmt, ## args); } while(0)
