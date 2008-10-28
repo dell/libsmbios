@@ -39,14 +39,12 @@ struct ut_data
 {
     char *filename;
     FILE *fd;
-    int cmos_errno;
     int rw;
 };
 
 static int UT_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
-    private_data->cmos_errno = errno = 0;
     int retval = -1;
 
     dbg_printf("%s %x %x %d\n", __PRETTY_FUNCTION__, indexPort, dataPort, offset);
@@ -84,7 +82,6 @@ static int UT_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPor
     goto out;
 
 err_out:
-    private_data->cmos_errno = errno;
 
 out:
     // always close
@@ -100,7 +97,6 @@ out:
 static int UT_write_fn(const struct cmos_access_obj *this, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     struct ut_data *private_data = (struct ut_data *)this->private_data;
-    private_data->cmos_errno = errno = 0;
     int retval = -1;
 
     // for unit testing, index into a file by indexPort
@@ -131,7 +127,6 @@ static int UT_write_fn(const struct cmos_access_obj *this, u8 byte, u32 indexPor
     goto out;
 
 err_out:
-    private_data->cmos_errno = errno;
 
 out:
     // always close
@@ -167,7 +162,6 @@ static void UT_cleanup(struct cmos_access_obj *this)
         fclose(private_data->fd);
         private_data->fd = 0;
     }
-    private_data->cmos_errno = 0;
     private_data->rw = 0;
 }
 

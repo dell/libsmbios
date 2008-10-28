@@ -33,6 +33,7 @@
 // private
 #include "cmos_impl.h"
 #include "libsmbios_c_intlize.h"
+#include "internal_strl.h"
 
 struct cmos_access_obj singleton; // auto-init to 0
 static char *module_error_buf; // auto-init to 0
@@ -84,11 +85,8 @@ struct cmos_access_obj *cmos_obj_factory(int flags, ...)
         goto out;
 
     // fail
-    if (! (flags & CMOS_GET_SINGLETON))
-        free(toReturn); // cant free statically allocated:
-    else
-        // zero it instead
-        memset(&singleton, 0, sizeof(singleton));
+    cmos_obj_free(toReturn);
+    memset(&toReturn, 0, sizeof(*toReturn));
     toReturn = 0;
 
 out:
@@ -98,20 +96,24 @@ out:
 const char *cmos_obj_strerror(const struct cmos_access_obj *m)
 {
     const char * retval = 0;
-    if (m) {
-        if (m->strerror)
-            retval = m->strerror(m);
-        else
-            retval = _("The OS-specific module in use does not define a strerror function to get the error string.");
-    } else {
+    if (m)
+        retval = m->errstring;
+    else
         retval = module_error_buf;
-    }
-
     return retval;
+}
+
+static void clear_err(const struct cmos_access_obj *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 int  cmos_obj_read_byte(const struct cmos_access_obj *m, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
+    clear_err(m);
     int retval = -6;  // bad *buffer ptr
     if (!m)
         retval = -5; // bad memory_access_obj
@@ -124,6 +126,7 @@ int  cmos_obj_read_byte(const struct cmos_access_obj *m, u8 *byte, u32 indexPort
 
 int  cmos_obj_write_byte(const struct cmos_access_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
+    clear_err(m);
     int retval = -6;  // bad *buffer ptr
     if (!m)
         goto out;
@@ -138,8 +141,16 @@ out:
     return retval;
 }
 
+void __internal _cmos_obj_cleanup(struct cmos_access_obj *m)
+{
+    clear_err(m);
+    if(m->cleanup)
+        m->cleanup(m);
+}
+
 void __internal _cmos_obj_free(struct cmos_access_obj *m)
 {
+    clear_err(m);
     struct callback *ptr = 0;
     struct callback *next = 0;
 
@@ -162,7 +173,12 @@ void __internal _cmos_obj_free(struct cmos_access_obj *m)
 
     m->cb_list_head = 0;
 
-    m->free(m);
+    free(m->errstring);
+    m->errstring=0;
+    m->initialized=0;
+
+    if(m->free)
+        m->free(m);
 
 out:
     free(m);  //free(0) is legal;
@@ -170,17 +186,18 @@ out:
 
 void cmos_obj_free(struct cmos_access_obj *m)
 {
+    clear_err(m);
     if (!m) goto out;
+    _cmos_obj_cleanup(m);
     if (m != &singleton)
         _cmos_obj_free(m);
-    else
-        m->cleanup(m);
 out:
     return;
 }
 
 void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_callback cb_fn, void *userdata, void (*destructor)(void *))
 {
+    clear_err(m);
     struct callback *ptr = 0;
     struct callback *new = 0;
 
@@ -218,6 +235,7 @@ out:
 
 int cmos_obj_run_callbacks(const struct cmos_access_obj *m, bool do_update)
 {
+    clear_err(m);
     int retval = -1;
     const struct callback *ptr = 0;
 
@@ -240,10 +258,29 @@ out:
     return retval;
 }
 
-void __internal _init_cmos_std_stuff(struct cmos_access_obj *m)
+int __internal _init_cmos_std_stuff(struct cmos_access_obj *m)
 {
-    if (m) {
-        m->initialized = 1;
-        m->cb_list_head = 0;
-    }
+    int retval = 0;
+    m->initialized = 1;
+    m->cb_list_head = 0;
+    char * errbuf;
+
+    // allocate space for error buffer now. Can optimize this later once api
+    // settles. possibly only allocate on error (which would be problematic in
+    // the case of error==out-of-mem)
+    m->errstring = calloc(1, ERROR_BUFSIZE);
+    if (!m->errstring)
+        goto out_allocfail;
+    goto out;
+
+out_allocfail:
+    // if any allocations failed, roll everything back. This should be safe.
+    fnprintf("out_allocfail:\n");
+    errbuf = cmos_get_module_error_buf();
+    if (errbuf)
+        strlcpy(errbuf, _("There was an allocation failure while trying to construct the cmos object."), ERROR_BUFSIZE);
+    retval = -1;
+
+out:
+    return retval;
 }

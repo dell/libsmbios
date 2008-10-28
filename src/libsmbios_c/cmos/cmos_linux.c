@@ -35,20 +35,6 @@
 // private
 #include "cmos_impl.h"
 
-struct linux_data
-{
-    int last_errno;
-    char *errstring;
-};
-
-// we do error string stuff really stupid way for now. can try to optimize
-// later once everything works.
-static const char * linux_strerror(const struct cmos_access_obj *this)
-{
-    struct linux_data *private_data = (struct linux_data *)this->private_data;
-    return private_data->errstring;
-}
-
 static int linux_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     outb_p (offset, indexPort);
@@ -65,58 +51,25 @@ static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 index
     return 0;
 }
 
-static void linux_cleanup(struct cmos_access_obj *this)
-{
-    fnprintf(" cmos\n");
-    struct linux_data *private_data = (struct linux_data *)this->private_data;
-    if(private_data) {
-        free(private_data->errstring);
-        private_data->errstring = 0;
-        private_data->last_errno = 0;
-    }
-}
-
-static void linux_free(struct cmos_access_obj *this)
-{
-    fnprintf("\n");
-    struct linux_data *private_data = (struct linux_data *)this->private_data;
-    linux_cleanup(this);
-    free(private_data);
-    this->private_data = 0;
-    this->initialized=0;
-}
-
 int __internal init_cmos_struct(struct cmos_access_obj *m)
 {
     char * errbuf;
-    struct linux_data *private_data = 0;
     size_t curstrsize = 0;
+    int retval = 0;
 
     fnprintf("\n");
     if(iopl(3) < 0)
         goto out_noprivs;
 
-    private_data = (struct linux_data *)calloc(1, sizeof(struct linux_data));
-    if (!private_data)
-        goto out_allocfail;
-    
-    // allocate space for error buffer now. Can optimize this later once api
-    // settles
-    private_data->errstring = calloc(1, ERROR_BUFSIZE);
-    if (!private_data->errstring)
-        goto out_allocfail;
-
     m->read_fn = linux_read_fn;
     m->write_fn = linux_write_fn;
-    m->free = linux_free;
-    m->cleanup = linux_cleanup;
-    m->strerror = linux_strerror;
 
-    _init_cmos_std_stuff(m);
-    return 0;
+    retval = _init_cmos_std_stuff(m);
+    goto out;
 
 out_noprivs:
     fnprintf("out_noprivs:\n");
+    retval = -1;
     errbuf = cmos_get_module_error_buf();
     if (errbuf)
     {
@@ -127,15 +80,9 @@ out_noprivs:
             strerror_r(errno, errbuf + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
         strlcat(errbuf, "\n", ERROR_BUFSIZE);
     }
-    linux_free(m);
-    return -1;
+    // nothing left to free
+    goto out;
 
-out_allocfail:
-    // if any allocations failed, roll everything back. This should be safe.
-    fnprintf("out_allocfail:\n");
-    errbuf = cmos_get_module_error_buf();
-    if (errbuf)
-        strlcpy(errbuf, _("There was an allocation failure while trying to construct the cmos object."), ERROR_BUFSIZE);
-    linux_free(m);
-    return -1;
+out:
+    return retval;
 }

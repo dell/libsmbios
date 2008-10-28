@@ -47,7 +47,7 @@ struct cmos_access_obj
     int (*write_fn)(const struct cmos_access_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset);
     void (*free)(struct cmos_access_obj *this);
     void (*cleanup)(struct cmos_access_obj *this); // called instead of ->free for singleton
-    const char *(*strerror)(const struct cmos_access_obj *this);
+    char *errstring;
     struct callback *cb_list_head;
     void *private_data;
     int write_lock;
@@ -55,7 +55,7 @@ struct cmos_access_obj
 
 // regular one
 __internal int init_cmos_struct(struct cmos_access_obj *m);
-__internal void _init_cmos_std_stuff(struct cmos_access_obj *m);  // base class constructor
+__internal int _init_cmos_std_stuff(struct cmos_access_obj *m);  // base class constructor
 
 // unit test one
 __internal int init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn);
