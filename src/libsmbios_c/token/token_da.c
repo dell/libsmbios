@@ -32,6 +32,8 @@
 #include "smbios_c/smbios.h"
 #include "smbios_c/smi.h"
 #include "smbios_c/types.h"
+#include "libsmbios_c_intlize.h"
+#include "internal_strl.h"
 
 // private
 #include "token_impl.h"
@@ -70,14 +72,21 @@ static int _da_is_string(const struct token_obj *t)
 static int _da_is_active(const struct token_obj *t)
 {
     fnprintf("\n");
-    int ret = false;
+    int retval = 0;
     u32 curVal=0;
-    dell_smi_read_nv_storage(cast_token(t)->location, &curVal, 0, 0);
-    // TODO: get return value from fn above and save strerror output if != 0
+    int ret = dell_smi_read_nv_storage(cast_token(t)->location, &curVal, 0, 0);
+    if (ret) {
+        retval = ret;
+        strlcpy( t->errstring, _("Low level SMI call failed.\n"), ERROR_BUFSIZE);
+        strlcat( t->errstring, dell_smi_strerror(), ERROR_BUFSIZE );
+        goto out;
+    }
 
     if (cast_token(t)->value == curVal)
-        ret = true;
-    return ret;
+        retval = 1;
+
+out:
+    return retval;
 }
 
 // wonky to get around GCC error: "cast from pointer to integer of different size"
@@ -94,7 +103,12 @@ static int _da_activate(const struct token_obj *t)
     union void_u16 indirect;
     indirect.ptr = t->private_data;
     int retval = dell_smi_write_nv_storage(indirect.val, cast_token(t)->location, cast_token(t)->value, 0);
-    // TODO: need to run smi_strerror() here if retval != 0 and save error string
+
+    if (retval) {
+        strlcpy( t->errstring, _("Low level SMI call failed.\n"), ERROR_BUFSIZE);
+        strlcat( t->errstring, dell_smi_strerror(), ERROR_BUFSIZE );
+    }
+
     return retval;
 }
 
