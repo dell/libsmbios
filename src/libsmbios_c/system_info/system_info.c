@@ -46,6 +46,22 @@ int smbios_get_library_version_minor()
     return LIBSMBIOS_RELEASE_MINOR;
 }
 
+static char *module_error_buf; // auto-init to 0
+__attribute__((destructor)) static void return_mem(void)
+{
+    fnprintf("\n");
+    free(module_error_buf);
+    module_error_buf = 0;
+}
+
+__internal char *sysinfo_get_module_error_buf()
+{
+    fnprintf("\n");
+    if (!module_error_buf)
+        module_error_buf = calloc(1, ERROR_BUFSIZE);
+    return module_error_buf;
+}
+
 void __internal strip_trailing_whitespace( char *str )
 {
     if(!str)

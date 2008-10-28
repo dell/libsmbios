@@ -42,9 +42,8 @@
 // static vars
 static struct smbios_table singleton; // auto-init to 0
 static char *module_error_buf; // auto-init to 0
-static bool atexitreg;
 
-static void return_mem(void)
+__attribute__((destructor)) static void return_mem(void)
 {
     fnprintf("\n");
     free(module_error_buf);
@@ -54,16 +53,8 @@ static void return_mem(void)
 static char *smbios_get_module_error_buf()
 {
     fnprintf("\n");
-    if (module_error_buf)
-        goto out;
-
-    module_error_buf = calloc(1, ERROR_BUFSIZE);
-
-out:
-    if (!atexitreg){
-        atexitreg = true;
-        atexit(return_mem);
-    }
+    if (!module_error_buf)
+        module_error_buf = calloc(1, ERROR_BUFSIZE);
     return module_error_buf;
 }
 
