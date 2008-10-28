@@ -254,50 +254,44 @@ __internal int init_mem_struct_filename(struct memory_access_obj *m, const char 
 {
     char *errbuf=0;
     size_t curstrsize;
-    struct linux_data *private_data = (struct linux_data *)calloc(1, sizeof(struct linux_data));
-    if (!private_data)
-        goto out_allocfail;
+    int retval = 0;
+    const char *error;
 
     fnprintf("\n");
 
-    // must be power of 2, >= getpagesize()
-    private_data->mappingSize = getpagesize() * 16;  // 64k
-    if (getpagesize() > 4096)
-        private_data->mappingSize = getpagesize();  // page size. How big? Who knows...
-    fnprintf("mappingSize(%lld)\n", private_data->mappingSize); // this will tell if we care.
-
-    private_data->lastMappedOffset = -1;
-    private_data->filename = (char *)calloc(1, strlen(fn) + 1);
-    if (!private_data->filename)
-        goto out_allocfail;
-
-    private_data->rw = 0;
-    strcat(private_data->filename, fn);
-
-    // allocate space for error buffer now. Can optimize this later once api
-    // settles
+    // do allocations
+    error = _("There was an allocation failure while trying to construct the memory object. Filename: ");
+    struct linux_data *private_data = calloc(1, sizeof(struct linux_data));
+    private_data->filename = calloc(1, strlen(fn) + 1);
     m->errstring = calloc(1, ERROR_BUFSIZE);
-    if (!m->errstring)
-        goto out_allocfail;
+    if (!private_data || !private_data->filename || !m->errstring)
+        goto out_fail;
 
+    strcat(private_data->filename, fn);
+    private_data->lastMappedOffset = -1;
+    private_data->rw = 0;
+    private_data->mappingSize = getpagesize(); // must be power of 2, >= getpagesize()
     m->private_data = private_data;
+
     m->free = linux_free;
     m->read_fn = linux_read_fn;
     m->write_fn = linux_write_fn;
     m->cleanup = linux_cleanup;
     m->close = 1;
-    m->initialized = 1;
 
+    error = _("File open error during memory object construction. The filename: ");
     if (!reopen(private_data, false))
-        goto out_filefail;
+        goto out_fail;
     closefds(private_data);
-
+    m->initialized = 1;
     goto out;
-out_filefail:
-    fnprintf("out_filefail:\n");
+
+out_fail:
+    // if any allocations failed, roll everything back. This should be safe.
+    fnprintf("out_fail:\n");
     errbuf = memory_get_module_error_buf();
     if (errbuf){
-        strlcpy(errbuf, _("File open error during memory object construction. The filename:\n\t"), ERROR_BUFSIZE);
+        strlcpy(errbuf, error, ERROR_BUFSIZE);
 
         strlcat(errbuf, private_data->filename, ERROR_BUFSIZE);
         strlcat(errbuf, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
@@ -307,20 +301,11 @@ out_filefail:
     }
     fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
     linux_free(m);
-    return -1;
-
-out_allocfail:
-    // if any allocations failed, roll everything back. This should be safe.
-    fnprintf("out_allocfail:\n");
-    errbuf = memory_get_module_error_buf();
-    if (errbuf)
-        strlcpy(errbuf, _("There was an allocation failure while trying to construct the memory object."), ERROR_BUFSIZE);
-    fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
-    linux_free(m);
-    return -1;
+    retval = -1;
 
 out:
-    return 0;
+    fnprintf("out:\n");
+    return retval;
 }
 
 __internal int init_mem_struct(struct memory_access_obj *m)
