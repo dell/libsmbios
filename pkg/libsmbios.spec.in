@@ -45,7 +45,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: libxml2-devel
+BuildRequires: libxml2-devel python-devel
 #BuildRequires: %{valgrind_BR}
 BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
 
