@@ -108,7 +108,7 @@ def simple_ci_smi(smiClass, select, *args):
     res = array_4_u32(0, 0, 0, 0)
     _libsmbios_c.dell_simple_ci_smi(smiClass, select, arg, res)
     return [ i for i in res ]
-__all__.append("dell_simple_ci_smi")
+__all__.append("simple_ci_smi")
 
 #int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
 _libsmbios_c.dell_smi_read_nv_storage.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())

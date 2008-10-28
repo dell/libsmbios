@@ -236,6 +236,7 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 {
     struct callintf_cmd *kernel_buf;
     size_t alloc_size = sizeof(struct callintf_cmd) + sizeof(this->smi_buf);
+    int retval = -1;
 
     fnprintf("\n");
 
@@ -292,6 +293,7 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     // update smi buffer
     copy_phys_bufs(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
 
+    retval = 0;
     goto out;
 
 err_out:
@@ -300,7 +302,7 @@ err_out:
 
 out:
     free(buffer);
-    return -1;
+    return retval;
 }
 
 int __internal init_dell_smi_obj(struct dell_smi_obj *this)

@@ -130,6 +130,7 @@ static void clear_err(const struct dell_smi_obj *this)
 const char *dell_smi_obj_strerror(struct dell_smi_obj *s)
 {
     const char * retval = 0;
+    fnprintf("\n");
     if (s)
         retval = s->errstring;
     else

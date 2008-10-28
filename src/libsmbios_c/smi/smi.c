@@ -34,6 +34,7 @@ const char *dell_smi_strerror()
 {
     const char *retval = 0;
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    fnprintf("\n");
     if (smi) retval = dell_smi_obj_strerror(smi);
     dell_smi_obj_free(smi);
     return retval;
@@ -53,7 +54,9 @@ int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
     dell_smi_obj_set_arg(smi, cbARG3, args[cbARG3]);
     dell_smi_obj_set_arg(smi, cbARG4, args[cbARG4]);
 
-    dell_smi_obj_execute(smi);
+    retval = dell_smi_obj_execute(smi);
+    if(retval) // error
+        goto out;
 
     fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
     fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
@@ -66,7 +69,6 @@ int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
     res[cbRES4] = dell_smi_obj_get_res(smi, cbRES4);
 
     dell_smi_obj_free(smi);
-    retval = 0;
 
 out:
     return retval;
