@@ -30,9 +30,18 @@
 // private
 #include "smi_impl.h"
 
+const char *dell_smi_strerror()
+{
+    const char *retval = 0;
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    if (smi) retval = dell_smi_obj_strerror(smi);
+    dell_smi_obj_free(smi);
+    return retval;
+}
+
 void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
 
     dell_smi_obj_set_class(smi, smiClass);
     dell_smi_obj_set_select(smi, select);
@@ -60,7 +69,7 @@ void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 #define PROPERTY_TAG_LEN 80
 int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     fnprintf("\n");
 
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
@@ -89,7 +98,7 @@ out:
 
 int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     u16 security_key = 0;
     const char *whichpw = pass_scancode;
     u8 *buf;
