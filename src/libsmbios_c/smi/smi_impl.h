@@ -88,6 +88,8 @@ LIBSMBIOS_C_PACKED_ATTR;
 #pragma pack(pop)
 #endif
 
+#define ERROR_BUFSIZE 1024
+
 struct dell_smi_obj
 {
     int initialized;
@@ -97,10 +99,11 @@ struct dell_smi_obj
     struct smi_cmd_buffer smi_buf;
     u8 *physical_buffer[4];
     size_t physical_buffer_size[4];
+    char *errstring;
 };
 
-void __internal init_dell_smi_obj(struct dell_smi_obj *);
-void __internal init_dell_smi_obj_std(struct dell_smi_obj *);
+int __internal init_dell_smi_obj(struct dell_smi_obj *);
+int __internal init_dell_smi_obj_std(struct dell_smi_obj *);
 
 
 

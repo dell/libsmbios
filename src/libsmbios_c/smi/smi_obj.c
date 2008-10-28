@@ -30,6 +30,8 @@
 #include "smbios_c/obj/smi.h"
 #include "smbios_c/smbios.h"
 #include "smbios_c/smi.h"
+#include "libsmbios_c_intlize.h"
+#include "internal_strl.h"
 
 // private
 #include "smi_impl.h"
@@ -40,11 +42,38 @@ void _smi_free(struct dell_smi_obj *m);
 // static vars
 static struct dell_smi_obj singleton; // auto-init to 0
 typedef int (*init_fn)(struct dell_smi_obj *);
+static char *module_error_buf; // auto-init to 0
+static bool atexitreg;
+
+static void return_mem(void)
+{
+    fnprintf("\n");
+    free(module_error_buf);
+    module_error_buf = 0;
+}
+
+static char *smi_get_module_error_buf()
+{
+    fnprintf("\n");
+    if (module_error_buf)
+        goto out;
+
+    module_error_buf = calloc(1, ERROR_BUFSIZE);
+
+out:
+    if (!atexitreg){
+        atexitreg = true;
+        atexit(return_mem);
+    }
+    return module_error_buf;
+}
+
 
 struct dell_smi_obj *dell_smi_factory(int flags, ...)
 {
     va_list ap;
     struct dell_smi_obj *toReturn = 0;
+    int ret;
 
     fnprintf("\n");
 
@@ -64,15 +93,22 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
         va_start(ap, flags);
         init_fn fn = va_arg(ap, init_fn);
         fnprintf("call fn pointer: %p\n", fn);
-        fn(toReturn);
+        ret = fn(toReturn);
         va_end(ap);
     } else
     {
         fnprintf("default init\n");
-        init_dell_smi_obj(toReturn);
+        ret = init_dell_smi_obj(toReturn);
     }
 
-    init_dell_smi_obj_std(toReturn);
+    if (!ret)
+        goto out;
+
+    // failed
+    dell_smi_obj_free(toReturn);
+    memset(toReturn, 0, sizeof(struct dell_smi_obj));
+    toReturn = 0;
+
 out:
     return toReturn;
 }
@@ -81,51 +117,82 @@ out:
 void dell_smi_obj_free(struct dell_smi_obj *m)
 {
     fnprintf("\n");
-    if (m != &singleton)
+    if (m && m != &singleton)
         _smi_free(m);
+}
 
-    // can do special cleanup for singleton, but none necessary atm
+static void clear_err(const struct dell_smi_obj *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+}
+
+const char *dell_smi_obj_strerror(struct dell_smi_obj *s)
+{
+    const char * retval = 0;
+    if (s)
+        retval = s->errstring;
+    else
+        retval = module_error_buf;
+
+    return retval;
 }
 
 void dell_smi_obj_set_class(struct dell_smi_obj *this, u16 smi_class)
 {
     fnprintf(" %d\n", smi_class);
-    this->smi_buf.smi_class = smi_class;
+    clear_err(this);
+    if(this)
+        this->smi_buf.smi_class = smi_class;
 }
 
 void dell_smi_obj_set_select(struct dell_smi_obj *this, u16 smi_select)
 {
     fnprintf(" %d\n", smi_select);
-    this->smi_buf.smi_select = smi_select;
+    clear_err(this);
+    if(this)
+        this->smi_buf.smi_select = smi_select;
 }
 
 void dell_smi_obj_set_arg(struct dell_smi_obj *this, u8 argno, u32 value)
 {
     fnprintf(" %d -> 0x%x\n", argno, value);
+    clear_err(this);
+    if(!this) goto out;
     free(this->physical_buffer[argno]);
     this->physical_buffer[argno] = 0;
     this->physical_buffer_size[argno] = 0;
 
     this->smi_buf.arg[argno] = value;
+out:
+    return;
 }
 
 u32  dell_smi_obj_get_res(struct dell_smi_obj *this, u8 argno)
 {
-    fnprintf(" %d = 0x%x\n", argno, this->smi_buf.res[argno]);
-    return this->smi_buf.res[argno];
+    clear_err(this);
+    u32 retval = 0;
+    if (this)
+        retval = this->smi_buf.res[argno];
+    fnprintf(" %d = 0x%x\n", argno, retval);
+    return retval;
 }
 
 static u8 * dell_smi_obj_make_buffer_X(struct dell_smi_obj *this, u8 argno, size_t size)
 {
+    u8 *retval = 0;
     fnprintf("\n");
-    if (argno>3)
-        return 0;
+    clear_err(this);
+    if (argno>3 || !this)
+        goto out;
 
     this->smi_buf.arg[argno] = 0;
     free(this->physical_buffer[argno]);
     this->physical_buffer[argno] = calloc(1, size);
     this->physical_buffer_size[argno] = size;
-    return this->physical_buffer[argno];
+    retval = this->physical_buffer[argno];
+out:
+    return retval;
 }
 
 const char *bufpat = "DSCI";
@@ -155,7 +222,9 @@ u8 * dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *this, 
 
 u8 * dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *this, u8 argno, size_t size)
 {
+    clear_err(this);
     u8 smbios_ver = 1;
+    u8 *retval = 0;
     // look in smbios struct 0xD0 (Revisions and IDs) to find the Dell SMBIOS implementation version
     //  offset 4 of the struct == dell major version
     struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xd0);
@@ -164,9 +233,10 @@ u8 * dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *this, u8 argno,
     fnprintf("dell smbios ver: %d\n", smbios_ver);
 
     if (smbios_ver >= 2)
-        return dell_smi_obj_make_buffer_frombios_withheader(this, argno, size);
+        retval = dell_smi_obj_make_buffer_frombios_withheader(this, argno, size);
     else
-        return dell_smi_obj_make_buffer_frombios_withoutheader(this, argno, size);
+        retval = dell_smi_obj_make_buffer_frombios_withoutheader(this, argno, size);
+    return retval;
 }
 
 u8 * dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *this, u8 argno, size_t size)
@@ -178,9 +248,14 @@ u8 * dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *this, u8 argno, size_t
 void dell_smi_obj_execute(struct dell_smi_obj *this)
 {
     fnprintf("\n");
+    clear_err(this);
+    if(!this)
+        goto out;
     this->smi_buf.res[0] = -3; //default to 'not handled'
     if (this->execute)
         this->execute(this);
+out:
+    return;
 }
 
 /**************************************************
@@ -199,18 +274,44 @@ void __internal _smi_free(struct dell_smi_obj *this)
         this->physical_buffer[i]=0;
         this->physical_buffer_size[i] = 0;
     }
+    free(this->errstring);
+    this->errstring = 0;
     free(this);
 }
 
-void __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
+int __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
 {
+    int retval = 0;
+    char *errbuf = 0;
     fnprintf("\n");
 
+    const char *error = _("Failed to find appropriate SMBIOS 0xD4 structure.");
     struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xda);
-    smbios_struct_get_data(s, &(this->command_address), 4, sizeof(u16));
-    smbios_struct_get_data(s, &(this->command_code), 6, sizeof(u8));
+    if (s) {
+        smbios_struct_get_data(s, &(this->command_address), 4, sizeof(u16));
+        smbios_struct_get_data(s, &(this->command_code), 6, sizeof(u8));
+    }
+    else
+        goto out_fail;
+
+    error = _("Failed to allocate memory for error string.");
+    this->errstring = calloc(1, ERROR_BUFSIZE);
+    if (!this->errstring)
+        goto out_fail;
 
     this->initialized = 1;
+    goto out;
+
+out_fail:
+    retval = -1;
+    errbuf = smi_get_module_error_buf();
+    if (errbuf){
+        strlcpy(errbuf, error, ERROR_BUFSIZE);
+        strlcat(errbuf, smbios_strerror(), ERROR_BUFSIZE);
+    }
+
+out:
+    return retval;
 }
 
 

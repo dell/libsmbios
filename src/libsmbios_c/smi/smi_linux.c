@@ -300,7 +300,8 @@ out:
     return -1;
 }
 
-void __internal init_dell_smi_obj(struct dell_smi_obj *this)
+int __internal init_dell_smi_obj(struct dell_smi_obj *this)
 {
     this->execute = LINUX_dell_smi_obj_execute;
+    return init_dell_smi_obj_std(this);
 }
