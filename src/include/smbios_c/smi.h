@@ -35,6 +35,8 @@ enum {
     cbRES4 = 3,
 };
 
+const char *dell_smi_strerror();
+
 void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 
 int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
