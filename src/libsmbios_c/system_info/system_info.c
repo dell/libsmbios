@@ -25,7 +25,7 @@
 #include "smbios_c/smbios.h"
 #include "smbios_c/system_info.h"
 #include "dell_magic.h"
-#include "_impl.h"
+#include "sysinfo_impl.h"
 
 #if HAVE_CONFIG_H
 #include "config.h"

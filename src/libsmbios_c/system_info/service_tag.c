@@ -30,7 +30,7 @@
 #include "smbios_c/system_info.h"
 #include "smbios_c/smi.h"
 #include "dell_magic.h"
-#include "_impl.h"
+#include "sysinfo_impl.h"
 
 /***********************************************
  * specialty functions to decode dell service tag

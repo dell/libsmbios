@@ -29,7 +29,7 @@
 #include "smbios_c/smi.h"
 #include "smbios_c/system_info.h"
 #include "dell_magic.h"
-#include "_impl.h"
+#include "sysinfo_impl.h"
 
 
 static char *getAssetTagFromSysEncl()
