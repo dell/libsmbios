@@ -3,8 +3,12 @@
 %define minor @RELEASE_MINOR@
 %define sub @RELEASE_SUBLEVEL@
 %define extralevel @RELEASE_RPM_EXTRALEVEL@
-%define release_name libsmbios
 %define release_version %{major}.%{minor}.%{sub}%{extralevel}
+
+%define package_name  libsmbios2
+
+# required by suse build system
+# norootforbuild
 
 %define cppunit_BR cppunit-devel
 %define doxygen_BR %{nil}
@@ -36,11 +40,11 @@
 # per fedora python packaging guidelines
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Name: libsmbios_c
+Name: %{package_name}
 Version: %{release_version}
 Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
-Summary: Libsmbios C shared libraries
+Summary: Libsmbios C/C++ shared libraries
 Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
@@ -48,76 +52,58 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libxml2-devel python-devel
 #BuildRequires: %{valgrind_BR}
 BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
+Provides: libsmbios = 0:%{version}-%{release}
+Provides: libsmbios-libs = 0:%{version}-%{release}
+# uncomment for official fedora
+#Obsoletes: libsmbios-libs < 2.0.0
 
 # libsmbios only ever makes sense on intel compatible arches
 # no DMI tables on ppc, s390, etc.
 ExclusiveArch: x86_64 ia64 %{ix86}
 
 %description
-Libsmbios is a library and utilities that can be used by client programs
-to get information from standard BIOS tables, such as the SMBIOS table.
+Libsmbios is a library and utilities that can be used by client programs to get
+information from standard BIOS tables, such as the SMBIOS table.
 
 This package provides the C-based libsmbios library, with a C interface.
 
-%package -n libsmbios_c++
-Summary: Libsmbios C++ shared libraries
-Group: System Environment/Libraries
-Provides: libsmbios = %{epoch}:%{version}-%{release}
-Provides: libsmbios-libs = %{epoch}:%{version}-%{release}
-# uncomment for official fedora
-#Obsoletes: libsmbios-libs < 2.0.0
+This package also has a C++-based library, with a C++ interface. It is not
+actively maintained, but provided for backwards compatibility. New programs
+should use the libsmbios C interface.
 
-%description -n libsmbios_c++
-Libsmbios is a library and utilities that can be used by client programs
-to get information from standard BIOS tables, such as the SMBIOS table.
 
-This package has a C++-based library, with a C++ interface. It is not actively maintained, but provided for backwards compatibility. New programs should use the libsmbios C interface.
-
-%package -n libsmbios_c-python
+%package -n python-smbios
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
-Requires: libsmbios_c
+Requires: %{package_name} = %{version}-%{release}
+Requires: python
 
-%description -n libsmbios_c-python
+%description -n python-smbios
 This package provides a Python interface to libsmbios
 
 
 %package -n smbios-utils
 Summary: Utilities that use libsmbios
 Group: Applications/System
-Requires: libsmbios_c-python = %{version}-%{release}
-Requires: libsmbios_c = %{version}-%{release}
-Requires: libsmbios_c++ = %{version}-%{release}
+Requires: python-smbios = %{version}-%{release}
+Requires: %{package_name} = %{version}-%{release}
 Obsoletes: libsmbios-bin < 0:2.0.0
 Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
 
-%package -n libsmbios_c++-devel
+%package -n libsmbios-devel
 Summary: Development headers and archives
 Group: Development/Libraries
-Requires: libsmbios_c++ = %{version}-%{release}
-Provides: libsmbios-devel
+Requires: libsmbios = %{version}-%{release}
 
-%description -n libsmbios_c++-devel
-Libsmbios is a library and utilities that can be used by client programs
-to get information from standard BIOS tables, such as the SMBIOS table.
+%description -n libsmbios-devel
+Libsmbios is a library and utilities that can be used by client programs to get
+information from standard BIOS tables, such as the SMBIOS table.
 
-This package contains the headers and .a files necessary to compile new
-client programs against libsmbios.
+This package contains the headers and .a files necessary to compile new client
+programs against libsmbios.
 
-
-%package -n libsmbios_c-devel
-Summary: Development headers and archives
-Group: Development/Libraries
-Requires: libsmbios_c = %{version}-%{release}
-
-%description -n libsmbios_c-devel
-Libsmbios is a library and utilities that can be used by client programs
-to get information from standard BIOS tables, such as the SMBIOS table.
-
-This package contains the headers and .a files necessary to compile new
-client programs against libsmbios.
 
 %description -n smbios-utils
 Libsmbios is a library and utilities that can be used by client programs
@@ -157,6 +143,7 @@ make -e %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+mkdir %{buildroot}
 
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
@@ -165,7 +152,7 @@ rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
 
 # backwards compatible:
-ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
+ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 
 %find_lang libsmbios
 
@@ -173,41 +160,30 @@ ln -s /usr/sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 %clean
 rm -rf %{buildroot}
 
-%post   -n libsmbios_c++ -p /sbin/ldconfig
-%postun -n libsmbios_c++ -p /sbin/ldconfig
-%post   -n libsmbios_c   -p /sbin/ldconfig
-%postun -n libsmbios_c   -p /sbin/ldconfig
+%post   -n %{package_name}   -p /sbin/ldconfig
+%postun -n %{package_name}   -p /sbin/ldconfig
 
-%files -n libsmbios_c++
+%files -n %{package_name} -f libsmbios.lang
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README
+%{_libdir}/libsmbios_c.so.*
 %{_libdir}/libsmbios.so.*
 
-%files -n libsmbios_c -f libsmbios.lang
-%defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README
-%{_libdir}/libsmbios_c.so.*
-
-%files -n libsmbios_c-python
+%files -n python-smbios
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{python_sitelib}/*
 
-%files -n libsmbios_c++-devel
+%files -n libsmbios-devel
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 /usr/include/smbios
+/usr/include/smbios_c
 %{_libdir}/libsmbios.a
 %{_libdir}/libsmbios.so
-%doc out/libsmbios_c++
-
-%files -n libsmbios_c-devel
-%defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt
-/usr/include/smbios_c
 %{_libdir}/libsmbios_c.a
 %{_libdir}/libsmbios_c.so
 %doc out/libsmbios_c++
+%doc out/libsmbios_c
 
 %files -n smbios-utils
 %defattr(-,root,root,-)
@@ -244,6 +220,6 @@ rm -rf %{buildroot}
 %{_sbindir}/tokenCtl
 %{_datadir}/smbios-utils
 
-
-# ./ChangeLog is appended by configure
 %changelog
+* Tue Oct 28 2008 Michael E Brown <michael_e_brown at dell.com> - 2.2.0-1
+- Spec updates
