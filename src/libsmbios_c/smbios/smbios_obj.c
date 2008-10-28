@@ -95,8 +95,8 @@ struct smbios_table *smbios_table_factory(int flags, ...)
     goto out;
 
 out_init_fail:
-    memset(toReturn, 0, sizeof(struct smbios_table));
     smbios_table_free(toReturn);
+    memset(toReturn, 0, sizeof(struct smbios_table));
     toReturn = 0;
 
 out:
