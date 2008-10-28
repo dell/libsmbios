@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/file.h>  // flock
+#include <errno.h>
 
 // public
 #include "smbios_c/obj/smi.h"
@@ -237,6 +238,7 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     struct callintf_cmd *kernel_buf;
     size_t alloc_size = sizeof(struct callintf_cmd) + sizeof(this->smi_buf);
     int retval = -1;
+    size_t curstrsize;
 
     fnprintf("\n");
 
@@ -298,7 +300,11 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 
 err_out:
     fnprintf(" err_out\n");
-    strlcpy( this->errstring, _("There was an error trying to perform the smi execute() cmd."), ERROR_BUFSIZE);
+    strlcpy( this->errstring, _("There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' kernel module loaded?"), ERROR_BUFSIZE);
+    strlcat(this->errstring, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
+    curstrsize = strlen(this->errstring);
+    if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
+        strerror_r(errno, this->errstring + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
 
 out:
     free(buffer);
