@@ -47,7 +47,7 @@ u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, siz
 u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
 u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
 u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
-void dell_smi_obj_execute(struct dell_smi_obj *);
+int  dell_smi_obj_execute(struct dell_smi_obj *);
 
 EXTERN_C_END;
 

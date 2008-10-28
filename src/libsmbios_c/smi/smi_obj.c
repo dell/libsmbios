@@ -245,17 +245,18 @@ u8 * dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *this, u8 argno, size_t
 }
 
 
-void dell_smi_obj_execute(struct dell_smi_obj *this)
+int dell_smi_obj_execute(struct dell_smi_obj *this)
 {
     fnprintf("\n");
     clear_err(this);
+    int retval = -1;
     if(!this)
         goto out;
     this->smi_buf.res[0] = -3; //default to 'not handled'
     if (this->execute)
-        this->execute(this);
+        retval = this->execute(this);
 out:
-    return;
+    return retval;
 }
 
 /**************************************************

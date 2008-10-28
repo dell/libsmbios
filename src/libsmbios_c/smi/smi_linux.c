@@ -30,6 +30,8 @@
 // public
 #include "smbios_c/obj/smi.h"
 #include "smbios_c/types.h"
+#include "libsmbios_c_intlize.h"
+#include "internal_strl.h"
 
 // private
 #include "smi_impl.h"
@@ -294,6 +296,7 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 
 err_out:
     fnprintf(" err_out\n");
+    strlcpy( this->errstring, _("There was an error trying to perform the smi execute() cmd."), ERROR_BUFSIZE);
 
 out:
     free(buffer);

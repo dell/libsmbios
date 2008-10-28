@@ -93,6 +93,12 @@ if not getattr(ctypes, "c_bool", None):
 # define type that can be used for arg/res:  u32 arg[4]
 array_4_u32 = ctypes.c_int32 * 4
 
+# define strerror first so we can use it in error checking other functions.
+_libsmbios_c.dell_smi_strerror.argtypes = [ ]
+_libsmbios_c.dell_smi_strerror.restype = ctypes.c_char_p
+def _strerror(obj):
+    return Exception(_libsmbios_c.dell_smi_obj_strerror(obj))
+
 #void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 _libsmbios_c.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
 _libsmbios_c.dell_simple_ci_smi.restype = None
@@ -224,11 +230,17 @@ __all__.append("password_change")
 #struct dell_smi_obj;
 class _dell_smi_obj(ctypes.Structure): pass
 
+# define strerror first so we can use it in error checking other functions.
+_libsmbios_c.dell_smi_obj_strerror.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
+_libsmbios_c.dell_smi_obj_strerror.restype = ctypes.c_char_p
+def _obj_strerror(obj):
+    return Exception(_libsmbios_c.dell_smi_obj_strerror(obj))
+
 #struct dell_smi_obj *dell_smi_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.dell_smi_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.dell_smi_factory.restype = ctypes.POINTER(_dell_smi_obj)
-_libsmbios_c.dell_smi_factory.errcheck = errorOnZeroFN()
+_libsmbios_c.dell_smi_factory.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(r))
 
 #void dell_smi_obj_free(struct dell_smi_obj *);
 _libsmbios_c.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
@@ -253,26 +265,27 @@ _libsmbios_c.dell_smi_obj_get_res.restype = ctypes.c_uint32
 #u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN()
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN()
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN()
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
 
 #u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_tobios.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_tobios.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN()
+_libsmbios_c.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
 
 #void dell_smi_obj_execute(struct dell_smi_obj *);
 _libsmbios_c.dell_smi_obj_execute.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
-_libsmbios_c.dell_smi_obj_execute.restype = None
+_libsmbios_c.dell_smi_obj_execute.restype = ctypes.c_int
+_libsmbios_c.dell_smi_obj_execute.errcheck = errorOnNegativeFN(lambda r,f,a: _obj_strerror(a[0]))
 
 
 
