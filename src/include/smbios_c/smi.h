@@ -37,11 +37,11 @@ enum {
 
 const char *dell_smi_strerror();
 
-void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
+int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 
-int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
-int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
-int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
+int dell_smi_read_nv_storage         (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
+int dell_smi_read_battery_mode_setting(u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
+int dell_smi_read_ac_mode_setting     (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
 
 int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value);
 int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);

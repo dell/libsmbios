@@ -71,7 +71,9 @@ static int _da_is_active(const struct token_obj *t)
 {
     fnprintf("\n");
     int ret = false;
-    if (cast_token(t)->value == dell_smi_read_nv_storage(cast_token(t)->location, 0, 0))
+    u32 curVal=0;
+    dell_smi_read_nv_storage(cast_token(t)->location, &curVal, 0, 0);
+    if (cast_token(t)->value == curVal)
         ret = true;
     return ret;
 }

@@ -39,9 +39,12 @@ const char *dell_smi_strerror()
     return retval;
 }
 
-void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
+int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 {
+    int retval = -1;
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    if(!smi)
+        goto out;
 
     dell_smi_obj_set_class(smi, smiClass);
     dell_smi_obj_set_select(smi, select);
@@ -63,14 +66,21 @@ void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
     res[cbRES4] = dell_smi_obj_get_res(smi, cbRES4);
 
     dell_smi_obj_free(smi);
+    retval = 0;
+
+out:
+    return retval;
 }
 
 // prepackaged smi functions
 #define PROPERTY_TAG_LEN 80
 int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
 {
+    int retval = -2;
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     fnprintf("\n");
+    if (!smi)
+        goto out;
 
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
     dell_smi_obj_set_select(smi, 0); // 0 == read
@@ -80,7 +90,7 @@ int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
     fnprintf("dell_smi_obj_execute()\n");
     dell_smi_obj_execute(smi);
 
-    int retval = dell_smi_obj_get_res(smi, cbRES1);
+    retval = dell_smi_obj_get_res(smi, cbRES1);
     if (retval != 0)
         goto out;
 
@@ -102,14 +112,16 @@ int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_asci
     u16 security_key = 0;
     const char *whichpw = pass_scancode;
     u8 *buf;
-    int retval;
+    int retval = -2;
+
+    if (!smi)
+        goto out;
 
     fnprintf(" new tag request: '%s'\n", newTag);
 
     if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
         whichpw=pass_ascii;
     int ret = dell_smi_get_security_key(whichpw, &security_key);
-    retval = -2;
     if (ret)  // bad password
         goto out;
 
@@ -131,30 +143,32 @@ out:
     return retval;
 }
 
-static int read_setting(u16 select, u32 location, u32 *minValue, u32 *maxValue)
+static int read_setting(u16 select, u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
     u32 args[4] = {location, 0,}, res[4] = {0,};
-    dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
+    int retval = dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
+    if(curValue)
+        *curValue = res[cbARG2];
     if(minValue)
         *minValue = res[cbARG3];
     if(maxValue)
         *maxValue = res[cbARG4];
-    return res[cbARG2]; // current value
+    return retval;
 }
 
-int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue)
+int dell_smi_read_nv_storage         (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
-    return read_setting(0, location, minValue, maxValue); // 0 = select code for nv storage
+    return read_setting(0, location, curValue, minValue, maxValue); // 0 = select code for nv storage
 }
 
-int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue)
+int dell_smi_read_battery_mode_setting(u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
-    return read_setting(1, location, minValue, maxValue); // 1 = select code for battery mode
+    return read_setting(1, location, curValue, minValue, maxValue); // 1 = select code for battery mode
 }
 
-int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue)
+int dell_smi_read_ac_mode_setting     (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
-    return read_setting(2, location, minValue, maxValue); // 2 = select code for ac mode
+    return read_setting(2, location, curValue, minValue, maxValue); // 2 = select code for ac mode
 }
 
 static int write_setting(u16 security_key, u16 select, u32 location, u32 value)
