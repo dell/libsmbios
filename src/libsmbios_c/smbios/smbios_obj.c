@@ -86,21 +86,32 @@ struct smbios_table *smbios_table_factory(int flags, ...)
     goto out;
 
 out_init_fail:
-    smbios_table_free(toReturn);
-    memset(toReturn, 0, sizeof(struct smbios_table));
+    // fail. init_smbios_* functions are responsible for free-ing memory if they
+    // return failure.
+    toReturn->initialized = 0;
     toReturn = 0;
 
 out:
     return toReturn;
 }
 
+static void clear_err(const struct smbios_table *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
+}
 
 void smbios_table_free(struct smbios_table *m)
 {
+    if (!m) goto out;
+    clear_err(m);
     if (m != &singleton)
         _smbios_table_free(m);
 
-    // can do special cleanup for singleton, but none necessary atm
+out:
+    return;
 }
 
 const char *smbios_table_strerror(const struct smbios_table *m)
@@ -116,6 +127,7 @@ const char *smbios_table_strerror(const struct smbios_table *m)
 
 struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *table, const struct smbios_struct *cur)
 {
+    clear_err(table);
     const u8 *data = 0;
 
     //If we are called on an uninitialized smbiosBuffer, return 0;
@@ -287,6 +299,7 @@ out:
 // visitor pattern
 void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbios_struct *, void *userdata), void *userdata)
 {
+    clear_err(table);
     const struct smbios_struct *s = smbios_table_get_next_struct(table, 0);
     while(s) {
         fn(s, userdata);
@@ -303,9 +316,6 @@ void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbio
 
 void __internal _smbios_table_free(struct smbios_table *this)
 {
-    if (!this)
-        goto out;
-
     memset(&this->tep, 0, sizeof(this->tep));
 
     free(this->errstring);
@@ -316,7 +326,7 @@ void __internal _smbios_table_free(struct smbios_table *this)
 
     this->initialized=0;
 
-out:
+    memset(this, 0, sizeof(*this)); // big hammer
     free(this);
 }
 
