@@ -96,12 +96,13 @@ array_4_u32 = ctypes.c_int32 * 4
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.dell_smi_strerror.argtypes = [ ]
 _libsmbios_c.dell_smi_strerror.restype = ctypes.c_char_p
-def _strerror(obj):
-    return Exception(_libsmbios_c.dell_smi_obj_strerror(obj))
+def _strerror():
+    return Exception(_libsmbios_c.dell_smi_strerror())
 
 #void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 _libsmbios_c.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
-_libsmbios_c.dell_simple_ci_smi.restype = None
+_libsmbios_c.dell_simple_ci_smi.restype = ctypes.c_int
+_libsmbios_c.dell_simple_ci_smi.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
 def simple_ci_smi(smiClass, select, *args):
     arg = array_4_u32(*args)
     res = array_4_u32(0, 0, 0, 0)
@@ -110,35 +111,50 @@ def simple_ci_smi(smiClass, select, *args):
 __all__.append("dell_simple_ci_smi")
 
 #int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
+_libsmbios_c.dell_smi_read_nv_storage.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
 _libsmbios_c.dell_smi_read_nv_storage.restype = ctypes.c_int
 _libsmbios_c.dell_smi_read_nv_storage.argtypes = [
         ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32)]
 def read_nv_storage(location):
     min = ctypes.c_uint32(0)
     max = ctypes.c_uint32(0)
-    cur = _libsmbios_c.dell_smi_read_nv_storage(location, ctypes.pointer(min), ctypes.pointer(max))
+    cur = ctypes.c_uint32(0)
+    _libsmbios_c.dell_smi_read_nv_storage(location, ctypes.byref(cur), ctypes.byref(min), ctypes.byref(max))
     return (cur, min.value, max.value)
 __all__.append("read_nv_storage")
 
 #int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
-_libsmbios_c.dell_smi_read_battery_mode_setting.argtypes = [ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_uint32)]
+_libsmbios_c.dell_smi_read_battery_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
 _libsmbios_c.dell_smi_read_battery_mode_setting.restype = ctypes.c_int
+_libsmbios_c.dell_smi_read_battery_mode_setting.argtypes = [
+        ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.POINTER(ctypes.c_uint32)]
 def read_battery_mode_setting(location):
     min = ctypes.c_uint32(0)
     max = ctypes.c_uint32(0)
-    cur = _libsmbios_c.dell_smi_read_battery_mode_setting(location, ctypes.pointer(min), ctypes.pointer(max))
+    cur = ctypes.c_uint32(0)
+    _libsmbios_c.dell_smi_read_battery_mode_setting(location, ctypes.byref(cur), ctypes.byref(min), ctypes.byref(max))
     return (cur, min.value, max.value)
 __all__.append("read_battery_mode_setting")
 
 #int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
-_libsmbios_c.dell_smi_read_ac_mode_setting.argtypes = [ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_uint32)]
+_libsmbios_c.dell_smi_read_ac_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
 _libsmbios_c.dell_smi_read_ac_mode_setting.restype = ctypes.c_int
+_libsmbios_c.dell_smi_read_ac_mode_setting.argtypes = [
+        ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.POINTER(ctypes.c_uint32)]
 def read_ac_mode_setting(location):
     min = ctypes.c_uint32(0)
     max = ctypes.c_uint32(0)
-    cur = _libsmbios_c.dell_smi_read_ac_mode_setting(location, ctypes.pointer(min), ctypes.pointer(max))
+    cur = ctypes.c_uint32(0)
+    _libsmbios_c.dell_smi_read_ac_mode_setting(location, ctypes.byref(cur), ctypes.byref(min), ctypes.byref(max))
     return (cur, min.value, max.value)
 __all__.append("read_ac_mode_setting")
 

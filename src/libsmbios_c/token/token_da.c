@@ -73,6 +73,8 @@ static int _da_is_active(const struct token_obj *t)
     int ret = false;
     u32 curVal=0;
     dell_smi_read_nv_storage(cast_token(t)->location, &curVal, 0, 0);
+    // TODO: get return value from fn above and save strerror output if != 0
+
     if (cast_token(t)->value == curVal)
         ret = true;
     return ret;
@@ -91,8 +93,9 @@ static int _da_activate(const struct token_obj *t)
     fnprintf("\n");
     union void_u16 indirect;
     indirect.ptr = t->private_data;
-    dell_smi_write_nv_storage(indirect.val, cast_token(t)->location, cast_token(t)->value);
-    return 0;
+    int retval = dell_smi_write_nv_storage(indirect.val, cast_token(t)->location, cast_token(t)->value, 0);
+    // TODO: need to run smi_strerror() here if retval != 0 and save error string
+    return retval;
 }
 
 static int _da_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)

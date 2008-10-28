@@ -43,9 +43,9 @@ int dell_smi_read_nv_storage         (u32 location, u32 *curValue, u32 *minValue
 int dell_smi_read_battery_mode_setting(u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
 int dell_smi_read_ac_mode_setting     (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
 
-int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value);
-int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);
-int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
+int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value, u32 *smiret);
+int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value, u32 *smiret);
+int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value, u32 *smiret);
 
 // password related functions
 enum { DELL_SMI_PASSWORD_ANY = 0, DELL_SMI_PASSWORD_USER = 9, DELL_SMI_PASSWORD_ADMIN = 10, DELL_SMI_PASSWORD_OWNER = 12 };
