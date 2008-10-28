@@ -106,14 +106,21 @@ class _token_table(ctypes.Structure): pass
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.token_table_strerror.argtypes = [ ctypes.POINTER(_token_table) ]
 _libsmbios_c.token_table_strerror.restype = ctypes.c_char_p
-def _strerror(obj):
+def _table_strerror(obj):
     return Exception(_libsmbios_c.token_table_strerror(obj))
+
+#const char *token_obj_strerror(const struct token_table *m);
+# define strerror first so we can use it in error checking other functions.
+_libsmbios_c.token_obj_strerror.argtypes = [ ctypes.POINTER(Token) ]
+_libsmbios_c.token_obj_strerror.restype = ctypes.c_char_p
+def _obj_strerror(obj):
+    return Exception(_libsmbios_c.token_obj_strerror(obj))
 
 #struct token_table *token_table_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.token_table_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.token_table_factory.restype = ctypes.POINTER(_token_table)
-_libsmbios_c.token_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _strerror(r))
+_libsmbios_c.token_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _table_strerror(r))
 
 #void   token_table_free(struct token_table *);
 _libsmbios_c.token_table_free.argtypes = [ ctypes.POINTER(_token_table) ]
@@ -141,11 +148,13 @@ _libsmbios_c.token_obj_is_bool.restype = ctypes.c_bool
 
 #bool  DLL_SPEC token_obj_is_active(const struct token_obj *);
 _libsmbios_c.token_obj_is_active.argtypes = [ ctypes.POINTER(Token) ]
-_libsmbios_c.token_obj_is_active.restype = ctypes.c_bool
+_libsmbios_c.token_obj_is_active.restype = ctypes.c_int
+_libsmbios_c.token_obj_is_active.errcheck = errorOnNegativeFN(lambda r,f,a: _table_strerror(a[0]))
 
 #int  DLL_SPEC token_obj_activate(const struct token_obj *);
 _libsmbios_c.token_obj_activate.argtypes = [ ctypes.POINTER(Token) ]
 _libsmbios_c.token_obj_activate.restype = ctypes.c_int
+_libsmbios_c.token_obj_activate.errcheck = errorOnNegativeFN(lambda r,f,a: _table_strerror(a[0]))
 
 #bool  DLL_SPEC token_obj_is_string(const struct token_obj *);
 _libsmbios_c.token_obj_is_string.argtypes = [ ctypes.POINTER(Token) ]
@@ -154,10 +163,12 @@ _libsmbios_c.token_obj_is_string.restype = ctypes.c_bool
 #char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);
 _libsmbios_c.token_obj_get_string.argtypes = [ ctypes.POINTER(Token), ctypes.POINTER(ctypes.c_size_t) ]
 _libsmbios_c.token_obj_get_string.restype = ctypes.c_void_p
+_libsmbios_c.token_obj_get_string.errcheck = errorOnNullPtrFN(lambda r,f,a: _table_strerror(a[0]))
 
 #int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);
 _libsmbios_c.token_obj_set_string.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.POINTER(ctypes.c_size_t) ]
 _libsmbios_c.token_obj_set_string.restype = ctypes.c_int
+_libsmbios_c.token_obj_set_string.errcheck = errorOnNegativeFN(lambda r,f,a: _table_strerror(a[0]))
 
 #const struct smbios_struct * DLL_SPEC token_obj_get_smbios_struct(const struct token_obj *);
 #_libsmbios_c.token_obj_get_smbios_struct.argtypes = [ ctypes.POINTER(Token), ]
