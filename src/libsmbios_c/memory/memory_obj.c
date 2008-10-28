@@ -90,8 +90,7 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
 
     // init_mem_* functions are responsible for free-ing memory if they return
     // failure
-    memset(toReturn, 0, sizeof(struct memory_access_obj));
-    memory_obj_free(toReturn);
+    toReturn->initialized = 0;
     toReturn = 0;
 
 out:
@@ -170,15 +169,15 @@ void memory_obj_free(struct memory_access_obj *m)
     clear_err(m);
     fnprintf("  m(%p)  singleton(%p)\n", m, &singleton);
     if (!m) goto out;
+    if (m->cleanup)
+        m->cleanup(m);
     if (m != &singleton)
     {
         if (m->free)
             m->free(m);
+        memset(m, 0, sizeof(*m)); // big hammer
         free(m);
     }
-    else
-        if (m->cleanup)
-            m->cleanup(m);
 out:
     return;
 }

@@ -84,9 +84,9 @@ struct cmos_access_obj *cmos_obj_factory(int flags, ...)
     if (ret==0)
         goto out;
 
-    // fail
-    cmos_obj_free(toReturn);
-    memset(&toReturn, 0, sizeof(*toReturn));
+    // fail. init_cmos_* functions are responsible for free-ing memory if they
+    // return failure.
+    toReturn->initialized = 0;
     toReturn = 0;
 
 out:
@@ -154,9 +154,6 @@ void __internal _cmos_obj_free(struct cmos_access_obj *m)
     struct callback *ptr = 0;
     struct callback *next = 0;
 
-    if (!m)
-        goto out;
-
     ptr = m->cb_list_head;
     // free callback list
     while(ptr)
@@ -180,8 +177,8 @@ void __internal _cmos_obj_free(struct cmos_access_obj *m)
     if(m->free)
         m->free(m);
 
-out:
-    free(m);  //free(0) is legal;
+    memset(m, 0, sizeof(*m)); // big hammer
+    free(m);
 }
 
 void cmos_obj_free(struct cmos_access_obj *m)

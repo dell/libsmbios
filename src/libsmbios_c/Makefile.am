@@ -4,7 +4,10 @@ lib_LTLIBRARIES += out/libsmbios_c.la
 out_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
 out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
 
-EXTRA_DIST += src/include/smbios_c
+EXTRA_DIST += src/include/smbios_c	\
+    src/libsmbios_c/memory/memory_ut.c
+
+# need to compile in memory_ut.c on windows (eventually)
 
 out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/common/common.c			\
@@ -28,7 +31,6 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/memory/memory_impl.h		\
     src/libsmbios_c/memory/memory_linux.c		\
     src/libsmbios_c/memory/memory_obj.c			\
-    src/libsmbios_c/memory/memory_ut.c			\
     src/libsmbios_c/memory/memory.c			\
     src/libsmbios_c/smbios/smbios.c			\
     src/libsmbios_c/smbios/smbios_impl.h		\

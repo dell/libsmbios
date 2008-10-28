@@ -238,8 +238,6 @@ static void linux_free(struct memory_access_obj *this)
     struct linux_data *private_data = (struct linux_data *)this->private_data;
     fnprintf("\n");
 
-    linux_cleanup(this);
-
     free(this->errstring);
     this->errstring = 0;
 
