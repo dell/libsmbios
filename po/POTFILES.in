@@ -1,9 +1,12 @@
-src/libsmbios_c/common/common.c
+src/bin/tokenCtl
 src/libsmbios_c/cmos/cmos_linux.c
 src/libsmbios_c/cmos/cmos_obj.c
+src/libsmbios_c/common/common.c
 src/libsmbios_c/memory/memory_linux.c
 src/libsmbios_c/memory/memory_obj.c
 src/libsmbios_c/smbios/smbios_obj.c
+src/libsmbios_c/smi/smi_linux.c
+src/libsmbios_c/smi/smi_obj.c
 src/libsmbios_c/token/token_d4.c
 src/libsmbios_c/token/token_obj.c
 src/python/libsmbios_c/cmos.py
@@ -14,4 +17,3 @@ src/python/libsmbios_c/smbios.py
 src/python/libsmbios_c/smi.py
 src/python/libsmbios_c/system_info.py
 src/python/libsmbios_c/token.py
-src/bin/tokenCtl
