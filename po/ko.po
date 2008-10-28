@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-28 02:43-0500\n"
+"POT-Creation-Date: 2008-10-28 09:16-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Korean\n"
@@ -191,6 +191,7 @@ msgstr ""
 
 #: src/libsmbios_c/memory/memory_linux.c:198
 #: src/libsmbios_c/memory/memory_linux.c:305
+#: src/libsmbios_c/smi/smi_linux.c:304
 msgid ""
 "\n"
 "The OS Error string was: "
@@ -243,15 +244,17 @@ msgstr ""
 msgid "Found table entry point but could not read table from memory. "
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_linux.c:299
-msgid "There was an error trying to perform the smi execute() cmd."
+#: src/libsmbios_c/smi/smi_linux.c:303
+msgid ""
+"There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' "
+"kernel module loaded?"
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_obj.c:289
+#: src/libsmbios_c/smi/smi_obj.c:290
 msgid "Failed to find appropriate SMBIOS 0xD4 structure."
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_obj.c:298
+#: src/libsmbios_c/smi/smi_obj.c:299
 msgid "Failed to allocate memory for error string."
 msgstr ""
 
