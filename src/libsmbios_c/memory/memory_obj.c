@@ -102,6 +102,8 @@ static void clear_err(const struct memory_access_obj *this)
 {
     if (this && this->errstring)
         memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 void  memory_obj_suggest_leave_open(struct memory_access_obj *this)

@@ -116,6 +116,8 @@ static void clear_err(const struct dell_smi_obj *this)
 {
     if (this && this->errstring)
         memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 const char *dell_smi_obj_strerror(struct dell_smi_obj *s)

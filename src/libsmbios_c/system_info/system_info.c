@@ -31,6 +31,8 @@
 #include "config.h"
 #endif
 
+static char *module_error_buf; // auto-init to 0
+
 const char *smbios_get_library_version_string()
 {
     return LIBSMBIOS_RELEASE_VERSION;
@@ -46,7 +48,6 @@ int smbios_get_library_version_minor()
     return LIBSMBIOS_RELEASE_MINOR;
 }
 
-static char *module_error_buf; // auto-init to 0
 __attribute__((destructor)) static void return_mem(void)
 {
     fnprintf("\n");
@@ -60,6 +61,12 @@ __internal char *sysinfo_get_module_error_buf()
     if (!module_error_buf)
         module_error_buf = calloc(1, ERROR_BUFSIZE);
     return module_error_buf;
+}
+
+__internal void sysinfo_clearerr()
+{
+    if (module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 void __internal strip_trailing_whitespace( char *str )
