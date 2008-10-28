@@ -68,12 +68,12 @@ u16  DLL_SPEC token_obj_get_id(const struct token_obj *);
 
 int  DLL_SPEC token_obj_get_type(const struct token_obj *);
 bool  DLL_SPEC token_obj_is_bool(const struct token_obj *);
-bool  DLL_SPEC token_obj_is_active(const struct token_obj *);
-int  DLL_SPEC token_obj_activate(const struct token_obj *);
+int  DLL_SPEC token_obj_is_active(const struct token_obj *);  // return 0,1 or negative error
+int  DLL_SPEC token_obj_activate(const struct token_obj *);   // return error
 
 bool  DLL_SPEC token_obj_is_string(const struct token_obj *);
-char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);
-int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);
+char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);  // return 0 on error
+int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);  // return error
 
 const struct smbios_struct * DLL_SPEC token_obj_get_smbios_struct(const struct token_obj *);
 int  DLL_SPEC token_obj_try_password(const struct token_obj *, const char *pass_ascii, const char *pass_scancode);

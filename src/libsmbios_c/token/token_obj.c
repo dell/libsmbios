@@ -168,8 +168,8 @@ const struct token_obj *token_table_get_next_by_id(const struct token_table *t, 
 
 make_token_obj_fn( int, 0, get_type )
 make_token_obj_fn( u16, 0, get_id )
-make_token_obj_fn( bool, 0, is_active )
-make_token_obj_fn( int, 0, activate )
+make_token_obj_fn( int, -1, is_active )
+make_token_obj_fn( int, -1, activate )
 make_token_obj_fn( bool, 0, is_bool )
 make_token_obj_fn( bool, 0, is_string )
 

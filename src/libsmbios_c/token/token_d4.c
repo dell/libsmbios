@@ -64,7 +64,7 @@ static int _d4_is_string(const struct token_obj *t)
 
 static int _d4_is_active(const struct token_obj *t)
 {
-    bool retval = false;
+    int retval = 0;
     u8 byte=0;
     int ret;
 
@@ -76,15 +76,21 @@ static int _d4_is_active(const struct token_obj *t)
                   cast_struct(t)->dataPort,
                   cast_token(t)->location
               );
-    if(ret<0) goto out_err;
+    if(ret<0) goto out_cmosfail;
 
     if( (byte & (~cast_token(t)->andMask)) == cast_token(t)->orValue  )
-        retval = true;
+        retval = 1;
 
     goto out;
 
+out_cmosfail:
+    strlcpy( t->errstring, _("error reading cmos. Lowlevel returned: \n"), ERROR_BUFSIZE );
+    strlcat( t->errstring, cmos_strerror(), ERROR_BUFSIZE);
+    retval = -3;
+    goto out;
+
 out_err:
-    // really should do something here.
+    retval = -2;
 
 out:
     return retval;
@@ -95,6 +101,7 @@ static int _d4_activate(const struct token_obj *t)
     int retval = -1;
     u8 byte = 0;
     int ret;
+    const char *error = _("Error trying to read cmos. Lowlevel returned: \n");
 
     if (! _d4_is_bool(t))
         goto out_err;
@@ -104,7 +111,7 @@ static int _d4_activate(const struct token_obj *t)
                   cast_struct(t)->dataPort,
                   cast_token(t)->location
               );
-    if(ret<0) goto out_err;
+    if(ret<0) goto out_cmosfail;
 
     byte = byte & cast_token(t)->andMask;
     byte = byte | cast_token(t)->orValue;
@@ -114,13 +121,20 @@ static int _d4_activate(const struct token_obj *t)
         cast_struct(t)->dataPort,
         cast_token(t)->location
         );
-    if(ret<0) goto out_err;
+    error = _("error trying to write cmos. Lowlevel returned: \n");
+    if(ret<0) goto out_cmosfail;
 
     retval = 0;
     goto out;
 
+out_cmosfail:
+    strlcpy( t->errstring, error, ERROR_BUFSIZE );
+    strlcat( t->errstring, cmos_strerror(), ERROR_BUFSIZE);
+    retval = -3;
+    goto out;
+
 out_err:
-    // really should do something here
+    retval = -2;
 
 out:
     return retval;
@@ -137,9 +151,8 @@ static char * _d4_get_string(const struct token_obj *t, size_t *len)
     u8 *retval = 0;
     size_t strSize = 0;
 
-    dbg_printf("_d4_get_string()\n");
+    fnprintf("\n");
 
-    dbg_printf("_d4_get_string() - is string?\n");
     if (! _d4_is_string(t))
         goto out_err;
 
@@ -147,24 +160,30 @@ static char * _d4_get_string(const struct token_obj *t, size_t *len)
     if(len)
         *len = strSize;
 
-    dbg_printf("_d4_get_string() - alloc string %ld bytes\n", strSize + 1);
+    fnprintf("alloc string %ld bytes\n", strSize + 1);
     retval = calloc(1, strSize+1);
     if (!retval)
         goto out_err;
 
     for (int i=0; i<strSize; ++i){
-        dbg_printf("_d4_get_string() - read byte %d/%ld\n", i+1, strSize);
+        fnprintf("read byte %d/%ld\n", i+1, strSize);
         int ret = cmos_read_byte(retval + i,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
                   cast_token(t)->location + i
               );
-        if(ret<0) goto out_err;
+        if(ret<0) goto out_cmosfail;
     }
     goto out;
 
+out_cmosfail:
+    fnprintf("out_cmosfail\n");
+    strlcpy( t->errstring, _("Error while trying to write cmos. Lowlevel error was:\n"), ERROR_BUFSIZE );
+    strlcat( t->errstring, cmos_strerror(), ERROR_BUFSIZE);
+    // fall through
+
 out_err:
-    dbg_printf("_d4_get_string() - out_err\n");
+    fnprintf("out_err\n");
     free(retval);
     retval = 0;
 
@@ -185,7 +204,6 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
     if (! _d4_is_string(t))
         goto out_err;
 
-    memset(targetBuffer, 0, strSize);
     memcpy( targetBuffer, str, size < strSize ? size : strSize );
 
     for (int i=0; i<strSize; ++i){
@@ -194,20 +212,26 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
                   cast_struct(t)->dataPort,
                   cast_token(t)->location + i
               );
-        if(ret<0) goto out_err;
+        if(ret<0) goto out_cmosfail;
     }
 
     goto out;
 
+out_cmosfail:
+    strlcpy( t->errstring, _("Error while trying to write cmos. Lowlevel error was:\n"), ERROR_BUFSIZE );
+    strlcat( t->errstring, cmos_strerror(), ERROR_BUFSIZE);
+    retval = -3;
+    goto out;
+
 out_err:
-    retval = -1;
+    retval = -2;
 
 out:
     free(targetBuffer);
     return retval;
 }
 
-void __internal init_d4_token(struct token_obj *t)
+void __internal init_d4_token(struct token_table *table, struct token_obj *t)
 {
     t->get_type = _d4_get_type;
     t->get_id = _d4_get_id;
@@ -221,6 +245,7 @@ void __internal init_d4_token(struct token_obj *t)
     t->set_string = _d4_set_string;
     t->try_password = 0;
     t->private_data = 0;
+    t->errstring = table->errstring;
 }
 
 int setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
@@ -295,7 +320,7 @@ int __internal add_d4_tokens(struct token_table *t)
 
             n->token_ptr = token;
             n->smbios_structure = s;
-            init_d4_token(n);
+            init_d4_token(t, n);
             add_token(t, n);
             token++;
         }
