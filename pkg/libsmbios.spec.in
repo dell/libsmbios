@@ -10,19 +10,26 @@
 # required by suse build system
 # norootforbuild
 
+# some distros already have fdupes macro. If not, we just set it to something innocuous
+%{?!fdupes: %define fdupes echo fdupes macro not defined for this distro. }
+
 %define cppunit_BR cppunit-devel
 %define doxygen_BR %{nil}
 %define valgrind_BR %{nil}
+%define fdupes_BR %{nil}
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
 # Fedora: fedora dist fc8 fc9
 %if 0%{?fedora_version} || 0%{?fedora}
     %define doxygen_BR doxygen
+    %define fdupes_BR hardlink
+    %define fdupes /usr/sbin/hardlink -c -v
 %endif
 
 # no doxygen in most suse versions base
-%if 0%{?suse_version}
+%if 0%{?suse_version} > 1020
     %define valgrind_BR valgrind
+    %define fdupes_BR fdupes
 %endif
 
 %if 0%{?sles_version}
@@ -37,8 +44,10 @@
     %define doxygen_BR doxygen
 %endif
 
-# per fedora python packaging guidelines
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+# per fedora and suse python packaging guidelines
+# suse: will define py_sitedir for us
+# fedora: use the !? code below to define when it isnt already
+%{!?py_sitedir: %define py_sitedir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name: %{package_name}
 Version: %{release_version}
@@ -49,9 +58,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: libxml2-devel python-devel
-#BuildRequires: %{valgrind_BR}
-BuildRequires: gcc-c++, gettext, %{doxygen_BR}, %{cppunit_BR}
+BuildRequires: libxml2-devel python-devel gcc-c++ gettext %{doxygen_BR} %{cppunit_BR} %{fdupes_BR} %{valgrind_BR}
 Provides: libsmbios = 0:%{version}-%{release}
 Provides: libsmbios-libs = 0:%{version}-%{release}
 # uncomment for official fedora
@@ -133,13 +140,13 @@ mkdir -p out/libsmbios_c++
 make -e %{?_smp_mflags}
 
 %check
-#if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-#    make -e valgrind
-#elif [ -d /usr/include/cppunit ]; then
-#    make -e check
-#else
-#    echo "Unit tests skipped due to missing cppunit."
-#fi
+if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
+    make -e valgrind
+elif [ -d /usr/include/cppunit ]; then
+    make -e check
+else
+    echo "Unit tests skipped due to missing cppunit."
+fi
 
 %install
 rm -rf %{buildroot}
@@ -156,6 +163,8 @@ ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 
 %find_lang libsmbios
 
+# hardlink files to save some space.
+%fdupes $RPM_BUILD_ROOT
 
 %clean
 rm -rf %{buildroot}
@@ -171,7 +180,7 @@ rm -rf %{buildroot}
 %files -n python-smbios
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
-%{python_sitelib}/*
+%{py_sitedir}/*
 
 %files -n libsmbios-devel
 %defattr(-,root,root,-)
