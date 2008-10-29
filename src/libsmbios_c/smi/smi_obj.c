@@ -280,7 +280,7 @@ int __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
     char *errbuf = 0;
     fnprintf("\n");
 
-    const char *error = _("Failed to find appropriate SMBIOS 0xD4 structure.");
+    const char *error = _("Failed to find appropriate SMBIOS 0xD4 structure.\n");
     struct smbios_struct *s = smbios_get_next_struct_by_type(0, 0xda);
     if (s) {
         smbios_struct_get_data(s, &(this->command_address), 4, sizeof(u16));
@@ -289,7 +289,7 @@ int __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
     else
         goto out_fail;
 
-    error = _("Failed to allocate memory for error string.");
+    error = _("Failed to allocate memory for error string.\n");
     this->errstring = calloc(1, ERROR_BUFSIZE);
     if (!this->errstring)
         goto out_fail;
