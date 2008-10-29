@@ -30,6 +30,12 @@ EXTERN_C_BEGIN;
 #define TOKEN_TYPE_D6  0xD6
 #define TOKEN_TYPE_DA  0xDA
 
+/** Returns string describing the last error condition.
+ * Can return 0. The buffer used is guaranteed to be valid until the next call
+ * to any token_* function. Copy the contents if you need it longer.
+ */
+const char * DLL_SPEC token_strerror();
+
 /** Return token type.
  * tokens can be 0xD4, 0xD5, 0xD6, or 0xDA tokens, depending on the smbios
  * table structure they come from.
@@ -42,9 +48,9 @@ int DLL_SPEC token_get_type(u16 id);
 bool DLL_SPEC token_is_bool(u16 id);
 
 /** Check if a boolean token is currently set.
- * @return true if token is active (set), false if otherwise
+ * @return -1 on error, 0 == false, 1 == true
  */
-bool DLL_SPEC token_is_active(u16 id);
+int DLL_SPEC token_is_active(u16 id);
 
 /** Activate a boolean token.
  * @return 0 on success, <0 on failure.
