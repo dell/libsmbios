@@ -27,33 +27,59 @@
 #include "smbios_c/obj/smi.h"
 #include "smbios_c/smi.h"
 
+//private
+#include "libsmbios_c_intlize.h"
+#include "internal_strl.h"
+#include "sysinfo_impl.h"
+
 // prepackaged smi functions
 #define PROPERTY_TAG_LEN 80
-int sysinfo_get_property_ownership_tag(char *tagBuf, size_t size)
+const char *sysinfo_get_property_ownership_tag()
 {
-    int retval = -2;
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    char *retval = 0;
+    const char *error = 0;
+    int ret=0;
+    char *errbuf=0;
+
+    sysinfo_clearerr();
     fnprintf("\n");
+
+    error = _("Could not instantiate SMI object.");
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     if (!smi)
-        goto out;
+        goto out_fail;
 
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
     dell_smi_obj_set_select(smi, 0); // 0 == read
     // allocate one extra byte to ensure it is zero terminated
+    error = _("SMI return buffer allocation failed.");
     u8 *buf = dell_smi_obj_make_buffer_frombios_auto(smi, cbARG1, PROPERTY_TAG_LEN + 1);
+    if (!buf)
+        goto out_fail;
 
     fnprintf("dell_smi_obj_execute()\n");
-    dell_smi_obj_execute(smi);
+    error = _("SMI execution failed.");
+    ret = dell_smi_obj_execute(smi);
+    if (ret != 0)
+        goto out_fail;
 
-    retval = dell_smi_obj_get_res(smi, cbRES1);
-    if (retval != 0)
-        goto out;
+    error = _("SMI did not complete successfully.");
+    ret = dell_smi_obj_get_res(smi, cbRES1);
+    if (ret != 0)
+        goto out_fail;
 
     fnprintf("copy to return value\n");
-    memset(tagBuf, 0, size);
-    strncpy(tagBuf, (const char*)buf, size); // strncpy with size guaranteed to be ok
-    tagBuf[size-1] = '\0';
-    fnprintf("tag: -->%s<--\n", tagBuf);
+    buf[PROPERTY_TAG_LEN] = '\0';  // protect against potentially buggy BIOS (shouldnt ever be non-null)
+    strip_trailing_whitespace((char *)buf);
+    retval = calloc(1, strlen((char*)buf)+1); // dont see how these could ever overflow, let me know if I'm wrong. :)
+    strcpy(retval, (const char*)buf);
+    fnprintf("tag: -->%s<--\n", retval);
+    goto out;
+
+out_fail:
+    errbuf = sysinfo_get_module_error_buf();
+    strlcpy(errbuf, error, ERROR_BUFSIZE);
+    strlcpy(errbuf, dell_smi_obj_strerror(smi), ERROR_BUFSIZE);
 
 out:
     fnprintf(" - out\n");
@@ -63,12 +89,14 @@ out:
 
 int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    sysinfo_clearerr();
+    struct dell_smi_obj *smi;
     u16 security_key = 0;
     const char *whichpw = pass_scancode;
     u8 *buf;
     int retval = -2;
 
+    smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     if (!smi)
         goto out;
 

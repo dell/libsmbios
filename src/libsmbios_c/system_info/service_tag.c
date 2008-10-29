@@ -285,6 +285,7 @@ char *sysinfo_get_service_tag()
     int numEntries =
         sizeof (DellGetServiceTagFunctions) / sizeof (DellGetServiceTagFunctions[0]);
 
+    sysinfo_clearerr();
     fnprintf("\n");
     for (int i = 0; (i < numEntries) && (!serviceTag); ++i)
     {

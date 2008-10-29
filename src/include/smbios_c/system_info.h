@@ -25,15 +25,6 @@
 
 EXTERN_C_BEGIN;
 
-//////////////////////////////////////////////////////////////////////////
-//
-// Stable API section.
-//
-// All of the functions in this section have a strong guarantee that we
-// will not break API compatibility.
-//
-//////////////////////////////////////////////////////////////////////////
-
 /** Return a string representing the version of the libsmbios library.
  * This string is statically allocated in the library, so there is no need to
  * free it when done.
@@ -84,6 +75,30 @@ char * DLL_SPEC sysinfo_get_bios_version();
  */
 char * DLL_SPEC sysinfo_get_asset_tag();
 
+/** Return a buffer containing the system service tag string.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing system service tag string. Deallocate
+ * with sysinfo_string_free() when done.
+ */
+char * DLL_SPEC sysinfo_get_service_tag();
+
+/** copy property ownership tag into user-supplied buffer.
+ * Return value *must* be de-allocated using sysinfo_string_free(), or memory
+ * will leak.
+ * @return pointer to buffer containing system property ownership tag string.
+ * Deallocate with sysinfo_string_free() when done.
+ */
+char * DLL_SPEC sysinfo_get_property_ownership_tag();
+
+/** Set system property ownership tag
+ * @param newTag buffer holding new tag
+ * @param pass_ascii    password as ascii bytes
+ * @param pass_scancode password as keyboard scancodes
+ * @return  0 on success, -1 general failure, -2 bad password
+ */
+int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode);
+
 /** set the system asset tag.
  * Note some systems store password in ascii and some store keyboard scancodes. Thus you must pass both.
  * @param assetTag  null-terminated new asset tag string
@@ -96,29 +111,11 @@ char * DLL_SPEC sysinfo_get_asset_tag();
  */
 int DLL_SPEC sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode);
 
-
-/** Return a buffer containing the system service tag string.
- * Return value *must* be de-allocated using sysinfo_string_free(), or memory
- * will leak.
- * @return pointer to buffer containing system service tag string. Deallocate
- * with sysinfo_string_free() when done.
+/** Returns string describing the last error condition.
+ * Can return 0. The buffer used is guaranteed to be valid until the next call
+ * to any sysinfo_* function. Copy the contents if you need it longer.
  */
-char * DLL_SPEC sysinfo_get_service_tag();
-
-/** copy property ownership tag into user-supplied buffer.
- * @param tagBuf  user must allocate 81-byte null-filled buffer to hold tag
- * @param size  indicates size of buffer. If smaller buffer is passed, result may be truncated
- * @return 0 on success
- */
-int DLL_SPEC sysinfo_get_property_ownership_tag(char *tagBuf, size_t size);
-
-/** Set system property ownership tag
- * @param newTag buffer holding new tag
- * @param pass_ascii    password as ascii bytes
- * @param pass_scancode password as keyboard scancodes
- * @return  0 on success, -1 general failure, -2 bad password
- */
-int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode);
+const char * DLL_SPEC sysinfo_strerror();
 
 /** Free string.
  * Use this function to deallocate the strings returned by other functions in

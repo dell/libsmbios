@@ -23,8 +23,6 @@
 #include "smbios_c/system_info.h" // this is the main header to include to use the C interface
 #include "getopts.h"
 
-#define PROP_TAG_SIZE 80
-
 struct options opts[] =
     {
         { 250, "set", "Set Dell Property Tag", "s", 1 },
@@ -73,9 +71,9 @@ main (int argc, char **argv)
         }
     }
 
-    char propertyTag[PROP_TAG_SIZE + 1] = { 0, };
-    sysinfo_get_property_ownership_tag(propertyTag, PROP_TAG_SIZE);
+    char *propertyTag = sysinfo_get_property_ownership_tag();
     printf("Existing Property Ownership Tag: %s\n", propertyTag);
+    sysinfo_string_free(propertyTag);
 
     if(new_tag)
     {

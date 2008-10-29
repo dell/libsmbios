@@ -35,16 +35,19 @@ static char *module_error_buf; // auto-init to 0
 
 const char *smbios_get_library_version_string()
 {
+    sysinfo_clearerr();
     return LIBSMBIOS_RELEASE_VERSION;
 }
 
 int smbios_get_library_version_major()
 {
+    sysinfo_clearerr();
     return LIBSMBIOS_RELEASE_MAJOR;
 }
 
 int smbios_get_library_version_minor()
 {
+    sysinfo_clearerr();
     return LIBSMBIOS_RELEASE_MINOR;
 }
 
@@ -60,6 +63,11 @@ __internal char *sysinfo_get_module_error_buf()
     fnprintf("\n");
     if (!module_error_buf)
         module_error_buf = calloc(1, ERROR_BUFSIZE);
+    return module_error_buf;
+}
+
+const char * sysinfo_strerror()
+{
     return module_error_buf;
 }
 
@@ -95,6 +103,7 @@ __internal char * smbios_struct_get_string_from_table(u8 type, u8 offset)
     const char *r;
     char *ret=0;
 
+    sysinfo_clearerr();
     s = smbios_get_next_struct_by_type(0, type);
     if (!s)
         goto out;

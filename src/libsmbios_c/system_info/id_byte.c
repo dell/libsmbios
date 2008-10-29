@@ -27,6 +27,7 @@
 #include "smbios_c/smbios.h"
 
 #include "dell_magic.h"
+#include "sysinfo_impl.h"
 
 //
 //
@@ -182,6 +183,7 @@ int sysinfo_get_dell_system_id()
     int numEntries =
         sizeof (DellIdByteFunctions) / sizeof (DellIdByteFunctions[0]);
 
+    sysinfo_clearerr();
     for (int i = 0; i < numEntries; ++i)
     {
         // first function to return non-zero id wins.

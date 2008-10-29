@@ -126,6 +126,7 @@ char *sysinfo_get_asset_tag()
     int numEntries =
         sizeof (DellAssetTagFunctions) / sizeof (DellAssetTagFunctions[0]);
 
+    sysinfo_clearerr();
     fnprintf("\n");
     for (int i = 0; (i < numEntries) && (!assetTag); ++i)
     {
@@ -236,6 +237,7 @@ int sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const ch
     int ret = -1;
     int numEntries = sizeof (DellSetAssetTagFunctions) / sizeof (DellSetAssetTagFunctions[0]);
 
+    sysinfo_clearerr();
     fnprintf("\n");
     for (int i = 0; (i < numEntries) && (ret != 0); ++i)
     {
