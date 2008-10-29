@@ -166,7 +166,6 @@ const char *memory_obj_strerror(const struct memory_access_obj *m)
 
 void memory_obj_free(struct memory_access_obj *m)
 {
-    clear_err(m);
     fnprintf("  m(%p)  singleton(%p)\n", m, &singleton);
     if (!m) goto out;
     if (m->cleanup)

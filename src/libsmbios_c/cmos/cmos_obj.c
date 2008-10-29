@@ -143,14 +143,12 @@ out:
 
 void __internal _cmos_obj_cleanup(struct cmos_access_obj *m)
 {
-    clear_err(m);
     if(m->cleanup)
         m->cleanup(m);
 }
 
 void __internal _cmos_obj_free(struct cmos_access_obj *m)
 {
-    clear_err(m);
     struct callback *ptr = 0;
     struct callback *next = 0;
 
@@ -183,7 +181,6 @@ void __internal _cmos_obj_free(struct cmos_access_obj *m)
 
 void cmos_obj_free(struct cmos_access_obj *m)
 {
-    clear_err(m);
     if (!m) goto out;
     _cmos_obj_cleanup(m);
     if (m != &singleton)

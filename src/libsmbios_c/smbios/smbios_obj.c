@@ -106,7 +106,6 @@ static void clear_err(const struct smbios_table *this)
 void smbios_table_free(struct smbios_table *m)
 {
     if (!m) goto out;
-    clear_err(m);
     if (m != &singleton)
         _smbios_table_free(m);
 
