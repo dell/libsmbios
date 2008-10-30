@@ -27,26 +27,28 @@
 %endif
 
 # no doxygen in most suse versions base
-%if 0%{?suse_version} <= 1020
+%define strace %{nil}
+%if 0%{?suse_version}
+%if 0%{?suse_version} > 1020
+    %define valgrind_BR valgrind strace
+    %define fdupes_BR fdupes
+    %define strace strace
+%else    # be careful with else as it will affect other distros
     %define cppunit_BR %{nil}
 %endif
-
-%if 0%{?suse_version} > 1020
-    %define valgrind_BR valgrind
-    %define fdupes_BR fdupes
 %endif
 
 %if 0%{?sles_version}
     %define valgrind_BR valgrind
 %endif
 
-%if 0%{?rhel_version} < 500
+%if 0%{?rhel_version}
+%if 0%{?rhel_version} >= 500
+    %define doxygen_BR doxygen
+%else    # be careful with else as it will affect other distros
     %define doxygen_BR doxygen
     %define cppunit_BR %{nil}
 %endif
-
-%if 0%{?rhel_version} >= 500
-    %define doxygen_BR doxygen
 %endif
 
 # per fedora and suse python packaging guidelines
@@ -133,6 +135,11 @@ chmod 755 src/cppunit/*.sh
 # this line lets us build an RPM directly from a git tarball
 [ -e ./configure ] || ./autogen.sh
 
+mkdir _build
+cd _build
+echo '../configure "$@"' > configure
+chmod +x ./configure
+
 export CXXFLAGS="%{optflags}"
 export CFLAGS="%{optflags}"
 export RELEASE_MAJOR=%{major}
@@ -145,12 +152,28 @@ mkdir -p out/libsmbios_c++
 make -e %{?_smp_mflags}
 
 %check
+runtest() {
+    mkdir $1$2
+    pushd $1$2
+    ../configure
+    make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
+    popd
+}
+
+if [ -d /usr/include/cppunit ]; then
+    # run this first since it is slightly faster than valgrind
+    VALGRIND="strace -f" runtest check strace
+fi
+
 if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-    make -e valgrind
-    make -e check
-elif [ -d /usr/include/cppunit ]; then
-    make -e check
-else
+    runtest valgrind
+fi
+
+if [ -d /usr/include/cppunit ]; then
+    runtest check
+fi
+
+if [ ! -d /usr/include/cppunit ]; then
     echo "Unit tests skipped due to missing cppunit."
 fi
 
@@ -158,11 +181,13 @@ fi
 rm -rf %{buildroot}
 mkdir %{buildroot}
 
+cd _build
+TOPDIR=..
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
-cp -a src/include/*  %{buildroot}/usr/include/
+cp -a $TOPDIR/src/include/*  %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
-find %{buildroot}/usr/include -exec touch -r configure.ac {} \;
+find %{buildroot}/usr/include -exec touch -r $TOPDIR/configure.ac {} \;
 
 # backwards compatible:
 ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
