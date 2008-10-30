@@ -219,7 +219,7 @@ int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset,
 {
     int retval = -1;
 
-    dbg_printf("smbios_struct_get_data(%p, %p, %d, %ld)\n", s, dest, offset, len);
+    fnprintf("(%p, %p, %d, %zd)\n", s, dest, offset, len);
 
     if (!s)
         goto out;

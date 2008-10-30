@@ -160,13 +160,13 @@ static char * _d4_get_string(const struct token_obj *t, size_t *len)
     if(len)
         *len = strSize;
 
-    fnprintf("alloc string %ld bytes\n", strSize + 1);
+    fnprintf("alloc string %zd bytes\n", strSize + 1);
     retval = calloc(1, strSize+1);
     if (!retval)
         goto out_err;
 
     for (int i=0; i<strSize; ++i){
-        fnprintf("read byte %d/%ld\n", i+1, strSize);
+        fnprintf("read byte %d/%zd\n", i+1, strSize);
         int ret = cmos_read_byte(retval + i,
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
