@@ -33,6 +33,7 @@ def MemoryAccess(flags=MEMORY_GET_SINGLETON, factory_args=None):
 class _MemoryAccess(object):
     _instance = None
     def __init__(self, *args):
+        self._memobj = None
         self._memobj = _libsmbios_c.memory_obj_factory(*args)
             
     def __del__(self):
