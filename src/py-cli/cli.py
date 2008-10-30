@@ -33,7 +33,7 @@ def setup_std_options(options):
     if options.password is not None:
         options.password_scancode = braindead_asc_to_scancode(options.password)
     options.password_ascii = options.password
-    if not options.raw:
+    if options.raw:
         options.password_scancode = options.password
 
 def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
