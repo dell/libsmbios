@@ -27,6 +27,10 @@
 %endif
 
 # no doxygen in most suse versions base
+%if 0%{?suse_version} <= 1020
+    %define cppunit_BR %{nil}
+%endif
+
 %if 0%{?suse_version} > 1020
     %define valgrind_BR valgrind
     %define fdupes_BR fdupes
@@ -36,11 +40,12 @@
     %define valgrind_BR valgrind
 %endif
 
-%if 0%{?rhel_version}
+%if 0%{?rhel_version} < 500
     %define doxygen_BR doxygen
+    %define cppunit_BR %{nil}
 %endif
 
-%if 0%{?centos_version}
+%if 0%{?rhel_version} >= 500
     %define doxygen_BR doxygen
 %endif
 
