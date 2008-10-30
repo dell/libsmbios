@@ -47,7 +47,7 @@ static int UT_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPor
     struct ut_data *private_data = (struct ut_data *)this->private_data;
     int retval = -1;
 
-    dbg_printf("%s %x %x %d\n", __PRETTY_FUNCTION__, indexPort, dataPort, offset);
+    fnprintf("%x %x %d\n", indexPort, dataPort, offset);
 
     // for unit testing, index into a file by indexPort
     offset = indexPort * 256 + offset;
@@ -55,7 +55,7 @@ static int UT_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPor
     if (!private_data->fd)
     {
         // fopen portable to Windows if "b" is added to mode.
-        dbg_printf("%s - reopen\n", __PRETTY_FUNCTION__);
+        fnprintf("reopen\n");
         private_data->rw=0;
         private_data->fd = fopen( private_data->filename, "rb" ); // open for read to start
         if (!private_data->fd)
@@ -63,18 +63,18 @@ static int UT_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPor
     }
 
     // FSEEK is a macro defined in config/ for portability
-    dbg_printf("%s - seek %d (%x)\n", __PRETTY_FUNCTION__, offset, offset);
+    fnprintf("seek %d (%x)\n", offset, offset);
     retval = -2;
     int ret = FSEEK(private_data->fd, offset, 0);
     if (ret)
         goto err_out;
 
-    dbg_printf("%s - read\n", __PRETTY_FUNCTION__);
+    fnprintf("read\n");
     size_t bytesRead = fread( byte, 1, 1, private_data->fd );
 
     // TODO: handle short reads
     retval = -3;
-    dbg_printf("%s - short? %ld\n", __PRETTY_FUNCTION__, bytesRead);
+    fnprintf("short? %zd\n", bytesRead);
     if ((1 != bytesRead))
         goto err_out;
 
@@ -90,7 +90,7 @@ out:
         fclose(private_data->fd);
         private_data->fd = 0;
     }
-    dbg_printf("%s - retval %d read\n", __PRETTY_FUNCTION__, retval);
+    fnprintf("retval %d read\n", retval);
     return retval;
 }
 
