@@ -222,8 +222,8 @@ rm -rf %{buildroot}
 %{_libdir}/libsmbios.so
 %{_libdir}/libsmbios_c.a
 %{_libdir}/libsmbios_c.so
-%doc out/libsmbios_c++
-%doc out/libsmbios_c
+%doc _build/out/libsmbios_c++
+%doc _build/out/libsmbios_c
 
 %files -n smbios-utils
 %defattr(-,root,root,-)
