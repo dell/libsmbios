@@ -15,6 +15,7 @@ pkgpython_PYTHON = \
 	src/python/libsmbios_c/token.py	\
 	src/python/_vars.py
 
+DISTCLEANFILES += ./src/python/_vars.py
 src/python/_vars.py: src/python/libsmbios_c/_vars.py  configure Makefile config.status
 	mkdir -p $$(dirname $@) ||:
 	cp $< $@

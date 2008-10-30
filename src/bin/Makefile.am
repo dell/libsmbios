@@ -33,11 +33,6 @@ sbin_PROGRAMS += out/serviceTag
 out_serviceTag_SOURCES = src/bin/serviceTag.cpp
 out_serviceTag_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
-# replaced by python program of same name
-#sbin_PROGRAMS += out/verifySmiPassword
-#out_verifySmiPassword_SOURCES = src/bin/verifySmiPassword.cpp
-#out_verifySmiPassword_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
 sbin_PROGRAMS += out/wakeupCtl
 out_wakeupCtl_SOURCES = src/bin/wakeupCtl.cpp
 out_wakeupCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
@@ -56,10 +51,6 @@ out_dellMediaDirectCtl_SOURCES = src/bin/dellMediaDirectCtl.cpp
 out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 endif
 
-noinst_PROGRAMS += out/dumpSmbios
-out_dumpSmbios_SOURCES = src/bin/dumpSmbios.cpp
-out_dumpSmbios_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
 # BAD BAD BAD programs....  (uses private headers)
 sbin_PROGRAMS += out/dellBiosUpdate
 out_dellBiosUpdate_SOURCES = src/bin/dellBiosUpdate.cpp
@@ -75,25 +66,6 @@ noinst_PROGRAMS += out/propertyTag_lite
 out_propertyTag_lite_SOURCES = src/bin/propertyTag_lite.c
 out_propertyTag_lite_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
 
-
-
-
-sbin_PROGRAMS += out/activateCmosToken
-out_activateCmosToken_SOURCES = src/bin/activateCmosToken.cpp
-out_activateCmosToken_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-noinst_PROGRAMS += out/disable_console_redir
-out_disable_console_redir_SOURCES = src/bin/disable_console_redir.cpp
-out_disable_console_redir_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-noinst_PROGRAMS += out/dumpCmos
-out_dumpCmos_SOURCES = src/bin/dumpCmos.cpp
-out_dumpCmos_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-sbin_PROGRAMS += out/isCmosTokenActive
-out_isCmosTokenActive_SOURCES = src/bin/isCmosTokenActive.cpp
-out_isCmosTokenActive_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
 noinst_PROGRAMS += out/smitest
 out_smitest_SOURCES = src/bin/smitest.cpp
 out_smitest_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
@@ -105,10 +77,6 @@ out_stateByteCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 sbin_PROGRAMS += out/upBootCtl
 out_upBootCtl_SOURCES = src/bin/upBootCtl.cpp
 out_upBootCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-sbin_PROGRAMS += out/getPasswordFormat
-out_getPasswordFormat_SOURCES = src/bin/getPasswordFormat.cpp
-out_getPasswordFormat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
 noinst_PROGRAMS += out/ascii2enUS_scancode
 out_ascii2enUS_scancode_SOURCES = src/bin/ascii2enUS_scancode.cpp
