@@ -22,6 +22,7 @@
 #include "smbios_c/compat.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 // public
 #include "smbios_c/obj/smi.h"
@@ -89,40 +90,64 @@ out:
 
 int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
-    sysinfo_clearerr();
     struct dell_smi_obj *smi;
     u16 security_key = 0;
     const char *whichpw = pass_scancode;
     u8 *buf;
-    int retval = -2;
+    const char *error = 0;
+    char *errbuf;
+    int retval = -2, ret;
 
-    smi = dell_smi_factory(DELL_SMI_DEFAULTS);
-    if (!smi)
-        goto out;
-
+    sysinfo_clearerr();
     fnprintf(" new tag request: '%s'\n", newTag);
 
+    error = _("Could not instantiate SMI object.");
+    smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    if (!smi)
+        goto out_fail;
+
+    fnprintf(" get security key\n");
     if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
         whichpw=pass_ascii;
-    int ret = dell_smi_get_security_key(whichpw, &security_key);
-    if (ret)  // bad password
-        goto out;
+    ret = dell_smi_get_security_key(whichpw, &security_key);
+    switch (ret) {
+        case -1:
+            error = _("Could not validate password.");
+            goto out_fail;
+        case -2:
+            error = _("SMI did not complete successfully.\n");
+            goto out_fail;
+    }
 
+    fnprintf(" setup smi\n");
     dell_smi_obj_set_class(smi, 20); //class 20 == property tag
     dell_smi_obj_set_select(smi, 1); // 1 == write
-    buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, PROPERTY_TAG_LEN); // max property tag size
     dell_smi_obj_set_arg(smi, cbARG2, security_key);
+    buf = dell_smi_obj_make_buffer_tobios(smi, cbARG1, PROPERTY_TAG_LEN); // max property tag size
+    error = _("SMI return buffer allocation failed.");
+    if (!buf)
+        goto out_fail;
     strncpy((char *)buf, newTag, PROPERTY_TAG_LEN);
 
     fnprintf("dell_smi_obj_execute()\n");
-    dell_smi_obj_execute(smi);
+    error = _("SMI did not complete successfully.\n");
+    ret = dell_smi_obj_execute(smi);
+    if (ret != 0)
+        goto out_fail;
 
     retval = dell_smi_obj_get_res(smi, cbRES1);
+    goto out;
 
-    fnprintf(" - out\n");
-    dell_smi_obj_free(smi);
+out_fail:
+    errbuf = sysinfo_get_module_error_buf();
+    strlcpy(errbuf, error, ERROR_BUFSIZE);
+    strlcat(errbuf, dell_smi_obj_strerror(smi), ERROR_BUFSIZE);
+    fnprintf(" out_fail: %d, '%s', '%s'\n", retval, error, dell_smi_obj_strerror(smi));
+    fnprintf(" errbuf: %p == %s\n", errbuf, errbuf);
 
 out:
+    fnprintf(" - out\n");
+    dell_smi_obj_free(smi);
     return retval;
 }
 
