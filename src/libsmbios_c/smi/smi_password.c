@@ -271,7 +271,7 @@ done:
 
 int password_installed(int which)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     fnprintf("\n");
 
     dell_smi_obj_set_class(smi, which);
@@ -285,7 +285,7 @@ int password_installed(int which)
 
 int verify_password(int which, const char *password_scancodes, u16 *security_key)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     u32 arg[2] = {0,};
     fnprintf("\n");
 
@@ -313,7 +313,7 @@ int verify_password(int which, const char *password_scancodes, u16 *security_key
 
 int change_password(int which, const char *oldpw_scancode, const char *newpw_scancode)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     u32 arg[4] = {0,};
     fnprintf("\n");
 
@@ -348,12 +348,17 @@ int change_password(int which, const char *oldpw_scancode, const char *newpw_sca
 
 int get_password_properties_2(int which, struct smi_password_properties *p)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
     int retval = -10;
-    fnprintf("\n");
+    struct dell_smi_obj *smi = 0;
 
+    fnprintf("\n");
     if (!p)
         goto out;
+
+    smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+
+    if (!smi)
+        goto out_free;
 
     dell_smi_obj_set_class(smi, which);
     dell_smi_obj_set_select(smi, SMI_SELECT_GET_PASSWORD_PROPERTIES_II);
@@ -361,7 +366,7 @@ int get_password_properties_2(int which, struct smi_password_properties *p)
     dell_smi_obj_execute(smi);
     retval = dell_smi_obj_get_res(smi, cbRES1);
     if (retval != 0)
-        goto out;
+        goto out_free;
 
     getbyte(installed, 0, dell_smi_obj_get_res(smi, cbRES2));
     getbyte(maxlen, 1, dell_smi_obj_get_res(smi, cbRES2));
@@ -373,14 +378,17 @@ int get_password_properties_2(int which, struct smi_password_properties *p)
     getbyte(minspecial, 2, dell_smi_obj_get_res(smi, cbRES3));
     getbyte(maxrepeat, 3, dell_smi_obj_get_res(smi, cbRES3));
 
-out:
+out_free:
+    fnprintf("out_free\n");
     dell_smi_obj_free(smi);
+out:
+    fnprintf("out\n");
     return retval;
 }
 
 int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *security_key)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     fnprintf("\n");
 
     dell_smi_obj_set_class(smi, which);
@@ -404,7 +412,7 @@ int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *sec
 
 int change_password_2(int which, const char *oldpw, const char *newpw, size_t maxpwlen)
 {
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     fnprintf("\n");
 
     dell_smi_obj_set_class(smi, which);
