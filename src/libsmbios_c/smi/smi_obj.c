@@ -61,6 +61,7 @@ static char *smi_get_module_error_buf()
 
 static void clear_err(const struct dell_smi_obj *this)
 {
+    fnprintf("\n");
     if (this && this->errstring)
         memset(this->errstring, 0, ERROR_BUFSIZE);
     if(module_error_buf)
@@ -99,10 +100,11 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
         ret = init_dell_smi_obj(toReturn);
     }
 
-    if (!ret)
+    if (ret == 0)
         goto out;
 
     // failed
+    fnprintf("failed\n");
     toReturn->initialized = 0;
     toReturn = 0;
 
