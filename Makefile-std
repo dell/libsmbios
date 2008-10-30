@@ -34,13 +34,14 @@ ChangeLog:
 AUTHORS:
 	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
-export GETTEXT_PACKAGE RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
+REPLACE_VARS=GETTEXT_PACKAGE RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
+export $(REPLACE_VARS)
 
 DATA_HOOK_REPLACE=
 install-data-hook:
 	for i in $(DATA_HOOK_REPLACE); do      \
 	    file=$(DESTDIR)/$$i                     ;\
-	    for var in RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir;\
+	    for var in $(REPLACE_VARS)	;\
 	    do	\
 	        perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $$file;\
 	    done	;\
@@ -50,7 +51,7 @@ EXEC_HOOK_REPLACE=
 install-exec-hook:
 	for i in $(EXEC_HOOK_REPLACE); do      \
 	    file=$(DESTDIR)/$$i                     ;\
-	    for var in RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir;\
+	    for var in $(REPLACE_VARS)	;\
 	    do	\
 	        perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $$file;\
 	    done	;\
