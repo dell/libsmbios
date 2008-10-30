@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-30 01:57-0500\n"
+"POT-Creation-Date: 2008-10-30 15:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,7 +173,7 @@ msgid ""
 "There was an allocation failure while trying to construct the cmos object."
 msgstr ""
 
-#: src/libsmbios_c/common/common.c:19
+#: src/libsmbios_c/common/common.c:15
 msgid ""
 "This message should be localized if setlocale() has been called and gettext "
 "compiled in.\n"
