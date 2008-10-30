@@ -1,0 +1,55 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2005 Dell Computer Corporation
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""dumpCmos"""
+
+from __future__ import generators
+
+# import arranged alphabetically
+import gettext
+import locale
+import os
+import sys
+import traceback
+
+# the following vars are all substituted on install
+# this bin isnt byte-compiled, so this is ok
+RELEASE_VERSION="uninstalled-version"
+GETTEXT_PACKAGE="libsmbios" #replaced
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
+# end vars
+
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
+__VERSION__=RELEASE_VERSION
+
+import cli
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+class CmdlineError(Exception): pass
+
+def command_parse():
+    parser = cli.getStdOptionParser(usage=__doc__, version=__VERSION__)
+    return parser.parse_args()
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+
+    return exit_code
+
+if __name__ == "__main__":
+    sys.exit( main() )
+

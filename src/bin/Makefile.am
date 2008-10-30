@@ -14,6 +14,9 @@ DATA_HOOK_REPLACE += $(sbindir)/tokenCtl
 pkgdatadir = $(datadir)/smbios-utils
 nodist_pkgdata_DATA = doc/token_list.csv doc/token_blacklist.csv
 
+dist_sbin_SCRIPTS += src/bin/verifySmiPassword
+DATA_HOOK_REPLACE += $(sbindir)/verifySmiPassword
+
 sbin_PROGRAMS += out/assetTag
 out_assetTag_SOURCES = src/bin/assetTag.cpp 
 out_assetTag_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
@@ -30,9 +33,10 @@ sbin_PROGRAMS += out/serviceTag
 out_serviceTag_SOURCES = src/bin/serviceTag.cpp
 out_serviceTag_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
-sbin_PROGRAMS += out/verifySmiPassword
-out_verifySmiPassword_SOURCES = src/bin/verifySmiPassword.cpp
-out_verifySmiPassword_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
+# replaced by python program of same name
+#sbin_PROGRAMS += out/verifySmiPassword
+#out_verifySmiPassword_SOURCES = src/bin/verifySmiPassword.cpp
+#out_verifySmiPassword_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
 sbin_PROGRAMS += out/wakeupCtl
 out_wakeupCtl_SOURCES = src/bin/wakeupCtl.cpp
