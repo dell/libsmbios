@@ -33,18 +33,19 @@ def CmosAccess(flags=CMOS_GET_SINGLETON, factory_args=None):
 class _CmosAccess(object):
     _instance = None
     def __init__(self, *args):
-        self._memobj = _libsmbios_c.cmos_obj_factory(*args)
+        self._cmosobj = None
+        self._cmosobj = _libsmbios_c.cmos_obj_factory(*args)
 
     def __del__(self):
-        _libsmbios_c.cmos_obj_free(self._memobj)
+        _libsmbios_c.cmos_obj_free(self._cmosobj)
 
     def readByte(self, offset, indexPort, dataPort):
         buf = ctypes.c_uint8
-        _libsmbios_c.cmos_obj_read(self._memobj, buf, offset, length)
+        _libsmbios_c.cmos_obj_read(self._cmosobj, buf, offset, length)
         return buf
 
     def writeByte(self, offset, indexPort, dataPort):
-        _libsmbios_c.cmos_obj_write(self._memobj, buf, offset, len(buf))
+        _libsmbios_c.cmos_obj_write(self._cmosobj, buf, offset, len(buf))
 
 
 
