@@ -30,10 +30,12 @@ GETTEXT_PACKAGE="libsmbios" #replaced
 pkgdatadir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "doc")
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
 localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
 # end vars
 
 # import all local modules after this.
 sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
 TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
@@ -42,12 +44,13 @@ locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
 import libsmbios_c.token as tok
+import cli
 
 class CmdlineError(Exception): pass
 class BlacklistedToken(Exception): pass
 
 def command_parse():
-    parser = OptionParser(usage=__doc__, version=__VERSION__)
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
 
     parser.add_option("-d", '--dump-tokens', action="store_const", dest="action",
                       help= _("Action: dump token table"), const="dump-tokens", default="dump-tokens")
@@ -83,22 +86,12 @@ def command_parse():
     parser.add_option("-s", '--token-setting', action="store", dest="token_setting",
                       help=_("Filter only token with setting."), default=None)
 
-
-    parser.add_option('--password', action="store", dest="password",
-                      help=_("BIOS Setup password for set/activate operations."))
-    parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
-                      help=_("Do not auto-convert password to scancodes."))
-
     parser.add_option('--token-csv', action="append", type="string", dest="token_csv",
                       help=_("path to the token.csv file."), default=[TOKENLIST_CSV,])
     parser.add_option('--token-blacklist-csv', action="append", dest="token_blacklist_csv",
                       help=_("Path to token blacklist file."), default=[TOKENBLACKLIST_CSV])
-    parser.add_option('--memory-dat', action="store", type="string", dest="memory_dat",
-                      help=_("Path to a memory dump file to use instead of real RAM"),
-                      default=None)
-    parser.add_option('--cmos-dat', action="store", type="string", dest="cmos_dat",
-                      help=_("Path to a CMOS dump file to use instead of real CMOS"),
-                      default=None)
+
+    cli.addStdOptions(parser)
     return parser.parse_args()
 
 class CommentedFile:
@@ -198,34 +191,6 @@ def tokenInfo(tokenObj, action):
 
     return (exit_code, type, value)
 
-def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
-    sys.stdout.write(" "*first_line_indent)
-    chars_printed = first_line_start
-    for c in s:
-        sys.stdout.write(c)
-        chars_printed = chars_printed + 1
-        if chars_printed > line_len:
-            sys.stdout.write("\n")
-            chars_printed=indent
-            sys.stdout.write(" "*indent)
-
-def makePrintable(s):
-    printable = 1
-    for ch in s:
-        if ch not in string.printable:
-            printable=0
-
-    if printable:
-        return s
-
-    else:
-        retstr=""
-        i = 0
-        for ch in s:
-            i = i+1
-            retstr = retstr + "0x%02x" % ord(ch)
-        return retstr
-
 def dumpTokens(tokenTable, tokenXlator, options):
      for token in tokenTable:
         try:
@@ -250,13 +215,13 @@ def dumpTokens(tokenTable, tokenXlator, options):
 
         try:
             (e, type, value) = tokenInfo(token, "dump-tokens")
-            print _("  value: %s = %s") % (type, makePrintable(value))
+            print _("  value: %s = %s") % (type, cli.makePrintable(value))
         except RuntimeError, e:
             pass
 
         desc = _("   Desc: ")
         sys.stdout.write(desc)
-        wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
+        cli.wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
         print
 
 def getTokenObj(tokenTable, tokenXlator, options):
@@ -285,14 +250,7 @@ def getTokenObj(tokenTable, tokenXlator, options):
 def main():
     exit_code = 0
     (options, args) = command_parse()
-
-    if options.memory_dat is not None:
-        import libsmbios_c.memory as mem
-        mem.MemoryAccess( flags= mem.MEMORY_GET_SINGLETON | mem.MEMORY_UNIT_TEST_MODE, factory_args=(options.memory_dat,))
-
-    if options.cmos_dat is not None:
-        import libsmbios_c.cmos as cmos
-        cmos.CmosAccess( flags= cmos.CMOS_GET_SINGLETON | cmos.CMOS_UNIT_TEST_MODE, factory_args=(options.cmos_dat,))
+    cli.setup_std_options(options)
 
     tokenXlator = TokenTranslatorCsv(csvlist=options.token_csv, csvblacklist=options.token_blacklist_csv)
 
@@ -308,7 +266,7 @@ def main():
         (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
         print _("Original Values")
         print _("        type: %s") % type
-        print _("       value: %s") % makePrintable(value)
+        print _("       value: %s") % cli.makePrintable(value)
         print
         print _("Setting string value ...")
         tokenObj.setString(args[0])
@@ -320,7 +278,7 @@ def main():
         (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
         print _("Original Values")
         print _("        type: %s") % type
-        print _("       value: %s") % makePrintable(value)
+        print _("       value: %s") % cli.makePrintable(value)
         print
         print _("Activating token...")
         tokenObj.activate()
@@ -330,7 +288,7 @@ def main():
     if options.action in ("is-bool", "is-string", "is-active", "get-string", "dump-tokens"):
         (exit_code, type, value) = tokenInfo(tokenObj, options.action)
         print _("        type: %s") % type
-        print _("       value: %s") % makePrintable(value)
+        print _("       value: %s") % cli.makePrintable(value)
 
     return exit_code
 

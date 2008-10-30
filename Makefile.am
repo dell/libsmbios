@@ -33,6 +33,7 @@ include Makefile-std
 include src/libsmbios_c++/Makefile.am
 include src/libsmbios_c/Makefile.am
 include src/python/Makefile.am
+include src/py-cli/Makefile.am
 include src/bin/Makefile.am
 include src/cppunit/Makefile.am
 
