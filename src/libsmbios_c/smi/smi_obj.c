@@ -103,8 +103,7 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
         goto out;
 
     // failed
-    dell_smi_obj_free(toReturn);
-    memset(toReturn, 0, sizeof(struct dell_smi_obj));
+    toReturn->initialized = 0;
     toReturn = 0;
 
 out:
