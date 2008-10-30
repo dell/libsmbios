@@ -41,6 +41,7 @@ def DellSmi(flags=DELL_SMI_GET_NEW, *args):
 class _DellSmi(object):
     _instance = None
     def __init__(self, *args, **kargs):
+        self._smiobj = None
         self._smiobj = _libsmbios_c.dell_smi_factory(*args)
         self.bufs = [0,0,0,0]
 
@@ -256,7 +257,7 @@ def _obj_strerror(obj):
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.dell_smi_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.dell_smi_factory.restype = ctypes.POINTER(_dell_smi_obj)
-_libsmbios_c.dell_smi_factory.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(r))
+_libsmbios_c.dell_smi_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _obj_strerror(r))
 
 #void dell_smi_obj_free(struct dell_smi_obj *);
 _libsmbios_c.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
