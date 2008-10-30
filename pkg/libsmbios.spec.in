@@ -203,7 +203,7 @@ rm -rf %{buildroot}
 %post   -n %{package_name}   -p /sbin/ldconfig
 %postun -n %{package_name}   -p /sbin/ldconfig
 
-%files -n %{package_name} -f libsmbios.lang
+%files -n %{package_name} -f _build/libsmbios.lang
 %defattr(-,root,root,-)
 %{_libdir}/libsmbios_c.so.*
 %{_libdir}/libsmbios.so.*
