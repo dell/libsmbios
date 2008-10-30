@@ -90,7 +90,7 @@ int dell_smi_get_security_key(const char *password, u16 *key)
 {
     int tmpret;
     u16 security_key = 0;
-    int return_code = 0;
+    int return_code = -2;
 
     int pass_to_check[] = {DELL_SMI_PASSWORD_ADMIN, DELL_SMI_PASSWORD_USER};
     int numpass = sizeof(pass_to_check)/sizeof(pass_to_check[0]);
@@ -109,12 +109,18 @@ int dell_smi_get_security_key(const char *password, u16 *key)
         // if function succeeded and password *not* installed, skip
         fnprintf("after get_password_properties_2: tmpret(%d)  p.installed(%d)\n", tmpret, p.installed);
         if (tmpret == 0 && p.installed != 0)
+        {
+            return_code = 0;
             continue;
+        }
 
         tmpret = password_installed(which);
         fnprintf("after password_installed: tmpret(%d)\n", tmpret);
         if (!(tmpret == 0 || tmpret == 2))
+        {
+            return_code = 0;
             continue;
+        }
 
         // step 2a: verify admin password (new method)
         tmpret = verify_password_2(which, password, p.maxlen, &security_key);
