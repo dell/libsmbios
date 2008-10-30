@@ -4,6 +4,11 @@
 #    define inb_p  inb
 #endif
 
+// required for compile on RHEL4. fseeko not defined unless we use this
+#ifndef _LARGEFILE_SOURCE
+#define _LARGEFILE_SOURCE
+#endif
+
 // Enable 64-bit file access
 #ifndef FSEEK
 #define FSEEK(fh, pos, whence) fseeko(fh, (off_t)(pos), whence)

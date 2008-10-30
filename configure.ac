@@ -75,6 +75,7 @@ AC_FUNC_MALLOC
 AC_FUNC_MEMCMP
 AC_FUNC_MMAP
 AC_FUNC_FSEEKO
+AC_SYS_LARGEFILE  # needed for rhel4 compile
 AC_CHECK_FUNCS([strlcpy strlcat getpagesize memmove memset munmap strerror strndup strtol strtoul])
 
 dnl Check for doxygen support
