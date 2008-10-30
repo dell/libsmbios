@@ -153,8 +153,8 @@ make -e %{?_smp_mflags}
 
 %check
 runtest() {
-    mkdir $1$2
-    pushd $1$2
+    mkdir _$1$2
+    pushd _$1$2
     ../configure
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
     popd
