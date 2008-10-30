@@ -59,6 +59,13 @@ static char *smi_get_module_error_buf()
     return module_error_buf;
 }
 
+static void clear_err(const struct dell_smi_obj *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
+}
 
 struct dell_smi_obj *dell_smi_factory(int flags, ...)
 {
@@ -101,6 +108,8 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
     toReturn = 0;
 
 out:
+    if (toReturn)
+        clear_err(toReturn);
     return toReturn;
 }
 
@@ -110,14 +119,6 @@ void dell_smi_obj_free(struct dell_smi_obj *m)
     fnprintf("\n");
     if (m && m != &singleton)
         _smi_free(m);
-}
-
-static void clear_err(const struct dell_smi_obj *this)
-{
-    if (this && this->errstring)
-        memset(this->errstring, 0, ERROR_BUFSIZE);
-    if(module_error_buf)
-        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 const char *dell_smi_obj_strerror(struct dell_smi_obj *s)

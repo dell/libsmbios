@@ -54,6 +54,14 @@ char *memory_get_module_error_buf()
     return module_error_buf;
 }
 
+static void clear_err(const struct memory_access_obj *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
+}
+
 struct memory_access_obj *memory_obj_factory(int flags, ...)
 {
     va_list ap;
@@ -94,15 +102,9 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     toReturn = 0;
 
 out:
+    if (toReturn)
+        clear_err(toReturn);
     return toReturn;
-}
-
-static void clear_err(const struct memory_access_obj *this)
-{
-    if (this && this->errstring)
-        memset(this->errstring, 0, ERROR_BUFSIZE);
-    if(module_error_buf)
-        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 void  memory_obj_suggest_leave_open(struct memory_access_obj *this)

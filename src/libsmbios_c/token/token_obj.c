@@ -59,6 +59,14 @@ __internal char *token_get_module_error_buf()
     return module_error_buf;
 }
 
+static void clear_err(const struct token_table *table)
+{
+    fnprintf("\n");
+    if(table && table->errstring)
+        memset(table->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
+}
 
 struct token_table *token_table_factory(int flags, ...)
 {
@@ -88,6 +96,8 @@ struct token_table *token_table_factory(int flags, ...)
     toReturn = 0;
 
 out:
+    if (toReturn)
+        clear_err(toReturn);
     return toReturn;
 }
 
@@ -99,13 +109,6 @@ void token_table_free(struct token_table *m)
         _token_table_free(m);
 
     // can do special cleanup for singleton, but none necessary atm
-}
-
-void token_table_clearerr(const struct token_table *table)
-{
-    fnprintf("\n");
-    if(table && table->errstring)
-        memset(table->errstring, 0, ERROR_BUFSIZE);
 }
 
 const char * token_table_strerror(const struct token_table *table)

@@ -53,6 +53,13 @@ char *cmos_get_module_error_buf()
     return module_error_buf;
 }
 
+static void clear_err(const struct cmos_access_obj *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
+}
 
 struct cmos_access_obj *cmos_obj_factory(int flags, ...)
 {
@@ -90,6 +97,8 @@ struct cmos_access_obj *cmos_obj_factory(int flags, ...)
     toReturn = 0;
 
 out:
+    if (toReturn)
+        clear_err(toReturn);
     return toReturn;
 }
 
@@ -101,14 +110,6 @@ const char *cmos_obj_strerror(const struct cmos_access_obj *m)
     else
         retval = module_error_buf;
     return retval;
-}
-
-static void clear_err(const struct cmos_access_obj *this)
-{
-    if (this && this->errstring)
-        memset(this->errstring, 0, ERROR_BUFSIZE);
-    if(module_error_buf)
-        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 int  cmos_obj_read_byte(const struct cmos_access_obj *m, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)

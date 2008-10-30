@@ -58,6 +58,14 @@ static char *smbios_get_module_error_buf()
     return module_error_buf;
 }
 
+static void clear_err(const struct smbios_table *this)
+{
+    if (this && this->errstring)
+        memset(this->errstring, 0, ERROR_BUFSIZE);
+    if(module_error_buf)
+        memset(module_error_buf, 0, ERROR_BUFSIZE);
+}
+
 struct smbios_table *smbios_table_factory(int flags, ...)
 {
     struct smbios_table *toReturn = 0;
@@ -92,15 +100,9 @@ out_init_fail:
     toReturn = 0;
 
 out:
+    if (toReturn)
+        clear_err(toReturn);
     return toReturn;
-}
-
-static void clear_err(const struct smbios_table *this)
-{
-    if (this && this->errstring)
-        memset(this->errstring, 0, ERROR_BUFSIZE);
-    if(module_error_buf)
-        memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
 void smbios_table_free(struct smbios_table *m)
