@@ -1,3 +1,4 @@
+src/bin/verifySmiPassword
 src/bin/tokenCtl
 src/libsmbios_c/cmos/cmos_linux.c
 src/libsmbios_c/cmos/cmos_obj.c
