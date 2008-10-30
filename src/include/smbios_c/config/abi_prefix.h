@@ -12,7 +12,7 @@
 # error double inclusion of header smbios_c/config/abi_prefix.h is an error
 #endif
 
-#include <smbios_c/config/config.h>
+#include <smbios_c/config/get_config.h>
 
 // this must occur after all other includes and before any code appears:
 #ifdef LIBSMBIOS_C_HAS_ABI_HEADERS

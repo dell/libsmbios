@@ -20,7 +20,7 @@
 #ifndef LIBSMBIOS_C_COMPAT_H_INCLUDED
 #define LIBSMBIOS_C_COMPAT_H_INCLUDED
 
-#include "smbios_c/config/config.h"
+#include "smbios_c/config/get_config.h"
 #include "smbios_c/config/auto_link.h"
 
 #ifdef LIBSMBIOS_C_SOURCE

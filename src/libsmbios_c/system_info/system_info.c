@@ -27,10 +27,6 @@
 #include "dell_magic.h"
 #include "sysinfo_impl.h"
 
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 static char *module_error_buf; // auto-init to 0
 
 const char *smbios_get_library_version_string()

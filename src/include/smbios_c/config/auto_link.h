@@ -23,7 +23,7 @@
 
 #ifdef __cplusplus
 #  ifndef LIBSMBIOS_C_CONFIG_H
-#     include "smbios_c/config/config.h"
+#     include "smbios_c/config/get_config.h"
 #  endif
 #elif defined(_MSC_VER) && !defined(__MWERKS__) && !defined(__EDG_VERSION__)
 /*

@@ -1,7 +1,3 @@
-#if HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #define LIBSMBIOS_C_SOURCE
 #include "libsmbios_c_intlize.h"
 

@@ -18,6 +18,10 @@
 #ifndef LIBSMBIOS_C_INTERNAL_CONFIG_H
 #define LIBSMBIOS_C_INTERNAL_CONFIG_H
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 // if we don't have a compiler config set, try and find one:
 #if !defined(LIBSMBIOS_C_INTERNAL_COMPILER_CONFIG) && !defined(LIBSMBIOS_C_INTERNAL_NO_COMPILER_CONFIG) && !defined(LIBSMBIOS_C_INTERNAL_NO_CONFIG)
 #  include <select_compiler_config.h>
