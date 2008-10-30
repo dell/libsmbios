@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-28 09:16-0500\n"
-"PO-Revision-Date: 2008-10-28 09:16-0500\n"
+"POT-Creation-Date: 2008-10-30 01:57-0500\n"
+"PO-Revision-Date: 2008-10-30 01:57-0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -41,167 +41,163 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/bin/tokenCtl:53
+#: src/bin/verifySmiPassword:56
+msgid "Keyboard Scancodes"
+msgstr "Keyboard Scancodes"
+
+#: src/bin/verifySmiPassword:57
+msgid "ASCII"
+msgstr "ASCII"
+
+#: src/bin/verifySmiPassword:61
+msgid "User password"
+msgstr "User password"
+
+#: src/bin/verifySmiPassword:62
+msgid "Admin password"
+msgstr "Admin password"
+
+#: src/bin/verifySmiPassword:63
+msgid "Owner password"
+msgstr "Owner password"
+
+#: src/bin/tokenCtl:56
 msgid "Action: dump token table"
 msgstr "Action: dump token table"
 
-#: src/bin/tokenCtl:56
+#: src/bin/tokenCtl:59
 msgid "Action: return true if specified token is a string."
 msgstr "Action: return true if specified token is a string."
 
-#: src/bin/tokenCtl:60
+#: src/bin/tokenCtl:63
 msgid "Action: return true if specified token is a bool."
 msgstr "Action: return true if specified token is a bool."
 
-#: src/bin/tokenCtl:64
+#: src/bin/tokenCtl:67
 msgid "Action: return true if specified bool token is active."
 msgstr "Action: return true if specified bool token is active."
 
-#: src/bin/tokenCtl:68
+#: src/bin/tokenCtl:71
 msgid "Action: get string token value."
 msgstr "Action: get string token value."
 
-#: src/bin/tokenCtl:72
+#: src/bin/tokenCtl:75
 msgid "Action: activate specified bool token."
 msgstr "Action: activate specified bool token."
 
-#: src/bin/tokenCtl:76
+#: src/bin/tokenCtl:79
 msgid "Action: set string token value."
 msgstr "Action: set string token value."
 
-#: src/bin/tokenCtl:80
+#: src/bin/tokenCtl:83
 msgid "Filter only token with ID."
 msgstr "Filter only token with ID."
 
-#: src/bin/tokenCtl:82
+#: src/bin/tokenCtl:85
 msgid "Filter only token with name."
 msgstr "Filter only token with name."
 
-#: src/bin/tokenCtl:84
+#: src/bin/tokenCtl:87
 msgid "Filter only token with setting."
 msgstr "Filter only token with setting."
 
-#: src/bin/tokenCtl:88
-msgid "BIOS Setup password for set/activate operations."
-msgstr "BIOS Setup password for set/activate operations."
-
 #: src/bin/tokenCtl:90
-msgid "Do not auto-convert password to scancodes."
-msgstr "Do not auto-convert password to scancodes."
-
-#: src/bin/tokenCtl:93
 msgid "path to the token.csv file."
 msgstr "path to the token.csv file."
 
-#: src/bin/tokenCtl:95
+#: src/bin/tokenCtl:92
 msgid "Path to token blacklist file."
 msgstr "Path to token blacklist file."
 
-#: src/bin/tokenCtl:97
-msgid "Path to a memory dump file to use instead of real RAM"
-msgstr "Path to a memory dump file to use instead of real RAM"
-
-#: src/bin/tokenCtl:100
-msgid "Path to a CMOS dump file to use instead of real CMOS"
-msgstr "Path to a CMOS dump file to use instead of real CMOS"
-
-#: src/bin/tokenCtl:120 src/bin/tokenCtl:121 src/bin/tokenCtl:122
-#: src/bin/tokenCtl:123
+#: src/bin/tokenCtl:113 src/bin/tokenCtl:114 src/bin/tokenCtl:115
+#: src/bin/tokenCtl:116
 msgid "unknown"
 msgstr "unknown"
 
-#: src/bin/tokenCtl:164
+#: src/bin/tokenCtl:157
 msgid "Ignoring parsing error in CSV file:"
 msgstr "Ignoring parsing error in CSV file:"
 
-#: src/bin/tokenCtl:176
+#: src/bin/tokenCtl:169
 #, c-format
 msgid "Skipping '%s' due to IOError.\n"
 msgstr "Skipping ‘[1m%s[0m’ due to IOError.\n"
 
-#: src/bin/tokenCtl:177
+#: src/bin/tokenCtl:170
 #, c-format
 msgid "The error message was: %s"
 msgstr "The error message was: %s"
 
-#: src/bin/tokenCtl:184
+#: src/bin/tokenCtl:177
 msgid "<wierd unknown type>"
 msgstr "<wierd unknown type>"
 
-#: src/bin/tokenCtl:185
+#: src/bin/tokenCtl:178
 msgid "<unknown value>"
 msgstr "<unknown value>"
 
-#: src/bin/tokenCtl:249
+#: src/bin/tokenCtl:214
 #, c-format
 msgid "  Token: %s - %s (%s)"
 msgstr "  Token: %s - %s (%s)"
 
-#: src/bin/tokenCtl:253
+#: src/bin/tokenCtl:218
 #, c-format
 msgid "  value: %s = %s"
 msgstr "  value: %s = %s"
 
-#: src/bin/tokenCtl:257
+#: src/bin/tokenCtl:222
 msgid "   Desc: "
 msgstr "   Desc: "
 
-#: src/bin/tokenCtl:268
+#: src/bin/tokenCtl:233
 msgid "require token-id or token name/setting pair."
 msgstr "require token-id or token name/setting pair."
 
-#: src/bin/tokenCtl:282
+#: src/bin/tokenCtl:247
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr "token not found. Name(%s) Setting(%s)."
 
-#: src/bin/tokenCtl:309 src/bin/tokenCtl:321
+#: src/bin/tokenCtl:267 src/bin/tokenCtl:279
 msgid "Original Values"
 msgstr "Original Values"
 
-#: src/bin/tokenCtl:310 src/bin/tokenCtl:322 src/bin/tokenCtl:332
+#: src/bin/tokenCtl:268 src/bin/tokenCtl:280 src/bin/tokenCtl:290
 #, c-format
 msgid "        type: %s"
 msgstr "        type: %s"
 
-#: src/bin/tokenCtl:311 src/bin/tokenCtl:323 src/bin/tokenCtl:333
+#: src/bin/tokenCtl:269 src/bin/tokenCtl:281 src/bin/tokenCtl:291
 #, c-format
 msgid "       value: %s"
 msgstr "       value: %s"
 
-#: src/bin/tokenCtl:313
+#: src/bin/tokenCtl:271
 msgid "Setting string value ..."
 msgstr "Setting string value ..."
 
-#: src/bin/tokenCtl:325
+#: src/bin/tokenCtl:283
 msgid "Activating token..."
 msgstr "Activating token..."
 
-#: src/bin/tokenCtl:328
+#: src/bin/tokenCtl:286
 msgid "New values"
 msgstr "New values"
 
-#: src/libsmbios_c/cmos/cmos_linux.c:123
+#: src/libsmbios_c/cmos/cmos_linux.c:76
 msgid "Error trying to raise IO Privilege level.\n"
 msgstr "Error trying to raise IO Privilege level.\n"
 
-#: src/libsmbios_c/cmos/cmos_linux.c:124
+#: src/libsmbios_c/cmos/cmos_linux.c:77
 msgid "The OS Error string was: "
 msgstr "The OS Error string was: "
 
-#: src/libsmbios_c/cmos/cmos_linux.c:138
+#: src/libsmbios_c/cmos/cmos_obj.c:276
 msgid ""
 "There was an allocation failure while trying to construct the cmos object."
 msgstr ""
 "There was an allocation failure while trying to construct the cmos object."
-
-#: src/libsmbios_c/cmos/cmos_obj.c:114
-msgid ""
-"The OS-specific module in use does not define a strerror function to get the "
-"error string."
-msgstr ""
-"The OS-specific module in use does not define a strerror function to get the "
-"error string."
 
 #: src/libsmbios_c/common/common.c:19
 msgid ""
@@ -220,7 +216,7 @@ msgid "The mmap() call returned mapping of -1 (failure). File: "
 msgstr "The mmap() call returned mapping of -1 (failure). File: "
 
 #: src/libsmbios_c/memory/memory_linux.c:198
-#: src/libsmbios_c/memory/memory_linux.c:305
+#: src/libsmbios_c/memory/memory_linux.c:297
 #: src/libsmbios_c/smi/smi_linux.c:304
 msgid ""
 "\n"
@@ -229,21 +225,19 @@ msgstr ""
 "\n"
 "The OS Error string was: "
 
-#: src/libsmbios_c/memory/memory_linux.c:302
+#: src/libsmbios_c/memory/memory_linux.c:263
 msgid ""
-"File open error during memory object construction. The filename:\n"
-"\t"
+"There was an allocation failure while trying to construct the memory object. "
+"Filename: "
 msgstr ""
-"File open error during memory object construction. The filename:\n"
-"\t"
+"There was an allocation failure while trying to construct the memory object. "
+"Filename: "
 
-#: src/libsmbios_c/memory/memory_linux.c:319
-msgid ""
-"There was an allocation failure while trying to construct the memory object."
-msgstr ""
-"There was an allocation failure while trying to construct the memory object."
+#: src/libsmbios_c/memory/memory_linux.c:282
+msgid "File open error during memory object construction. The filename: "
+msgstr "File open error during memory object construction. The filename: "
 
-#: src/libsmbios_c/smbios/smbios_obj.c:335
+#: src/libsmbios_c/smbios/smbios_obj.c:337
 msgid ""
 "Allocation error trying to allocate memory for error string. (ironic, "
 "yes?) \n"
@@ -251,7 +245,7 @@ msgstr ""
 "Allocation error trying to allocate memory for error string. (ironic, "
 "yes?) \n"
 
-#: src/libsmbios_c/smbios/smbios_obj.c:342
+#: src/libsmbios_c/smbios/smbios_obj.c:344
 msgid ""
 "Could not instantiate SMBIOS table. The errors from the low-level modules "
 "were:\n"
@@ -259,27 +253,27 @@ msgstr ""
 "Could not instantiate SMBIOS table. The errors from the low-level modules "
 "were:\n"
 
-#: src/libsmbios_c/smbios/smbios_obj.c:468
+#: src/libsmbios_c/smbios/smbios_obj.c:470
 msgid "Could not read physical memory. Lowlevel error was:\n"
 msgstr "Could not read physical memory. Lowlevel error was:\n"
 
-#: src/libsmbios_c/smbios/smbios_obj.c:479
+#: src/libsmbios_c/smbios/smbios_obj.c:481
 msgid "Found _DMI_ anchor but could not parse legacy DMI structure."
 msgstr "Found _DMI_ anchor but could not parse legacy DMI structure."
 
-#: src/libsmbios_c/smbios/smbios_obj.c:494
+#: src/libsmbios_c/smbios/smbios_obj.c:496
 msgid "Found _SM_ anchor but could not parse SMBIOS structure."
 msgstr "Found _SM_ anchor but could not parse SMBIOS structure."
 
-#: src/libsmbios_c/smbios/smbios_obj.c:507
+#: src/libsmbios_c/smbios/smbios_obj.c:509
 msgid "Did not find smbios table entry point in memory."
 msgstr "Did not find smbios table entry point in memory."
 
-#: src/libsmbios_c/smbios/smbios_obj.c:536
+#: src/libsmbios_c/smbios/smbios_obj.c:538
 msgid "Could not find Table Entry Point."
 msgstr "Could not find Table Entry Point."
 
-#: src/libsmbios_c/smbios/smbios_obj.c:543
+#: src/libsmbios_c/smbios/smbios_obj.c:545
 msgid "Found table entry point but could not read table from memory. "
 msgstr "Found table entry point but could not read table from memory. "
 
@@ -291,13 +285,13 @@ msgstr ""
 "There was an error trying to perform the smi execute() cmd. Is the ‘[1mdcdbas"
 "[0m’ kernel module loaded?"
 
-#: src/libsmbios_c/smi/smi_obj.c:290
-msgid "Failed to find appropriate SMBIOS 0xD4 structure."
-msgstr "Failed to find appropriate SMBIOS 0xD4 structure."
+#: src/libsmbios_c/smi/smi_obj.c:285
+msgid "Failed to find appropriate SMBIOS 0xD4 structure.\n"
+msgstr "Failed to find appropriate SMBIOS 0xD4 structure.\n"
 
-#: src/libsmbios_c/smi/smi_obj.c:299
-msgid "Failed to allocate memory for error string."
-msgstr "Failed to allocate memory for error string."
+#: src/libsmbios_c/smi/smi_obj.c:294
+msgid "Failed to allocate memory for error string.\n"
+msgstr "Failed to allocate memory for error string.\n"
 
 #: src/libsmbios_c/token/token_d4.c:87
 msgid "error reading cmos. Lowlevel returned: \n"
@@ -323,15 +317,15 @@ msgstr "Error trying to set up CMOS checksum routines.\n"
 msgid "Allocation failure while trying to create token object."
 msgstr "Allocation failure while trying to create token object."
 
-#: src/libsmbios_c/token/token_obj.c:263
+#: src/libsmbios_c/token/token_obj.c:257
 msgid "Failed to obtain smbios table.\n"
 msgstr "Failed to obtain smbios table.\n"
 
-#: src/libsmbios_c/token/token_obj.c:273
+#: src/libsmbios_c/token/token_obj.c:267
 msgid "Memory allocation failure allocating error string.\n"
 msgstr "Memory allocation failure allocating error string.\n"
 
-#: src/libsmbios_c/token/token_obj.c:278
+#: src/libsmbios_c/token/token_obj.c:272
 msgid "Error while trying to add 0xD4 tokens.\n"
 msgstr "Error while trying to add 0xD4 tokens.\n"
 
@@ -380,7 +374,7 @@ msgstr "String number %d doesnt exist"
 msgid "something bad happened"
 msgstr "something bad happened"
 
-#: src/python/libsmbios_c/system_info.py:46
+#: src/python/libsmbios_c/system_info.py:54
 msgid "Null ID returned."
 msgstr "Null ID returned."
 
