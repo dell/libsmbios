@@ -166,7 +166,7 @@ _libsmbios_c.token_obj_get_string.restype = ctypes.c_void_p
 _libsmbios_c.token_obj_get_string.errcheck = errorOnNullPtrFN(lambda r,f,a: _table_strerror(a[0]))
 
 #int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);
-_libsmbios_c.token_obj_set_string.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.POINTER(ctypes.c_size_t) ]
+_libsmbios_c.token_obj_set_string.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.c_size_t ]
 _libsmbios_c.token_obj_set_string.restype = ctypes.c_int
 _libsmbios_c.token_obj_set_string.errcheck = errorOnNegativeFN(lambda r,f,a: _table_strerror(a[0]))
 
