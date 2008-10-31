@@ -74,6 +74,9 @@ _mk_simple_sysinfo_str_fn("get_asset_tag")
 _mk_simple_sysinfo_str_fn("get_service_tag")
 _mk_simple_sysinfo_str_fn("get_property_ownership_tag")
 
+def set_service_tag(newtag, pass_ascii=None, pass_scancode=None):
+    raise Exception("set service tag not yet supported.")
+
 #_mk_simple_sysinfo_str_fn("set_asset_tag")
 _libsmbios_c.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 _libsmbios_c.sysinfo_set_asset_tag.restype = ctypes.c_int
