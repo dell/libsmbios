@@ -154,15 +154,15 @@ runtest() {
 
 if [ -d /usr/include/cppunit ]; then
     # run this first since it is slightly faster than valgrind
-    VALGRIND="strace -f" runtest check strace > /dev/null || :
+    VALGRIND="strace -f" runtest check strace > /dev/null || echo FAILED strace check
 fi
 
 if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-    runtest valgrind > /dev/null || :
+    runtest valgrind > /dev/null || echo FAILED valgrind check
 fi
 
 if [ -d /usr/include/cppunit ]; then
-    runtest check > /dev/null || :
+    runtest check > /dev/null || echo FAILED check
 fi
 
 if [ ! -d /usr/include/cppunit ]; then
