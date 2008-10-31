@@ -11,42 +11,30 @@
 # norootforbuild
 
 # some distros already have fdupes macro. If not, we just set it to something innocuous
-%{?!fdupes: %define fdupes echo fdupes macro not defined for this distro. }
+%{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
 
 %define cppunit_BR cppunit-devel
-%define doxygen_BR %{nil}
-%define valgrind_BR %{nil}
-%define fdupes_BR %{nil}
+%define doxygen_BR doxygen
+%define valgrind_BR valgrind
+%define fdupes_BR hardlink
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
 # Fedora: fedora dist fc8 fc9
-%if 0%{?fedora_version} || 0%{?fedora}
-    %define doxygen_BR doxygen
-    %define fdupes_BR hardlink
-    %define fdupes /usr/sbin/hardlink -c -v
-%endif
 
-# no doxygen in most suse versions base
-%define strace %{nil}
+# suse/sles
 %if 0%{?suse_version}
-%if 0%{?suse_version} > 1020
-    %define valgrind_BR valgrind strace
+    %define fdupes_BR %{nil}
+%if 0%{?suse_version} >= 1020
     %define fdupes_BR fdupes
-    %define strace strace
-%else    # be careful with else as it will affect other distros
-    %define cppunit_BR %{nil}
 %endif
 %endif
 
-%if 0%{?sles_version}
-    %define valgrind_BR valgrind
-%endif
-
+# rhel
 %if 0%{?rhel_version}
-%if 0%{?rhel_version} >= 500
-    %define doxygen_BR doxygen
-%else    # be careful with else as it will affect other distros
-    %define doxygen_BR doxygen
+%if 0%{?rhel_version} < 500
+    %define fdupes echo fdupes disabled
+    %define fdupes_BR %{nil}
+    # dont yet have rhel4 cppunit
     %define cppunit_BR %{nil}
 %endif
 %endif
@@ -65,7 +53,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: libxml2-devel python-devel gcc-c++ gettext %{doxygen_BR} %{cppunit_BR} %{fdupes_BR} %{valgrind_BR}
+BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext %{doxygen_BR} %{cppunit_BR} %{fdupes_BR} %{valgrind_BR}
 Provides: libsmbios = 0:%{version}-%{release}
 Provides: libsmbios-libs = 0:%{version}-%{release}
 # uncomment for official fedora
@@ -90,7 +78,7 @@ should use the libsmbios C interface.
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
 Requires: %{package_name} = %{version}-%{release}
-Requires: python
+Requires: python python-ctypes
 
 %description -n python-smbios
 This package provides a Python interface to libsmbios
@@ -149,7 +137,9 @@ export RELEASE_EXTRALEVEL=%{extralevel}
 %configure
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
-make -e %{?_smp_mflags}
+make -e %{?_smp_mflags} 2>&1 | tee build.log
+
+echo \%doc _build/build.log > buildlogs.txt
 
 %check
 runtest() {
@@ -157,20 +147,22 @@ runtest() {
     pushd _$1$2
     ../configure
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
+    #make -e $1 2>&1 | tee $1$2.log
     popd
+    echo \%doc _$1$2/$1$2.log > buildlogs.txt
 }
 
 if [ -d /usr/include/cppunit ]; then
     # run this first since it is slightly faster than valgrind
-    VALGRIND="strace -f" runtest check strace
+    VALGRIND="strace -f" runtest check strace > /dev/null || :
 fi
 
 if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-    runtest valgrind
+    runtest valgrind > /dev/null || :
 fi
 
 if [ -d /usr/include/cppunit ]; then
-    runtest check
+    runtest check > /dev/null || :
 fi
 
 if [ ! -d /usr/include/cppunit ]; then
@@ -213,7 +205,7 @@ rm -rf %{buildroot}
 %doc COPYING-GPL COPYING-OSL README
 %{py_sitedir}/*
 
-%files -n libsmbios-devel
+%files -n libsmbios-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 /usr/include/smbios
