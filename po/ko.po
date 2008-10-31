@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-30 15:16-0500\n"
+"POT-Creation-Date: 2008-10-31 05:33-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Korean\n"
@@ -16,147 +16,214 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/bin/verifySmiPassword:56
+#: src/bin/smbios-passwd:56
 msgid "Keyboard Scancodes"
 msgstr ""
 
-#: src/bin/verifySmiPassword:57
+#: src/bin/smbios-passwd:57
 msgid "ASCII"
 msgstr ""
 
-#: src/bin/verifySmiPassword:61
+#: src/bin/smbios-passwd:61
 msgid "User password"
 msgstr ""
 
-#: src/bin/verifySmiPassword:62
+#: src/bin/smbios-passwd:62
 msgid "Admin password"
 msgstr ""
 
-#: src/bin/verifySmiPassword:63
+#: src/bin/smbios-passwd:63
 msgid "Owner password"
 msgstr ""
 
-#: src/bin/tokenCtl:56
+#: src/bin/smbios-sys-info:52
+msgid "Libsmbios version"
+msgstr ""
+
+#: src/bin/smbios-sys-info:53
+msgid "Product Name"
+msgstr ""
+
+#: src/bin/smbios-sys-info:54
+msgid "Vendor"
+msgstr ""
+
+#: src/bin/smbios-sys-info:55
+msgid "BIOS Version"
+msgstr ""
+
+#: src/bin/smbios-sys-info:56
+msgid "Product ID"
+msgstr ""
+
+#: src/bin/smbios-sys-info:57
+msgid "Service Tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:58
+msgid "Express Service Code"
+msgstr ""
+
+#: src/bin/smbios-sys-info:59
+msgid "Asset Tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:60
+msgid "Property Ownership Tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:72
+msgid "Show or set service tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:73
+msgid "Show or set asset tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:74
+msgid "Show or set property tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:75
+msgid "Set specified tag to new value"
+msgstr ""
+
+#: src/bin/smbios-sys-info:89
+msgid "Specify which tag to set."
+msgstr ""
+
+#: src/bin/smbios-sys-info:91
+msgid "Current tag value:"
+msgstr ""
+
+#: src/bin/smbios-sys-info:106
+#, c-format
+msgid "Setting new tag value: %s"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:56
 msgid "Action: dump token table"
 msgstr ""
 
-#: src/bin/tokenCtl:59
+#: src/bin/smbios-token-ctl:59
 msgid "Action: return true if specified token is a string."
 msgstr ""
 
-#: src/bin/tokenCtl:63
+#: src/bin/smbios-token-ctl:63
 msgid "Action: return true if specified token is a bool."
 msgstr ""
 
-#: src/bin/tokenCtl:67
+#: src/bin/smbios-token-ctl:67
 msgid "Action: return true if specified bool token is active."
 msgstr ""
 
-#: src/bin/tokenCtl:71
+#: src/bin/smbios-token-ctl:71
 msgid "Action: get string token value."
 msgstr ""
 
-#: src/bin/tokenCtl:75
+#: src/bin/smbios-token-ctl:75
 msgid "Action: activate specified bool token."
 msgstr ""
 
-#: src/bin/tokenCtl:79
+#: src/bin/smbios-token-ctl:79
 msgid "Action: set string token value."
 msgstr ""
 
-#: src/bin/tokenCtl:83
+#: src/bin/smbios-token-ctl:83
 msgid "Filter only token with ID."
 msgstr ""
 
-#: src/bin/tokenCtl:85
+#: src/bin/smbios-token-ctl:85
 msgid "Filter only token with name."
 msgstr ""
 
-#: src/bin/tokenCtl:87
+#: src/bin/smbios-token-ctl:87
 msgid "Filter only token with setting."
 msgstr ""
 
-#: src/bin/tokenCtl:90
+#: src/bin/smbios-token-ctl:90
 msgid "path to the token.csv file."
 msgstr ""
 
-#: src/bin/tokenCtl:92
+#: src/bin/smbios-token-ctl:92
 msgid "Path to token blacklist file."
 msgstr ""
 
-#: src/bin/tokenCtl:113 src/bin/tokenCtl:114 src/bin/tokenCtl:115
-#: src/bin/tokenCtl:116
+#: src/bin/smbios-token-ctl:113 src/bin/smbios-token-ctl:114
+#: src/bin/smbios-token-ctl:115 src/bin/smbios-token-ctl:116
 msgid "unknown"
 msgstr ""
 
-#: src/bin/tokenCtl:157
+#: src/bin/smbios-token-ctl:157
 msgid "Ignoring parsing error in CSV file:"
 msgstr ""
 
-#: src/bin/tokenCtl:169
+#: src/bin/smbios-token-ctl:169
 #, c-format
 msgid "Skipping '%s' due to IOError.\n"
 msgstr ""
 
-#: src/bin/tokenCtl:170
+#: src/bin/smbios-token-ctl:170
 #, c-format
 msgid "The error message was: %s"
 msgstr ""
 
-#: src/bin/tokenCtl:177
+#: src/bin/smbios-token-ctl:177
 msgid "<wierd unknown type>"
 msgstr ""
 
-#: src/bin/tokenCtl:178
+#: src/bin/smbios-token-ctl:178
 msgid "<unknown value>"
 msgstr ""
 
-#: src/bin/tokenCtl:214
+#: src/bin/smbios-token-ctl:214
 #, c-format
 msgid "  Token: %s - %s (%s)"
 msgstr ""
 
-#: src/bin/tokenCtl:218
+#: src/bin/smbios-token-ctl:218
 #, c-format
 msgid "  value: %s = %s"
 msgstr ""
 
-#: src/bin/tokenCtl:222
+#: src/bin/smbios-token-ctl:222
 msgid "   Desc: "
 msgstr ""
 
-#: src/bin/tokenCtl:233
+#: src/bin/smbios-token-ctl:233
 msgid "require token-id or token name/setting pair."
 msgstr ""
 
-#: src/bin/tokenCtl:247
+#: src/bin/smbios-token-ctl:247
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr ""
 
-#: src/bin/tokenCtl:267 src/bin/tokenCtl:279
+#: src/bin/smbios-token-ctl:267 src/bin/smbios-token-ctl:279
 msgid "Original Values"
 msgstr ""
 
-#: src/bin/tokenCtl:268 src/bin/tokenCtl:280 src/bin/tokenCtl:290
+#: src/bin/smbios-token-ctl:268 src/bin/smbios-token-ctl:280
+#: src/bin/smbios-token-ctl:290
 #, c-format
 msgid "        type: %s"
 msgstr ""
 
-#: src/bin/tokenCtl:269 src/bin/tokenCtl:281 src/bin/tokenCtl:291
+#: src/bin/smbios-token-ctl:269 src/bin/smbios-token-ctl:281
+#: src/bin/smbios-token-ctl:291
 #, c-format
 msgid "       value: %s"
 msgstr ""
 
-#: src/bin/tokenCtl:271
+#: src/bin/smbios-token-ctl:271
 msgid "Setting string value ..."
 msgstr ""
 
-#: src/bin/tokenCtl:283
+#: src/bin/smbios-token-ctl:283
 msgid "Activating token..."
 msgstr ""
 
-#: src/bin/tokenCtl:286
+#: src/bin/smbios-token-ctl:286
 msgid "New values"
 msgstr ""
 
