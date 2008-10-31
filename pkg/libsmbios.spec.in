@@ -149,11 +149,11 @@ runtest() {
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
     #make -e $1 2>&1 | tee $1$2.log
     popd
-    echo \%doc _$1$2/$1$2.log > buildlogs.txt
+    echo \%doc _$1$2/$1$2.log >> ../_build/buildlogs.txt
 }
 
 if [ -d /usr/include/cppunit ]; then
-    # run this first since it is slightly faster than valgrind
+   # run this first since it is slightly faster than valgrind
     VALGRIND="strace -f" runtest check strace > /dev/null || echo FAILED strace check
 fi
 
@@ -183,6 +183,7 @@ find %{buildroot}/usr/include -exec touch -r $TOPDIR/configure.ac {} \;
 
 # backwards compatible:
 ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
+ln -s smbios-sys-info %{buildroot}%{_sbindir}/getSystemId
 
 %find_lang libsmbios
 
@@ -222,14 +223,10 @@ rm -rf %{buildroot}
 %doc COPYING-GPL COPYING-OSL README
 %doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 %doc doc/pkgheader.sh
-%{_sbindir}/assetTag
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/getSystemId
-%{_sbindir}/propertyTag
-%{_sbindir}/serviceTag
 %{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
-%{_sbindir}/mkbiospkg.sh
 %{_sbindir}/dellLEDCtl
 %{_sbindir}/stateByteCtl
 %{_sbindir}/upBootCtl
@@ -245,8 +242,11 @@ rm -rf %{buildroot}
 %endif
 
 # python utilities
-%{_sbindir}/tokenCtl
-%{_sbindir}/verifySmiPassword
+%{_sbindir}/smbios-sys-info
+%{_sbindir}/smbios-token-ctl
+%{_sbindir}/smbios-passwd
+
+# data files
 %{_datadir}/smbios-utils
 
 %changelog

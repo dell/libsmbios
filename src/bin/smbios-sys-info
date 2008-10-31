@@ -1,0 +1,114 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2005 Dell Computer Corporation
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""dumpCmos"""
+
+from __future__ import generators
+
+# import arranged alphabetically
+import gettext
+import locale
+import os
+import sys
+import exceptions
+
+# the following vars are all substituted on install
+# this bin isnt byte-compiled, so this is ok
+RELEASE_VERSION="uninstalled-version"
+GETTEXT_PACKAGE="libsmbios" #replaced
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
+# end vars
+
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
+__VERSION__=RELEASE_VERSION
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+import cli
+import libsmbios_c.system_info as sysinfo
+import libsmbios_c.smbios as smbios
+
+def notSettable(*args):
+    raise exceptions.Exception("this property is read-only")
+
+def getEsc():
+    return int(sysinfo.get_service_tag(), 36)
+
+def get_system_id():
+    return "0x%04X" % sysinfo.get_dell_system_id()
+
+info_list = {
+        "library-version": ( _("Libsmbios version"), sysinfo.get_library_version_string, notSettable),
+        "product-name": ( _("Product Name"), sysinfo.get_system_name, notSettable ),
+        "product-vendor": ( _("Vendor"), sysinfo.get_vendor_name, notSettable),
+        "bios-version": ( _("BIOS Version"), sysinfo.get_bios_version, notSettable),
+        "product-id": ( _("Product ID"), get_system_id, notSettable),
+        "service-tag": ( _("Service Tag"), sysinfo.get_service_tag, sysinfo.set_service_tag),
+        "express-service-code": ( _("Express Service Code"), getEsc, notSettable),
+        "asset-tag": ( _("Asset Tag"), sysinfo.get_asset_tag, sysinfo.set_asset_tag ),
+        "property-tag": ( _("Property Ownership Tag"), sysinfo.get_property_ownership_tag, sysinfo.set_property_ownership_tag),
+    }
+
+output_order = [ "library-version", "product-name", "product-vendor", "bios-version", "product-id", "service-tag", "express-service-code", "asset-tag", "property-tag"]
+
+for tag in info_list.keys():
+    if tag not in output_order:
+        raise Exception("programming error: %s tag in info_list not in output_order" % tag)
+
+def command_parse():
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
+
+    parser.add_option('--service-tag', action="store_const", dest="taglist", const=["service-tag"], default=info_list.keys(), help= _("Show or set service tag"), )
+    parser.add_option('--asset-tag', action="store_const", dest="taglist", const=["asset-tag"], help= _("Show or set asset tag"), )
+    parser.add_option('--property-tag', action="store_const", dest="taglist", const=["property-tag"], help= _("Show or set property tag"), )
+    parser.add_option('--set', action="store", dest="set", default=None, help= _("Set specified tag to new value"), )
+
+    cli.addStdOptions(parser)
+    return parser.parse_args()
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+
+    #instantiate smbios table to ensure we have good perms, etc
+    s = smbios.SmbiosTable()
+
+    if options.set and len(options.taglist) > 1:
+        raise exceptions.Exception( _("Specify which tag to set.") )
+    elif options.set:
+        print _("Current tag value:")
+
+    maxlen=0
+    for t in options.taglist:
+        slen = len(info_list[t][0]) + 1
+        if slen>maxlen: maxlen=slen
+
+    for info in [ info_list[t] for t in output_order if t in options.taglist ]:
+        label = info[0]
+        sys.stdout.write( "%s:" % label)
+        sys.stdout.write( " " * (maxlen-len(label)))
+        sys.stdout.write( "%s\n" % info[1]() )
+
+    if options.set:
+        print
+        print _("Setting new tag value: %s") % options.set
+        fn = info_list[ options.taglist[0] ][2]
+        fn(options.set, options.password_ascii, options.password_scancode)
+
+    return exit_code
+
+if __name__ == "__main__":
+    sys.exit( main() )
+
