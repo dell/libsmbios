@@ -14,8 +14,6 @@
 %{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
 
 %define cppunit_BR cppunit-devel
-%define doxygen_BR doxygen
-%define valgrind_BR valgrind
 %define fdupes_BR hardlink
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
@@ -23,9 +21,11 @@
 
 # suse/sles
 %if 0%{?suse_version}
-    %define fdupes_BR %{nil}
 %if 0%{?suse_version} >= 1020
     %define fdupes_BR fdupes
+%else
+    %define fdupes_BR %{nil}
+    %define fdupes echo fdupes disabled
 %endif
 %endif
 
@@ -53,7 +53,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext %{doxygen_BR} %{cppunit_BR} %{fdupes_BR} %{valgrind_BR}
+BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR}
 Provides: libsmbios = 0:%{version}-%{release}
 Provides: libsmbios-libs = 0:%{version}-%{release}
 # uncomment for official fedora
