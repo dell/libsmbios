@@ -20,12 +20,12 @@
 #ifndef LIBSMBIOS_C_COMPAT_H_INCLUDED
 #define LIBSMBIOS_C_COMPAT_H_INCLUDED
 
-#include "smbios_c/config/get_config.h"
-#include "smbios_c/config/auto_link.h"
-
 #ifdef LIBSMBIOS_C_SOURCE
 #include "libsmbios_c_source.h"
 #endif
+
+#include "smbios_c/config/get_config.h"
+#include "smbios_c/config/auto_link.h"
 
 /*
  * CHANGES TO THIS FILE CAUSE A WHOLE-PROJECT REBUILD!
