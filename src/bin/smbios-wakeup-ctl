@@ -1,0 +1,114 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2005 Dell Computer Corporation
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""dumpCmos"""
+
+from __future__ import generators
+from __future__ import division
+
+# import arranged alphabetically
+import gettext
+import locale
+import os
+import struct
+import sys
+import traceback
+
+# the following vars are all substituted on install
+# this bin isnt byte-compiled, so this is ok
+RELEASE_VERSION="uninstalled-version"
+GETTEXT_PACKAGE="libsmbios" #replaced
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
+# end vars
+
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
+__VERSION__=RELEASE_VERSION
+
+import cli
+import libsmbios_c.token as token
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+token_wake_hour = 0x2b
+token_wake_min = 0x2c
+token_wake_disable = 0x28
+token_wake_everyday = 0x29
+token_wake_weekday = 0x2a
+
+class CmdlineError(Exception): pass
+
+def command_parse():
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
+    parser.add_option('--hour', action="store", dest="hour", default=0, help= _("Set wakeup hour. Must be 0-23"), )
+    parser.add_option('--minute', action="store", dest="minute", default=0, help= _("Set wakeup minute. Must be 0-59"), )
+    parser.add_option('--everyday', action="store_const", const=token_wake_everyday, dest="action", default=None, help= _("Set wakeup for every day"), )
+    parser.add_option('--weekday', action="store_const", const=token_wake_weekday, dest="action",  help= _("Set wakeup for weekdays only"), )
+    parser.add_option('--disable', action="store_const", const=token_wake_disable, dest="action", help= _("Disable wakeups"), )
+    cli.addStdOptions(parser)
+    return parser.parse_args()
+
+def xform_options(options):
+    options.hour = int(options.hour)
+    if options.hour < 0 or options.hour > 23:
+        raise Exception( _("Wakeup hour must be between 0 and 23. You passed: '%s'") % options.hour)
+
+    options.minute = int(options.minute)
+    if options.minute < 0 or options.minute > 59:
+        raise Exception( _("Wakeup min must be between 0 and 59. You passed: '%s'") % options.minute)
+
+    options.hour_bcd = ((options.hour // 10) <<4) + (options.hour % 10)
+    options.min_bcd = ((options.minute // 10) <<4) + (options.minute % 10)
+
+def getWakeupTime(table):
+    hour = struct.unpack("b", table[token_wake_hour].getString())
+    minute = struct.unpack("b", table[token_wake_min].getString())
+    # time is BCD coded
+    return ( int("%x" % hour), int("%x"%minute) )
+
+def showCurrentWakeup(table):
+    if table[token_wake_disable].isActive():
+        print _("\tWakeup disabled")
+    if table[token_wake_everyday].isActive():
+        print _("\tWakeup every day")
+        print _("\tWakeup time:  %02d:%02d") % getWakeupTime(table)
+    if table[token_wake_weekday].isActive():
+        print _("\tWakeup weekdays")
+        print _("\tWakeup time:  %02d:%02d") % getWakeupTime(table)
+
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+    xform_options(options)
+
+    table = token.TokenTable()
+
+    print _("Current wakeup settings:")
+    showCurrentWakeup(table)
+
+    if options.action:
+        print
+        print _("Setting new wakeup time:")
+        table[options.action].activate()
+        table[token_wake_hour].setString(struct.pack("b", options.hour_bcd))
+        table[token_wake_min].setString(struct.pack("b", options.min_bcd))
+
+    showCurrentWakeup(table)
+
+    return exit_code
+
+if __name__ == "__main__":
+    sys.exit( main() )
+

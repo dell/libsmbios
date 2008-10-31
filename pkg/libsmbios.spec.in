@@ -225,7 +225,6 @@ rm -rf %{buildroot}
 %doc doc/pkgheader.sh
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/getSystemId
-%{_sbindir}/wakeupCtl
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/dellLEDCtl
 %{_sbindir}/stateByteCtl
@@ -245,6 +244,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-sys-info
 %{_sbindir}/smbios-token-ctl
 %{_sbindir}/smbios-passwd
+%{_sbindir}/smbios-wakeup-ctl
 
 # data files
 %{_datadir}/smbios-utils

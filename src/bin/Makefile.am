@@ -20,9 +20,8 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-passwd
 dist_sbin_SCRIPTS += src/bin/smbios-sys-info
 DATA_HOOK_REPLACE += $(sbindir)/smbios-sys-info
 
-sbin_PROGRAMS += out/wakeupCtl
-out_wakeupCtl_SOURCES = src/bin/wakeupCtl.cpp
-out_wakeupCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
+dist_sbin_SCRIPTS += src/bin/smbios-wakeup-ctl
+DATA_HOOK_REPLACE += $(sbindir)/smbios-wakeup-ctl
 
 sbin_PROGRAMS += out/dellLcdBrightness
 out_dellLcdBrightness_SOURCES = src/bin/dellLcdBrightness.cpp
@@ -60,10 +59,6 @@ out_stateByteCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 sbin_PROGRAMS += out/upBootCtl
 out_upBootCtl_SOURCES = src/bin/upBootCtl.cpp
 out_upBootCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-noinst_PROGRAMS += out/ascii2enUS_scancode
-out_ascii2enUS_scancode_SOURCES = src/bin/ascii2enUS_scancode.cpp
-out_ascii2enUS_scancode_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
 noinst_PROGRAMS += out/probes
 out_probes_SOURCES = src/bin/probes.cpp
