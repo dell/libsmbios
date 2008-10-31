@@ -77,22 +77,23 @@ SPECFILE= $(TOPDIR)/pkg/$(PACKAGE_NAME).spec
 SPECDIR = $(TOPDIR)/pkg
 SRCRPMDIR = $(TOPDIR)
 
-RPM_DEFINES = --define "_topdir $(TOPDIR)" \
+AM_RPM_DEFINES = --define "_topdir $(TOPDIR)" \
 		--define "_builddir $(BUILDDIR)" \
 		--define "_rpmdir $(RPMDIR)" \
 		--define "_sourcedir $(SOURCEDIR)" \
 		--define "_specdir $(SPECDIR)" \
-		--define "_srcrpmdir $(SRCRPMDIR)"
+		--define "_srcrpmdir $(SRCRPMDIR)" \
+		$(RPM_DEFINES)
 
 .PHONY: rpm srpm
 rpm: dist
 	mkdir -p $(BUILDDIR)
-	rpmbuild $(RPM_DEFINES) -ba --nodeps $(SPECFILE)
+	rpmbuild $(AM_RPM_DEFINES) -ba --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
 
 srpm: dist
 	mkdir -p $(BUILDDIR)
-	rpmbuild $(RPM_DEFINES) -bs --nodeps $(SPECFILE)
+	rpmbuild $(AM_RPM_DEFINES) -bs --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
 
 # This updates the debian version information, similar to how specfile for RPM
