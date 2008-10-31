@@ -149,7 +149,7 @@ runtest() {
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
     #make -e $1 2>&1 | tee $1$2.log
     popd
-    echo \%doc _$1$2/$1$2.log >> ../_build/buildlogs.txt
+    echo \%doc _$1$2/$1$2.log >> _build/buildlogs.txt
 }
 
 if [ -d /usr/include/cppunit ]; then
