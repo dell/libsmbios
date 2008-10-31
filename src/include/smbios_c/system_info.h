@@ -111,6 +111,10 @@ int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *
  */
 int DLL_SPEC sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode);
 
+int DLL_SPEC sysinfo_has_nvram_state_bytes();
+int DLL_SPEC sysinfo_get_nvram_state_bytes( int user );
+void DLL_SPEC sysinfo_set_nvram_state_bytes(int value, int user);
+
 /** Returns string describing the last error condition.
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any sysinfo_* function. Copy the contents if you need it longer.

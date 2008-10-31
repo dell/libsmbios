@@ -10,6 +10,10 @@
 # required by suse build system
 # norootforbuild
 
+%define run_unit_tests 1
+%{?_without_unit_tests: %define run_unit_tests 0}
+%{?_with_unit_tests:    %define run_unit_tests 1}
+
 # some distros already have fdupes macro. If not, we just set it to something innocuous
 %{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
 
@@ -144,12 +148,14 @@ echo \%doc _build/build.log > buildlogs.txt
 %check
 runtest() {
     mkdir _$1$2
+%if 0%{?run_unit_tests}
     pushd _$1$2
     ../configure
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
     #make -e $1 2>&1 | tee $1$2.log
     popd
     echo \%doc _$1$2/$1$2.log >> _build/buildlogs.txt
+%endif
 }
 
 if [ -d /usr/include/cppunit ]; then
@@ -223,28 +229,33 @@ rm -rf %{buildroot}
 %doc COPYING-GPL COPYING-OSL README
 %doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 %doc doc/pkgheader.sh
+
+# legacy C++
 %{_sbindir}/dellBiosUpdate
-%{_sbindir}/getSystemId
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/dellLEDCtl
-%{_sbindir}/stateByteCtl
-%{_sbindir}/upBootCtl
-%{_sbindir}/smbios_cmos_save_to_file
-
-# used by HAL in old location, so keep it around until HAL is updated.
 %{_sbindir}/dellWirelessCtl
-# this is a symlink to the above...
-%{_bindir}/dellWirelessCtl
-
+%{_sbindir}/upBootCtl
 %ifnarch ia64
 %{_sbindir}/dellMediaDirectCtl
 %endif
 
+# new C utilities
+%{_sbindir}/smbios-state-byte-ctl
+%{_sbindir}/smbios-get-ut-data
+
 # python utilities
+%{_sbindir}/smbios-sys-info-lite
 %{_sbindir}/smbios-sys-info
 %{_sbindir}/smbios-token-ctl
 %{_sbindir}/smbios-passwd
 %{_sbindir}/smbios-wakeup-ctl
+
+# symlinks: backwards compat
+# used by lots of people
+%{_sbindir}/getSystemId
+# used by HAL in old location, so keep it around until HAL is updated.
+%{_bindir}/dellWirelessCtl
 
 # data files
 %{_datadir}/smbios-utils
