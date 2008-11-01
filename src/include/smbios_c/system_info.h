@@ -111,10 +111,6 @@ int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *
  */
 int DLL_SPEC sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode);
 
-int DLL_SPEC sysinfo_has_nvram_state_bytes();
-int DLL_SPEC sysinfo_get_nvram_state_bytes( int user );
-void DLL_SPEC sysinfo_set_nvram_state_bytes(int value, int user);
-
 /** Returns string describing the last error condition.
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any sysinfo_* function. Copy the contents if you need it longer.
@@ -126,6 +122,15 @@ const char * DLL_SPEC sysinfo_strerror();
  * this header.
  */
 void DLL_SPEC  sysinfo_string_free(void *);
+
+// experimental functions
+int DLL_SPEC sysinfo_has_nvram_state_bytes();
+int DLL_SPEC sysinfo_get_nvram_state_bytes( int user );
+void DLL_SPEC sysinfo_set_nvram_state_bytes(int value, int user);
+
+int DLL_SPEC sysinfo_has_up_boot_flag();
+int DLL_SPEC sysinfo_set_up_boot_flag(int state);
+int DLL_SPEC sysinfo_get_up_boot_flag();
 
 EXTERN_C_END;
 

@@ -48,6 +48,7 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/system_info/property_tag.c		\
     src/libsmbios_c/system_info/system_info.c		\
     src/libsmbios_c/system_info/state_byte.c		\
+    src/libsmbios_c/system_info/up_flag.c		\
     src/libsmbios_c/system_info/dell_magic.h		\
     src/libsmbios_c/system_info/sysinfo_impl.h		\
     src/libsmbios_c/token/checksum.c			\

@@ -41,6 +41,10 @@ sbin_PROGRAMS += out/smbios-state-byte-ctl
 out_smbios_state_byte_ctl_SOURCES = src/bin/smbios-state-byte-ctl.c
 out_smbios_state_byte_ctl_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
 
+sbin_PROGRAMS += out/smbios-upflag-ctl
+out_smbios_upflag_ctl_SOURCES = src/bin/smbios-upflag-ctl.c
+out_smbios_upflag_ctl_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
+
 #
 # C++
 #
@@ -57,10 +61,6 @@ sbin_PROGRAMS += out/dellBiosUpdate
 out_dellBiosUpdate_SOURCES = src/bin/dellBiosUpdate.cpp
 out_dellBiosUpdate_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios_c++/common
-
-sbin_PROGRAMS += out/upBootCtl
-out_upBootCtl_SOURCES = src/bin/upBootCtl.cpp
-out_upBootCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
 sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
