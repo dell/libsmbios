@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-10-31 05:33-0500\n"
-"PO-Revision-Date: 2008-10-31 05:33-0500\n"
+"POT-Creation-Date: 2008-11-01 21:46-0500\n"
+"PO-Revision-Date: 2008-11-01 21:46-0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -248,6 +248,168 @@ msgstr "Activating token..."
 #: src/bin/smbios-token-ctl:286
 msgid "New values"
 msgstr "New values"
+
+#: src/bin/smbios-get-ut-data.c:53 src/bin/smbios-state-byte-ctl.c:47
+#: src/bin/smbios-upflag-ctl.c:49
+msgid "Debug: CMOS dump file to use instead of physical cmos"
+msgstr "Debug: CMOS dump file to use instead of physical cmos"
+
+#: src/bin/smbios-get-ut-data.c:54 src/bin/smbios-state-byte-ctl.c:46
+#: src/bin/smbios-sys-info-lite.c:38 src/bin/smbios-upflag-ctl.c:48
+msgid "Debug: Memory dump file to use instead of physical memory"
+msgstr "Debug: Memory dump file to use instead of physical memory"
+
+#: src/bin/smbios-get-ut-data.c:55 src/bin/smbios-sys-info-lite.c:39
+#: src/bin/smbios-upflag-ctl.c:53
+msgid "Display libsmbios version information"
+msgstr "Display libsmbios version information"
+
+#: src/bin/smbios-get-ut-data.c:83 src/bin/smbios-get-ut-data.c:92
+#: src/bin/smbios-sys-info-lite.c:76
+#, c-format
+msgid "Libsmbios:    %s\n"
+msgstr "Libsmbios:    %s\n"
+
+#: src/bin/smbios-get-ut-data.c:112
+#, c-format
+msgid "Dumping CMOS index(%d) data(%d)\n"
+msgstr "Dumping CMOS index(%d) data(%d)\n"
+
+#: src/bin/smbios-get-ut-data.c:251
+#, c-format
+msgid "dumping table header.\n"
+msgstr "dumping table header.\n"
+
+#: src/bin/smbios-get-ut-data.c:256
+#, c-format
+msgid "dumping table.\n"
+msgstr "dumping table.\n"
+
+#: src/bin/smbios-get-ut-data.c:261
+#, c-format
+msgid "dumped table.\n"
+msgstr "dumped table.\n"
+
+#: src/bin/smbios-get-ut-data.c:262
+#, c-format
+msgid "table length: %d\n"
+msgstr "table length: %d\n"
+
+#: src/bin/smbios-get-ut-data.c:266
+#, c-format
+msgid "error dumping header ret(%d) sizeof(tep): %zd\n"
+msgstr "error dumping header ret(%d) sizeof(tep): %zd\n"
+
+#: src/bin/smbios-get-ut-data.c:270
+#, c-format
+msgid "error dumping table\n"
+msgstr "error dumping table\n"
+
+#: src/bin/smbios-state-byte-ctl.c:48
+msgid "Set CMOS state byte to new value"
+msgstr "Set CMOS state byte to new value"
+
+#: src/bin/smbios-state-byte-ctl.c:49
+msgid "Set state byte owner"
+msgstr "Set state byte owner"
+
+#: src/bin/smbios-state-byte-ctl.c:99
+#, c-format
+msgid "State Byte: 0x%04x\n"
+msgstr "State Byte: 0x%04x\n"
+
+#: src/bin/smbios-sys-info-lite.c:67 src/bin/smbios-upflag-ctl.c:86
+#, c-format
+msgid "Libsmbios version:    %s\n"
+msgstr "Libsmbios version:    %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:83
+#, c-format
+msgid "System ID:    0x%04X\n"
+msgstr "System ID:    0x%04X\n"
+
+#: src/bin/smbios-sys-info-lite.c:86
+#, c-format
+msgid "Error getting the System ID:    unknown error.\n"
+msgstr "Error getting the System ID:    unknown error.\n"
+
+#: src/bin/smbios-sys-info-lite.c:93
+#, c-format
+msgid "Service Tag:  %s\n"
+msgstr "Service Tag:  %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:94
+#, c-format
+msgid "Express Service Code: %lld\n"
+msgstr "Express Service Code: %lld\n"
+
+#: src/bin/smbios-sys-info-lite.c:98
+#, c-format
+msgid "Error getting the Service Tag:  unknown error\n"
+msgstr "Error getting the Service Tag:  unknown error\n"
+
+#: src/bin/smbios-sys-info-lite.c:105
+#, c-format
+msgid "Aset Tag:  %s\n"
+msgstr "Aset Tag:  %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:108
+#, c-format
+msgid "Error getting the Aset Tag:  unknown error\n"
+msgstr "Error getting the Aset Tag:  unknown error\n"
+
+#: src/bin/smbios-sys-info-lite.c:115
+#, c-format
+msgid "Product Name: %s\n"
+msgstr "Product Name: %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:118
+#, c-format
+msgid "Error getting the System Name:    unknown error.\n"
+msgstr "Error getting the System Name:    unknown error.\n"
+
+#: src/bin/smbios-sys-info-lite.c:125
+#, c-format
+msgid "BIOS Version: %s\n"
+msgstr "BIOS Version: %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:128
+#, c-format
+msgid "Error getting the BIOS Version:    unknown error.\n"
+msgstr "Error getting the BIOS Version:    unknown error.\n"
+
+#: src/bin/smbios-sys-info-lite.c:135
+#, c-format
+msgid "Vendor:       %s\n"
+msgstr "Vendor:       %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:138
+#, c-format
+msgid "Error getting the Vendor:    unknown error.\n"
+msgstr "Error getting the Vendor:    unknown error.\n"
+
+#: src/bin/smbios-sys-info-lite.c:143
+#, c-format
+msgid "Is Dell:      %d\n"
+msgstr "Is Dell:      %d\n"
+
+#: src/bin/smbios-upflag-ctl.c:50 src/bin/smbios-upflag-ctl.c:52
+msgid "Set Boot To UP Flag to true"
+msgstr "Set Boot To UP Flag to true"
+
+#: src/bin/smbios-upflag-ctl.c:51
+msgid "Set Boot To UP Flag to false"
+msgstr "Set Boot To UP Flag to false"
+
+#: src/bin/smbios-upflag-ctl.c:101
+#, c-format
+msgid "UP Boot Flag SET\n"
+msgstr "UP Boot Flag SET\n"
+
+#: src/bin/smbios-upflag-ctl.c:106
+#, c-format
+msgid "UP Boot Flag NOT SET\n"
+msgstr "UP Boot Flag NOT SET\n"
 
 #: src/libsmbios_c/cmos/cmos_linux.c:76
 msgid "Error trying to raise IO Privilege level.\n"

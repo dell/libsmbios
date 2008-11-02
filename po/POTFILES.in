@@ -1,6 +1,12 @@
 src/bin/smbios-passwd
 src/bin/smbios-sys-info
 src/bin/smbios-token-ctl
+
+src/bin/smbios-get-ut-data.c
+src/bin/smbios-state-byte-ctl.c
+src/bin/smbios-sys-info-lite.c
+src/bin/smbios-upflag-ctl.c
+
 src/libsmbios_c/cmos/cmos_linux.c
 src/libsmbios_c/cmos/cmos_obj.c
 src/libsmbios_c/common/common.c

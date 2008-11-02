@@ -16,11 +16,13 @@
  * See the GNU General Public License for more details.
  */
 
-// compat header should always be first header if including system headers
-#include "smbios_c/compat.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <libintl.h>
 
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/obj/memory.h"
@@ -32,6 +34,10 @@
 
 #include "getopts.h"
 
+#define _(String) gettext(String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+
 // retval = 0; successfully activated token
 // retval = 1; failed cmos checksum pre-check
 // retval = 2; failed to set token
@@ -39,11 +45,12 @@
 
 struct options opts[] =
 {
-    { 1, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1 },
-    { 2, "cmos_file", "Debug: CMOS dump file to use instead of physical cmos", "c", 1 },
-    { 3, "set", "Set Boot To UP Flag to true", "s", 0 },
-    { 4, "clear", "Set Boot To UP Flag to false", "c", 0 },
-    { 5, "get", "Set Boot To UP Flag to true", "g", 0 },
+    { 1, "memory_file",  N_("Debug: Memory dump file to use instead of physical memory"), "m", 1 },
+    { 2, "cmos_file",  N_("Debug: CMOS dump file to use instead of physical cmos"), "c", 1 },
+    { 3, "set",  N_("Set Boot To UP Flag to true"), "s", 0 },
+    { 4, "clear",  N_("Set Boot To UP Flag to false"), "c", 0 },
+    { 5, "get",  N_("Set Boot To UP Flag to true"), "g", 0 },
+    { 255, "version", N_("Display libsmbios version information"), "v", 0 },
     { 0, NULL, NULL, NULL, 0 }
 };
 
@@ -52,6 +59,10 @@ main (int argc, char **argv)
 {
     int retval = 0;
     int flag = 2;
+
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, LIBSMBIOS_LOCALEDIR);
+    textdomain(GETTEXT_PACKAGE);
 
     int c;
     char *args = 0;
@@ -71,6 +82,10 @@ main (int argc, char **argv)
             if( sysinfo_has_up_boot_flag() )
                 sysinfo_set_up_boot_flag( flag );
             break;
+        case 255:
+            printf( _("Libsmbios version:    %s\n"), smbios_get_library_version_string());
+            exit(0);
+            break;
         default:
             break;
         }
@@ -83,12 +98,12 @@ main (int argc, char **argv)
         if(sysinfo_get_up_boot_flag())
         {
                 retval = 0;
-                printf("UP Boot Flag SET\n");
+                printf(_("UP Boot Flag SET\n"));
         }
         else
         {
                 retval = 1;
-                printf("UP Boot Flag NOT SET\n");
+                printf(_("UP Boot Flag NOT SET\n"));
         }
     }
 

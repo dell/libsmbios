@@ -16,12 +16,14 @@
  * See the GNU General Public License for more details.
  */
 
-// compat header should always be first header if including system headers
-#include "smbios_c/compat.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libintl.h>
 
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/obj/cmos.h"
@@ -30,7 +32,9 @@
 #include "smbios_c/system_info.h"
 #include "getopts.h"
 
-#define _(s) s
+#define _(String) gettext(String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
 
 // retval = 0; successfully activated token
 // retval = 1; failed cmos checksum pre-check
@@ -39,10 +43,10 @@
 
 struct options opts[] =
 {
-    { 1, "memory_file", _("Debug: Memory dump file to use instead of physical memory"), "m", 1 },
-    { 2, "cmos_file",   _("Debug: CMOS dump file to use instead of physical cmos"), "c", 1 },
-    { 3, "set",         _("Set CMOS state byte to new value"), "s", 1 },
-    { 4, "owner",       _("Set state byte owner"), "o", 1 },
+    { 1, "memory_file", N_("Debug: Memory dump file to use instead of physical memory"), "m", 1 },
+    { 2, "cmos_file",   N_("Debug: CMOS dump file to use instead of physical cmos"), "c", 1 },
+    { 3, "set",         N_("Set CMOS state byte to new value"), "s", 1 },
+    { 4, "owner",       N_("Set state byte owner"), "o", 1 },
     { 0, NULL, NULL, NULL, 0 }
 };
 
@@ -56,6 +60,11 @@ main (int argc, char **argv)
     bool set = false;
     int newvalue = 0;
     bool ownerset = false;
+    
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, LIBSMBIOS_LOCALEDIR);
+    textdomain(GETTEXT_PACKAGE);
+
     while ( (c=getopts(argc, argv, opts, &args)) != 0 )
     {
         switch(c)

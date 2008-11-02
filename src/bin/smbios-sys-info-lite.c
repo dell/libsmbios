@@ -16,20 +16,27 @@
  * See the GNU General Public License for more details.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <libintl.h>
 
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/system_info.h"
 
 #include "getopts.h"
 
+#define _(String) gettext(String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
+
 struct options opts[] =
     {
-        {
-            254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1
-        },
-        { 255, "version", "Display libsmbios version information", "v", 0 },
+        { 254, "memory_file", N_("Debug: Memory dump file to use instead of physical memory"), "m", 1 },
+        { 255, "version", N_("Display libsmbios version information"), "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
     };
 
@@ -39,6 +46,10 @@ main (int argc, char **argv)
     int retval = 0;
     int sysid = 0;
     char *str;
+
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, LIBSMBIOS_LOCALEDIR);
+    textdomain(GETTEXT_PACKAGE);
 
     int c=0;
     char *args = 0;
@@ -53,7 +64,7 @@ main (int argc, char **argv)
             memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, args);
             break;
         case 255:
-            printf("Libsmbios version:    %s\n", smbios_get_library_version_string());
+            printf( _("Libsmbios version:    %s\n"), smbios_get_library_version_string());
             exit(0);
             break;
         default:
@@ -62,74 +73,74 @@ main (int argc, char **argv)
         free(args);
     }
 
-    printf("Libsmbios:    %s\n", smbios_get_library_version_string());
+    printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
 
     //Error handline needs to be implemented for each of these functions
     //we don't want to catch exceptions because we want to test the C calling interface
     //and besides, C calling interface cannot throw exceptions.
     sysid     = sysinfo_get_dell_system_id();
     if(sysid)
-        printf("System ID:    0x%04X\n", sysid);
+        printf(_("System ID:    0x%04X\n"), sysid);
     else
     {
-        printf("Error getting the System ID:    unknown error.\n");
+        printf(_("Error getting the System ID:    unknown error.\n"));
         retval = 1;
     }
 
     str    = sysinfo_get_service_tag();
     if(str)
     {
-        printf("Service Tag:  %s\n", str);
-        printf("Express Service Code: %lld\n", strtoll(str, NULL, 36));
+        printf(_("Service Tag:  %s\n"), str);
+        printf(_("Express Service Code: %lld\n"), strtoll(str, NULL, 36));
     }
     else
     {
-        printf("Error getting the Service Tag:  unknown error\n");
+        printf(_("Error getting the Service Tag:  unknown error\n"));
         retval = 1;
     }
     sysinfo_string_free(str);
 
     str    = sysinfo_get_asset_tag();
     if(str)
-        printf("Aset Tag:  %s\n", str);
+        printf(_("Aset Tag:  %s\n"), str);
     else
     {
-        printf("Error getting the Aset Tag:  unknown error\n");
+        printf(_("Error getting the Aset Tag:  unknown error\n"));
         retval = 1;
     }
     sysinfo_string_free(str);
 
     str   = sysinfo_get_system_name();
     if(str)
-        printf("Product Name: %s\n", str);
+        printf(_("Product Name: %s\n"), str);
     else
     {
-        printf("Error getting the System Name:    unknown error.\n");
+        printf(_("Error getting the System Name:    unknown error.\n"));
         retval = 1;
     }
     sysinfo_string_free(str);
 
     str   = sysinfo_get_bios_version();
     if(str)
-        printf("BIOS Version: %s\n", str);
+        printf(_("BIOS Version: %s\n"), str);
     else
     {
-        printf("Error getting the BIOS Version:    unknown error.\n");
+        printf(_("Error getting the BIOS Version:    unknown error.\n"));
         retval = 1;
     }
     sysinfo_string_free(str);
 
     str   = sysinfo_get_vendor_name();
     if(str)
-        printf("Vendor:       %s\n", str);
+        printf(_("Vendor:       %s\n"), str);
     else
     {
-        printf("Error getting the Vendor:    unknown error.\n");
+        printf(_("Error getting the Vendor:    unknown error.\n"));
         retval = 1;
     }
     sysinfo_string_free(str);
 
-    printf("Is Dell:      %d\n", (sysid!=0));
+    printf(_("Is Dell:      %d\n"), (sysid!=0));
 
     return retval;
 }

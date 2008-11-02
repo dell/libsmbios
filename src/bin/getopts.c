@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libintl.h>
 
 #include "getopts.h"
 
@@ -94,7 +95,7 @@ int getopts_usage(char *progName, struct options opts[])
         }
       if(cmd)
         {
-          printf("  %s%s\n", cmd, opts[count].description);
+          printf("  %s%s\n", cmd, gettext(opts[count].description));
           free(cmd);
         }
     }

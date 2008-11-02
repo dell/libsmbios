@@ -16,11 +16,14 @@
  * See the GNU General Public License for more details.
  */
 
-#include <stdio.h>        // fopen()
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-//#include <unistd.h>    // getopt()
+#include <stdio.h>        // fopen()
 #include <string.h>
 #include <stdlib.h>
+#include <libintl.h>
 
 #include "smbios_c/obj/cmos.h"
 #include "smbios_c/obj/memory.h"
@@ -31,6 +34,10 @@
 #include "smbios_c/system_info.h"
 
 #include "getopts.h"
+
+#define _(String) gettext(String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop (String)
 
 const char *sysstrDumpFile = "sysstr.dat";
 const char *smbiosDumpFile = "smbios.dat";
@@ -43,9 +50,9 @@ void dumpCmos(const struct smbios_struct *structure, void *userdata);
 
 struct options opts[] =
     {
-        { 253, "cmos_file", "Debug: CMOS dump file to use instead of physical cmos", "c", 1 },
-        { 254, "memory_file", "Debug: Memory dump file to use instead of physical memory", "m", 1 },
-        { 255, "version", "Display libsmbios version information", "v", 0 },
+        { 253, "cmos_file", N_("Debug: CMOS dump file to use instead of physical cmos"), "c", 1 },
+        { 254, "memory_file", N_("Debug: Memory dump file to use instead of physical memory"), "m", 1 },
+        { 255, "version", N_("Display libsmbios version information"), "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
     };
 
@@ -54,6 +61,11 @@ main (int argc, char **argv)
 {
     int c=0;
     char *args = 0;
+
+    setlocale(LC_ALL, "");
+    bindtextdomain(GETTEXT_PACKAGE, LIBSMBIOS_LOCALEDIR);
+    textdomain(GETTEXT_PACKAGE);
+
     while ( (c=getopts(argc, argv, opts, &args)) != 0 )
     {
         switch(c)
@@ -68,7 +80,7 @@ main (int argc, char **argv)
             memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, args);
             break;
         case 255:
-            printf("Libsmbios:    %s\n", smbios_get_library_version_string());
+            printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
             exit(0);
             break;
         default:
@@ -77,7 +89,7 @@ main (int argc, char **argv)
         free(args);
     }
 
-    printf("Libsmbios:    %s\n", smbios_get_library_version_string());
+    printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
 
     // SMBIOS TABLE
     dump_smbios_table(smbiosDumpFile);
@@ -97,7 +109,7 @@ void dumpCmosIndexPort(const char *fn, u32 indexPort, u32 dataPort)
     struct cmos_access_obj *cmos=0;
     struct cmos_access_obj *dump=0;
 
-    printf("Dumping CMOS index(%d) data(%d)\n", indexPort, dataPort);
+    printf(_("Dumping CMOS index(%d) data(%d)\n"), indexPort, dataPort);
 
     // ensure file exists
     FILE *fd = fopen(cmosDumpFile, "a+");
@@ -236,26 +248,26 @@ void dump_smbios_table(const char *smbiosDumpFile)
     tep.checksum = ~checksum + 1;
 
 
-    printf("dumping table header.\n");
+    printf( _("dumping table header.\n")) ;
     int ret = fwrite(&tep, sizeof(tep), 1, fd);
     if (ret != 1)  // one item
         goto out_err_header;
 
-    printf("dumping table.\n");
+    printf( _("dumping table.\n")) ;
     ret = fwrite(my->table, tep.dmi.table_length, 1, fd);
     if (ret != 1)  // one item
         goto out_err_table;
 
-    printf("dumped table.\n");
-    printf("table length: %d\n", tep.dmi.table_length);
+    printf(_("dumped table.\n"));
+    printf(_("table length: %d\n"), tep.dmi.table_length);
 
     goto out;
 out_err_header:
-    printf("error dumping header ret(%d) sizeof(tep): %zd\n", ret, sizeof(tep));
+    printf( _("error dumping header ret(%d) sizeof(tep): %zd\n"), ret, sizeof(tep));
     goto out;
 
 out_err_table:
-    printf("error dumping table\n");
+    printf( _("error dumping table\n"));
     goto out;
 
 out:
