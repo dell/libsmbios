@@ -7,7 +7,17 @@
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
-"""dumpCmos"""
+"""smbios-wireless-ctl
+
+
+
+BIG FAT NOTE: 
+
+this one is still being re-implemented. not done yet.
+
+
+
+"""
 
 from __future__ import generators
 
@@ -33,6 +43,9 @@ sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
 import cli
+import libsmbios_c.token as token
+import libsmbios_c.smbios as smbios
+import libsmbios_c.smi as smi
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
@@ -42,33 +55,38 @@ class CmdlineError(Exception): pass
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
     
-    parser.add_option('info', action="store", default=None, dest="action", help= _("Show wireless configuration (default)"))
-    parser.add_option('boot', action="store_const", const=1, default=None, dest="boot", help= _("Set BIOS boot-time setting as well as runtime setting."))
-    parser.add_option('boot_only', action="store_const", const=2, dest="boot", help= _("Set BIOS boot-time setting only."))
+    parser.add_option('--info', action="store", default=None, dest="action", help= _("Show wireless configuration (default)"))
 
-    parser.add_option('wlan', action="store", type="int", default=None, dest="wlan",
+    parser.add_option('--boot',    action="store_true", default=False, dest="boot", help= _("Set BIOS boot-time setting."))
+    parser.add_option('--no-boot', action="store_false",               dest="boot", help= _("Do not set BIOS boot-time setting."))
+
+    parser.add_option('--runtime',    action="store_true",  default=True, dest="runtime", help= _("Set BIOS runtime setting (default)."))
+    parser.add_option( "--no-runtime", "--boot-only", '--boot_only', 
+                                      action="store_false",               dest="runtime", help= _("Do not set BIOS runtime setting."))
+
+    parser.add_option('--wlan', action="store", type="int", default=None, dest="wlan",
             help= _("Set radio runtime status for wireless LAN"))
-    parser.add_option('bt',   action="store", type="int", default=None, dest="bt",
+    parser.add_option('--bt',   action="store", type="int", default=None, dest="bt",
             help= _("Set radio runtime status for Bluetooth"))
-    parser.add_option('wwan', action="store", type="int", default=None, dest="wwan",
+    parser.add_option('--wwan', action="store", type="int", default=None, dest="wwan",
             help= _("Set radio runtime status for cellular (wireless WAN)"))
 
-    parser.add_option('sw_wlan', action="store", type="int", default=None, dest="sw_wlan",
+    parser.add_option('--sw_wlan', action="store", type="int", default=None, dest="sw_wlan",
             help= _("Set hardware switch so that it controls radio for wireless LAN"))
-    parser.add_option('sw_bt',   action="store", type="int", default=None, dest="sw_bt",
+    parser.add_option('--sw_bt',   action="store", type="int", default=None, dest="sw_bt",
             help= _("Set hardware switch so that it controls radio for Bluetooth"))
-    parser.add_option('sw_wwan', action="store", type="int", default=None, dest="sw_wwan",
+    parser.add_option('--sw_wwan', action="store", type="int", default=None, dest="sw_wwan",
             help= _("Set hardware switch so that it controls radio for cellular (wireless WAN)"))
 
-    parser.add_option('st_wlan', action="store", type="int", default=None, dest="st_wlan",
+    parser.add_option('--st_wlan', action="store", type="int", default=None, dest="st_wlan",
             help= _("Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
-    parser.add_option('st_bt',   action="store", type="int", default=None, dest="st_bt",
+    parser.add_option('--st_bt',   action="store", type="int", default=None, dest="st_bt",
             help= _("Get status for Bluetooth. 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
-    parser.add_option('st_wwan', action="store", type="int", default=None, dest="st_wwan",
+    parser.add_option('--st_wwan', action="store", type="int", default=None, dest="st_wwan",
             help= _("Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
 
-    parser.add_option('st_locator', action="store", type="int", default=None, dest="sw_locator",
-            help= _(""))
+    parser.add_option('--st_locator', action="store", type="int", default=None, dest="sw_locator",
+            help= _("Enable or disable the WIFI locator switch"))
 
     cli.addStdOptions(parser)
     return parser.parse_args()
@@ -91,13 +109,14 @@ def wirelessBoot(radio, enable):
     print "Set boot settings for %s" % radio
 
 def wirelessRuntime(radio, enable):
-    #if (enable && !smbios::isTokenActive(enable_token))
-    #    throw ConfigErrorImpl("boot time config disabled, runtime setting has no effect.");
-    #u32 disable = enable ? 0:1;
-    #u32 args[4] = {(1 | (static_cast<u32>(radioNum)<<8) | ((disable)<<16)), 0, 0, 0};
-    #u32 res[4] = {0,};
-    #doSimpleCallingInterfaceSmi(17, 11, args, res);
+    tokenTable = token.TokenTable()
+    if enable and not tokenTable[radios[radio]["enable"]].isActive():
+        raise Exception( _("Runtime setting has no effect when boot time config is disabled. Ignoring.") )
+
     print "Set runtime settings for %s" % radio
+    disable = 1
+    if enable: disable=0
+    smi.simple_ci_smi( 17, 11, (1 | ((radios[radio]['radioId'])<<8) | ((disable)<<16)) )
 
 def wirelessSwitch(radio, enable):
     print "Set switch settings for %s" % radio
@@ -109,6 +128,10 @@ def main():
     exit_code = 0
     (options, args) = command_parse()
     cli.setup_std_options(options)
+
+    # need to do one or the other.
+    if not options.runtime:
+        options.boot=1
 
     for i in ("wlan", "bt", "wwan"):
         if getattr(options, i) is not None:
