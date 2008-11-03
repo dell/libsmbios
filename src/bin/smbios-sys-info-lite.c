@@ -76,8 +76,6 @@ main (int argc, char **argv)
     printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
 
     //Error handline needs to be implemented for each of these functions
-    //we don't want to catch exceptions because we want to test the C calling interface
-    //and besides, C calling interface cannot throw exceptions.
     sysid     = sysinfo_get_dell_system_id();
     if(sysid)
         printf(_("System ID:    0x%04X\n"), sysid);
