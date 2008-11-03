@@ -80,6 +80,7 @@ struct token_table
 
 __internal void add_token(struct token_table *t, struct token_obj *o);
 __internal int add_d4_tokens(struct token_table *t);
+__internal int add_da_tokens(struct token_table *t);
 
 
 #if defined(_MSC_VER)

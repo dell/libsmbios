@@ -138,8 +138,10 @@ void __internal init_da_token(struct token_obj *t)
     t->private_data = 0;
 }
 
-void __internal add_da_tokens(struct token_table *t)
+int __internal add_da_tokens(struct token_table *t)
 {
+    char *error=0;
+    int retval = 0;
     fnprintf("\n");
     smbios_table_for_each_struct_type(t->smbios_table, s, 0xDA) {
         struct calling_interface_structure *d4_struct = (struct calling_interface_structure*)s;
@@ -147,6 +149,7 @@ void __internal add_da_tokens(struct token_table *t)
 
 
         while (token->tokenId != TokenTypeEOT) {
+            error =   _("Allocation failure while trying to create token object.");
             struct token_obj *n = calloc(1, sizeof(struct token_obj));
             if (!n)
                 goto out_err;
@@ -160,9 +163,10 @@ void __internal add_da_tokens(struct token_table *t)
     }
     goto out;
 out_err:
-    // really should do something here
+    strlcat(t->errstring, error, ERROR_BUFSIZE);
+    retval = -1;
 out:
-    return;
+    return retval;
 }
 
 

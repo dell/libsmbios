@@ -274,6 +274,10 @@ int init_token_table(struct token_table *t)
     if (ret)
         goto out_tokenfail;
 
+    ret = add_da_tokens(t);
+    if (ret)
+        goto out_tokenfail;
+
     t->initialized = 1;
     retval = 0;
     goto out;
