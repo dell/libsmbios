@@ -29,6 +29,9 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-wakeup-ctl
 dist_sbin_SCRIPTS += src/bin/smbios-wireless-ctl
 DATA_HOOK_REPLACE += $(sbindir)/smbios-wireless-ctl
 
+dist_sbin_SCRIPTS += src/bin/smbios-rbu-bios-update
+DATA_HOOK_REPLACE += $(sbindir)/smbios-rbu-bios-update
+
 #
 # C
 #

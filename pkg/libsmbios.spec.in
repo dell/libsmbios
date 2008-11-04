@@ -251,6 +251,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-passwd
 %{_sbindir}/smbios-wakeup-ctl
 %{_sbindir}/smbios-wireless-ctl
+%{_sbindir}/smbios-rbu-bios-update
 
 # symlinks: backwards compat
 # used by lots of people

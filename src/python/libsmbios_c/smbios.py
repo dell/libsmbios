@@ -24,6 +24,8 @@ SMBIOS_GET_SINGLETON =0x0001
 SMBIOS_GET_NEW       =0x0002
 SMBIOS_UNIT_TEST_MODE=0x0004
 
+class TableParseError(Exception): pass
+
 class SmbiosStructure(ctypes.Structure): 
     def getString(self, off):
         return _libsmbios_c.smbios_struct_get_string_from_offset(self, off)
@@ -84,15 +86,17 @@ class _SmbiosTable(object):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =_libsmbios_c.smbios_table_get_next_struct_by_handle( self._tableobj, cur, handle )
         if not bool(cur):
-            raise exceptions.Exception( _("no such handle %s") % handle)
+            raise exceptions.IndexError( _("No SMBIOS structure found with handle %s") % handle)
         return cur.contents
 
     def getStructureByType(self, t):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =_libsmbios_c.smbios_table_get_next_struct_by_type( self._tableobj, cur, t )
         if not bool(cur):
-            raise exceptions.Exception( _("no such type %s") % t)
+            raise exceptions.IndexError( _("No SMBIOS structure found with type %s") % t)
         return cur.contents
+
+    __getitem__ = getStructureByType
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
@@ -106,14 +110,13 @@ class _smbios_table(ctypes.Structure): pass
 _libsmbios_c.smbios_table_strerror.argtypes = [ ctypes.POINTER(_smbios_table) ]
 _libsmbios_c.smbios_table_strerror.restype = ctypes.c_char_p
 def _strerror(obj):
-    return Exception(_libsmbios_c.smbios_table_strerror(obj))
-
+    return _libsmbios_c.smbios_table_strerror(obj)
 
 #struct smbios_table *smbios_table_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.smbios_table_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.smbios_table_factory.restype = ctypes.POINTER(_smbios_table)
-_libsmbios_c.smbios_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _strerror(r))
+_libsmbios_c.smbios_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: TableParseError(_strerror(r)))
 
 #void   smbios_table_free(struct smbios_table *);
 _libsmbios_c.smbios_table_free.argtypes = [ ctypes.POINTER(_smbios_table) ]
@@ -146,17 +149,17 @@ _libsmbios_c.smbios_struct_get_handle.restype = ctypes.c_uint16
 #const char * DLL_SPEC smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
 _libsmbios_c.smbios_struct_get_string_from_offset.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
 _libsmbios_c.smbios_struct_get_string_from_offset.restype = ctypes.c_char_p
-_libsmbios_c.smbios_struct_get_string_from_offset.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.Exception( _("String from offset %d doesnt exist") % a[1]))
+_libsmbios_c.smbios_struct_get_string_from_offset.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.IndexError( _("String from offset %d doesnt exist") % a[1]))
 
 #const char * DLL_SPEC smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 _libsmbios_c.smbios_struct_get_string_number.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
 _libsmbios_c.smbios_struct_get_string_number.restype = ctypes.c_char_p
-_libsmbios_c.smbios_struct_get_string_number.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.Exception( _("String number %d doesnt exist") % a[1]))
+_libsmbios_c.smbios_struct_get_string_number.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.IndexError( _("String number %d doesnt exist") % a[1]))
 
 #int DLL_SPEC smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
 _libsmbios_c.smbios_struct_get_data.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_void_p, ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.smbios_struct_get_data.restype = ctypes.c_int
-_libsmbios_c.smbios_struct_get_data.errcheck = errorOnNegativeFN(lambda r,f,a: exceptions.Exception( _("something bad happened") ))
+_libsmbios_c.smbios_struct_get_data.errcheck = errorOnNegativeFN(lambda r,f,a: exceptions.IndexError( _("Tried to get data past the end of the structure.") ))
 
 
 
