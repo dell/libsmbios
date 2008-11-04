@@ -102,7 +102,7 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
     toReturn = 0;
 
 out:
-    if (toReturn)
+    if (toReturn && ! (flags & MEMORY_NO_ERR_CLEAR))
         clear_err(toReturn);
     return toReturn;
 }

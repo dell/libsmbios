@@ -28,6 +28,7 @@ EXTERN_C_BEGIN;
 #define MEMORY_GET_SINGLETON  0x0001
 #define MEMORY_GET_NEW        0x0002
 #define MEMORY_UNIT_TEST_MODE 0x0004
+#define MEMORY_NO_ERR_CLEAR   0x0008
 
 struct memory_access_obj;
 

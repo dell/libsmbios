@@ -28,12 +28,11 @@
 #include <string.h>     // memcpy
 #include <errno.h>
 #include <sys/mman.h>   // mmap
-#include "internal_strl.h"
 
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/types.h"
 #include "memory_impl.h"
-#include "internal_strl.h"
+#include "common_internal.h"
 
 // usually want to include this last
 #include "libsmbios_c_intlize.h"
@@ -155,7 +154,6 @@ static int copy_mmap(const struct memory_access_obj *this, u8 *buffer, u64 offse
     private_data->mem_errno = errno = 0;
     int retval = -1;
     const char *error = 0;
-    size_t curstrsize;
 
     size_t bytesCopied = 0;
 
@@ -196,9 +194,7 @@ err_out:
     strlcpy(this->errstring, error, ERROR_BUFSIZE);
     strlcat(this->errstring, private_data->filename, ERROR_BUFSIZE);
     strlcat(this->errstring, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
-    curstrsize = strlen(this->errstring);
-    if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
-        strerror_r(errno, this->errstring + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+    fixed_strerror(errno, this->errstring, ERROR_BUFSIZE);
 
     if (private_data->lastMapping == (void*)-1)
         private_data->lastMapping = 0;
@@ -253,7 +249,6 @@ static void linux_free(struct memory_access_obj *this)
 __internal int init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
 {
     char *errbuf=0;
-    size_t curstrsize;
     int retval = 0;
     const char *error;
 
@@ -295,9 +290,7 @@ out_fail:
 
         strlcat(errbuf, private_data->filename, ERROR_BUFSIZE);
         strlcat(errbuf, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
-        curstrsize = strlen(errbuf);
-        if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
-            strerror_r(errno, errbuf + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+        fixed_strerror(errno, errbuf, ERROR_BUFSIZE);
     }
     fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
     linux_free(m);
