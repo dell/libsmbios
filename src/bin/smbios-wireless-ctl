@@ -7,17 +7,7 @@
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
-"""smbios-wireless-ctl
-
-
-
-BIG FAT NOTE: 
-
-this one is still being re-implemented. not done yet.
-
-
-
-"""
+"""smbios-wireless-ctl"""
 
 from __future__ import generators
 
@@ -46,6 +36,7 @@ import cli
 import libsmbios_c.token as token
 import libsmbios_c.smbios as smbios
 import libsmbios_c.smi as smi
+import libsmbios_c.system_info as sysinfo
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
@@ -54,14 +45,14 @@ class CmdlineError(Exception): pass
 
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
-    
-    parser.add_option('--info', action="store", default=None, dest="action", help= _("Show wireless configuration (default)"))
+
+    parser.add_option('--info', action="store_true", default=False, help= _("Show wireless configuration (default)"))
 
     parser.add_option('--boot',    action="store_true", default=False, dest="boot", help= _("Set BIOS boot-time setting."))
     parser.add_option('--no-boot', action="store_false",               dest="boot", help= _("Do not set BIOS boot-time setting."))
 
     parser.add_option('--runtime',    action="store_true",  default=True, dest="runtime", help= _("Set BIOS runtime setting (default)."))
-    parser.add_option( "--no-runtime", "--boot-only", '--boot_only', 
+    parser.add_option( "--no-runtime", "--boot-only", '--boot_only',
                                       action="store_false",               dest="runtime", help= _("Do not set BIOS runtime setting."))
 
     parser.add_option('--wlan', action="store", type="int", default=None, dest="wlan",
@@ -78,20 +69,20 @@ def command_parse():
     parser.add_option('--sw_wwan', action="store", type="int", default=None, dest="sw_wwan",
             help= _("Set hardware switch so that it controls radio for cellular (wireless WAN)"))
 
-    parser.add_option('--st_wlan', action="store", type="int", default=None, dest="st_wlan",
+    parser.add_option('--st_wlan', action="store_true", default=False, dest="st_wlan",
             help= _("Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
-    parser.add_option('--st_bt',   action="store", type="int", default=None, dest="st_bt",
+    parser.add_option('--st_bt',   action="store_true", default=False, dest="st_bt",
             help= _("Get status for Bluetooth. 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
-    parser.add_option('--st_wwan', action="store", type="int", default=None, dest="st_wwan",
+    parser.add_option('--st_wwan', action="store_true", default=False, dest="st_wwan",
             help= _("Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
 
-    parser.add_option('--st_locator', action="store", type="int", default=None, dest="sw_locator",
+    parser.add_option('--st_locator', action="store", type="int", default=None, dest="st_locator",
             help= _("Enable or disable the WIFI locator switch"))
 
     cli.addStdOptions(parser)
     return parser.parse_args()
 
-# old boot-only interface
+# old boot-only interface (legacy)
 #const int Radio_Transmission_Enable = 0x010c;
 #const int Radio_Transmission_Disable = 0x010d;
 #const int Wireless_Device_Disable = 0x0114;
@@ -99,30 +90,143 @@ def command_parse():
 #const int Wireless_Device_App_Or_Hotkey_Control = 0x0116;
 
 radios = {
-    "wlan": {"radioId":1, "enable": 0x0180, "disable": 0x017F, "switchEnable": 0x0186, "switchDisable": 0x0185},
-    "bt":   {"radioId":2, "enable": 0x0152, "disable": 0x0153, "switchEnable": 0x0182, "switchDisable": 0x0181},
-    "wwan": {"radioId":3, "enable": 0x017C, "disable": 0x017B, "switchEnable": 0x0184, "switchDisable": 0x0183},
-    "locator": {"switchEnable": 0x017E, "switchDisable": 0x017D},
+    "wlan": {
+            "radioEnable" : 0x0180, "radioDisable" : 0x017F, "radioRuntimeId": 1,
+            "switchEnable": 0x0186, "switchDisable": 0x0185, "switchRuntime" : (1, 1),
+             "supported_bit": 2, "installed_bit": 8, "disabled_bit": 17, "name": "WLAN",
+             "legacyEnable": 0x010c, "legacyDisable": 0x010d,
+             "legacySwitchEnable": 0x0116, "legacySwitchDisable": 0x0115,
+            },
+
+    "bt":   {
+            "radioEnable" : 0x0152, "radioDisable" : 0x0153, "radioRuntimeId": 2,
+            "switchEnable": 0x0182, "switchDisable": 0x0181, "switchRuntime" : (1, 2),
+             "supported_bit": 3, "installed_bit": 9, "disabled_bit": 18, "name": "Bluetooth",
+            },
+
+    "wwan": {
+            "radioEnable" : 0x017C, "radioDisable" : 0x017B, "radioRuntimeId": 3,
+            "switchEnable": 0x0184, "switchDisable": 0x0183, "switchRuntime" : (1, 4),
+             "supported_bit": 4, "installed_bit": 10, "disabled_bit": 19, "name": "WWAN",
+            },
+
+    "locator": {
+            "switchEnable": 0x017E, "switchDisable": 0x017D, "switchRuntime": (2, 1),
+            },
     }
 
-def wirelessBoot(radio, enable):
+def radioBootCtl(radio, enable):
     print "Set boot settings for %s" % radio
-
-def wirelessRuntime(radio, enable):
     tokenTable = token.TokenTable()
-    if enable and not tokenTable[radios[radio]["enable"]].isActive():
+    if enable:
+        token[ radio["radioEnable"] ].activate()
+    else:
+        token[ radio["radioDisable"] ].activate()
+
+def radioRuntimeCtl(radio, enable):
+    tokenTable = token.TokenTable()
+    if enable and not tokenTable[radio["radioEnable"]].isActive():
         raise Exception( _("Runtime setting has no effect when boot time config is disabled. Ignoring.") )
 
     print "Set runtime settings for %s" % radio
     disable = 1
     if enable: disable=0
-    smi.simple_ci_smi( 17, 11, (1 | ((radios[radio]['radioId'])<<8) | ((disable)<<16)) )
+    smi.simple_ci_smi( 17, 11, (1 | ((radio['radioId'])<<8) | ((disable)<<16)) )
 
-def wirelessSwitch(radio, enable):
-    print "Set switch settings for %s" % radio
+def switchBootCtl(radio, enable):
+    print "Set boot switch settings for %s" % radio
+
+    switch = "switchDisable"
+    if enable:
+        switch = "switchEnable"
+
+    tokenTable = token.TokenTable()
+    tokenTable[radio[switch]].activate()
+
+def switchRuntimeCtl(radio, enable):
+    print "Set runtime switch settings for %s" % radio
+    whichConfig, whichSwitch = radio["switchRuntime"]
+    oldconfig=0
+    if whichConfig == 1:
+        res = smi.simple_ci_smi( 17, 11, 2 )
+        oldconfig = res[smi.cbRES2] & 0xFF
+
+    newConfig = (oldConfig & ~whichSwitch)
+    if enable:
+        newconfig = newconfig | whichSwitch
+
+    smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newConfig << 16)))
+
+def onOff(thing, trueval="on", falseval="off"):
+    if thing:
+        return trueval
+    else:
+        return falseval
+
+STATUS_ENABLED = 0
+STATUS_DISABLED = 1
+STATUS_NOT_PRESENT = 2
+STATUS_UNSUPPORTED = 3
+STATUS_UNKNOWN = 4
 
 def wirelessInfo(radio):
-    print "Print status for %s" % radio
+    print "\nRadio Status for %s:" % radio["name"];
+    ret = STATUS_UNKNOWN
+    res = smi.simple_ci_smi( 17, 11 )
+
+    tokenTable = token.TokenTable()
+    print "\t%s %s at boot" % (radio["name"],
+            onOff(tokenTable[radio["radioEnable"]].isActive(), "enabled", "disabled"))
+
+    if res[smi.cbRES2] & (1 << radio["supported_bit"]):
+        print "\t%s supported" % radio["name"]
+
+        if res[smi.cbRES2] & (1<< radio["disabled_bit"]):
+            ret = STATUS_DISABLED;
+            print "\t%s disabled" % radio["name"]
+        else:
+            ret = STATUS_ENABLED;
+            print "\t%s enabled" % radio["name"]
+
+        if res[smi.cbRES2] & (1<< radio["installed_bit"]):
+            print "\t%s installed" % radio["name"]
+        else:
+            ret = STATUS_NOT_PRESENT;
+            print "\t%s not installed" % radio["name"]
+
+        print "\t%s %s by wireless switch at boot" % (radio["name"],
+                onOff(tokenTable[radio["switchEnable"]].isActive(), "controlled", "not controlled"))
+
+    else:
+        ret = STATUS_UNSUPPORTED
+        print "\t%s not supported" % radio["name"]
+
+    print "\tStatus Code: %d" % ret
+
+def outputWirelessInfo():
+    res = smi.simple_ci_smi( 17, 11 )
+    print "Wireless Info:"
+    if res[smi.cbRES2] & (1<<0):
+        print "\tHardware switch supported"
+        print "\tHardware switch is %s" % onOff(res[smi.cbRES2] & (1 << 16), "On", "Off")
+    else:
+        print "\tHardware switch not supported"
+
+    print "\tWiFi Locator %s" % onOff(res[smi.cbRES2] & (1<<1), "supported", "not supported")
+    print "\tWireless Keyboard %s" % onOff(res[smi.cbRES2] & (1<<5), "supported", "not supported")
+    print "\tNVRAM Size: %d bytes" % res[smi.cbRES3]
+    print "\tNVRAM format version: %d" % (res[smi.cbRES4] & 0xFF)
+
+def outputSwitchStatus():
+    res = smi.simple_ci_smi( 17, 11, 2 )
+    print "\nWireless Switch Configuration"
+    print "\tWLAN switch control %s" %      onOff((res[smi.cbRES2] & (1<<0)), "on", "off")
+    print "\tBluetooth switch control %s" % onOff((res[smi.cbRES2] & (1<<1)), "on", "off")
+    print "\tWWAN switch control %s" %      onOff((res[smi.cbRES2] & (1<<2)), "on", "off")
+    print "\tswitch config %s" %            onOff((res[smi.cbRES2] & (1<<7)), "locked", "not locked")
+    print "\tWiFi locator %s" %             onOff((res[smi.cbRES2] & (1<<8)), "enabled", "disabled")
+    print "\tWiFi Locator config %s" %      onOff((res[smi.cbRES2] & (1<<15)), "locked", "not locked")
+
 
 def main():
     exit_code = 0
@@ -133,21 +237,83 @@ def main():
     if not options.runtime:
         options.boot=1
 
-    for i in ("wlan", "bt", "wwan"):
-        if getattr(options, i) is not None:
-            if options.boot:
-                wirelessBoot(i, getattr(options, i))
-            if options.runtime:
-                wirelessRuntime(i, getattr(options, i))
+    if options.info:
+        print "Libsmbios version : %s" % sysinfo.get_library_version_string()
+        print "smbios-wireless-ctl version : %s" % __VERSION__
+        outputWirelessInfo()
+        options.st_wlan = 1
+        options.st_bt = 1
+        options.st_wwan = 1
+        options.st_locator = 1
 
-        if getattr(options, "sw_%s" % i) is not None:
-            wirelessSwitch(i, getattr(options, i))
-        
-        if getattr(options, "st_%s" % i) is not None:
-            wirelessInfo(i)
+    for i in ("wlan", "bt", "wwan"):
+        if getattr(options, i, None) is not None:
+            if options.boot:
+                radioBootCtl(radios[i], getattr(options, i))
+            if options.runtime:
+                radioRuntimeCtl(radios[i], getattr(options, i))
+
+        if getattr(options, "sw_%s" % i, None) is not None:
+            if options.boot:
+                switchBootCtl(radios[i], getattr(options, i))
+            if options.runtime:
+                switchRuntimeCtl(radios[i], getattr(options, i))
+
+        if getattr(options, "st_%s" % i, None):
+            wirelessInfo(radios[i])
+
+    if options.st_locator:
+        outputSwitchStatus()
 
     return exit_code
 
 if __name__ == "__main__":
     sys.exit( main() )
+
+
+
+# cbClass 17
+# cbSelect 11
+# WiFi Control
+# Entry/return values grouped by the value of cbARG1, byte0 which indicates the function to perform:
+
+# 0x1 = Set QuickSet Radio Disable Flag
+#  cbARG1, byte1    Radio ID value:
+#      0 Radio Status
+#      1 WLAN ID
+#      2 BT ID
+#      3 WWAN ID
+#  cbARG1, byte2   Flag bits:
+#      0 QuickSet disables radio (1)
+#      1-7 Reserved (0)
+#  cbRES1      Standard return codes (0, -1, -2)
+#  cbRES2      QuickSet (QS) radio disable bit map:
+#      0 QS disables WLAN
+#      1 QS disables BT
+#      2 QS disables WWAN
+#      3-31 Reserved (0)
+
+# 0x2 = Wireless Switch Configuration
+#  cbARG1, byte1   Subcommand:
+#      0 Get config
+#      1 Set config
+#      2 Set WiFi locator enable/disable
+#  cbARG1,byte2    Switch settings (if byte 1==1):
+#      0 WLAN switch control (1)
+#      1 BT switch control (1)
+#      2 WWAN switch control (1)
+#      3-7 Reserved (0)
+#  cbARG1, byte2   Enable bits (if byte 1==2):
+#      0 Enable WiFi locator (1)
+#  cbRES1      Standard return codes (0, -1, -2)
+#  cbRES2      QuickSet radio disable bit map:
+#      0 WLAN controlled by switch (1)
+#      1 BT controlled by switch (1)
+#      2 WWAN controlled by switch (1)
+#      3-6 Reserved (0)
+#      7 Wireless switch config locked (1)
+#      8 WiFi locator enabled (1)
+#      9-14 Reserved (0)
+#      15 WiFi locator setting locked (1)
+#      16-31 Reserved (0)
 
