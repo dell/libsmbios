@@ -26,6 +26,9 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-sys-info
 dist_sbin_SCRIPTS += src/bin/smbios-wakeup-ctl
 DATA_HOOK_REPLACE += $(sbindir)/smbios-wakeup-ctl
 
+dist_sbin_SCRIPTS += src/bin/smbios-wireless-ctl
+DATA_HOOK_REPLACE += $(sbindir)/smbios-wireless-ctl
+
 #
 # C
 #
@@ -51,10 +54,6 @@ out_smbios_upflag_ctl_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
 sbin_PROGRAMS += out/dellLcdBrightness
 out_dellLcdBrightness_SOURCES = src/bin/dellLcdBrightness.cpp
 out_dellLcdBrightness_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-sbin_PROGRAMS += out/dellWirelessCtl
-out_dellWirelessCtl_SOURCES = src/bin/dellWirelessCtl.cpp
-out_dellWirelessCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 
 # dellBiosUpdate uses private headers... this is bad.
 sbin_PROGRAMS += out/dellBiosUpdate

@@ -1,6 +1,8 @@
 src/bin/smbios-passwd
 src/bin/smbios-sys-info
 src/bin/smbios-token-ctl
+src/bin/smbios-wakeup-ctl
+src/bin/smbios-wireless-ctl
 
 src/bin/smbios-get-ut-data.c
 src/bin/smbios-state-byte-ctl.c

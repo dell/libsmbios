@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-11-01 21:46-0500\n"
-"PO-Revision-Date: 2008-11-01 21:46-0500\n"
+"POT-Creation-Date: 2008-11-04 00:31-0600\n"
+"PO-Revision-Date: 2008-11-04 00:31-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -252,6 +252,378 @@ msgstr "Activating token..."
 msgid "New values"
 msgstr "New values"
 
+#: src/bin/smbios-wakeup-ctl:53
+msgid "Set wakeup hour. Must be 0-23"
+msgstr "Set wakeup hour. Must be 0-23"
+
+#: src/bin/smbios-wakeup-ctl:54
+msgid "Set wakeup minute. Must be 0-59"
+msgstr "Set wakeup minute. Must be 0-59"
+
+#: src/bin/smbios-wakeup-ctl:55
+msgid "Set wakeup for every day"
+msgstr "Set wakeup for every day"
+
+#: src/bin/smbios-wakeup-ctl:56
+msgid "Set wakeup for weekdays only"
+msgstr "Set wakeup for weekdays only"
+
+#: src/bin/smbios-wakeup-ctl:57
+msgid "Disable wakeups"
+msgstr "Disable wakeups"
+
+#: src/bin/smbios-wakeup-ctl:64
+#, c-format
+msgid "Wakeup hour must be between 0 and 23. You passed: '%s'"
+msgstr "Wakeup hour must be between 0 and 23. You passed: ‘[1m%s[0m’"
+
+#: src/bin/smbios-wakeup-ctl:68
+#, c-format
+msgid "Wakeup min must be between 0 and 59. You passed: '%s'"
+msgstr "Wakeup min must be between 0 and 59. You passed: ‘[1m%s[0m’"
+
+#: src/bin/smbios-wakeup-ctl:81
+msgid "\tWakeup disabled"
+msgstr "\tWakeup disabled"
+
+#: src/bin/smbios-wakeup-ctl:83
+msgid "\tWakeup every day"
+msgstr "\tWakeup every day"
+
+#: src/bin/smbios-wakeup-ctl:84 src/bin/smbios-wakeup-ctl:87
+#, c-format
+msgid "\tWakeup time:  %02d:%02d"
+msgstr "\tWakeup time:  %02d:%02d"
+
+#: src/bin/smbios-wakeup-ctl:86
+msgid "\tWakeup weekdays"
+msgstr "\tWakeup weekdays"
+
+#: src/bin/smbios-wakeup-ctl:98
+msgid "Current wakeup settings:"
+msgstr "Current wakeup settings:"
+
+#: src/bin/smbios-wakeup-ctl:103
+msgid "Setting new wakeup time:"
+msgstr "Setting new wakeup time:"
+
+#: src/bin/smbios-wireless-ctl:50
+msgid "Show wireless configuration (default)"
+msgstr "Show wireless configuration (default)"
+
+#: src/bin/smbios-wireless-ctl:52
+msgid "Set BIOS boot-time setting."
+msgstr "Set BIOS boot-time setting."
+
+#: src/bin/smbios-wireless-ctl:53
+msgid "Do not set BIOS boot-time setting."
+msgstr "Do not set BIOS boot-time setting."
+
+#: src/bin/smbios-wireless-ctl:55
+msgid "Set BIOS runtime setting (default)."
+msgstr "Set BIOS runtime setting (default)."
+
+#: src/bin/smbios-wireless-ctl:57
+msgid "Do not set BIOS runtime setting."
+msgstr "Do not set BIOS runtime setting."
+
+#: src/bin/smbios-wireless-ctl:60
+msgid "Set radio runtime status for wireless LAN"
+msgstr "Set radio runtime status for wireless LAN"
+
+#: src/bin/smbios-wireless-ctl:62
+msgid "Set radio runtime status for Bluetooth"
+msgstr "Set radio runtime status for Bluetooth"
+
+#: src/bin/smbios-wireless-ctl:64
+msgid "Set radio runtime status for cellular (wireless WAN)"
+msgstr "Set radio runtime status for cellular (wireless WAN)"
+
+#: src/bin/smbios-wireless-ctl:67
+msgid "Set hardware switch so that it controls radio for wireless LAN"
+msgstr "Set hardware switch so that it controls radio for wireless LAN"
+
+#: src/bin/smbios-wireless-ctl:69
+msgid "Set hardware switch so that it controls radio for Bluetooth"
+msgstr "Set hardware switch so that it controls radio for Bluetooth"
+
+#: src/bin/smbios-wireless-ctl:71
+msgid ""
+"Set hardware switch so that it controls radio for cellular (wireless WAN)"
+msgstr ""
+"Set hardware switch so that it controls radio for cellular (wireless WAN)"
+
+#: src/bin/smbios-wireless-ctl:74
+msgid ""
+"Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+msgstr ""
+"Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+
+#: src/bin/smbios-wireless-ctl:76
+msgid ""
+"Get status for Bluetooth. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+msgstr ""
+"Get status for Bluetooth. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+
+#: src/bin/smbios-wireless-ctl:78
+msgid ""
+"Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not "
+"present. 3 = unsupported. 4 = unknown."
+msgstr ""
+"Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not "
+"present. 3 = unsupported. 4 = unknown."
+
+#: src/bin/smbios-wireless-ctl:81
+msgid "Enable or disable the WIFI locator switch"
+msgstr "Enable or disable the WIFI locator switch"
+
+#: src/bin/smbios-wireless-ctl:90
+msgid "WLAN"
+msgstr "WLAN"
+
+#: src/bin/smbios-wireless-ctl:98
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: src/bin/smbios-wireless-ctl:104
+msgid "WWAN"
+msgstr "WWAN"
+
+#: src/bin/smbios-wireless-ctl:113
+#, c-format
+msgid "Set boot settings for %s"
+msgstr "Set boot settings for %s"
+
+#: src/bin/smbios-wireless-ctl:127
+#, c-format
+msgid "\tThis system does not support boot time settings for %s"
+msgstr "\tThis system does not support boot time settings for %s"
+
+#: src/bin/smbios-wireless-ctl:132
+#, c-format
+msgid "Set runtime settings for %s"
+msgstr "Set runtime settings for %s"
+
+#: src/bin/smbios-wireless-ctl:135
+msgid ""
+"Runtime setting has no effect when boot time config is disabled. Ignoring."
+msgstr ""
+"Runtime setting has no effect when boot time config is disabled. Ignoring."
+
+#: src/bin/smbios-wireless-ctl:141 src/bin/smbios-wireless-ctl:206
+#: src/bin/smbios-wireless-ctl:249
+msgid "This system does not support runtime control of wireless settings."
+msgstr "This system does not support runtime control of wireless settings."
+
+#: src/bin/smbios-wireless-ctl:147
+#, c-format
+msgid "Set boot switch settings for %s"
+msgstr "Set boot switch settings for %s"
+
+#: src/bin/smbios-wireless-ctl:163
+msgid "This system does not support wireless switch configuration."
+msgstr "This system does not support wireless switch configuration."
+
+#: src/bin/smbios-wireless-ctl:167
+#, c-format
+msgid "Set runtime switch settings for %s"
+msgstr "Set runtime switch settings for %s"
+
+#: src/bin/smbios-wireless-ctl:174 src/bin/smbios-wireless-ctl:183
+#: src/bin/smbios-wireless-ctl:268
+msgid ""
+"This system does not support runtime control of wireless switch settings."
+msgstr ""
+"This system does not support runtime control of wireless switch settings."
+
+#: src/bin/smbios-wireless-ctl:200
+#, c-format
+msgid ""
+"\n"
+"Radio Status for %s:"
+msgstr ""
+"\n"
+"Radio Status for %s:"
+
+#: src/bin/smbios-wireless-ctl:208
+#, c-format
+msgid "\t%s enabled at boot"
+msgstr "\t%s enabled at boot"
+
+#: src/bin/smbios-wireless-ctl:208
+#, c-format
+msgid "\t%s disabled at boot"
+msgstr "\t%s disabled at boot"
+
+#: src/bin/smbios-wireless-ctl:211
+#, c-format
+msgid "\t%s supported"
+msgstr "\t%s supported"
+
+#: src/bin/smbios-wireless-ctl:215
+#, c-format
+msgid "\t%s disabled"
+msgstr "\t%s disabled"
+
+#: src/bin/smbios-wireless-ctl:218
+#, c-format
+msgid "\t%s enabled"
+msgstr "\t%s enabled"
+
+#: src/bin/smbios-wireless-ctl:221
+#, c-format
+msgid "\t%s installed"
+msgstr "\t%s installed"
+
+#: src/bin/smbios-wireless-ctl:224
+#, c-format
+msgid "\t%s not installed"
+msgstr "\t%s not installed"
+
+#: src/bin/smbios-wireless-ctl:226
+msgid "controlled by wireless switch at boot"
+msgstr "controlled by wireless switch at boot"
+
+#: src/bin/smbios-wireless-ctl:226
+msgid "not controlled by wireless switch at boot"
+msgstr "not controlled by wireless switch at boot"
+
+#: src/bin/smbios-wireless-ctl:230
+#, c-format
+msgid "\t%s not supported"
+msgstr "\t%s not supported"
+
+#: src/bin/smbios-wireless-ctl:237
+#, c-format
+msgid "\t%s legacy switch enabled"
+msgstr "\t%s legacy switch enabled"
+
+#: src/bin/smbios-wireless-ctl:237
+#, c-format
+msgid "\t%s legacy switch disabled"
+msgstr "\t%s legacy switch disabled"
+
+#: src/bin/smbios-wireless-ctl:242
+#, c-format
+msgid "\tStatus Code: %d"
+msgstr "\tStatus Code: %d"
+
+#: src/bin/smbios-wireless-ctl:245
+msgid "Wireless Info:"
+msgstr "Wireless Info:"
+
+#: src/bin/smbios-wireless-ctl:251
+msgid "\tHardware switch supported"
+msgstr "\tHardware switch supported"
+
+#: src/bin/smbios-wireless-ctl:254
+msgid "\tHardware switch not supported"
+msgstr "\tHardware switch not supported"
+
+#: src/bin/smbios-wireless-ctl:256
+msgid "\tWiFi Locator supported"
+msgstr "\tWiFi Locator supported"
+
+#: src/bin/smbios-wireless-ctl:256
+msgid "\tWiFi Locator not supported"
+msgstr "\tWiFi Locator not supported"
+
+#: src/bin/smbios-wireless-ctl:257
+msgid "\tWireless Keyboard supported"
+msgstr "\tWireless Keyboard supported"
+
+#: src/bin/smbios-wireless-ctl:257
+msgid "\tWireless Keyboard not supported"
+msgstr "\tWireless Keyboard not supported"
+
+#: src/bin/smbios-wireless-ctl:258
+#, c-format
+msgid "\tNVRAM Size: %d bytes"
+msgstr "\tNVRAM Size: %d bytes"
+
+#: src/bin/smbios-wireless-ctl:259
+#, c-format
+msgid "\tNVRAM format version: %d"
+msgstr "\tNVRAM format version: %d"
+
+#: src/bin/smbios-wireless-ctl:264
+msgid ""
+"\n"
+"Wireless Switch Configuration"
+msgstr ""
+"\n"
+"Wireless Switch Configuration"
+
+#: src/bin/smbios-wireless-ctl:269
+#, c-format
+msgid "\tWLAN switch control: %s"
+msgstr "\tWLAN switch control: %s"
+
+#: src/bin/smbios-wireless-ctl:269 src/bin/smbios-wireless-ctl:270
+#: src/bin/smbios-wireless-ctl:271
+msgid "on"
+msgstr "on"
+
+#: src/bin/smbios-wireless-ctl:269 src/bin/smbios-wireless-ctl:270
+#: src/bin/smbios-wireless-ctl:271
+msgid "off"
+msgstr "off"
+
+#: src/bin/smbios-wireless-ctl:270
+#, c-format
+msgid "\tBluetooth switch control: %s"
+msgstr "\tBluetooth switch control: %s"
+
+#: src/bin/smbios-wireless-ctl:271
+#, c-format
+msgid "\tWWAN switch control: %s"
+msgstr "\tWWAN switch control: %s"
+
+#: src/bin/smbios-wireless-ctl:272
+#, c-format
+msgid "\tswitch config: %s"
+msgstr "\tswitch config: %s"
+
+#: src/bin/smbios-wireless-ctl:272 src/bin/smbios-wireless-ctl:274
+msgid "locked"
+msgstr "locked"
+
+#: src/bin/smbios-wireless-ctl:272 src/bin/smbios-wireless-ctl:274
+msgid "not locked"
+msgstr "not locked"
+
+#: src/bin/smbios-wireless-ctl:273
+#, c-format
+msgid "\tWiFi locator: %s"
+msgstr "\tWiFi locator: %s"
+
+#: src/bin/smbios-wireless-ctl:273
+msgid "enabled"
+msgstr "enabled"
+
+#: src/bin/smbios-wireless-ctl:273
+msgid "disabled"
+msgstr "disabled"
+
+#: src/bin/smbios-wireless-ctl:274
+#, c-format
+msgid "\tWiFi Locator config: %s"
+msgstr "\tWiFi Locator config: %s"
+
+#: src/bin/smbios-wireless-ctl:289
+#, c-format
+msgid "Libsmbios version : %s"
+msgstr "Libsmbios version : %s"
+
+#: src/bin/smbios-wireless-ctl:290
+#, c-format
+msgid "smbios-wireless-ctl version : %s"
+msgstr "smbios-wireless-ctl version : %s"
+
 #: src/bin/smbios-get-ut-data.c:53 src/bin/smbios-state-byte-ctl.c:47
 #: src/bin/smbios-upflag-ctl.c:49
 msgid "Debug: CMOS dump file to use instead of physical cmos"
@@ -326,72 +698,72 @@ msgstr "State Byte: 0x%04x\n"
 msgid "Libsmbios version:    %s\n"
 msgstr "Libsmbios version:    %s\n"
 
-#: src/bin/smbios-sys-info-lite.c:83
+#: src/bin/smbios-sys-info-lite.c:81
 #, c-format
 msgid "System ID:    0x%04X\n"
 msgstr "System ID:    0x%04X\n"
 
-#: src/bin/smbios-sys-info-lite.c:86
+#: src/bin/smbios-sys-info-lite.c:84
 #, c-format
 msgid "Error getting the System ID:    unknown error.\n"
 msgstr "Error getting the System ID:    unknown error.\n"
 
-#: src/bin/smbios-sys-info-lite.c:93
+#: src/bin/smbios-sys-info-lite.c:91
 #, c-format
 msgid "Service Tag:  %s\n"
 msgstr "Service Tag:  %s\n"
 
-#: src/bin/smbios-sys-info-lite.c:94
+#: src/bin/smbios-sys-info-lite.c:92
 #, c-format
 msgid "Express Service Code: %lld\n"
 msgstr "Express Service Code: %lld\n"
 
-#: src/bin/smbios-sys-info-lite.c:98
+#: src/bin/smbios-sys-info-lite.c:96
 #, c-format
 msgid "Error getting the Service Tag:  unknown error\n"
 msgstr "Error getting the Service Tag:  unknown error\n"
 
-#: src/bin/smbios-sys-info-lite.c:105
+#: src/bin/smbios-sys-info-lite.c:103
 #, c-format
 msgid "Aset Tag:  %s\n"
 msgstr "Aset Tag:  %s\n"
 
-#: src/bin/smbios-sys-info-lite.c:108
+#: src/bin/smbios-sys-info-lite.c:106
 #, c-format
 msgid "Error getting the Aset Tag:  unknown error\n"
 msgstr "Error getting the Aset Tag:  unknown error\n"
 
-#: src/bin/smbios-sys-info-lite.c:115
+#: src/bin/smbios-sys-info-lite.c:113
 #, c-format
 msgid "Product Name: %s\n"
 msgstr "Product Name: %s\n"
 
-#: src/bin/smbios-sys-info-lite.c:118
+#: src/bin/smbios-sys-info-lite.c:116
 #, c-format
 msgid "Error getting the System Name:    unknown error.\n"
 msgstr "Error getting the System Name:    unknown error.\n"
 
-#: src/bin/smbios-sys-info-lite.c:125
+#: src/bin/smbios-sys-info-lite.c:123
 #, c-format
 msgid "BIOS Version: %s\n"
 msgstr "BIOS Version: %s\n"
 
-#: src/bin/smbios-sys-info-lite.c:128
+#: src/bin/smbios-sys-info-lite.c:126
 #, c-format
 msgid "Error getting the BIOS Version:    unknown error.\n"
 msgstr "Error getting the BIOS Version:    unknown error.\n"
 
-#: src/bin/smbios-sys-info-lite.c:135
+#: src/bin/smbios-sys-info-lite.c:133
 #, c-format
 msgid "Vendor:       %s\n"
 msgstr "Vendor:       %s\n"
 
-#: src/bin/smbios-sys-info-lite.c:138
+#: src/bin/smbios-sys-info-lite.c:136
 #, c-format
 msgid "Error getting the Vendor:    unknown error.\n"
 msgstr "Error getting the Vendor:    unknown error.\n"
 
-#: src/bin/smbios-sys-info-lite.c:143
+#: src/bin/smbios-sys-info-lite.c:141
 #, c-format
 msgid "Is Dell:      %d\n"
 msgstr "Is Dell:      %d\n"
@@ -607,6 +979,10 @@ msgstr "something bad happened"
 msgid "Null ID returned."
 msgstr "Null ID returned."
 
-#: src/python/libsmbios_c/token.py:91
+#: src/python/libsmbios_c/token.py:87
+msgid "Cannot dereference NULL ID"
+msgstr "Cannot dereference NULL ID"
+
+#: src/python/libsmbios_c/token.py:93
 msgid "no such ID"
 msgstr "no such ID"

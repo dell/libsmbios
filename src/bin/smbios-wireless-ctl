@@ -42,6 +42,7 @@ locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
 class CmdlineError(Exception): pass
+class RuntimeControlUnsupported(Exception): pass
 
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
@@ -82,18 +83,11 @@ def command_parse():
     cli.addStdOptions(parser)
     return parser.parse_args()
 
-# old boot-only interface (legacy)
-#const int Radio_Transmission_Enable = 0x010c;
-#const int Radio_Transmission_Disable = 0x010d;
-#const int Wireless_Device_Disable = 0x0114;
-#const int Wireless_Device_App_Control = 0x0115;
-#const int Wireless_Device_App_Or_Hotkey_Control = 0x0116;
-
 radios = {
     "wlan": {
             "radioEnable" : 0x0180, "radioDisable" : 0x017F, "radioRuntimeId": 1,
             "switchEnable": 0x0186, "switchDisable": 0x0185, "switchRuntime" : (1, 1),
-             "supported_bit": 2, "installed_bit": 8, "disabled_bit": 17, "name": "WLAN",
+             "supported_bit": 2, "installed_bit": 8, "disabled_bit": 17, "name": _("WLAN"),
              "legacyEnable": 0x010c, "legacyDisable": 0x010d,
              "legacySwitchEnable": 0x0116, "legacySwitchDisable": 0x0115,
             },
@@ -101,13 +95,13 @@ radios = {
     "bt":   {
             "radioEnable" : 0x0152, "radioDisable" : 0x0153, "radioRuntimeId": 2,
             "switchEnable": 0x0182, "switchDisable": 0x0181, "switchRuntime" : (1, 2),
-             "supported_bit": 3, "installed_bit": 9, "disabled_bit": 18, "name": "Bluetooth",
+             "supported_bit": 3, "installed_bit": 9, "disabled_bit": 18, "name": _("Bluetooth"),
             },
 
     "wwan": {
             "radioEnable" : 0x017C, "radioDisable" : 0x017B, "radioRuntimeId": 3,
             "switchEnable": 0x0184, "switchDisable": 0x0183, "switchRuntime" : (1, 4),
-             "supported_bit": 4, "installed_bit": 10, "disabled_bit": 19, "name": "WWAN",
+             "supported_bit": 4, "installed_bit": 10, "disabled_bit": 19, "name": _("WWAN"),
             },
 
     "locator": {
@@ -116,46 +110,79 @@ radios = {
     }
 
 def radioBootCtl(radio, enable):
-    print "Set boot settings for %s" % radio
-    tokenTable = token.TokenTable()
-    if enable:
-        token[ radio["radioEnable"] ].activate()
-    else:
-        token[ radio["radioDisable"] ].activate()
+    print _("Set boot settings for %s") % radio["name"]
+    try:
+        tok = radio["radioDisable"]
+        legacy = radio.get("legacyDisable", None)
+        if enable:
+            tok = radio["radioEnable"]
+            legacy = radio.get("legacyEnable", None)
+
+        tokenTable = token.TokenTable()
+        try:
+            tokenTable[ tok ].activate()
+        except IndexError, e:
+            tokenTable[ legacy ].activate()
+    except IndexError:
+        print _("\tThis system does not support boot time settings for %s") % radio["name"]
+        pass
 
 def radioRuntimeCtl(radio, enable):
-    tokenTable = token.TokenTable()
-    if enable and not tokenTable[radio["radioEnable"]].isActive():
-        raise Exception( _("Runtime setting has no effect when boot time config is disabled. Ignoring.") )
+    try:
+        print _("Set runtime settings for %s") % radio['name']
+        tokenTable = token.TokenTable()
+        if enable and not tokenTable[radio["radioEnable"]].isActive():
+            raise Exception( _("Runtime setting has no effect when boot time config is disabled. Ignoring.") )
 
-    print "Set runtime settings for %s" % radio
-    disable = 1
-    if enable: disable=0
-    smi.simple_ci_smi( 17, 11, (1 | ((radio['radioId'])<<8) | ((disable)<<16)) )
+        disable = 1
+        if enable: disable=0
+        res = smi.simple_ci_smi( 17, 11, (1 | ((radio['radioRuntimeId'])<<8) | ((disable)<<16)) )
+        if res[smi.cbRES1] != 0:
+            raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless settings.") )
+
+    except (Exception, RuntimeControlUnsupported), e:
+        print "\t%s" % e
 
 def switchBootCtl(radio, enable):
-    print "Set boot switch settings for %s" % radio
+    print _("Set boot switch settings for %s") % radio["name"]
 
-    switch = "switchDisable"
-    if enable:
-        switch = "switchEnable"
+    try:
+        switch = radio["switchDisable"]
+        legacy = radio.get("legacySwitchDisable", None)
+        if enable:
+            switch = radio["switchEnable"]
+            legacy = radio.get("legacySwitchEnable", None)
 
-    tokenTable = token.TokenTable()
-    tokenTable[radio[switch]].activate()
+        tokenTable = token.TokenTable()
+        try:
+            tokenTable[switch].activate()
+        except IndexError, e:
+            tokenTable[legacy].activate()
+
+    except IndexError:
+        print "\t%s" % _("This system does not support wireless switch configuration.")
+        
 
 def switchRuntimeCtl(radio, enable):
-    print "Set runtime switch settings for %s" % radio
-    whichConfig, whichSwitch = radio["switchRuntime"]
-    oldconfig=0
-    if whichConfig == 1:
-        res = smi.simple_ci_smi( 17, 11, 2 )
-        oldconfig = res[smi.cbRES2] & 0xFF
+    print _("Set runtime switch settings for %s") % radio["name"]
+    try:
+        whichConfig, whichSwitch = radio["switchRuntime"]
+        oldconfig=0
+        if whichConfig == 1:
+            res = smi.simple_ci_smi( 17, 11, 2 )
+            if res[smi.cbRES1] != 0:
+                raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless switch settings.") )
+            oldconfig = res[smi.cbRES2] & 0xFF
 
-    newConfig = (oldConfig & ~whichSwitch)
-    if enable:
-        newconfig = newconfig | whichSwitch
+        newConfig = (oldconfig & ~whichSwitch)
+        if enable:
+            newconfig = newconfig | whichSwitch
 
-    smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newConfig << 16)))
+        smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newConfig << 16)))
+        if res[smi.cbRES1] != 0:
+            raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless switch settings.") )
+    except (RuntimeControlUnsupported,), e:
+        print "\t%s" % e
 
 def onOff(thing, trueval="on", falseval="off"):
     if thing:
@@ -170,62 +197,83 @@ STATUS_UNSUPPORTED = 3
 STATUS_UNKNOWN = 4
 
 def wirelessInfo(radio):
-    print "\nRadio Status for %s:" % radio["name"];
+    print _("\nRadio Status for %s:") % radio["name"];
     ret = STATUS_UNKNOWN
-    res = smi.simple_ci_smi( 17, 11 )
-
     tokenTable = token.TokenTable()
-    print "\t%s %s at boot" % (radio["name"],
-            onOff(tokenTable[radio["radioEnable"]].isActive(), "enabled", "disabled"))
+    try:
+        res = smi.simple_ci_smi( 17, 11 )
+        if res[smi.cbRES1] != 0:
+            raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless settings.") )
 
-    if res[smi.cbRES2] & (1 << radio["supported_bit"]):
-        print "\t%s supported" % radio["name"]
+        print onOff(tokenTable[radio["radioEnable"]].isActive(), _("\t%s enabled at boot"), _("\t%s disabled at boot")) % radio["name"]
 
-        if res[smi.cbRES2] & (1<< radio["disabled_bit"]):
-            ret = STATUS_DISABLED;
-            print "\t%s disabled" % radio["name"]
+        if res[smi.cbRES2] & (1 << radio["supported_bit"]):
+            print _("\t%s supported") % radio["name"]
+
+            if res[smi.cbRES2] & (1<< radio["disabled_bit"]):
+                ret = STATUS_DISABLED;
+                print _("\t%s disabled") % radio["name"]
+            else:
+                ret = STATUS_ENABLED;
+                print _("\t%s enabled") % radio["name"]
+
+            if res[smi.cbRES2] & (1<< radio["installed_bit"]):
+                print _("\t%s installed") % radio["name"]
+            else:
+                ret = STATUS_NOT_PRESENT;
+                print _("\t%s not installed") % radio["name"]
+
+            print onOff(tokenTable[radio["switchEnable"]].isActive(), _("controlled by wireless switch at boot"), _("not controlled by wireless switch at boot")) % radio["name"]
+
         else:
-            ret = STATUS_ENABLED;
-            print "\t%s enabled" % radio["name"]
+            ret = STATUS_UNSUPPORTED
+            print _("\t%s not supported") % radio["name"]
+    except RuntimeControlUnsupported, e:
+        print "\t%s" % e
 
-        if res[smi.cbRES2] & (1<< radio["installed_bit"]):
-            print "\t%s installed" % radio["name"]
-        else:
-            ret = STATUS_NOT_PRESENT;
-            print "\t%s not installed" % radio["name"]
+    # print legacy status, if avail:
+    try:
+        print onOff(tokenTable[radio["legacyEnable"]], "\t%s legacy boot setting enabled", "\t%s legacy boot setting disabled" ) % radio["name"]
+        print onOff(tokenTable[radio["legacySwitchEnable"]], _("\t%s legacy switch enabled"), _("\t%s legacy switch disabled") ) % radio["name"]
+    except (IndexError, KeyError): 
+        # token doesnt exist, or we dont have 'legacy*' settings for this radio, it's ok.
+        pass
 
-        print "\t%s %s by wireless switch at boot" % (radio["name"],
-                onOff(tokenTable[radio["switchEnable"]].isActive(), "controlled", "not controlled"))
-
-    else:
-        ret = STATUS_UNSUPPORTED
-        print "\t%s not supported" % radio["name"]
-
-    print "\tStatus Code: %d" % ret
+    print _("\tStatus Code: %d") % ret
 
 def outputWirelessInfo():
-    res = smi.simple_ci_smi( 17, 11 )
-    print "Wireless Info:"
-    if res[smi.cbRES2] & (1<<0):
-        print "\tHardware switch supported"
-        print "\tHardware switch is %s" % onOff(res[smi.cbRES2] & (1 << 16), "On", "Off")
-    else:
-        print "\tHardware switch not supported"
+    print _("Wireless Info:")
+    try:
+        res = smi.simple_ci_smi( 17, 11 )
+        if res[smi.cbRES1] != 0:
+            raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless settings.") )
+        if res[smi.cbRES2] & (1<<0):
+            print _("\tHardware switch supported")
+            print "\tHardware switch is %s" % onOff(res[smi.cbRES2] & (1 << 16), "On", "Off")
+        else:
+            print _("\tHardware switch not supported")
 
-    print "\tWiFi Locator %s" % onOff(res[smi.cbRES2] & (1<<1), "supported", "not supported")
-    print "\tWireless Keyboard %s" % onOff(res[smi.cbRES2] & (1<<5), "supported", "not supported")
-    print "\tNVRAM Size: %d bytes" % res[smi.cbRES3]
-    print "\tNVRAM format version: %d" % (res[smi.cbRES4] & 0xFF)
+        print onOff(res[smi.cbRES2] & (1<<1), _("\tWiFi Locator supported"), _("\tWiFi Locator not supported"))
+        print onOff(res[smi.cbRES2] & (1<<5), _("\tWireless Keyboard supported"), _("\tWireless Keyboard not supported"))
+        print _("\tNVRAM Size: %d bytes") % res[smi.cbRES3]
+        print _("\tNVRAM format version: %d") % (res[smi.cbRES4] & 0xFF)
+    except RuntimeControlUnsupported, e:
+        print "\t%s" % e
 
 def outputSwitchStatus():
-    res = smi.simple_ci_smi( 17, 11, 2 )
-    print "\nWireless Switch Configuration"
-    print "\tWLAN switch control %s" %      onOff((res[smi.cbRES2] & (1<<0)), "on", "off")
-    print "\tBluetooth switch control %s" % onOff((res[smi.cbRES2] & (1<<1)), "on", "off")
-    print "\tWWAN switch control %s" %      onOff((res[smi.cbRES2] & (1<<2)), "on", "off")
-    print "\tswitch config %s" %            onOff((res[smi.cbRES2] & (1<<7)), "locked", "not locked")
-    print "\tWiFi locator %s" %             onOff((res[smi.cbRES2] & (1<<8)), "enabled", "disabled")
-    print "\tWiFi Locator config %s" %      onOff((res[smi.cbRES2] & (1<<15)), "locked", "not locked")
+    print _("\nWireless Switch Configuration")
+    try:
+        res = smi.simple_ci_smi( 17, 11, 2 )
+        if res[smi.cbRES1] != 0:
+            raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless switch settings.") )
+        print _("\tWLAN switch control: %s") %      onOff((res[smi.cbRES2] & (1<<0)), _("on"), _("off"))
+        print _("\tBluetooth switch control: %s") % onOff((res[smi.cbRES2] & (1<<1)), _("on"), _("off"))
+        print _("\tWWAN switch control: %s") %      onOff((res[smi.cbRES2] & (1<<2)), _("on"), _("off"))
+        print _("\tswitch config: %s") %            onOff((res[smi.cbRES2] & (1<<7)), _("locked"), _("not locked"))
+        print _("\tWiFi locator: %s") %             onOff((res[smi.cbRES2] & (1<<8)), _("enabled"), _("disabled"))
+        print _("\tWiFi Locator config: %s") %      onOff((res[smi.cbRES2] & (1<<15)), _("locked"), _("not locked"))
+    except RuntimeControlUnsupported, e:
+        print "\t%s" % e
 
 
 def main():
@@ -238,8 +286,8 @@ def main():
         options.boot=1
 
     if options.info:
-        print "Libsmbios version : %s" % sysinfo.get_library_version_string()
-        print "smbios-wireless-ctl version : %s" % __VERSION__
+        print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
+        print _("smbios-wireless-ctl version : %s") % __VERSION__
         outputWirelessInfo()
         options.st_wlan = 1
         options.st_bt = 1
