@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 #include <libintl.h>
 
 #include "smbios_c/obj/memory.h"

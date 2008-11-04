@@ -23,6 +23,7 @@
 #include <stdio.h>        // fopen()
 #include <string.h>
 #include <stdlib.h>
+#include <locale.h>
 #include <libintl.h>
 
 #include "smbios_c/obj/cmos.h"
