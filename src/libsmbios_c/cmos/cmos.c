@@ -55,7 +55,7 @@ int cmos_run_callbacks(bool do_update)
 
 const char * cmos_strerror()
 {
-    struct cmos_access_obj *m = cmos_obj_factory(CMOS_GET_SINGLETON);
+    struct cmos_access_obj *m = cmos_obj_factory(CMOS_GET_SINGLETON | CMOS_NO_ERR_CLEAR);
     const char * retval = cmos_obj_strerror(m);
     cmos_obj_free(m);
     return retval;

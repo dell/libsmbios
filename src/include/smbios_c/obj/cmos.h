@@ -30,6 +30,7 @@ EXTERN_C_BEGIN;
 #define CMOS_GET_SINGLETON  0x0001
 #define CMOS_GET_NEW        0x0002
 #define CMOS_UNIT_TEST_MODE 0x0004
+#define CMOS_NO_ERR_CLEAR   0x0008
 
 struct cmos_access_obj;
 

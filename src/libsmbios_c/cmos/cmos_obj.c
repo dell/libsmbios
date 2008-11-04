@@ -97,7 +97,7 @@ struct cmos_access_obj *cmos_obj_factory(int flags, ...)
     toReturn = 0;
 
 out:
-    if (toReturn)
+    if (toReturn  && ! (flags & CMOS_NO_ERR_CLEAR))
         clear_err(toReturn);
     return toReturn;
 }

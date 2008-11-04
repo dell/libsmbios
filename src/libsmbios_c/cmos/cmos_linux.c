@@ -29,7 +29,7 @@
 // public
 #include "smbios_c/cmos.h"
 #include "smbios_c/types.h"
-#include "internal_strl.h"
+#include "common_internal.h"
 #include "libsmbios_c_intlize.h"
 
 // private
@@ -54,7 +54,6 @@ static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 index
 int __internal init_cmos_struct(struct cmos_access_obj *m)
 {
     char * errbuf;
-    size_t curstrsize = 0;
     int retval = 0;
 
     fnprintf("\n");
@@ -75,9 +74,7 @@ out_noprivs:
     {
         strlcpy(errbuf, _("Error trying to raise IO Privilege level.\n"), ERROR_BUFSIZE);
         strlcat(errbuf, _("The OS Error string was: "), ERROR_BUFSIZE);
-        curstrsize = strlen(errbuf);
-        if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
-            strerror_r(errno, errbuf + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+        fixed_strerror(errno, errbuf, ERROR_BUFSIZE);
         strlcat(errbuf, "\n", ERROR_BUFSIZE);
     }
     // nothing left to free
