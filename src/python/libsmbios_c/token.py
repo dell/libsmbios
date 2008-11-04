@@ -83,6 +83,8 @@ class _TokenTable(object):
                 raise exceptions.StopIteration( _("hit end of table.") )
 
     def __getitem__(self, id):
+        if id is None:
+            raise exceptions.IndexError( _("Cannot dereference NULL ID") )
         cur = ctypes.POINTER(Token)()
         cur =_libsmbios_c.token_table_get_next_by_id( self._tableobj, cur, id )
         if bool(cur):
