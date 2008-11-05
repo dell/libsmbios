@@ -124,7 +124,7 @@ def read_nv_storage(location):
     max = ctypes.c_uint32(0)
     cur = ctypes.c_uint32(0)
     _libsmbios_c.dell_smi_read_nv_storage(location, ctypes.byref(cur), ctypes.byref(min), ctypes.byref(max))
-    return (cur, min.value, max.value)
+    return (cur.value, min.value, max.value)
 __all__.append("read_nv_storage")
 
 #int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
@@ -140,7 +140,7 @@ def read_battery_mode_setting(location):
     max = ctypes.c_uint32(0)
     cur = ctypes.c_uint32(0)
     _libsmbios_c.dell_smi_read_battery_mode_setting(location, ctypes.byref(cur), ctypes.byref(min), ctypes.byref(max))
-    return (cur, min.value, max.value)
+    return (cur.value, min.value, max.value)
 __all__.append("read_battery_mode_setting")
 
 #int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
@@ -156,26 +156,26 @@ def read_ac_mode_setting(location):
     max = ctypes.c_uint32(0)
     cur = ctypes.c_uint32(0)
     _libsmbios_c.dell_smi_read_ac_mode_setting(location, ctypes.byref(cur), ctypes.byref(min), ctypes.byref(max))
-    return (cur, min.value, max.value)
+    return (cur.value, min.value, max.value)
 __all__.append("read_ac_mode_setting")
 
 
 #int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value);
-_libsmbios_c.dell_smi_write_nv_storage.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
+_libsmbios_c.dell_smi_write_nv_storage.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 _libsmbios_c.dell_smi_write_nv_storage.restype = ctypes.c_int
 _libsmbios_c.dell_smi_write_nv_storage.errcheck=errorOnNegativeFN()
 write_nv_storage = _libsmbios_c.dell_smi_write_nv_storage
 __all__.append("write_nv_storage")
 
 #int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);
-_libsmbios_c.dell_smi_write_battery_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
+_libsmbios_c.dell_smi_write_battery_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 _libsmbios_c.dell_smi_write_battery_mode_setting.restype = ctypes.c_int
 _libsmbios_c.dell_smi_write_battery_mode_setting.errcheck=errorOnNegativeFN()
 write_battery_mode_setting = _libsmbios_c.dell_smi_write_battery_mode_setting
 __all__.append("write_battery_mode_setting")
 
 #int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
-_libsmbios_c.dell_smi_write_ac_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32]
+_libsmbios_c.dell_smi_write_ac_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 _libsmbios_c.dell_smi_write_ac_mode_setting.restype = ctypes.c_int
 _libsmbios_c.dell_smi_write_ac_mode_setting.errcheck=errorOnNegativeFN()
 write_ac_mode_setting = _libsmbios_c.dell_smi_write_ac_mode_setting
