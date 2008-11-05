@@ -33,6 +33,14 @@ DELL_SMI_GET_SINGLETON =0x0001
 DELL_SMI_GET_NEW       =0x0002
 DELL_SMI_UNIT_TEST_MODE=0x0004
 
+class SMIExecutionError(Exception): pass # ret = -1
+class SMIUnsupported(Exception): pass # ret = -2
+class SMIUnhandled(Exception): pass   # ret = -3
+class SMIOutputBufferFormatError(Exception): pass  # ret == -5
+class SMIOutputBufferTooSmall(Exception): pass  # ret == -6
+
+class BadPassword(Exception): pass
+
 def DellSmi(flags=DELL_SMI_GET_NEW, *args):
     if _DellSmi._instance is None:
         _DellSmi._instance = _DellSmi( flags, *args)
@@ -79,10 +87,22 @@ class _DellSmi(object):
 
     def execute(self):
         _libsmbios_c.dell_smi_obj_execute(self._smiobj)
+        raiseExceptionOnError(ret, self)
 
     def getBufContents(self, arg):
         return self.bufs[arg]
 
+def raiseExceptionOnError(ret, smiobj=None):
+    if ret == -1:
+        raise SMIExecutionError( _("SMI executed but returned error"))
+    if ret == -2:
+        raise SMIUnsupported(_("SMI is unsupported"))
+    if ret == -3:
+        raise SMIUnhandled(_("SMI did not execute"))
+    if ret == -5:
+        raise SMIOutputBufferFormatError(_("The output buffer the BIOS requires is in the wrong format"))
+    if ret == -6:
+        raise SMIOutputBufferTooSmall(_("The output buffer the BIOS requires is too small"))
 
 # initialize libsmbios lib
 _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
@@ -98,12 +118,12 @@ array_4_u32 = ctypes.c_int32 * 4
 _libsmbios_c.dell_smi_strerror.argtypes = [ ]
 _libsmbios_c.dell_smi_strerror.restype = ctypes.c_char_p
 def _strerror():
-    return Exception(_libsmbios_c.dell_smi_strerror())
+    return _libsmbios_c.dell_smi_strerror()
 
 #void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 _libsmbios_c.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
 _libsmbios_c.dell_simple_ci_smi.restype = ctypes.c_int
-_libsmbios_c.dell_simple_ci_smi.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
+_libsmbios_c.dell_simple_ci_smi.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
 def simple_ci_smi(smiClass, select, *args):
     arg = array_4_u32(*args)
     res = array_4_u32(0, 0, 0, 0)
@@ -112,7 +132,7 @@ def simple_ci_smi(smiClass, select, *args):
 __all__.append("simple_ci_smi")
 
 #int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
-_libsmbios_c.dell_smi_read_nv_storage.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
+_libsmbios_c.dell_smi_read_nv_storage.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
 _libsmbios_c.dell_smi_read_nv_storage.restype = ctypes.c_int
 _libsmbios_c.dell_smi_read_nv_storage.argtypes = [
         ctypes.c_uint32,
@@ -128,7 +148,7 @@ def read_nv_storage(location):
 __all__.append("read_nv_storage")
 
 #int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
-_libsmbios_c.dell_smi_read_battery_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
+_libsmbios_c.dell_smi_read_battery_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
 _libsmbios_c.dell_smi_read_battery_mode_setting.restype = ctypes.c_int
 _libsmbios_c.dell_smi_read_battery_mode_setting.argtypes = [
         ctypes.c_uint32,
@@ -144,7 +164,7 @@ def read_battery_mode_setting(location):
 __all__.append("read_battery_mode_setting")
 
 #int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
-_libsmbios_c.dell_smi_read_ac_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror())
+_libsmbios_c.dell_smi_read_ac_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
 _libsmbios_c.dell_smi_read_ac_mode_setting.restype = ctypes.c_int
 _libsmbios_c.dell_smi_read_ac_mode_setting.argtypes = [
         ctypes.c_uint32,
@@ -160,35 +180,41 @@ def read_ac_mode_setting(location):
 __all__.append("read_ac_mode_setting")
 
 
-#int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value);
+#int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value, u32 *smiret);
 _libsmbios_c.dell_smi_write_nv_storage.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 _libsmbios_c.dell_smi_write_nv_storage.restype = ctypes.c_int
 _libsmbios_c.dell_smi_write_nv_storage.errcheck=errorOnNegativeFN()
 write_nv_storage = _libsmbios_c.dell_smi_write_nv_storage
 __all__.append("write_nv_storage")
 
-#int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value);
+#int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value, u32 *smiret);
 _libsmbios_c.dell_smi_write_battery_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 _libsmbios_c.dell_smi_write_battery_mode_setting.restype = ctypes.c_int
 _libsmbios_c.dell_smi_write_battery_mode_setting.errcheck=errorOnNegativeFN()
 write_battery_mode_setting = _libsmbios_c.dell_smi_write_battery_mode_setting
 __all__.append("write_battery_mode_setting")
 
-#int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value);
+#int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value, u32 *smiret);
 _libsmbios_c.dell_smi_write_ac_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 _libsmbios_c.dell_smi_write_ac_mode_setting.restype = ctypes.c_int
 _libsmbios_c.dell_smi_write_ac_mode_setting.errcheck=errorOnNegativeFN()
 write_ac_mode_setting = _libsmbios_c.dell_smi_write_ac_mode_setting
 __all__.append("write_ac_mode_setting")
 
+def securityException(r):
+    if r == -1:
+        return BadPassword()
+    if r == -2:
+        return Exception()
+
 #int dell_smi_get_security_key(const char *pass_scancode, u16 *security_key);
 _libsmbios_c.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
 _libsmbios_c.dell_smi_get_security_key.restype = ctypes.c_int
-_libsmbios_c.dell_smi_get_security_key.errcheck=errorOnNegativeFN()
+_libsmbios_c.dell_smi_get_security_key.errcheck=errorOnNegativeFN(lambda r,f,a: securityException(r))
 def get_security_key(password):
     key = ctypes.c_uint16(0)
-    cur = _libsmbios_c.dell_smi_get_security_key(password, key)
-    return cur, key.value
+    _libsmbios_c.dell_smi_get_security_key(password, key)
+    return key.value
 __all__.append("get_security_key")
 
 
@@ -251,13 +277,13 @@ class _dell_smi_obj(ctypes.Structure): pass
 _libsmbios_c.dell_smi_obj_strerror.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
 _libsmbios_c.dell_smi_obj_strerror.restype = ctypes.c_char_p
 def _obj_strerror(obj):
-    return Exception(_libsmbios_c.dell_smi_obj_strerror(obj))
+    return _libsmbios_c.dell_smi_obj_strerror(obj)
 
 #struct dell_smi_obj *dell_smi_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #_libsmbios_c.dell_smi_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.dell_smi_factory.restype = ctypes.POINTER(_dell_smi_obj)
-_libsmbios_c.dell_smi_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _obj_strerror(r))
+_libsmbios_c.dell_smi_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: Exception(_obj_strerror(r)))
 
 #void dell_smi_obj_free(struct dell_smi_obj *);
 _libsmbios_c.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
@@ -282,27 +308,27 @@ _libsmbios_c.dell_smi_obj_get_res.restype = ctypes.c_uint32
 #u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
+_libsmbios_c.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
 _libsmbios_c.dell_smi_obj_make_buffer_tobios.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
 _libsmbios_c.dell_smi_obj_make_buffer_tobios.restype = ctypes.c_void_p
-_libsmbios_c.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN(lambda r,f,a: _obj_strerror(a[0]))
+_libsmbios_c.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #void dell_smi_obj_execute(struct dell_smi_obj *);
 _libsmbios_c.dell_smi_obj_execute.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
 _libsmbios_c.dell_smi_obj_execute.restype = ctypes.c_int
-_libsmbios_c.dell_smi_obj_execute.errcheck = errorOnNegativeFN(lambda r,f,a: _obj_strerror(a[0]))
+_libsmbios_c.dell_smi_obj_execute.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 
 
