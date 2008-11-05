@@ -191,6 +191,7 @@ find %{buildroot}/usr/include -exec touch -r $TOPDIR/configure.ac {} \;
 ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 ln -s smbios-sys-info %{buildroot}%{_sbindir}/getSystemId
 ln -s smbios-wireless-ctl %{buildroot}%{_sbindir}/dellWirelessCtl
+ln -s smbios-lcd-brightness %{buildroot}%{_sbindir}/dellLcdBrightness
 
 %find_lang libsmbios
 
@@ -233,7 +234,6 @@ rm -rf %{buildroot}
 
 # legacy C++
 %{_sbindir}/dellBiosUpdate
-%{_sbindir}/dellLcdBrightness
 %{_sbindir}/dellLEDCtl
 %ifnarch ia64
 %{_sbindir}/dellMediaDirectCtl
@@ -254,7 +254,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-rbu-bios-update
 
 # symlinks: backwards compat
-# used by lots of people
+%{_sbindir}/dellLcdBrightness
 %{_sbindir}/getSystemId
 %{_sbindir}/dellWirelessCtl
 # used by HAL in old location, so keep it around until HAL is updated.

@@ -1,0 +1,106 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2005 Dell Computer Corporation
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""smbios-lcd-brightness"""
+
+from __future__ import generators
+
+# import arranged alphabetically
+import ctypes
+import gettext
+import locale
+import os
+import sys
+import traceback
+
+# the following vars are all substituted on install
+# this bin isnt byte-compiled, so this is ok
+RELEASE_VERSION="uninstalled-version"
+GETTEXT_PACKAGE="libsmbios" #replaced
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
+# end vars
+
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
+__VERSION__=RELEASE_VERSION
+
+import cli
+import libsmbios_c.smi as smi
+import libsmbios_c.token as token
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+class CmdlineError(Exception): pass
+
+def command_parse():
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
+    cli.addStdOptions(parser)
+    parser.add_option('--value', action="store", type="int", default=None, help= _("Set new value"))
+    parser.add_option('--battery', '-b', action="store_const", dest="which", const="battery", default="battery", help= _("Set new value to be used while running on battery power"))
+    parser.add_option('--ac', '-a', action="store_const", dest="which", const="ac", help= _("Set new value to be used while running on AC power"))
+    return parser.parse_args()
+
+def printCurrent(readFn, tok, mode):
+    (current, minval, maxval) = readFn(tok.getPtr().location)
+    print _("Reading current %s mode setting") % mode
+    print _("    current: %s") % current
+    print _("        min: %s") % minval
+    print _("        max: %s") % maxval
+    return (current, minval, maxval)
+
+def setValue(writeFn, tok, mode, options, minval, maxval):
+    print _("Write new %s mode setting") % mode
+    securitykey = cli.getSecurityKey(options)
+    ret = ctypes.c_uint32(-3)
+    writeFn(securitykey, tok.getPtr().location, options.value, ctypes.byref(ret))
+    
+    if ret.value != 0:
+        raise Exception( "smi failed: %s" % ret.value )
+
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+
+    mode = _("Battery")
+    readFn = smi.read_battery_mode_setting
+    writeFn = smi.write_battery_mode_setting
+    if options.which=="ac":
+        mode = _("AC")
+        readFn = smi.read_ac_mode_setting
+        writeFn = smi.write_ac_mode_setting
+
+    DELL_LCD_BRIGHNESS_TOKEN = 0x007d;
+    table = token.TokenTable()
+    tok = table[DELL_LCD_BRIGHNESS_TOKEN]
+
+    (current, minval, maxval) = printCurrent(readFn, tok, mode)
+
+    try:
+        if options.value is not None:
+            if options.value < minval or options.value > maxval:
+                raise OutOfBounds()
+
+            setValue(writeFn, tok, mode, options, minval, maxval)
+            printCurrent(readFn, tok, mode)
+    except (smi.BadPassword,), e:
+        print _("Could not set value because the password was incorrect")
+    except (OutOfBounds,), e:
+        print _("value outside legal bounds")
+
+    return exit_code
+
+if __name__ == "__main__":
+    sys.exit( main() )
+
