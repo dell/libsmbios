@@ -2,11 +2,14 @@ from optparse import OptionParser
 import string
 import sys
 
+import libsmbios_c.smi as smi
+
 def getStdOptionParser(usage, version):
     parser = OptionParser(usage=usage, version=version)
     return addStdOptions(parser)
 
 def addStdOptions(parser):
+    parser.add_option('--security-key', action="store", dest="security_key", help=_("BIOS pre-calculated security key."))
     parser.add_option('--password', action="store", dest="password",
                       help=_("BIOS Setup password for set/activate operations."))
     parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
@@ -36,6 +39,9 @@ def setup_std_options(options):
     if options.raw:
         options.password_scancode = options.password
 
+    if options.security_key:
+        options.security_key = int(options.security_key, 0)
+
 def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
     sys.stdout.write(" "*first_line_indent)
     chars_printed = first_line_start
@@ -64,7 +70,15 @@ def makePrintable(s):
             retstr = retstr + "0x%02x" % ord(ch)
         return retstr
 
+def getSecurityKey(options):
+    if options.security_key is None:
+        fmt = smi.password_format(smi.DELL_SMI_PASSWORD_ADMIN)
+        passToTry = options.password_ascii
+        if fmt == smi.DELL_SMI_PASSWORD_FMT_SCANCODE:
+            passToTry = options.password_scancode
 
+        options.security_key = smi.get_security_key( passToTry )
+    return options.security_key
 
 # for testing only. It only does en_US, which is just wrong.
 def braindead_asc_to_scancode(s):
