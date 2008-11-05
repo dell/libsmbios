@@ -152,20 +152,22 @@ const struct token_obj *token_table_get_next_by_id(const struct token_table *t, 
     return cur;
 }
 
-#define make_token_obj_fn(ret, defret, callname) \
+#define make_token_obj_fn(ret, defret, callname, retfmt) \
     ret token_obj_##callname (const struct token_obj *t)    \
     {\
         fnprintf("\n"); \
-        if (t) return t-> callname (t);     \
-        return defret;\
+        ret retval = defret;    \
+        if (t) retval = t-> callname (t);     \
+        fnprintf(" return: " retfmt "\n", retval);  \
+        return retval;\
     }
 
-make_token_obj_fn( int, 0, get_type )
-make_token_obj_fn( u16, 0, get_id )
-make_token_obj_fn( int, -1, is_active )
-make_token_obj_fn( int, -1, activate )
-make_token_obj_fn( bool, 0, is_bool )
-make_token_obj_fn( bool, 0, is_string )
+make_token_obj_fn( int, 0, get_type, "0x%04x" )
+make_token_obj_fn( u16, 0, get_id, "0x%04x" )
+make_token_obj_fn( int, -1, is_active, "%d" )
+make_token_obj_fn( int, -1, activate, "%d" )
+make_token_obj_fn( bool, 0, is_bool, "%d" )
+make_token_obj_fn( bool, 0, is_string, "%d" )
 
 
 char * token_obj_get_string (const struct token_obj *t, size_t *len)
@@ -184,6 +186,7 @@ int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t s
 
 int token_obj_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
 {
+    fnprintf("\n");
     if (t)
         return t->try_password (t, pass_ascii, pass_scan);
     return 0;
