@@ -100,9 +100,8 @@ union void_u16 {
 static int _da_activate(const struct token_obj *t)
 {
     fnprintf("\n");
-    union void_u16 indirect;
-    indirect.ptr = t->private_data;
-    int retval = dell_smi_write_nv_storage(indirect.val, cast_token(t)->location, cast_token(t)->value, 0);
+    union void_u16 *indirect = (union void_u16*) &(t->private_data);
+    int retval = dell_smi_write_nv_storage(indirect->val, cast_token(t)->location, cast_token(t)->value, 0);
 
     if (retval) {
         strlcpy( t->errstring, _("Low level SMI call failed.\n"), ERROR_BUFSIZE);
@@ -114,12 +113,17 @@ static int _da_activate(const struct token_obj *t)
 
 static int _da_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
 {
-    union void_u16 indirect;
-    indirect.ptr = t->private_data;
+    fnprintf("\n");
+    union void_u16 *indirect = (union void_u16*) &(t->private_data);
+
     const char *whichpw = pass_scan;
     if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
         whichpw=pass_ascii;
-    return dell_smi_get_security_key(whichpw, &(indirect.val));
+
+    fnprintf("current security key: %d\n", indirect->val);
+    int ret = dell_smi_get_security_key(whichpw, &(indirect->val));
+    fnprintf("new security key: 0x%04x\n", indirect->val);
+    return ret;
 }
 
 void __internal init_da_token(struct token_obj *t)
