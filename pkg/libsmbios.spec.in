@@ -252,6 +252,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-wakeup-ctl
 %{_sbindir}/smbios-wireless-ctl
 %{_sbindir}/smbios-rbu-bios-update
+%{_sbindir}/smbios-lcd-brightness
 
 # symlinks: backwards compat
 %{_sbindir}/dellLcdBrightness
