@@ -43,6 +43,9 @@ class Token(ctypes.Structure):
     def isString(self):
         return _libsmbios_c.token_obj_is_string(self)
 
+    def getPtr(self):
+        return ctypes.cast(_libsmbios_c.token_obj_get_ptr(self),  ctypes.POINTER(_Token_LL.subclasses[ self.getType() ])).contents
+
     def getString(self):
         len = ctypes.c_size_t()
         retstr = _libsmbios_c.token_obj_get_string(self, ctypes.byref(len))
@@ -57,6 +60,19 @@ class Token(ctypes.Structure):
 
     def tryPassword(self, pass_ascii, pass_scancode):
         return _libsmbios_c.token_obj_try_password(self, pass_ascii, pass_scancode)
+
+class _Token_LL(ctypes.Structure):
+    subclasses = {}
+
+class _TokenD4(ctypes.Structure):
+    _pack_ = 1
+    _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint16), ("value", ctypes.c_uint16)]
+_Token_LL.subclasses[0xD4] = _TokenD4
+
+class _TokenDA(Token):
+    _pack_ = 1
+    _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint8), ("andMask", ctypes.c_uint8), ("orValue", ctypes.c_uint8)]
+_Token_LL.subclasses[0xDA] = _TokenDA
 
 def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
@@ -182,7 +198,8 @@ _libsmbios_c.token_obj_get_smbios_struct.restype = ctypes.c_int
 
 #const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
 _libsmbios_c.token_obj_get_ptr.argtypes = [ ctypes.POINTER(Token), ]
-_libsmbios_c.token_obj_get_ptr.restype = ctypes.c_void_p
+_libsmbios_c.token_obj_get_ptr.restype = ctypes.POINTER(_Token_LL)
+_libsmbios_c.token_obj_get_ptr.errcheck = errorOnNullPtrFN(lambda r,f,a: _table_strerror(r))
 
 
 
