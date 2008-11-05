@@ -82,6 +82,7 @@ def main():
 
         if smi.password_verify(whichpass, passToTry):
             sys.stdout.write("\tPassword entered MATCHED\n")
+            sys.stdout.write("\tSECURITY KEY: 0x%04x\n" % smi.get_security_key(passToTry))
         else:
             sys.stdout.write("\tPassword did not match\n")
         
