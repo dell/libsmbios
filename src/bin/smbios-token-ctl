@@ -261,6 +261,7 @@ def main():
         return exit_code
 
     tokenObj = getTokenObj(tokenTable, tokenXlator, options)
+    tokenObj.tryPassword(options.password_ascii, options.password_scancode)
 
     if options.action == "set-string":
         (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
