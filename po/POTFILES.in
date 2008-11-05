@@ -3,22 +3,25 @@ src/bin/smbios-sys-info
 src/bin/smbios-token-ctl
 src/bin/smbios-wakeup-ctl
 src/bin/smbios-wireless-ctl
+src/bin/smbios-lcd-brightness
+src/bin/smbios-rbu-bios-update
 
-src/bin/smbios-get-ut-data.c
-src/bin/smbios-state-byte-ctl.c
-src/bin/smbios-sys-info-lite.c
 src/bin/smbios-upflag-ctl.c
+src/bin/smbios-get-ut-data.c
+src/bin/smbios-sys-info-lite.c
+src/bin/smbios-state-byte-ctl.c
 
-src/libsmbios_c/cmos/cmos_linux.c
 src/libsmbios_c/cmos/cmos_obj.c
+src/libsmbios_c/cmos/cmos_linux.c
 src/libsmbios_c/common/common.c
-src/libsmbios_c/memory/memory_linux.c
 src/libsmbios_c/memory/memory_obj.c
+src/libsmbios_c/memory/memory_linux.c
 src/libsmbios_c/smbios/smbios_obj.c
-src/libsmbios_c/smi/smi_linux.c
 src/libsmbios_c/smi/smi_obj.c
+src/libsmbios_c/smi/smi_linux.c
 src/libsmbios_c/token/token_d4.c
 src/libsmbios_c/token/token_obj.c
+
 src/python/libsmbios_c/cmos.py
 src/python/libsmbios_c/_common.py
 src/python/libsmbios_c/__init__.py
