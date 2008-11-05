@@ -105,7 +105,7 @@ int dell_smi_read_ac_mode_setting     (u32 location, u32 *curValue, u32 *minValu
 static int write_setting(u16 security_key, u16 select, u32 location, u32 value, u32 *smiret)
 {
     u32 args[4] = {location, value, security_key}, res[4] = {0,};
-    int retval = dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
+    int retval = dell_simple_ci_smi(1, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
     if(smiret)
         *smiret = res[cbRES1];
     return retval;
@@ -113,16 +113,19 @@ static int write_setting(u16 security_key, u16 select, u32 location, u32 value, 
 
 int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value, u32 *smiret)
 {
+    fnprintf("key(0x%04x)  location(0x%04x)  value(0x%04x)\n", security_key, location, value);
     return write_setting(security_key, 0, location, value, smiret);
 }
 
 int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value, u32 *smiret)
 {
+    fnprintf("key(0x%04x)  location(0x%04x)  value(0x%04x)\n", security_key, location, value);
     return write_setting(security_key, 1, location, value, smiret);
 }
 
 int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value, u32 *smiret)
 {
+    fnprintf("key(0x%04x)  location(0x%04x)  value(0x%04x)\n", security_key, location, value);
     return write_setting(security_key, 2, location, value, smiret);
 }
 
