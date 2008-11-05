@@ -148,11 +148,28 @@ int __internal add_da_tokens(struct token_table *t)
     int retval = 0;
     fnprintf("\n");
     smbios_table_for_each_struct_type(t->smbios_table, s, 0xDA) {
-        struct calling_interface_structure *d4_struct = (struct calling_interface_structure*)s;
-        struct calling_interface_token *token = d4_struct->tokens;
+        struct calling_interface_structure *da_struct = (struct calling_interface_structure*)s;
+        struct calling_interface_token *token = da_struct->tokens;
 
 
         while (token->tokenId != TokenTypeEOT) {
+            if ( (void* )(token + sizeof(*token) ) > (void *)(da_struct + da_struct->length ))
+            {
+                fnprintf("\n");
+                fnprintf("\n");
+                fnprintf("\n");
+                fnprintf("BIOS BUG ============================= BIOS BUG\n");
+                fnprintf("BIOS BUG ============================= BIOS BUG\n");
+                fnprintf("\n");
+                fnprintf("Ran off the end of the token table! %p  >  %p \n\n", token, da_struct + da_struct->length);
+                fnprintf("\n");
+                fnprintf("BIOS BUG ============================= BIOS BUG\n");
+                fnprintf("BIOS BUG ============================= BIOS BUG\n\n\n\n");
+                fnprintf("\n");
+                fnprintf("\n");
+                fnprintf("\n");
+                break;
+            }
             error =   _("Allocation failure while trying to create token object.");
             struct token_obj *n = calloc(1, sizeof(struct token_obj));
             if (!n)

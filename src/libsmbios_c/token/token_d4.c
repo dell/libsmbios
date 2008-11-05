@@ -313,6 +313,27 @@ int __internal add_d4_tokens(struct token_table *t)
             goto out_err;
 
         while (token->tokenId != TokenTypeEOT) {
+            if ( (void* )(token + sizeof(*token) ) > (void *)(d4_struct + d4_struct->length ))
+            {
+                fnprintf("\n");
+                fnprintf("\n");
+                fnprintf("\n");
+                fnprintf("BIOS BUG =============================================== BIOS BUG\n");
+                fnprintf("BIOS BUG Unterminated table.... table has no EOT marker.\n");
+                fnprintf("BIOS BUG =============================================== BIOS BUG\n");
+                fnprintf("\n");
+                fnprintf("Ran off the end of the token table! %p  >  %p \n\n", token, d4_struct + d4_struct->length);
+                fnprintf("Struct Type 0x%02x Handle 0x%04x Len %d\n", d4_struct->type, d4_struct->handle, d4_struct->length);
+                fnprintf("\n");
+                fnprintf("BIOS BUG =============================================== BIOS BUG\n");
+                fnprintf("BIOS BUG =============================================== BIOS BUG\n\n\n\n");
+                fnprintf("\n");
+                fnprintf("\n");
+                fnprintf("\n");
+                break;
+            }
+
+
             error =   _("Allocation failure while trying to create token object.");
             struct token_obj *n = calloc(1, sizeof(struct token_obj));
             if (!n)
