@@ -193,8 +193,8 @@ _libsmbios_c.token_obj_set_string.errcheck = errorOnNegativeFN(lambda r,f,a: _ta
 #_libsmbios_c.token_obj_get_smbios_struct.restype = ctypes.c_int
 
 #int  DLL_SPEC token_obj_try_password(const struct token_obj *, const char *pass_ascii, const char *pass_scancode);
-_libsmbios_c.token_obj_get_smbios_struct.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.c_char_p ]
-_libsmbios_c.token_obj_get_smbios_struct.restype = ctypes.c_int
+_libsmbios_c.token_obj_try_password.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.c_char_p ]
+_libsmbios_c.token_obj_try_password.restype = ctypes.c_int
 
 #const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
 _libsmbios_c.token_obj_get_ptr.argtypes = [ ctypes.POINTER(Token), ]
