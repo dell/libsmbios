@@ -73,11 +73,3 @@ out_dellBiosUpdate_SOURCES = src/bin/dellBiosUpdate.cpp
 out_dellBiosUpdate_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios_c++/common
 
-noinst_PROGRAMS += out/smitest
-out_smitest_SOURCES = src/bin/smitest.cpp
-out_smitest_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-noinst_PROGRAMS += out/probes
-out_probes_SOURCES = src/bin/probes.cpp
-out_probes_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
