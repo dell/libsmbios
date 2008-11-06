@@ -12,11 +12,13 @@
 from __future__ import generators
 
 # import arranged alphabetically
+import ctypes
 import gettext
 import locale
 import os
 import struct
 import sys
+import time
 import traceback
 
 # the following vars are all substituted on install
@@ -35,11 +37,16 @@ __VERSION__=RELEASE_VERSION
 
 import cli
 import libsmbios_c.smbios as smbios
+import libsmbios_c.token as token
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
 class CmdlineError(Exception): pass
+
+RBU_SMBIOS_STRUCT = 0xDE
+TOKEN_RBU_CANCEL = 0x005d
+TOKEN_RBU_STAGE  = 0x005c
 
 completion_messages = {
     0x0000: _("The update was completed successfully."),
@@ -75,9 +82,26 @@ Common problems are:
 
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
-    parser.add_option('--system-info', action="store_true", default=False, help= _("Show system information and RBU completion codes)"))
+    parser.add_option('--hdr', metavar="HDR_FILE", action="store", default=None, help= _("The BIOS update file (.HDR file)"))
+    parser.add_option('--hdr-info', metavar="HDR_FILE", action="append", default=[], help= _("Show information about a given BIOS HDR file"))
+    parser.add_option('--system-info', action="store_const", const="system_info", dest="action", default=None, help= _("Show system information and RBU completion codes"))
+    parser.add_option('--cancel', action="store_const", const="cancel", dest="action", help= _("Cancel pending BIOS update"))
+    parser.add_option('--update', action="store_const", const="update", dest="action", help= _("Stage BIOS for update at next reboot"))
+    parser.add_option('--test', action="store_const", const="test", dest="action", help= _("Test HDR file to see if it is appropriate for this system"))
+
+    parser.add_option('--auto-detect-mode', action="store_const", const="auto", dest="update_mode", default="auto", help= _("Automatically select the optimal update mode (default, recommended)"))
+    parser.add_option('--force-packet-mode', action="store_const", const="packet", dest="update_mode", help= _("Force update to use packet-mode"))
+    parser.add_option('--force-mono-mode', action="store_const", const="mono", dest="update_mode", help= _("Force update to use monolithic-mode"))
+
+    parser.add_option('--override-version-check', action="store_false", dest="check_bios_version", default=True, help= _("Allow BIOS downgrades and re-flash"))
+    parser.add_option('--override-sysid-check', action="store_false", dest="check_sysid", default=True, help= _("Disable check for system-id (Dangerous)"))
     cli.addStdOptions(parser)
-    return parser.parse_args()
+    options, args = parser.parse_args()
+
+    if len(args) == 1 and options.hdr is None:
+        options.hdr = args[0]
+
+    return options,args
 
 def getNum(s, off, len):
     retval = 0
@@ -85,7 +109,7 @@ def getNum(s, off, len):
         t = list(struct.unpack( 'B' * len, s.getData(off, len) ))
         t.reverse()
         for i in t:
-            retval = (retval << 8) | i 
+            retval = (retval << 8) | i
     except IndexError, e:
         pass
     return retval
@@ -94,7 +118,7 @@ def getCompletion(struct_0xDE):
     return (getNum(struct_0xDE, 0x06, 2), completion_messages[getNum(struct_0xDE, 0x06, 2)])
 
 def getRbuLastUpdate(struct_0xDE):
-    return { 
+    return {
         "year": getNum(struct_0xDE, 0x08, 1),
         "month": getNum(struct_0xDE, 0x09, 1),
         "day": getNum(struct_0xDE, 0x0a, 1),
@@ -109,9 +133,9 @@ def getUpdateModes(struct_0xDE):
         modes.append("PACKET")
     return modes
 
-def info():
+def system_info():
     table = smbios.SmbiosTable()
-    s = table[0xDE]
+    s = table[RBU_SMBIOS_STRUCT]
 
     print _("RBU Update information:")
     print _("\tMinimum size: %d") % getNum(s, 0x04, 2)
@@ -125,14 +149,102 @@ def info():
     print _("\tCharacteristics: 0x%04x") % getNum(s, 0x0f, 1)
     print _("\tUpdate modes supported: %s") % ", ".join(getUpdateModes(s))
 
+def updateBios(filename):
+    pass
+
+def cancelUpdate():
+    print _("Cancelling BIOS update...")
+    table = token.TokenTable()
+    table[TOKEN_RBU_CANCEL].activate()
+    print _("BIOS update cancelled.")
+
+def dumpDataToFile(filename, data, wait=False):
+    while wait and not os.file.exists(filename):
+        time.sleep(0.1)
+    fh = open(filename, "wb")
+    fh.write(data)
+    fh.close()
+
+def stream():
+    pass
+
+class HdrFile(ctypes.Structure):
+    __pack__ = 1
+    __fields__ = [
+        #char headerId[4];
+        ("headerId", ctypes.c_char * 4),
+
+        #u8  headerLength;
+        ("headerLength", ctypes.c_uint8),
+
+        #u8  headerMajorVer;
+        ("headerMajorVer", ctypes.c_uint8),
+
+        #u8  headerMinorVer;
+        ("headerMinorVer", ctypes.c_uint8),
+
+        #u8  numSystems;
+        ("numSystems", ctypes.c_uint8),
+
+        #char quickCheck[40];
+        ("quickCheck", ctypes.c_char * 40),
+
+        #char biosVersion[3];
+        ("biosVersion", ctypes.c_char * 3),
+
+        #u8  miscFlags;
+        ("miscFlags", ctypes.c_uint8),
+
+        #u8  biosInternalUse;
+        ("biosInternalOnly", ctypes.c_uint8),
+
+        #u8  reserved[5];
+        ("biosInternalOnly", ctypes.c_uint8 * 5),
+
+        #u16 compatFlags;
+        ("compatFlags", ctypes.c_uint16),
+
+        #u16 systemIdList[NUM_SYS_ID_IN_HDR];
+        ("systemIdList", ctypes.POINTER(ctypes.c_uint16)),
+
+# Contains the list of NumSystems Dell System ID and Hardware Revision
+# ID pairs for which the Image Data is valid, in the following format:
+#
+# Bit Range  Description
+# 15:11      Dell System ID, bits 12:8.
+#               This range is set to 00000b if the Dell System ID
+#               is a 1-byte value.
+# 10:8       Hardware Revision ID
+# 7:0        Dell System ID, bits 7:0.
+        ]
+
+class BaseRbu(object):
+    def __init__(self, filename):
+        self.hdrfile = filename
+
+class MonolithicRbu_v3(BaseRbu):
+    sysbasedir = "/sys/devices/platform/dell_rbu/"
+    img_type_file = "/sys/devices/platform/dell_rbu/image_type"
+    pkt_size_file = "/sys/devices/platform/dell_rbu/packet_size"
+    fw_data_file = "/sys/class/firmware/dell_rbu/data"
+    fw_load_file = "/sys/class/firmware/dell_rbu/loading"
+
+    def doUpdate(self):
+        pass
+        #self.setLoadValue('1')
+        # open fw_data_file "wb"
+        # copy data from hdrfile to kernel
+        # close
+        #self.setLoadValue('0')
+
 def main():
     exit_code = 0
     (options, args) = command_parse()
     cli.setup_std_options(options)
 
-    if options.system_info:
+    if options.action == "system_info":
         try:
-            info()
+            system_info()
         except IndexError, e:
             print _("RBU is not supported on this system.")
         except smbios.TableParseError, e:
@@ -141,6 +253,15 @@ def main():
             print str(e)
             print
             print failmessage
+
+    elif options.action == "cancel":
+        cancelUpdate()
+    elif options.action == "update":
+        exit_code=1
+        print _("Update mode not yet implemented... use dellBiosUpdate")
+    elif options.action == "test":
+        exit_code=1
+        print _("Test mode not yet implemented... use dellBiosUpdate")
 
     return exit_code
 
