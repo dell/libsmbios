@@ -232,6 +232,9 @@ rm -rf %{buildroot}
 %doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 %doc doc/pkgheader.sh
 
+%dir %{_sysconfdir}/libsmbios
+%config(noreplace) %{_sysconfdir}/libsmbios/*
+
 # legacy C++
 %{_sbindir}/dellBiosUpdate
 %{_sbindir}/dellLEDCtl

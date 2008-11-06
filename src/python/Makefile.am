@@ -12,6 +12,8 @@ pkgpython_PYTHON = \
 	src/python/libsmbios_c/smbios.py	\
 	src/python/libsmbios_c/smi.py		\
 	src/python/libsmbios_c/system_info.py	\
+	src/python/libsmbios_c/trace_decorator.py \
+	src/python/libsmbios_c/peak_util_decorators.py \
 	src/python/libsmbios_c/token.py	\
 	src/python/_vars.py
 
@@ -19,10 +21,9 @@ DISTCLEANFILES += ./src/python/_vars.py
 src/python/_vars.py: src/python/libsmbios_c/_vars.py  configure Makefile config.status
 	mkdir -p $$(dirname $@) ||:
 	cp $< $@
-	for var in RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir;\
+	for var in $(REPLACE_VARS)	;\
 	do	\
-		echo "replace $$var=\"$${!var}\""		;\
-		perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $@	;\
+		perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $@;\
 	done
 
 # this is only for in-tree use.

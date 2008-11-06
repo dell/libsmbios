@@ -37,6 +37,9 @@ include src/py-cli/Makefile.am
 include src/bin/Makefile.am
 include src/cppunit/Makefile.am
 
+pkgconfdir=$(sysconfdir)/$(PACKAGE)
+dist_pkgconf_DATA=etc/logging.conf
+
 CLEANFILES+=_buildtemp smbios-utils*.rpm out
 SUBDIRS += po
 ACLOCAL_AMFLAGS = -I m4
