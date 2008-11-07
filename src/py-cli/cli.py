@@ -1,14 +1,22 @@
+import logging
+import logging.config
 from optparse import OptionParser
+import os
 import string
 import sys
 
-import libsmbios_c.smi as smi
+import libsmbios_c
 
 def getStdOptionParser(usage, version):
     parser = OptionParser(usage=usage, version=version)
     return addStdOptions(parser)
 
 def addStdOptions(parser):
+    parser.add_option("-v", "--verbose", action="count", dest="verbosity", default=1, help=_("Display more verbose output."))
+    parser.add_option("-q", "--quiet", action="store_const", const=0, dest="verbosity", help=_("Minimize program output. Only errors and warnings are displayed."))
+    parser.add_option("--trace", action="store_true", dest="trace", default=False, help=_("Enable verbose function tracing."))
+    parser.add_option("--logconfig", action="store", default=os.path.join(libsmbios_c.pkgconfdir, "logging.conf"), help=_("Specify alternate config log."))
+
     parser.add_option('--security-key', action="store", dest="security_key", help=_("BIOS pre-calculated security key."))
     parser.add_option('--password', action="store", dest="password",
                       help=_("BIOS Setup password for set/activate operations."))
@@ -42,6 +50,37 @@ def setup_std_options(options):
     if options.security_key:
         options.security_key = int(options.security_key, 0)
 
+
+    setupLogging(options.logconfig, options.verbosity, options.trace)
+
+
+def setupLogging(configFile, verbosity=1, trace=0):
+    # set up logging
+    logging.basicConfig()
+    logging.raiseExceptions = 0
+    if configFile:
+        logging.config.fileConfig(configFile)
+
+    root_log    = logging.getLogger()
+    log         = logging.getLogger("libsmbios_c")
+    verbose_log = logging.getLogger("verbose")
+    trace_log   = logging.getLogger("trace")
+
+    log.propagate = 0
+    trace_log.propagate = 0
+    verbose_log.propagate = 0
+
+    if verbosity >= 1:
+        log.propagate = 1
+    if verbosity >= 2:
+        verbose_log.propagate = 1
+    if verbosity >= 3:
+        for hdlr in root_log.handlers:
+            hdlr.setLevel(logging.DEBUG)
+    if trace:
+        trace_log.propagate = 1
+
+
 def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
     sys.stdout.write(" "*first_line_indent)
     chars_printed = first_line_start
@@ -72,12 +111,12 @@ def makePrintable(s):
 
 def getSecurityKey(options):
     if options.security_key is None:
-        fmt = smi.password_format(smi.DELL_SMI_PASSWORD_ADMIN)
+        fmt = libsmbios_c.smi.password_format(libsmbios_c.smi.DELL_SMI_PASSWORD_ADMIN)
         passToTry = options.password_ascii
-        if fmt == smi.DELL_SMI_PASSWORD_FMT_SCANCODE:
+        if fmt == libsmbios_c.smi.DELL_SMI_PASSWORD_FMT_SCANCODE:
             passToTry = options.password_scancode
 
-        options.security_key = smi.get_security_key( passToTry )
+        options.security_key = libsmbios_c.smi.get_security_key( passToTry )
     return options.security_key
 
 # for testing only. It only does en_US, which is just wrong.
