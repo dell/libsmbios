@@ -13,6 +13,9 @@ testResults.xml
 # python compiled
 *.pyc
 
+# compiled po
+*.gmo
+
 # autogen files
 configure
 aclocal.m4
