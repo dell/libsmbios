@@ -16,6 +16,7 @@ import ctypes
 from exceptions import *
 
 from _common import *
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = []
 
@@ -27,6 +28,7 @@ _libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.sysinfo_strerror.argtypes = [ ]
 _libsmbios_c.sysinfo_strerror.restype = ctypes.c_char_p
+decorate(traceLog())
 def _strerror():
     return Exception(_libsmbios_c.sysinfo_strerror())
 
@@ -74,6 +76,7 @@ _mk_simple_sysinfo_str_fn("get_asset_tag")
 _mk_simple_sysinfo_str_fn("get_service_tag")
 _mk_simple_sysinfo_str_fn("get_property_ownership_tag")
 
+decorate(traceLog())
 def set_service_tag(newtag, pass_ascii=None, pass_scancode=None):
     raise Exception("set service tag not yet supported.")
 
@@ -81,6 +84,7 @@ def set_service_tag(newtag, pass_ascii=None, pass_scancode=None):
 _libsmbios_c.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 _libsmbios_c.sysinfo_set_asset_tag.restype = ctypes.c_int
 _libsmbios_c.sysinfo_set_asset_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
+decorate(traceLog())
 def set_asset_tag(newtag, pass_ascii=None, pass_scancode=None):
     return _libsmbios_c.sysinfo_set_asset_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_asset_tag")
@@ -89,6 +93,7 @@ __all__.append("set_asset_tag")
 _libsmbios_c.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 _libsmbios_c.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
 _libsmbios_c.sysinfo_set_property_ownership_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
+decorate(traceLog())
 def set_property_ownership_tag(newtag, pass_ascii=None, pass_scancode=None):
     return _libsmbios_c.sysinfo_set_property_ownership_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_property_ownership_tag")

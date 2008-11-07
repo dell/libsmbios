@@ -16,6 +16,7 @@ import ctypes
 import exceptions
 
 from _common import *
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["SmbiosTable", "SMBIOS_DEFAULTS", "SMBIOS_GET_SINGLETON", "SMBIOS_GET_NEW", "SMBIOS_UNIT_TEST_MODE"]
 
@@ -27,27 +28,34 @@ SMBIOS_UNIT_TEST_MODE=0x0004
 class TableParseError(Exception): pass
 
 class SmbiosStructure(ctypes.Structure): 
+    decorate(traceLog())
     def getString(self, off):
         return _libsmbios_c.smbios_struct_get_string_from_offset(self, off)
 
+    decorate(traceLog())
     def getStringNumber(self, num):
         return _libsmbios_c.smbios_struct_get_string_number(self, num)
 
+    decorate(traceLog())
     def getType(self):
         return _libsmbios_c.smbios_struct_get_type(self)
 
+    decorate(traceLog())
     def getLength(self):
         return _libsmbios_c.smbios_struct_get_length(self)
 
+    decorate(traceLog())
     def getHandle(self):
         return _libsmbios_c.smbios_struct_get_handle(self)
 
     # use struct module to pull data out
+    decorate(traceLog())
     def getData(self, offset, len):
         buf = ctypes.create_string_buffer(len)
         _libsmbios_c.smbios_struct_get_data(self, buf, offset, len)
         return buf.raw
 
+decorate(traceLog())
 def SmbiosTable(flags=SMBIOS_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
     if _SmbiosTable._instance is None:
@@ -56,13 +64,17 @@ def SmbiosTable(flags=SMBIOS_GET_SINGLETON, factory_args=None):
 
 class _SmbiosTable(object):
     _instance = None
+
+    decorate(traceLog())
     def __init__(self, *args):
         self._tableobj = None
         self._tableobj = _libsmbios_c.smbios_table_factory(*args)
 
+    decorate(traceLog())
     def __del__(self):
         _libsmbios_c.smbios_table_free(self._tableobj)
 
+    decorate(traceLog())
     def __iter__(self):
         cur = ctypes.POINTER(SmbiosStructure)()
         while 1:
@@ -72,6 +84,7 @@ class _SmbiosTable(object):
             else:
                 raise exceptions.StopIteration( _("hit end of table.") )
 
+    decorate(traceLog())
     def iterByType(self, t):
         cur = ctypes.POINTER(SmbiosStructure)()
         while 1:
@@ -82,6 +95,7 @@ class _SmbiosTable(object):
             else:
                 raise exceptions.StopIteration( _("hit end of table.") )
 
+    decorate(traceLog())
     def getStructureByHandle(self, handle):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =_libsmbios_c.smbios_table_get_next_struct_by_handle( self._tableobj, cur, handle )
@@ -89,6 +103,7 @@ class _SmbiosTable(object):
             raise exceptions.IndexError( _("No SMBIOS structure found with handle %s") % handle)
         return cur.contents
 
+    decorate(traceLog())
     def getStructureByType(self, t):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =_libsmbios_c.smbios_table_get_next_struct_by_type( self._tableobj, cur, t )
@@ -109,6 +124,7 @@ class _smbios_table(ctypes.Structure): pass
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.smbios_table_strerror.argtypes = [ ctypes.POINTER(_smbios_table) ]
 _libsmbios_c.smbios_table_strerror.restype = ctypes.c_char_p
+decorate(traceLog())
 def _strerror(obj):
     return _libsmbios_c.smbios_table_strerror(obj)
 
@@ -117,6 +133,7 @@ def _strerror(obj):
 #_libsmbios_c.smbios_table_factory.argtypes = [ctypes.c_int, ]
 _libsmbios_c.smbios_table_factory.restype = ctypes.POINTER(_smbios_table)
 _libsmbios_c.smbios_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: TableParseError(_strerror(r)))
+_libsmbios_c.smbios_table_factory
 
 #void   smbios_table_free(struct smbios_table *);
 _libsmbios_c.smbios_table_free.argtypes = [ ctypes.POINTER(_smbios_table) ]

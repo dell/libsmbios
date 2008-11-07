@@ -16,6 +16,7 @@ import ctypes
 import exceptions
 
 from _common import *
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["TokenTable", "TOKEN_DEFAULTS", "TOKEN_GET_SINGLETON", "TOKEN_GET_NEW", "TOKEN_UNIT_TEST_MODE"]
 
@@ -25,27 +26,35 @@ TOKEN_GET_NEW       =0x0002
 TOKEN_UNIT_TEST_MODE=0x0004
 
 class Token(ctypes.Structure): 
+    decorate(traceLog())
     def getId(self):
         return _libsmbios_c.token_obj_get_id(self)
 
+    decorate(traceLog())
     def getType(self):
         return _libsmbios_c.token_obj_get_type(self)
 
+    decorate(traceLog())
     def isBool(self):
         return _libsmbios_c.token_obj_is_bool(self)
 
+    decorate(traceLog())
     def isActive(self):
         return _libsmbios_c.token_obj_is_active(self)
 
+    decorate(traceLog())
     def activate(self):
         return _libsmbios_c.token_obj_activate(self)
 
+    decorate(traceLog())
     def isString(self):
         return _libsmbios_c.token_obj_is_string(self)
 
+    decorate(traceLog())
     def getPtr(self):
         return ctypes.cast(_libsmbios_c.token_obj_get_ptr(self),  ctypes.POINTER(_Token_LL.subclasses[ self.getType() ])).contents
 
+    decorate(traceLog())
     def getString(self):
         len = ctypes.c_size_t()
         retstr = _libsmbios_c.token_obj_get_string(self, ctypes.byref(len))
@@ -55,9 +64,11 @@ class Token(ctypes.Structure):
         else:
             return None
 
+    decorate(traceLog())
     def setString(self, newstr):
         return _libsmbios_c.token_obj_set_string(self, newstr, len(newstr))
 
+    decorate(traceLog())
     def tryPassword(self, pass_ascii, pass_scancode):
         return _libsmbios_c.token_obj_try_password(self, pass_ascii, pass_scancode)
 
@@ -74,6 +85,7 @@ class _TokenDA(Token):
     _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint8), ("andMask", ctypes.c_uint8), ("orValue", ctypes.c_uint8)]
 _Token_LL.subclasses[0xDA] = _TokenDA
 
+decorate(traceLog())
 def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
     if _TokenTable._instance is None:
@@ -82,13 +94,16 @@ def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
 
 class _TokenTable(object):
     _instance = None
+    decorate(traceLog())
     def __init__(self, *args):
         self._tableobj = None
         self._tableobj = _libsmbios_c.token_table_factory(*args)
 
+    decorate(traceLog())
     def __del__(self):
         _libsmbios_c.token_table_free(self._tableobj)
 
+    decorate(traceLog())
     def __iter__(self):
         cur = ctypes.POINTER(Token)()
         while 1:
@@ -98,6 +113,7 @@ class _TokenTable(object):
             else:
                 raise exceptions.StopIteration( _("hit end of table.") )
 
+    decorate(traceLog())
     def __getitem__(self, id):
         if id is None:
             raise exceptions.IndexError( _("Cannot dereference NULL ID") )
@@ -124,6 +140,7 @@ class _token_table(ctypes.Structure): pass
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.token_table_strerror.argtypes = [ ctypes.POINTER(_token_table) ]
 _libsmbios_c.token_table_strerror.restype = ctypes.c_char_p
+decorate(traceLog())
 def _table_strerror(obj):
     return Exception(_libsmbios_c.token_table_strerror(obj))
 
@@ -131,6 +148,7 @@ def _table_strerror(obj):
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.token_obj_strerror.argtypes = [ ctypes.POINTER(Token) ]
 _libsmbios_c.token_obj_strerror.restype = ctypes.c_char_p
+decorate(traceLog())
 def _obj_strerror(obj):
     return Exception(_libsmbios_c.token_obj_strerror(obj))
 

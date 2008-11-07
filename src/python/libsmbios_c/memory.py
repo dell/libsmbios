@@ -16,6 +16,7 @@ import ctypes
 import exceptions
 
 from _common import *
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["MemoryAccess", "MEMORY_DEFAULTS", "MEMORY_GET_SINGLETON", "MEMORY_GET_NEW", "MEMORY_UNIT_TEST_MODE"]
 
@@ -24,6 +25,7 @@ MEMORY_GET_SINGLETON =0x0001
 MEMORY_GET_NEW       =0x0002
 MEMORY_UNIT_TEST_MODE=0x0004
 
+decorate(traceLog())
 def MemoryAccess(flags=MEMORY_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
     if _MemoryAccess._instance is None:
@@ -32,18 +34,23 @@ def MemoryAccess(flags=MEMORY_GET_SINGLETON, factory_args=None):
 
 class _MemoryAccess(object):
     _instance = None
+
+    decorate(traceLog())
     def __init__(self, *args):
         self._memobj = None
         self._memobj = _libsmbios_c.memory_obj_factory(*args)
             
+    decorate(traceLog())
     def __del__(self):
         _libsmbios_c.memory_obj_free(self._memobj)
 
+    decorate(traceLog())
     def read(self, offset, length):
         buf = ctypes.create_string_buffer(length)
         _libsmbios_c.memory_obj_read(self._memobj, buf, offset, length)
         return buf
 
+    decorate(traceLog())
     def write(self, buf, offset):
         _libsmbios_c.memory_obj_write(self._memobj, buf, offset, len(buf))
 
@@ -58,6 +65,7 @@ class _memory_access_obj(ctypes.Structure): pass
 # define strerror first so we can use it in error checking other functions.
 _libsmbios_c.memory_obj_strerror.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
 _libsmbios_c.memory_obj_strerror.restype = ctypes.c_char_p
+decorate(traceLog())
 def _strerror(obj):
     return Exception(_libsmbios_c.memory_obj_strerror(obj))
 
