@@ -18,6 +18,8 @@ libsmbios_c_DLL = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
 if not getattr(ctypes, "c_bool", None):
     ctypes.c_bool = ctypes.c_uint8
 
+import _common
+
 # import all our packages.
 import cmos
 import memory
@@ -27,7 +29,7 @@ import system_info
 import token
 
 # push gettext vars into namespaces
-for i in (cmos, memory, smbios, smi, system_info, token):
+for i in (cmos, memory, smbios, smi, system_info, token, _common):
     setattr(i, "_", _)
 
 __VERSION__ = RELEASE_VERSION
