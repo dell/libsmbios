@@ -34,8 +34,7 @@ sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
 import cli
-import libsmbios_c.smi as smi
-import libsmbios_c.token as token
+from libsmbios_c import smi, token
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
