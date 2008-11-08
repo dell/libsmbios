@@ -15,8 +15,9 @@ memory_obj:
 import ctypes
 import exceptions
 
-from _common import *
-from trace_decorator import decorate, traceLog, getLog
+from libsmbios_c import libsmbios_c_DLL as DLL
+from _common import errorOnNegativeFN, errorOnNullPtrFN
+from _trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["MemoryAccess", "MEMORY_DEFAULTS", "MEMORY_GET_SINGLETON", "MEMORY_GET_NEW", "MEMORY_UNIT_TEST_MODE"]
 
@@ -38,56 +39,53 @@ class _MemoryAccess(object):
     decorate(traceLog())
     def __init__(self, *args):
         self._memobj = None
-        self._memobj = _libsmbios_c.memory_obj_factory(*args)
+        self._memobj = DLL.memory_obj_factory(*args)
             
     decorate(traceLog())
     def __del__(self):
-        _libsmbios_c.memory_obj_free(self._memobj)
+        DLL.memory_obj_free(self._memobj)
 
     decorate(traceLog())
     def read(self, offset, length):
         buf = ctypes.create_string_buffer(length)
-        _libsmbios_c.memory_obj_read(self._memobj, buf, offset, length)
+        DLL.memory_obj_read(self._memobj, buf, offset, length)
         return buf
 
     decorate(traceLog())
     def write(self, buf, offset):
-        _libsmbios_c.memory_obj_write(self._memobj, buf, offset, len(buf))
+        DLL.memory_obj_write(self._memobj, buf, offset, len(buf))
 
 
-
-# initialize libsmbios lib
-_libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
 
 #struct memory_access_obj;
 class _memory_access_obj(ctypes.Structure): pass
 
 # define strerror first so we can use it in error checking other functions.
-_libsmbios_c.memory_obj_strerror.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
-_libsmbios_c.memory_obj_strerror.restype = ctypes.c_char_p
+DLL.memory_obj_strerror.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
+DLL.memory_obj_strerror.restype = ctypes.c_char_p
 decorate(traceLog())
 def _strerror(obj):
-    return Exception(_libsmbios_c.memory_obj_strerror(obj))
+    return Exception(DLL.memory_obj_strerror(obj))
 
 #struct memory_access_obj *memory_obj_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
-#_libsmbios_c.memory_obj_factory.argtypes = [ctypes.c_int, ]
-_libsmbios_c.memory_obj_factory.restype = ctypes.POINTER(_memory_access_obj)
-_libsmbios_c.memory_obj_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _strerror(r))
+#DLL.memory_obj_factory.argtypes = [ctypes.c_int, ]
+DLL.memory_obj_factory.restype = ctypes.POINTER(_memory_access_obj)
+DLL.memory_obj_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _strerror(r))
 
 #void memory_obj_free(struct memory_access_obj *);
-_libsmbios_c.memory_obj_free.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
-_libsmbios_c.memory_obj_free.restype = None
+DLL.memory_obj_free.argtypes = [ ctypes.POINTER(_memory_access_obj) ]
+DLL.memory_obj_free.restype = None
 
 #int  memory_obj_read(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
-_libsmbios_c.memory_obj_read.argtypes = [ ctypes.POINTER(_memory_access_obj), ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t ]
-_libsmbios_c.memory_obj_read.restype = ctypes.c_int
-_libsmbios_c.memory_obj_read.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
+DLL.memory_obj_read.argtypes = [ ctypes.POINTER(_memory_access_obj), ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t ]
+DLL.memory_obj_read.restype = ctypes.c_int
+DLL.memory_obj_read.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
 
 #int  memory_obj_write(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
-_libsmbios_c.memory_obj_write.argtypes = [ ctypes.POINTER(_memory_access_obj), ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t ]
-_libsmbios_c.memory_obj_write.restype = ctypes.c_int
-_libsmbios_c.memory_obj_write.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
+DLL.memory_obj_write.argtypes = [ ctypes.POINTER(_memory_access_obj), ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t ]
+DLL.memory_obj_write.restype = ctypes.c_int
+DLL.memory_obj_write.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
 
 #s64  memory_obj_search(const struct memory_access_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 #void  memory_obj_suggest_leave_open(struct memory_access_obj *);

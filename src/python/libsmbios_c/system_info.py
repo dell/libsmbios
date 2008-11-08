@@ -15,58 +15,56 @@ systeminfo:
 import ctypes
 from exceptions import *
 
-from _common import *
-from trace_decorator import decorate, traceLog, getLog
+from libsmbios_c import libsmbios_c_DLL as DLL
+from _common import errorOnNullPtrFN, errorOnNegativeFN, errorOnZeroFN, freeLibStringFN
+from _trace_decorator import decorate, traceLog, getLog
 
 __all__ = []
-
-# initialize libsmbios lib
-_libsmbios_c = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
 
 #// format error string
 #const char *token_table_strerror(const struct token_table *m);
 # define strerror first so we can use it in error checking other functions.
-_libsmbios_c.sysinfo_strerror.argtypes = [ ]
-_libsmbios_c.sysinfo_strerror.restype = ctypes.c_char_p
+DLL.sysinfo_strerror.argtypes = [ ]
+DLL.sysinfo_strerror.restype = ctypes.c_char_p
 decorate(traceLog())
 def _strerror():
-    return Exception(_libsmbios_c.sysinfo_strerror())
+    return Exception(DLL.sysinfo_strerror())
 
 #    const char *smbios_get_library_version_string(); 
-_libsmbios_c.smbios_get_library_version_string.argtypes = []
-_libsmbios_c.smbios_get_library_version_string.restype = ctypes.c_char_p
-get_library_version_string = _libsmbios_c.smbios_get_library_version_string
+DLL.smbios_get_library_version_string.argtypes = []
+DLL.smbios_get_library_version_string.restype = ctypes.c_char_p
+get_library_version_string = DLL.smbios_get_library_version_string
 __all__.append("get_library_version_string")
 
 #    const char *smbios_get_library_version_major(); 
-_libsmbios_c.smbios_get_library_version_major.argtypes = []
-_libsmbios_c.smbios_get_library_version_major.restype = ctypes.c_int
-get_library_version_major = _libsmbios_c.smbios_get_library_version_major
+DLL.smbios_get_library_version_major.argtypes = []
+DLL.smbios_get_library_version_major.restype = ctypes.c_int
+get_library_version_major = DLL.smbios_get_library_version_major
 __all__.append("get_library_version_major")
 
 #    const char *smbios_get_library_version_minor(); 
-_libsmbios_c.smbios_get_library_version_minor.argtypes = []
-_libsmbios_c.smbios_get_library_version_minor.restype = ctypes.c_int
-get_library_version_minor = _libsmbios_c.smbios_get_library_version_minor
+DLL.smbios_get_library_version_minor.argtypes = []
+DLL.smbios_get_library_version_minor.restype = ctypes.c_int
+get_library_version_minor = DLL.smbios_get_library_version_minor
 __all__.append("get_library_version_minor")
 
 #    const char *sysinfo_get_dell_system_id(); 
-_libsmbios_c.sysinfo_get_dell_system_id.argtypes = []
-_libsmbios_c.sysinfo_get_dell_system_id.restype = ctypes.c_int
-_libsmbios_c.sysinfo_get_dell_system_id.errcheck=errorOnZeroFN(lambda r,f,a: Exception( _("Null ID returned.") ))
-get_dell_system_id = _libsmbios_c.sysinfo_get_dell_system_id
+DLL.sysinfo_get_dell_system_id.argtypes = []
+DLL.sysinfo_get_dell_system_id.restype = ctypes.c_int
+DLL.sysinfo_get_dell_system_id.errcheck=errorOnZeroFN(lambda r,f,a: Exception( _("Null ID returned.") ))
+get_dell_system_id = DLL.sysinfo_get_dell_system_id
 __all__.append("get_dell_system_id")
 
 #    void sysinfo_string_free( const char * );
-_libsmbios_c.sysinfo_string_free.argtypes = [ctypes.POINTER(ctypes.c_char),]
-_libsmbios_c.sysinfo_string_free.restype = None
+DLL.sysinfo_string_free.argtypes = [ctypes.POINTER(ctypes.c_char),]
+DLL.sysinfo_string_free.restype = None
 
 def _mk_simple_sysinfo_str_fn(name):
     import sys
-    getattr(_libsmbios_c,  "sysinfo_%s" % name).argtypes=[]
-    getattr(_libsmbios_c,  "sysinfo_%s" % name).restype=ctypes.POINTER(ctypes.c_char)
-    getattr(_libsmbios_c,  "sysinfo_%s" % name).errcheck=freeLibStringFN( _libsmbios_c.sysinfo_string_free, lambda r,f,a: _strerror() )
-    sys.modules[__name__].__dict__[name] = getattr(_libsmbios_c,  "sysinfo_%s" % name)
+    getattr(DLL,  "sysinfo_%s" % name).argtypes=[]
+    getattr(DLL,  "sysinfo_%s" % name).restype=ctypes.POINTER(ctypes.c_char)
+    getattr(DLL,  "sysinfo_%s" % name).errcheck=freeLibStringFN( DLL.sysinfo_string_free, lambda r,f,a: _strerror() )
+    sys.modules[__name__].__dict__[name] = getattr(DLL,  "sysinfo_%s" % name)
     __all__.append(name)
 
 _mk_simple_sysinfo_str_fn("get_system_name")
@@ -81,21 +79,21 @@ def set_service_tag(newtag, pass_ascii=None, pass_scancode=None):
     raise Exception("set service tag not yet supported.")
 
 #_mk_simple_sysinfo_str_fn("set_asset_tag")
-_libsmbios_c.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
-_libsmbios_c.sysinfo_set_asset_tag.restype = ctypes.c_int
-_libsmbios_c.sysinfo_set_asset_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
+DLL.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+DLL.sysinfo_set_asset_tag.restype = ctypes.c_int
+DLL.sysinfo_set_asset_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
 decorate(traceLog())
 def set_asset_tag(newtag, pass_ascii=None, pass_scancode=None):
-    return _libsmbios_c.sysinfo_set_asset_tag(newtag, pass_ascii, pass_scancode)
+    return DLL.sysinfo_set_asset_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_asset_tag")
 
 #int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
-_libsmbios_c.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
-_libsmbios_c.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
-_libsmbios_c.sysinfo_set_property_ownership_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
+DLL.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+DLL.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
+DLL.sysinfo_set_property_ownership_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
 decorate(traceLog())
 def set_property_ownership_tag(newtag, pass_ascii=None, pass_scancode=None):
-    return _libsmbios_c.sysinfo_set_property_ownership_tag(newtag, pass_ascii, pass_scancode)
+    return DLL.sysinfo_set_property_ownership_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_property_ownership_tag")
 
 if __name__ == "__main__":

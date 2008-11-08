@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 try:
     from peak.util.decorators import rewrap, decorate
 except ImportError:
-    from peak_util_decorators import rewrap, decorate
+    from _peak_util_decorators import rewrap, decorate
 
 # defaults to module verbose log
 # does a late binding on log. Forwards all attributes to logger.

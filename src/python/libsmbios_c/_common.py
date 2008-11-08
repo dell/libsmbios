@@ -13,13 +13,9 @@ _common:
 
 # imports (alphabetical)
 import exceptions
-import os
-import sys
 import ctypes
 
-__all__ = ["freeLibStringFN", "errorOnZeroFN", "errorOnNegativeFN", "errorOnNullPtrFN", "RELEASE_VERSION", "pkgdatadir", "pythondir", "_" ]
-
-from _vars import *
+__all__ = ["freeLibStringFN", "errorOnZeroFN", "errorOnNegativeFN", "errorOnNullPtrFN" ]
 
 class Exception(exceptions.Exception): pass
 
@@ -45,7 +41,6 @@ def errorOnNullPtrFN(exception_fn=None):
             _doExc(exception_fn, result, func, args, _("null pointer returned") )
         return result
     return _fn
-
 
 def errorOnZeroFN(exception_fn=None):
     def _fn(result, func, args):
