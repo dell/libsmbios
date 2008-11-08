@@ -102,8 +102,7 @@ def main():
         table[options.action].activate()
         table[token_wake_hour].setString(struct.pack("b", options.hour_bcd))
         table[token_wake_min].setString(struct.pack("b", options.min_bcd))
-
-    showCurrentWakeup(table)
+        showCurrentWakeup(table)
 
     return exit_code
 
