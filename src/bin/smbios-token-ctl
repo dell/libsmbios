@@ -26,10 +26,7 @@ import traceback
 # the following vars are all substituted on install
 # this bin isnt byte-compiled, so this is ok
 RELEASE_VERSION="uninstalled-version"
-GETTEXT_PACKAGE="libsmbios" #replaced
-pkgdatadir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "doc")
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
-localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
 clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
 # end vars
 
@@ -37,14 +34,15 @@ clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cl
 sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
-TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
-TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
+
+from libsmbios_c import token as tok, localedir, GETTEXT_PACKAGE, pkgdatadir
+import cli
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
-import libsmbios_c.token as tok
-import cli
+TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
+TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
 
 class CmdlineError(Exception): pass
 class BlacklistedToken(Exception): pass

@@ -21,9 +21,7 @@ import exceptions
 # the following vars are all substituted on install
 # this bin isnt byte-compiled, so this is ok
 RELEASE_VERSION="uninstalled-version"
-GETTEXT_PACKAGE="libsmbios" #replaced
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
-localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
 clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
 # end vars
 
@@ -32,12 +30,11 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
+import cli
+from  libsmbios_c import system_info as sysinfo, smbios, localedir, GETTEXT_PACKAGE
+
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
-
-import cli
-import libsmbios_c.system_info as sysinfo
-import libsmbios_c.smbios as smbios
 
 def notSettable(*args):
     raise exceptions.Exception("this property is read-only")
