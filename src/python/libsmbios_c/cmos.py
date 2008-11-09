@@ -33,7 +33,7 @@ def CmosAccess(flags=CMOS_GET_SINGLETON, factory_args=None):
         _CmosAccess._instance = _CmosAccess( flags, *factory_args)
     return _CmosAccess._instance
 
-class _CmosAccess(object):
+class _CmosAccess(ctypes.Structure):
     _instance = None
 
     decorate(traceLog())
@@ -57,13 +57,10 @@ class _CmosAccess(object):
 
 
 
-#struct cmos_access_obj;
-class _cmos_access_obj(ctypes.Structure): pass
-
 #// format error string
 #const char *cmos_obj_strerror(const struct cmos_access_obj *m);
 # define strerror first so we can use it in error checking other functions.
-DLL.cmos_obj_strerror.argtypes = [ ctypes.POINTER(_cmos_access_obj) ]
+DLL.cmos_obj_strerror.argtypes = [ ctypes.POINTER(_CmosAccess) ]
 DLL.cmos_obj_strerror.restype = ctypes.c_char_p
 decorate(traceLog())
 def _strerror(obj):
@@ -72,20 +69,20 @@ def _strerror(obj):
 #struct cmos_access_obj *cmos_obj_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #DLL.cmos_obj_factory.argtypes = [ctypes.c_int, ]
-DLL.cmos_obj_factory.restype = ctypes.POINTER(_cmos_access_obj)
+DLL.cmos_obj_factory.restype = ctypes.POINTER(_CmosAccess)
 DLL.cmos_obj_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: _strerror(r))
 
 #void   cmos_obj_free(struct cmos_access_obj *);
-DLL.cmos_obj_free.argtypes = [ ctypes.POINTER(_cmos_access_obj) ]
+DLL.cmos_obj_free.argtypes = [ ctypes.POINTER(_CmosAccess) ]
 DLL.cmos_obj_free.restype = None
 
 #int     cmos_obj_read_byte(const struct cmos_access_obj *, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
-DLL.cmos_obj_read_byte.argtypes = [ ctypes.POINTER(_cmos_access_obj), ctypes.POINTER(ctypes.c_uint8), ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32 ]
+DLL.cmos_obj_read_byte.argtypes = [ ctypes.POINTER(_CmosAccess), ctypes.POINTER(ctypes.c_uint8), ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32 ]
 DLL.cmos_obj_read_byte.restype = ctypes.c_int
 DLL.cmos_obj_read_byte.errcheck = errorOnNegativeFN(_strerror)
 
 #int    cmos_obj_write_byte(const struct cmos_access_obj *, u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
-DLL.cmos_obj_write_byte.argtypes = [ ctypes.POINTER(_cmos_access_obj), ctypes.c_uint8, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32 ]
+DLL.cmos_obj_write_byte.argtypes = [ ctypes.POINTER(_CmosAccess), ctypes.c_uint8, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32 ]
 DLL.cmos_obj_write_byte.restype = ctypes.c_int
 DLL.cmos_obj_write_byte.errcheck = errorOnNegativeFN(_strerror)
 
