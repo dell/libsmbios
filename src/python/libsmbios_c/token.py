@@ -17,7 +17,7 @@ import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN
-from _trace_decorator import decorate, traceLog, getLog
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["TokenTable", "TOKEN_DEFAULTS", "TOKEN_GET_SINGLETON", "TOKEN_GET_NEW", "TOKEN_UNIT_TEST_MODE"]
 

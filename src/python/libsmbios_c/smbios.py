@@ -17,7 +17,7 @@ import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN
-from _trace_decorator import decorate, traceLog, getLog
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["SmbiosTable", "SMBIOS_DEFAULTS", "SMBIOS_GET_SINGLETON", "SMBIOS_GET_NEW", "SMBIOS_UNIT_TEST_MODE"]
 
@@ -63,7 +63,7 @@ def SmbiosTable(flags=SMBIOS_GET_SINGLETON, factory_args=None):
         _SmbiosTable._instance = _SmbiosTable( flags, *factory_args)
     return _SmbiosTable._instance
 
-class _SmbiosTable(object):
+class _SmbiosTable(ctypes.Structure):
     _instance = None
 
     decorate(traceLog())
@@ -114,13 +114,10 @@ class _SmbiosTable(object):
 
     __getitem__ = getStructureByType
 
-#struct smbios_table;
-class _smbios_table(ctypes.Structure): pass
-
 #// format error string
 #const char *smbios_table_strerror(const struct smbios_table *m);
 # define strerror first so we can use it in error checking other functions.
-DLL.smbios_table_strerror.argtypes = [ ctypes.POINTER(_smbios_table) ]
+DLL.smbios_table_strerror.argtypes = [ ctypes.POINTER(_SmbiosTable) ]
 DLL.smbios_table_strerror.restype = ctypes.c_char_p
 decorate(traceLog())
 def _strerror(obj):
@@ -129,24 +126,24 @@ def _strerror(obj):
 #struct smbios_table *smbios_table_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #DLL.smbios_table_factory.argtypes = [ctypes.c_int, ]
-DLL.smbios_table_factory.restype = ctypes.POINTER(_smbios_table)
+DLL.smbios_table_factory.restype = ctypes.POINTER(_SmbiosTable)
 DLL.smbios_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: TableParseError(_strerror(r)))
 DLL.smbios_table_factory
 
 #void   smbios_table_free(struct smbios_table *);
-DLL.smbios_table_free.argtypes = [ ctypes.POINTER(_smbios_table) ]
+DLL.smbios_table_free.argtypes = [ ctypes.POINTER(_SmbiosTable) ]
 DLL.smbios_table_free.restype = None
 
 #struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
-DLL.smbios_table_get_next_struct.argtypes = [ ctypes.POINTER(_smbios_table), ctypes.POINTER(SmbiosStructure) ]
+DLL.smbios_table_get_next_struct.argtypes = [ ctypes.POINTER(_SmbiosTable), ctypes.POINTER(SmbiosStructure) ]
 DLL.smbios_table_get_next_struct.restype = ctypes.POINTER(SmbiosStructure)
 
 #struct smbios_struct *smbios_table_get_next_struct_by_type(const struct smbios_table *, const struct smbios_struct *cur);
-DLL.smbios_table_get_next_struct_by_type.argtypes = [ ctypes.POINTER(_smbios_table), ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
+DLL.smbios_table_get_next_struct_by_type.argtypes = [ ctypes.POINTER(_SmbiosTable), ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
 DLL.smbios_table_get_next_struct_by_type.restype = ctypes.POINTER(SmbiosStructure)
 
 #struct smbios_struct *smbios_table_get_next_struct_by_handle(const struct smbios_table *, const struct smbios_struct *cur);
-DLL.smbios_table_get_next_struct_by_handle.argtypes = [ ctypes.POINTER(_smbios_table), ctypes.POINTER(SmbiosStructure), ctypes.c_uint16 ]
+DLL.smbios_table_get_next_struct_by_handle.argtypes = [ ctypes.POINTER(_SmbiosTable), ctypes.POINTER(SmbiosStructure), ctypes.c_uint16 ]
 DLL.smbios_table_get_next_struct_by_handle.restype = ctypes.POINTER(SmbiosStructure)
 
 #u8 DLL_SPEC smbios_struct_get_type(const struct smbios_struct *);

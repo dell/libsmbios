@@ -17,7 +17,7 @@ import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN, errorOnZeroFN
-from _trace_decorator import decorate, traceLog, getLog
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["DellSmi", "DELL_SMI_DEFAULTS", "DELL_SMI_GET_SINGLETON", "DELL_SMI_GET_NEW", "DELL_SMI_UNIT_TEST_MODE"]
 __all__.extend( [ "cbARG1", "cbARG2", "cbARG3", "cbARG4", "cbRES1", "cbRES2", "cbRES3", "cbRES4", ])

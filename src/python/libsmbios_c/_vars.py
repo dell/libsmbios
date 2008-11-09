@@ -12,10 +12,10 @@ _modpath = os.path.realpath(libsmbios_c.__path__[0])
 # the following vars are all substituted on install
 RELEASE_VERSION="uninstalled-version"
 GETTEXT_PACKAGE="libsmbios"
-pythondir =os.path.join(_modpath, "..")
-pkgdatadir=os.path.join(_modpath, "..", "..", "..", "doc")
-localedir =os.path.join(_modpath, "..", "..", "..", "po")
-pkgconfdir=os.path.join(_modpath, "..", "..", "..", "etc")
 libdir    =os.path.join(_modpath, "..", "..", "..", "out", ".libs")
+pythondir =os.path.join(_modpath, "..")
+localedir =os.path.join(_modpath, "..", "..", "..", "po")
+pkgdatadir=os.path.join(_modpath, "..", "..", "..", "doc")
+pkgconfdir=os.path.join(_modpath, "..", "..", "..", "etc")
 # end vars
 

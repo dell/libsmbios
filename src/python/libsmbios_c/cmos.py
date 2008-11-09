@@ -17,7 +17,7 @@ import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNegativeFN, errorOnNullPtrFN
-from _trace_decorator import decorate, traceLog, getLog
+from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["CmosAccess", "CMOS_DEFAULTS", "CMOS_GET_SINGLETON", "CMOS_GET_NEW", "CMOS_UNIT_TEST_MODE"]
 
