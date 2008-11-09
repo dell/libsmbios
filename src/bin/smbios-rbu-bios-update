@@ -35,6 +35,15 @@ __VERSION__=RELEASE_VERSION
 
 import cli
 from libsmbios_c import smbios, token, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+
+# use python-decoratortools if it is installed, otherwise use our own local
+# copy. Imported this locally because it doesnt appear to be available on SUSE
+# and the fedora RPM doesnt appear to compile cleanly on SUSE
+try:
+    from peak.util.decorators import decorate_class
+except ImportError:
+    from libsmbios_c._peak_util_decorators import decorate_class
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
@@ -100,6 +109,7 @@ def command_parse():
 
     return options,args
 
+decorate(traceLog())
 def getNum(s, off, len):
     retval = 0
     try:
@@ -111,10 +121,16 @@ def getNum(s, off, len):
         pass
     return retval
 
-def getCompletion(struct_0xDE):
+decorate(traceLog())
+def getCompletion(struct_0xDE=None):
+    if struct_0xDE is None:
+        struct_0xDE = smbios.SmbiosTable()[RBU_SMBIOS_STRUCT]
     return (getNum(struct_0xDE, 0x06, 2), completion_messages[getNum(struct_0xDE, 0x06, 2)])
 
-def getRbuLastUpdate(struct_0xDE):
+decorate(traceLog())
+def getRbuLastUpdate(struct_0xDE=None):
+    if struct_0xDE is None:
+        struct_0xDE = smbios.SmbiosTable()[RBU_SMBIOS_STRUCT]
     return {
         "year": getNum(struct_0xDE, 0x08, 1),
         "month": getNum(struct_0xDE, 0x09, 1),
@@ -123,13 +139,18 @@ def getRbuLastUpdate(struct_0xDE):
         "minute": getNum(struct_0xDE, 0x0c, 1),
         }
 
-def getUpdateModes(struct_0xDE):
+decorate(traceLog())
+def getUpdateModes(struct_0xDE=None):
+    if struct_0xDE is None:
+        struct_0xDE = smbios.SmbiosTable()[RBU_SMBIOS_STRUCT]
+
     modes = [ "MONOLITHIC" ]
     characteristics = getNum(struct_0xDE, 0x0f, 1)
     if characteristics & 0x01:
         modes.append("PACKET")
     return modes
 
+decorate(traceLog())
 def system_info():
     table = smbios.SmbiosTable()
     s = table[RBU_SMBIOS_STRUCT]
@@ -146,15 +167,19 @@ def system_info():
     print _("\tCharacteristics: 0x%04x") % getNum(s, 0x0f, 1)
     print _("\tUpdate modes supported: %s") % ", ".join(getUpdateModes(s))
 
+decorate(traceLog())
 def updateBios(filename):
-    pass
+    meth = BaseRbu.getRbuMethod(filename)
+    meth.doUpdate()
 
+decorate(traceLog())
 def cancelUpdate():
     print _("Cancelling BIOS update...")
     table = token.TokenTable()
     table[TOKEN_RBU_CANCEL].activate()
     print _("BIOS update cancelled.")
 
+decorate(traceLog())
 def dumpDataToFile(filename, data, wait=False):
     while wait and not os.file.exists(filename):
         time.sleep(0.1)
@@ -162,12 +187,12 @@ def dumpDataToFile(filename, data, wait=False):
     fh.write(data)
     fh.close()
 
-def stream():
-    pass
+# current HDR def leaves room for 12 system ids
+NUM_SYS_ID_IN_HDR = 12
 
-class HdrFile(ctypes.Structure):
-    __pack__ = 1
-    __fields__ = [
+class HdrFileStructure(ctypes.Structure):
+    _pack_ = 1
+    _fields_ = [
         #char headerId[4];
         ("headerId", ctypes.c_char * 4),
 
@@ -196,13 +221,13 @@ class HdrFile(ctypes.Structure):
         ("biosInternalOnly", ctypes.c_uint8),
 
         #u8  reserved[5];
-        ("biosInternalOnly", ctypes.c_uint8 * 5),
+        ("reserved", ctypes.c_uint8 * 5),
 
         #u16 compatFlags;
         ("compatFlags", ctypes.c_uint16),
 
         #u16 systemIdList[NUM_SYS_ID_IN_HDR];
-        ("systemIdList", ctypes.POINTER(ctypes.c_uint16)),
+        ("systemIdList", ctypes.c_uint16 * NUM_SYS_ID_IN_HDR)
 
 # Contains the list of NumSystems Dell System ID and Hardware Revision
 # ID pairs for which the Image Data is valid, in the following format:
@@ -215,18 +240,76 @@ class HdrFile(ctypes.Structure):
 # 7:0        Dell System ID, bits 7:0.
         ]
 
+class HdrFile(object):
+    decorate(traceLog())
+    def __init__(self, filename):
+        self.filename = filename
+        self.fd = open(filename, "rb")
+        self.hdr = HdrFileStructure()
+        buf = self.fd.read(ctypes.sizeof(self.hdr))
+        self.fd.seek(0,0)
+        ctypes.memmove(ctypes.byref(self.hdr), ctypes.byref(ctypes.create_string_buffer(buf)), ctypes.sizeof(self.hdr))
+
+    decorate(traceLog())
+    def dumpInfo(self):
+        print "test for %s" % self.filename
+        print
+        print "ID: %s" % self.hdr.headerId
+        print "Length: %s" % self.hdr.headerLength
+        print "Major: %s" % self.hdr.headerMajorVer
+        print "Minor: %s" % self.hdr.headerMinorVer
+        print "numSystems: %s" % self.hdr.numSystems
+        print "quickCheck: %s" % self.hdr.quickCheck
+        print "biosVersion: %s" % self.hdr.biosVersion
+        print "miscFlags: %s" % self.hdr.miscFlags
+        print "biosInternalOnly: %s" % self.hdr.biosInternalOnly
+        for i in self.hdr.reserved:
+            print "reserved: 0x%04x" % i
+        print "compatFlags: %s" % self.hdr.compatFlags
+        for i in range(min(NUM_SYS_ID_IN_HDR, self.hdr.numSystems)):
+            print "System ID: 0x%04x" % self.hdr.systemIdList[i]
+
+
 class BaseRbu(object):
+    subclasses = []
+    decorate(traceLog())
     def __init__(self, filename):
         self.hdrfile = filename
 
+    decorate(staticmethod)
+    def getRbuMethod(hdrfile):
+        for i in BaseRbu.subclasses:
+            if i.validRbuMethod(hdrfile):
+                return i(hdrfile)
+
+# use this class decorator on subclasses
+def BaseRbuSubclass():
+    def decorator(cls):
+        BaseRbu.subclasses.append(cls)
+        return cls
+    decorate_class(decorator)
+
 class MonolithicRbu_v3(BaseRbu):
+    BaseRbuSubclass()
     sysbasedir = "/sys/devices/platform/dell_rbu/"
     img_type_file = "/sys/devices/platform/dell_rbu/image_type"
     pkt_size_file = "/sys/devices/platform/dell_rbu/packet_size"
     fw_data_file = "/sys/class/firmware/dell_rbu/data"
     fw_load_file = "/sys/class/firmware/dell_rbu/loading"
 
+    decorate(classmethod)
+    decorate(traceLog())
+    def validRbuMethod(cls, hdrfile):
+        if not os.path.exists(cls.img_type_file):
+            return 0
+        if "MONOLITHIC" not in getUpdateModes():
+            return 0
+        return 10
+
+    decorate(traceLog())
     def doUpdate(self):
+        print "Performing MONOLITHIC RBU update..."
+        print "... not really... not yet implemented."
         pass
         #self.setLoadValue('1')
         # open fw_data_file "wb"
@@ -234,12 +317,18 @@ class MonolithicRbu_v3(BaseRbu):
         # close
         #self.setLoadValue('0')
 
+
 def main():
     exit_code = 0
     (options, args) = command_parse()
     cli.setup_std_options(options)
 
-    if options.action == "system_info":
+    if options.hdr_info:
+        print _("Getting info for HDR file:")
+        for filename in options.hdr_info:
+            h = HdrFile(filename)
+            h.dumpInfo()
+    elif options.action == "system_info":
         try:
             system_info()
         except IndexError, e:
@@ -254,8 +343,7 @@ def main():
     elif options.action == "cancel":
         cancelUpdate()
     elif options.action == "update":
-        exit_code=1
-        print _("Update mode not yet implemented... use dellBiosUpdate")
+        exit_code = updateBios(options.hdr)
     elif options.action == "test":
         exit_code=1
         print _("Test mode not yet implemented... use dellBiosUpdate")
