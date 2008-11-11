@@ -169,7 +169,7 @@ def system_info():
 
 decorate(traceLog())
 def updateBios(filename, forcetype='auto', check_bios_version=True, check_sysid=True):
-    meth = BaseRbu.getRbuMethod(filename)
+    meth = BaseRbu.getRbuMethod(filename, forcetype)
     meth.doUpdate()
 
 decorate(traceLog())
@@ -177,7 +177,7 @@ def cancelUpdate():
     print _("Cancelling BIOS update...")
     table = token.TokenTable()
     table[TOKEN_RBU_CANCEL].activate()
-    meth = BaseRbu.getRbuMethod(filename)
+    meth = BaseRbu.getRbuMethod(None)
     meth.cancelUpdate()
     print _("BIOS update cancelled.")
 
@@ -233,10 +233,20 @@ class BaseRbu(object):
         self.hdrfile = hdrfile
 
     decorate(staticmethod)
+    decorate(traceLog())
     def getRbuMethod(hdrfile, forcetype="auto"):
+        meths = {}
         for i in BaseRbu.subclasses:
-            if i.validRbuMethod(hdrfile, forcetype):
-                return i(hdrfile)
+            meths[i] = i.validRbuMethod(hdrfile, forcetype)
+
+        retval = (None, 0)
+        for cls in meths.keys():
+            if meths[cls] > retval[1]:
+                retval = (cls, meths[cls])
+
+        if retval[0] is not None:
+            return retval[0](hdrfile)
+        return None
 
 # use this class decorator on subclasses
 def BaseRbuSubclass():
@@ -253,16 +263,27 @@ class MonolithicRbu_v3(BaseRbu):
     fw_data_file = "/sys/class/firmware/dell_rbu/data"
     fw_load_file = "/sys/class/firmware/dell_rbu/loading"
 
+    validtypes = ["auto", "mono"]
+
     decorate(classmethod)
     decorate(traceLog())
     def validRbuMethod(cls, hdrfile=None, forcetype="auto"):
-        if forcetype != 'auto' and forcetype != 'mono':
+        if not forcetype in cls.validtypes:
             return 0
         if not os.path.exists(cls.img_type_file):
             return 0
-        if "MONOLITHIC" not in getUpdateModes():
+        if not cls._checkMode(forcetype):
             return 0
         return 10
+
+    decorate(classmethod)
+    decorate(traceLog())
+    def _checkMode(cls, forcetype):
+        if forcetype != "auto" and forcetype in cls.validtypes:
+            return True
+        if "MONOLITHIC" not in getUpdateModes():
+            return False
+        return True
 
     decorate(traceLog())
     def cancelUpdate(self):
@@ -275,12 +296,14 @@ class MonolithicRbu_v3(BaseRbu):
         self.setPacketType('init')
         self.setPacketType('mono')
         self.setLoadValue('1')
-        # open fw_data_file "wb"
         outputFd = open(self.fw_data_file, "wb")
-        # copy data from hdrfile to kernel
         streamDataToFile(self.hdrfile.fd, outputFd)
         outputFd.close()
         self.setLoadValue('0')
+
+    decorate(traceLog())
+    def setSize(self, val):
+        dumpDataToFile(self.pkt_size_file, str(val), wait=False)
 
     decorate(traceLog())
     def setLoadValue(self, val):
@@ -288,8 +311,46 @@ class MonolithicRbu_v3(BaseRbu):
 
     decorate(traceLog())
     def setPacketType(self, val):
-        dumpDataToFile(self.img_type_file, val, wait=True)
+        dumpDataToFile(self.img_type_file, val, wait=False)
 
+class PacketRbu_v3(MonolithicRbu_v3):
+    BaseRbuSubclass()
+    validtypes = ["auto", "packet"]
+    packetSize = 4096
+
+    decorate(classmethod)
+    decorate(traceLog())
+    def _checkMode(cls, forcetype):
+        if forcetype != "auto" and forcetype in cls.validtypes:
+            return True
+        if "PACKET" not in getUpdateModes():
+            return False
+
+    decorate(traceLog())
+    def doUpdate(self):
+        print "Performing PACKET RBU update..."
+        self.setPacketType('init')
+        self.setPacketType('packet')
+        self.setSize(0)
+        self.setSize(self.packetSize)
+        self.setLoadValue('1')
+        self.pktUpdateLoop()
+        self.setLoadValue('0')
+
+    decorate(traceLog())
+    def pktUpdateLoop(self):
+        print "pktUpdateLoop()"
+
+        # make header
+
+        while 1:
+            buf = self.hdrfile.fd.read(self.packetSize)
+            if buf == "":
+                break
+
+            # setup pkt header
+            #  -- incr pkt# 
+            # write pkt
 
 def main():
     exit_code = 0
