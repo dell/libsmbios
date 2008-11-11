@@ -291,7 +291,7 @@ const int RBU_PACKET_SIZE = 4096;
         case pt_init:  /*fall thru*/
         default:
             // not really a packet type, but causes driver to free its memory
-            FWRITE("init\0", 1, 7, type_fh);
+            FWRITE("init\0", 1, 5, type_fh);
             break;
         }
     
