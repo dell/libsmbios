@@ -35,7 +35,7 @@ sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
 import cli
-from libsmbios_c import smbios, token, localedir, GETTEXT_PACKAGE
+from libsmbios_c import system_info as sysinfo, smbios, token, localedir, GETTEXT_PACKAGE
 from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 # use python-decoratortools if it is installed, otherwise use our own local
@@ -171,9 +171,19 @@ def system_info():
     print _("\tCharacteristics: 0x%04x") % getNum(s, 0x0f, 1)
     print _("\tUpdate modes supported: %s") % ", ".join(getUpdateModes(s))
 
+class InappropriateHDRFile(Exception): pass
+
 decorate(traceLog())
-def updateBios(filename, forcetype='auto', check_bios_version=True, check_sysid=True):
-    meth = BaseRbu.getRbuMethod(filename, forcetype)
+def updateBios(hdrfile, forcetype='auto', check_bios_version=True, check_sysid=True):
+    meth = BaseRbu.getRbuMethod(hdrfile, forcetype)
+    if check_sysid:
+        id = sysinfo.get_dell_system_id()
+        if id not in [i[0] for i in hdrfile.systemIds()]:
+            raise InappropriateHDRFile( _("The .HDR file does not list this system (0x%04x) as a supported system. The supported systems are: %s") % (id, ["0x%04x" % x for x in hdrfile.systemIds()]) )
+
+    if check_bios_version:
+        ver = sysinfo.get_bios_version()
+
     meth.doUpdate()
 
 decorate(traceLog())
@@ -210,6 +220,22 @@ class HdrFile(object):
         self.fd.seek(0,0)
         ctypes.memmove(ctypes.byref(self.hdr), ctypes.byref(ctypes.create_string_buffer(buf)), ctypes.sizeof(self.hdr))
 
+        self.sysidlist = []
+        for i in range(min(NUM_SYS_ID_IN_HDR, self.hdr.numSystems)):
+            f = self.hdr.systemIdList[i]
+            # see note in struct definition for the bit manipulations here
+            self.sysidlist.append(
+                  (
+                    (f & 0xFF) | ((f & 0xF800) >> 3), # system id
+                    (f & 700) >> 8                    # hw rev
+                  )
+                )
+
+    decorate(traceLog())
+    def systemIds(self):
+        for i in self.sysidlist:
+            yield i
+
     decorate(traceLog())
     def dumpInfo(self):
         print "test for %s" % self.filename
@@ -226,8 +252,8 @@ class HdrFile(object):
         for i in self.hdr.reserved:
             print "reserved: 0x%04x" % i
         print "compatFlags: %s" % self.hdr.compatFlags
-        for i in range(min(NUM_SYS_ID_IN_HDR, self.hdr.numSystems)):
-            print "System ID: 0x%04x" % self.hdr.systemIdList[i]
+        for id, hwrev in self.systemIds():
+            print "System ID: 0x%04x  Hardware Rev: %d" % (id, hwrev)
 
 
 class BaseRbu(object):
@@ -302,6 +328,8 @@ class MonolithicRbu(BaseRbu):
         streamDataToFile(self.hdrfile.fd, outputFd)
         outputFd.close()
         self.setLoadValue('0')
+        table = token.TokenTable()
+        table[TOKEN_RBU_STAGE].activate()
 
     decorate(traceLog())
     def setSize(self, val):
@@ -333,6 +361,8 @@ class PacketRbu(MonolithicRbu):
         self.setLoadValue('1')
         self.pktUpdateLoop()
         self.setLoadValue('0')
+        table = token.TokenTable()
+        table[TOKEN_RBU_STAGE].activate()
 
     decorate(traceLog())
     def pktUpdateLoop(self):
