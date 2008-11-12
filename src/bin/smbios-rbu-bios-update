@@ -237,6 +237,18 @@ class HdrFile(object):
             yield i
 
     decorate(traceLog())
+    def getBiosVersion(self):
+        ver = ""
+        if self.hdr.headerMajorVer < 2:
+            for i in range(3):
+                if self.hdr.biosVersion[i].isalnum():
+                    ver = ver + self.hdr.biosVersion[i];
+
+        else:
+            ver = "%d.%d.%d" % struct.unpack("BBB", self.hdr.biosVersion)
+        return ver
+
+    decorate(traceLog())
     def dumpInfo(self):
         print "test for %s" % self.filename
         print
@@ -246,11 +258,11 @@ class HdrFile(object):
         print "Minor: %s" % self.hdr.headerMinorVer
         print "numSystems: %s" % self.hdr.numSystems
         print "quickCheck: %s" % self.hdr.quickCheck
-        print "biosVersion: %s" % self.hdr.biosVersion
+        print "biosVersion: %s" % self.getBiosVersion()
         print "miscFlags: %s" % self.hdr.miscFlags
-        print "biosInternalOnly: %s" % self.hdr.biosInternalOnly
-        for i in self.hdr.reserved:
-            print "reserved: 0x%04x" % i
+        #print "biosInternalOnly: %s" % self.hdr.biosInternalOnly
+        #for i in self.hdr.reserved:
+            #print "reserved: 0x%04x" % i
         print "compatFlags: %s" % self.hdr.compatFlags
         for id, hwrev in self.systemIds():
             print "System ID: 0x%04x  Hardware Rev: %d" % (id, hwrev)
