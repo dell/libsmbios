@@ -13,7 +13,7 @@ pkgpython_PYTHON = \
 	src/python/libsmbios_c/smi.py		\
 	src/python/libsmbios_c/system_info.py	\
 	src/python/libsmbios_c/trace_decorator.py \
-	src/python/libsmbios_c/peak_util_decorators.py \
+	src/python/libsmbios_c/_peak_util_decorators.py \
 	src/python/libsmbios_c/token.py	\
 	src/python/_vars.py
 
