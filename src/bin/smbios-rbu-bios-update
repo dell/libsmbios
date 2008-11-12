@@ -16,6 +16,7 @@ import ctypes
 import gettext
 import locale
 import os
+import random
 import struct
 import sys
 import time
@@ -44,6 +45,9 @@ try:
     from peak.util.decorators import decorate_class
 except ImportError:
     from libsmbios_c._peak_util_decorators import decorate_class
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
@@ -144,10 +148,10 @@ def getUpdateModes(struct_0xDE=None):
     if struct_0xDE is None:
         struct_0xDE = smbios.SmbiosTable()[RBU_SMBIOS_STRUCT]
 
-    modes = [ "MONOLITHIC" ]
+    modes = [ "mono" ]
     characteristics = getNum(struct_0xDE, 0x0f, 1)
     if characteristics & 0x01:
-        modes.append("PACKET")
+        modes.append("packet")
     return modes
 
 decorate(traceLog())
@@ -255,7 +259,7 @@ def BaseRbuSubclass():
         return cls
     decorate_class(decorator)
 
-class MonolithicRbu_v3(BaseRbu):
+class MonolithicRbu(BaseRbu):
     BaseRbuSubclass()
     sysbasedir = "/sys/devices/platform/dell_rbu/"
     img_type_file = "/sys/devices/platform/dell_rbu/image_type"
@@ -263,27 +267,25 @@ class MonolithicRbu_v3(BaseRbu):
     fw_data_file = "/sys/class/firmware/dell_rbu/data"
     fw_load_file = "/sys/class/firmware/dell_rbu/loading"
 
+    method = "mono"
     validtypes = ["auto", "mono"]
+    methodWeight = 10
 
     decorate(classmethod)
     decorate(traceLog())
     def validRbuMethod(cls, hdrfile=None, forcetype="auto"):
+        verboseLog.debug("Class %s, forcetype(%s) validtypes(%s)" % (cls, forcetype, cls.validtypes))
         if not forcetype in cls.validtypes:
+            verboseLog.debug("\tforcetype not in validtypes")
             return 0
         if not os.path.exists(cls.img_type_file):
+            verboseLog.debug("\timg_type_file doesnt exist.")
             return 0
-        if not cls._checkMode(forcetype):
+        if cls.method not in getUpdateModes():
+            verboseLog.debug("\tcls.method(%s) not in getUpdateModes(%s)", (cls.method, getUpdateModes()))
             return 0
-        return 10
-
-    decorate(classmethod)
-    decorate(traceLog())
-    def _checkMode(cls, forcetype):
-        if forcetype != "auto" and forcetype in cls.validtypes:
-            return True
-        if "MONOLITHIC" not in getUpdateModes():
-            return False
-        return True
+        verboseLog.debug("\treturning weight %d for %s" % (cls.methodWeight, cls))
+        return cls.methodWeight
 
     decorate(traceLog())
     def cancelUpdate(self):
@@ -313,18 +315,13 @@ class MonolithicRbu_v3(BaseRbu):
     def setPacketType(self, val):
         dumpDataToFile(self.img_type_file, val, wait=False)
 
-class PacketRbu_v3(MonolithicRbu_v3):
+class PacketRbu(MonolithicRbu):
     BaseRbuSubclass()
-    validtypes = ["auto", "packet"]
-    packetSize = 4096
 
-    decorate(classmethod)
-    decorate(traceLog())
-    def _checkMode(cls, forcetype):
-        if forcetype != "auto" and forcetype in cls.validtypes:
-            return True
-        if "PACKET" not in getUpdateModes():
-            return False
+    method = "packet"
+    validtypes = ["auto", "packet"]
+    methodWeight = 20
+    packetSize = 4096
 
     decorate(traceLog())
     def doUpdate(self):
@@ -341,13 +338,13 @@ class PacketRbu_v3(MonolithicRbu_v3):
     def pktUpdateLoop(self):
         outfd = open(self.fw_data_file, "w+")
 
-        imageSize = getFileSize( self.hdrfile.fd )
+        imageSize = _getFileSize( self.hdrfile.fd )
         pktHeader = RbuPacketHeader(self.packetSize, imageSize)
-        pktHeader.setBuf( " " * 5 )
+        pktHeader.setBuf( "" )
         pktHeader.writeTo(outfd)
 
         while 1:
-            buf = self.hdrfile.fd.read(pktHeader.getReadSize())
+            buf = self.hdrfile.fd.read(pktHeader.getPayloadSize())
             if buf == "":
                 break
             pktHeader.incrementPktNum()
@@ -357,7 +354,7 @@ class PacketRbu_v3(MonolithicRbu_v3):
         outfd.close()
 
 decorate(traceLog())
-def getFileSize(fd):
+def _getFileSize(fd):
     curPos = fd.tell()
     fd.seek(0,2)
     size = fd.tell()
@@ -431,12 +428,13 @@ class RbuPacketHeader(ctypes.Structure):
         self.pktSizeKb = packetSize // 1024
         self.hdrSizePg = 2  # hdr is 32 bytes
         self.reserved2 = 0;
-        self.pktSetId = 0x12345678; 
+        self.pktSetId = random.randint(0, 0xFFFFFFFF) # 0x12345678;
         self.pktNum = 0
         self.pktVer = 1  # hardcoded to rbu version we support
         self.pktChksum = 0
-        self.totalPkts = imageSize // packetSize # floor integer
-        if imageSize % packetSize:
+        # +1 takes into account packet 0 which is a header of sorts
+        self.totalPkts = imageSize // self.getPayloadSize() + 1
+        if imageSize % self.getPayloadSize():
             self.totalPkts = self.totalPkts + 1
 
     decorate(traceLog())
@@ -449,7 +447,7 @@ class RbuPacketHeader(ctypes.Structure):
         self.pktNum = self.pktNum + 1
 
     decorate(traceLog())
-    def getReadSize(self):
+    def getPayloadSize(self):
         return self.packetSize - ctypes.sizeof(self)
 
     decorate(traceLog())
@@ -458,8 +456,8 @@ class RbuPacketHeader(ctypes.Structure):
         ctypes.memmove(rawbuf, ctypes.byref(self), ctypes.sizeof(self))
         ctypes.memmove(
             ptr_add(ctypes.pointer(rawbuf), ctypes.sizeof(self)), 
-            ctypes.create_string_buffer(self.buf, self.getReadSize()),
-            self.getReadSize())
+            ctypes.create_string_buffer(self.buf, self.getPayloadSize()),
+            self.getPayloadSize())
         return rawbuf
 
     decorate(traceLog())
@@ -467,8 +465,7 @@ class RbuPacketHeader(ctypes.Structure):
         self.pktChksum = 0
         rawbuf = self._makeBuf()
         ptr = ctypes.cast(rawbuf, ctypes.POINTER(ctypes.c_uint16))
-        self.pktChksum = 0;
-        for i in range( ctypes.sizeof(self) // 2 ):
+        for i in range( len(rawbuf) // 2 ):
             self.pktChksum = self.pktChksum + ptr[i]
 
         self.pktChksum = - self.pktChksum
