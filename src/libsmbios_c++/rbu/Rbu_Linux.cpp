@@ -482,13 +482,14 @@ main entry points for this module.
         switch(dt)
         {
         case rbu_linux_v2:
-            // Step 2: make sure firmware class doesn't think we are loading
+            // Step 2: tell the dell_rbu driver to free its allocated memory
+            cout << "Re-initialize driver for next user." << endl;
+            setPacketType(pt_init, rbu_v2_img_type_file);
+
+            // Step 3: make sure firmware class doesn't think we are loading
             cout << "Free kernel driver memory." << endl;
             setLoadValue('0');
 
-            // Step 3: tell the dell_rbu driver to free its allocated memory
-            cout << "Re-initialize driver for next user." << endl;
-            setPacketType(pt_init, rbu_v2_img_type_file);
             break;
 
         case rbu_linux_v1:
