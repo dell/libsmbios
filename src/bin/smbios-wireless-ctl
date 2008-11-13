@@ -236,7 +236,7 @@ def wirelessInfo(radio):
         print onOff(tokenTable[radio["legacyEnable"]], "\t%s legacy boot setting enabled", "\t%s legacy boot setting disabled" ) % radio["name"]
         print onOff(tokenTable[radio["legacySwitchEnable"]], _("\t%s legacy switch enabled"), _("\t%s legacy switch disabled") ) % radio["name"]
     except (IndexError, KeyError): 
-        # token doesnt exist, or we dont have 'legacy*' settings for this radio, it's ok.
+        # token doesnt exist, or we dont have legacy settings for this radio, it's ok.
         pass
 
     print _("\tStatus Code: %d") % ret
