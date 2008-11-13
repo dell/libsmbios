@@ -102,6 +102,7 @@ def command_parse():
     parser.add_option('--auto-detect-mode', action="store_const", const="auto", dest="update_mode", default="auto", help= _("Automatically select the optimal update mode (default, recommended)"))
     parser.add_option('--force-packet-mode', action="store_const", const="packet", dest="update_mode", help= _("Force update to use packet-mode"))
     parser.add_option('--force-mono-mode', action="store_const", const="mono", dest="update_mode", help= _("Force update to use monolithic-mode"))
+    parser.add_option('--force-compat-mode', action="store_const", const="compat", dest="update_mode", help= _("Force update to use old dellBiosUpdate binary"))
 
     parser.add_option('--override-version-check', action="store_false", dest="check_bios_version", default=True, help= _("Allow BIOS downgrades and re-flash"))
     parser.add_option('--override-sysid-check', action="store_false", dest="check_sysid", default=True, help= _("Disable check for system-id (Dangerous)"))
@@ -174,17 +175,19 @@ def system_info():
 class InappropriateHDRFile(Exception): pass
 
 decorate(traceLog())
-def updateBios(hdrfile, forcetype='auto', check_bios_version=True, check_sysid=True):
-    meth = BaseRbu.getRbuMethod(hdrfile, forcetype)
-    if check_sysid:
+def updateBios(hdrfile, options):
+    meth = BaseRbu.getRbuMethod(hdrfile, options.update_mode)
+    if options.check_sysid:
         id = sysinfo.get_dell_system_id()
         if id not in [i[0] for i in hdrfile.systemIds()]:
             raise InappropriateHDRFile( _("The .HDR file does not list this system (0x%04x) as a supported system. The supported systems are: %s") % (id, ["0x%04x" % x for x in hdrfile.systemIds()]) )
 
-    if check_bios_version:
+    if options.check_bios_version:
         ver = sysinfo.get_bios_version()
+        if compareBiosVersions(ver, hdrfile.getBiosVersion()) >= 0:
+            raise InappropriateHDRFile( _("The system bios version (%s) is the same as or newer than the .HDR file (%s).") % (ver, hdrfile.getBiosVersion()) )
 
-    meth.doUpdate()
+    meth.doUpdate(options)
 
 decorate(traceLog())
 def cancelUpdate():
@@ -297,6 +300,42 @@ def BaseRbuSubclass():
         return cls
     decorate_class(decorator)
 
+class BackCompatRbu(BaseRbu):
+    BaseRbuSubclass()
+    # this class calls the old dellBiosUpdate binary
+    # to handle 2.4 kernels and old pre-integrated rbu driver
+
+    decorate(classmethod)
+    decorate(traceLog())
+    def validRbuMethod(cls, hdrfile=None, forcetype="auto"):
+        # should always work:
+        return 1
+
+    decorate(traceLog())
+    def doUpdate(self, options):
+        print "Shelling out to run old dellBiosUpdate"
+
+        paths = os.environ.get("PATH").split(":")
+        if "/usr/sbin" not in paths:
+            paths.append("/usr/sbin")
+        os.environ["PATH"] = ":".join(paths)
+
+        cmdline = ["dellBiosUpdate", "-u", "-f", self.hdrfile.filename]
+        if not options.check_bios_version:
+            cmdline.append( "--override_bios_version" )
+        if not options.check_sysid:
+            cmdline.append( "--override_sysid" )
+        if options.update_mode == "mono":
+            cmdline.append( "--force_mono" )
+        if options.update_mode == "packet":
+            cmdline.append( "--force_packet" )
+        os.system(" ".join(cmdline))
+
+    decorate(traceLog())
+    def cancelUpdate(self):
+        print "Shelling out to run old dellBiosUpdate"
+        os.system("dellBiosUpdate -c")
+
 class MonolithicRbu(BaseRbu):
     BaseRbuSubclass()
     sysbasedir = "/sys/devices/platform/dell_rbu/"
@@ -319,7 +358,7 @@ class MonolithicRbu(BaseRbu):
         if not os.path.exists(cls.img_type_file):
             verboseLog.debug("\timg_type_file doesnt exist.")
             return 0
-        if cls.method not in getUpdateModes():
+        if forcetype == "auto" and cls.method not in getUpdateModes():
             verboseLog.debug("\tcls.method(%s) not in getUpdateModes(%s)", (cls.method, getUpdateModes()))
             return 0
         verboseLog.debug("\treturning weight %d for %s" % (cls.methodWeight, cls))
@@ -331,7 +370,7 @@ class MonolithicRbu(BaseRbu):
         self.setLoadValue('0')
 
     decorate(traceLog())
-    def doUpdate(self):
+    def doUpdate(self, options):
         print "Performing MONOLITHIC RBU update..."
         self.setPacketType('init')
         self.setPacketType('mono')
@@ -364,7 +403,7 @@ class PacketRbu(MonolithicRbu):
     packetSize = 4096
 
     decorate(traceLog())
-    def doUpdate(self):
+    def doUpdate(self, options):
         print "Performing PACKET RBU update..."
         self.setPacketType('init')
         self.setPacketType('packet')
@@ -403,6 +442,79 @@ def _getFileSize(fd):
     fd.seek(curPos, 0)
     return size
 
+firstSpecialVer = 90
+
+decorate(traceLog())
+def compareBiosVersions(latest, toTest):
+    latest = latest.lower()
+    toTest = toTest.lower()
+
+    if latest == toTest:
+        return 0
+
+    #some broken bios were leaked with bad version
+    # never let 'unknown' version override good version
+    if toTest == "unknown" or toTest == "49.0.48":
+        return 1
+
+    if latest == "unknown" or latest == "49.0.48":
+        return -1
+
+    # old style bios versioning ("Ann", eg. "A01"...)
+    if "." not in latest and "." not in toTest:
+        # anything non "Ann" version is "special" and should never win a
+        # ver comparison unless 'latest' is also "special"
+        if not toTest.lower().startswith("a") and latest.lower().startswith("a"):
+            return 1
+        elif toTest.lower().startswith("a") and not latest.lower().startswith("a"):
+            return -1
+
+        if toTest > latest:
+            return -1
+        else:
+            return 1
+
+    # only get here if one or other has new-style bios versioning
+
+    # new style bios overrides old style...
+    if "." not in latest:
+        return -1
+    if "." not in toTest:
+        return 1
+
+    # both new style, compare major/minor/build individually
+    latestArr = latest.split(".")
+    toTestArr = toTest.split(".")
+
+    # versions 90-99 are "special" and should never win a ver comparison
+    # unless 'latest' is also "special"
+    try:
+        if int(toTestArr[0]) >= firstSpecialVer and int(latestArr[0]) < firstSpecialVer:
+            return 1
+        if int(latestArr[0]) >= firstSpecialVer and int(toTestArr[0]) < firstSpecialVer:
+            return -1
+    except ValueError: # non-numeric version ?
+        pass
+
+    for i in xrange(0, len(latestArr)):
+        # test array shorter than latest,
+        if i >= len(toTestArr):
+            return 1
+        try:
+            if int(toTestArr[i]) > int(latestArr[i]):
+                return -1
+            if int(toTestArr[i]) < int(latestArr[i]):
+                return 1
+        except ValueError:  # non-numeric version?
+            pass #punt...
+
+    # if we get here, everything is equal (so far)
+    if len(toTestArr) > len(latestArr):
+        return -1
+
+    return 1
+
+
 def main():
     exit_code = 0
     (options, args) = command_parse()
@@ -428,7 +540,7 @@ def main():
     elif options.action == "cancel":
         cancelUpdate()
     elif options.action == "update":
-        exit_code = updateBios(HdrFile(options.hdr), options.update_mode, options.check_bios_version, options.check_sysid)
+        exit_code = updateBios(HdrFile(options.hdr), options)
     elif options.action == "test":
         exit_code=1
         print _("Test mode not yet implemented... use dellBiosUpdate")
@@ -497,7 +609,7 @@ class RbuPacketHeader(ctypes.Structure):
         rawbuf = ctypes.create_string_buffer(self.packetSize)
         ctypes.memmove(rawbuf, ctypes.byref(self), ctypes.sizeof(self))
         ctypes.memmove(
-            ptr_add(ctypes.pointer(rawbuf), ctypes.sizeof(self)), 
+            ptr_add(ctypes.pointer(rawbuf), ctypes.sizeof(self)),
             ctypes.create_string_buffer(self.buf, self.getPayloadSize()),
             self.getPayloadSize())
         return rawbuf
