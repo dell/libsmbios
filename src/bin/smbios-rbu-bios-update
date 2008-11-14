@@ -179,7 +179,7 @@ def system_info():
 class InappropriateHDRFile(Exception): pass
 
 decorate(traceLog())
-def updateBios(hdrfile, options):
+def updateBios(hdrfile, options, testMode=False):
     meth = BaseRbu.getRbuMethod(hdrfile, options.update_mode)
     if options.check_sysid:
         id = sysinfo.get_dell_system_id()
@@ -191,7 +191,11 @@ def updateBios(hdrfile, options):
         if compareBiosVersions(ver, hdrfile.getBiosVersion()) >= 0:
             raise InappropriateHDRFile( _("The system bios version (%s) is the same as or newer than the .HDR file (%s).") % (ver, hdrfile.getBiosVersion()) )
 
-    return meth.doUpdate(options)
+    exit_code = 0
+    if not testMode:
+        exit_code = meth.doUpdate(options)
+
+    return exit_code
 
 decorate(traceLog())
 def cancelUpdate():
@@ -386,7 +390,7 @@ class MonolithicRbu(BaseRbu):
         table = token.TokenTable()
         table[TOKEN_RBU_STAGE].activate()
         print _("Update successfully staged. Reboot the system to begin BIOS update.")
-        return True
+        return 0
 
     decorate(traceLog())
     def setSize(self, val):
@@ -421,7 +425,7 @@ class PacketRbu(MonolithicRbu):
         table = token.TokenTable()
         table[TOKEN_RBU_STAGE].activate()
         print _("Update successfully staged. Reboot the system to begin BIOS update.")
-        return True
+        return 0
 
     decorate(traceLog())
     def pktUpdateLoop(self):
@@ -563,14 +567,15 @@ def main():
         elif options.action == "update":
             ensureRbuDriver()
             smbios.SmbiosTable() # check permissions
-            if updateBios(HdrFile(options.hdr), options):
+            exit_code = updateBios(HdrFile(options.hdr), options)
+            if exit_code == 0:
                 conditionalReboot(options)
             else:
-                exit_code=1
+                print _("The BIOS update did NOT complete successfully.")
         elif options.action == "test":
             ensureRbuDriver()
-            exit_code=1
-            print _("Test mode not yet implemented... use dellBiosUpdate")
+            smbios.SmbiosTable() # check permissions
+            exit_code = updateBios(HdrFile(options.hdr), options, testMode=1)
 
     except RbuNotSupported, e:
         exit_code=2
