@@ -71,9 +71,9 @@ class _SmbiosTable(ctypes.Structure):
         self._tableobj = None
         self._tableobj = DLL.smbios_table_factory(*args)
 
-    decorate(traceLog())
     def __del__(self):
-        DLL.smbios_table_free(self._tableobj)
+        if self._tableobj is not None:
+            DLL.smbios_table_free(self._tableobj)
 
     decorate(traceLog())
     def __iter__(self):
@@ -128,7 +128,6 @@ def _strerror(obj):
 #DLL.smbios_table_factory.argtypes = [ctypes.c_int, ]
 DLL.smbios_table_factory.restype = ctypes.POINTER(_SmbiosTable)
 DLL.smbios_table_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: TableParseError(_strerror(r)))
-DLL.smbios_table_factory
 
 #void   smbios_table_free(struct smbios_table *);
 DLL.smbios_table_free.argtypes = [ ctypes.POINTER(_SmbiosTable) ]
