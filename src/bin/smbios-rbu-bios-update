@@ -35,6 +35,7 @@ sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
 import cli
+import libsmbios_c
 from libsmbios_c import system_info as sysinfo, smbios, token, localedir, GETTEXT_PACKAGE
 from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
@@ -106,6 +107,9 @@ def command_parse():
 
     parser.add_option('--override-version-check', action="store_false", dest="check_bios_version", default=True, help= _("Allow BIOS downgrades and re-flash"))
     parser.add_option('--override-sysid-check', action="store_false", dest="check_sysid", default=True, help= _("Disable check for system-id (Dangerous)"))
+
+    parser.add_option('--reboot', action="store_true", dest="reboot", default=None, help= _("Reboot the system after successfully staging update."))
+    parser.add_option('--no-reboot', action="store_false", dest="reboot", help= _("Do not reboot the system after staging update."))
     cli.addStdOptions(parser)
     options, args = parser.parse_args()
 
@@ -163,7 +167,7 @@ def system_info():
     print _("RBU Update information:")
     print _("\tMinimum size: %d") % getNum(s, 0x04, 2)
     print _("\tCompletion Code: %d") %  getCompletion(s)[0]
-    print _("\tCompletion Message:\n\t\t%s") %  getCompletion(s)[1]
+    print _("\tCompletion Message: %s") %  getCompletion(s)[1]
     print _("\tLast Update Date - Year  : %02x") % getRbuLastUpdate(s)["year"]
     print _("\tLast Update Date - Month : %02x") % getRbuLastUpdate(s)["month"]
     print _("\tLast Update Date - Day   : %02x") % getRbuLastUpdate(s)["day"]
@@ -187,7 +191,7 @@ def updateBios(hdrfile, options):
         if compareBiosVersions(ver, hdrfile.getBiosVersion()) >= 0:
             raise InappropriateHDRFile( _("The system bios version (%s) is the same as or newer than the .HDR file (%s).") % (ver, hdrfile.getBiosVersion()) )
 
-    meth.doUpdate(options)
+    return meth.doUpdate(options)
 
 decorate(traceLog())
 def cancelUpdate():
@@ -270,7 +274,6 @@ class HdrFile(object):
         for id, hwrev in self.systemIds():
             print "System ID: 0x%04x  Hardware Rev: %d" % (id, hwrev)
 
-
 class BaseRbu(object):
     subclasses = []
     decorate(traceLog())
@@ -313,14 +316,14 @@ class BackCompatRbu(BaseRbu):
 
     decorate(traceLog())
     def doUpdate(self, options):
-        print "Shelling out to run old dellBiosUpdate"
+        print _("Performing BIOS update in using old dellBiosUpdate executable.")
 
         paths = os.environ.get("PATH").split(":")
         if "/usr/sbin" not in paths:
             paths.append("/usr/sbin")
         os.environ["PATH"] = ":".join(paths)
 
-        cmdline = ["dellBiosUpdate", "-u", "-f", self.hdrfile.filename]
+        cmdline = ["dellBiosUpdate-compat", "-u", "-f", self.hdrfile.filename]
         if not options.check_bios_version:
             cmdline.append( "--override_bios_version" )
         if not options.check_sysid:
@@ -329,7 +332,8 @@ class BackCompatRbu(BaseRbu):
             cmdline.append( "--force_mono" )
         if options.update_mode == "packet":
             cmdline.append( "--force_packet" )
-        os.system(" ".join(cmdline))
+        ret = os.system(" ".join(cmdline))
+        return os.WEXITSTATUS(ret)
 
     decorate(traceLog())
     def cancelUpdate(self):
@@ -371,7 +375,7 @@ class MonolithicRbu(BaseRbu):
 
     decorate(traceLog())
     def doUpdate(self, options):
-        print "Performing MONOLITHIC RBU update..."
+        print _("Performing BIOS update in monolithic mode.")
         self.setPacketType('init')
         self.setPacketType('mono')
         self.setLoadValue('1')
@@ -381,6 +385,8 @@ class MonolithicRbu(BaseRbu):
         self.setLoadValue('0')
         table = token.TokenTable()
         table[TOKEN_RBU_STAGE].activate()
+        print _("Update successfully staged. Reboot the system to begin BIOS update.")
+        return True
 
     decorate(traceLog())
     def setSize(self, val):
@@ -404,7 +410,7 @@ class PacketRbu(MonolithicRbu):
 
     decorate(traceLog())
     def doUpdate(self, options):
-        print "Performing PACKET RBU update..."
+        print _("Performing BIOS update in packet mode.")
         self.setPacketType('init')
         self.setPacketType('packet')
         self.setSize(0)
@@ -414,6 +420,8 @@ class PacketRbu(MonolithicRbu):
         self.setLoadValue('0')
         table = token.TokenTable()
         table[TOKEN_RBU_STAGE].activate()
+        print _("Update successfully staged. Reboot the system to begin BIOS update.")
+        return True
 
     decorate(traceLog())
     def pktUpdateLoop(self):
@@ -514,36 +522,71 @@ def compareBiosVersions(latest, toTest):
 
     return 1
 
+def ensureRbuDriver():
+    os.system("/sbin/modprobe dell_rbu")
+
+def conditionalReboot(options):
+    if options.reboot is None:
+        print "No reboot option specified. The --reboot option is highly recommended."
+    elif options.reboot:
+        print "Rebooting system to update the BIOS."
+        while 1:
+            os.system("/sbin/shutdown -r now")
+            time.sleep(10)
+            os.system("/usr/bin/reboot")
+            time.sleep(10)
+
+class RbuNotSupported(Exception): pass
 
 def main():
     exit_code = 0
     (options, args) = command_parse()
     cli.setup_std_options(options)
 
-    if options.hdr_info:
-        print _("Getting info for HDR file:")
-        for filename in options.hdr_info:
-            h = HdrFile(filename)
-            h.dumpInfo()
-    elif options.action == "system_info":
-        try:
-            system_info()
-        except IndexError, e:
-            print _("RBU is not supported on this system.")
-        except smbios.TableParseError, e:
-            print _("\nERROR: Could not parse system SMBIOS table.")
-            print _("\nThe smbios library returned this error:")
-            print str(e)
-            print
-            print failmessage
+    try:
+        if options.hdr_info:
+            print _("Getting info for HDR file:")
+            for filename in options.hdr_info:
+                h = HdrFile(filename)
+                h.dumpInfo()
+        elif options.action == "system_info":
+            try:
+                system_info()
+            except IndexError, e:
+                raise RbuNotSupported( _("RBU Bios Update not supported on this system.") )
 
-    elif options.action == "cancel":
-        cancelUpdate()
-    elif options.action == "update":
-        exit_code = updateBios(HdrFile(options.hdr), options)
-    elif options.action == "test":
-        exit_code=1
-        print _("Test mode not yet implemented... use dellBiosUpdate")
+        elif options.action == "cancel":
+            ensureRbuDriver()
+            #smbios.SmbiosTable() # check permissions
+            table = token.TokenTable()
+            cancelUpdate()
+        elif options.action == "update":
+            ensureRbuDriver()
+            smbios.SmbiosTable() # check permissions
+            if updateBios(HdrFile(options.hdr), options):
+                conditionalReboot(options)
+            else:
+                exit_code=1
+        elif options.action == "test":
+            ensureRbuDriver()
+            exit_code=1
+            print _("Test mode not yet implemented... use dellBiosUpdate")
+
+    except RbuNotSupported, e:
+        exit_code=2
+        print _("RBU is not supported on this system.")
+    except (libsmbios_c.smbios.TableParseError, token.TokenTableParseError), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( failmessage )
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( failmessage )
 
     return exit_code
 
