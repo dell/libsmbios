@@ -192,6 +192,7 @@ ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 ln -s smbios-sys-info %{buildroot}%{_sbindir}/getSystemId
 ln -s smbios-wireless-ctl %{buildroot}%{_sbindir}/dellWirelessCtl
 ln -s smbios-lcd-brightness %{buildroot}%{_sbindir}/dellLcdBrightness
+ln -s smbios-rbu-bios-update %{buildroot}%{_sbindir}/dellBiosUpdate
 
 %find_lang libsmbios
 
@@ -236,7 +237,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/libsmbios/*
 
 # legacy C++
-%{_sbindir}/dellBiosUpdate
+%{_sbindir}/dellBiosUpdate-compat
 %{_sbindir}/dellLEDCtl
 %ifnarch ia64
 %{_sbindir}/dellMediaDirectCtl
@@ -261,6 +262,7 @@ rm -rf %{buildroot}
 %{_sbindir}/dellLcdBrightness
 %{_sbindir}/getSystemId
 %{_sbindir}/dellWirelessCtl
+%{_sbindir}/dellBiosUpdate
 # used by HAL in old location, so keep it around until HAL is updated.
 %{_bindir}/dellWirelessCtl
 

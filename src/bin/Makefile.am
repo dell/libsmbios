@@ -68,8 +68,8 @@ out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 endif
 
 # dellBiosUpdate uses private headers... this is bad.
-sbin_PROGRAMS += out/dellBiosUpdate
-out_dellBiosUpdate_SOURCES = src/bin/dellBiosUpdate.cpp
-out_dellBiosUpdate_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-out_dellBiosUpdate_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios_c++/common
+sbin_PROGRAMS += out/dellBiosUpdate-compat
+out_dellBiosUpdate_compat_SOURCES = src/bin/dellBiosUpdate.cpp
+out_dellBiosUpdate_compat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
+out_dellBiosUpdate_compat_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios_c++/common
 
