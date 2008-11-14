@@ -109,7 +109,7 @@ struct dell_smi_obj *dell_smi_factory(int flags, ...)
     toReturn = 0;
 
 out:
-    if (toReturn)
+    if (toReturn && ! (flags & DELL_SMI_NO_ERR_CLEAR))
         clear_err(toReturn);
     return toReturn;
 }
@@ -131,6 +131,7 @@ const char *dell_smi_obj_strerror(struct dell_smi_obj *s)
     else
         retval = module_error_buf;
 
+    fnprintf("error string: %s\n", retval);
     return retval;
 }
 
@@ -300,10 +301,13 @@ int __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
     goto out;
 
 out_fail:
+    fnprintf(" out_fail \n");
     retval = -1;
     errbuf = smi_get_module_error_buf();
     if (errbuf){
+        fnprintf("error: %s\n", error);
         strlcpy(errbuf, error, ERROR_BUFSIZE);
+        fnprintf("smbios_strerror: %s\n", smbios_strerror());
         strlcat(errbuf, smbios_strerror(), ERROR_BUFSIZE);
     }
 

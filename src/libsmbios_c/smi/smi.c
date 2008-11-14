@@ -32,10 +32,9 @@
 
 const char *dell_smi_strerror()
 {
-    const char *retval = 0;
-    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     fnprintf("\n");
-    if (smi) retval = dell_smi_obj_strerror(smi);
+    struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
+    const char *retval = dell_smi_obj_strerror(smi);
     dell_smi_obj_free(smi);
     return retval;
 }

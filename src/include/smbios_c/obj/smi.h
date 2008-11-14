@@ -28,6 +28,7 @@ EXTERN_C_BEGIN;
 #define DELL_SMI_GET_SINGLETON  0x0001
 #define DELL_SMI_GET_NEW        0x0002
 #define DELL_SMI_UNIT_TEST_MODE 0x0004
+#define DELL_SMI_NO_ERR_CLEAR   0x0008
 
 struct dell_smi_obj;
 
