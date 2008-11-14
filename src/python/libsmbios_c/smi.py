@@ -42,6 +42,9 @@ class SMIOutputBufferFormatError(Exception): pass  # ret == -5
 class SMIOutputBufferTooSmall(Exception): pass  # ret == -6
 
 class BadPassword(Exception): pass
+class SmiCreateError(Exception): pass
+class SmiBufferCreateError(Exception): pass
+
 
 decorate(traceLog())
 def DellSmi(flags=DELL_SMI_GET_NEW, *args):
@@ -101,7 +104,7 @@ class _DellSmi(ctypes.Structure):
 
     decorate(traceLog())
     def execute(self):
-        DLL.dell_smi_obj_execute(self._smiobj)
+        ret = DLL.dell_smi_obj_execute(self._smiobj)
         raiseExceptionOnError(ret, self)
 
     decorate(traceLog())
@@ -135,7 +138,7 @@ def _strerror():
 #void dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 DLL.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
 DLL.dell_simple_ci_smi.restype = ctypes.c_int
-DLL.dell_simple_ci_smi.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
+DLL.dell_simple_ci_smi.errcheck = errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 decorate(traceLog())
 def simple_ci_smi(smiClass, select, *args):
     arg = array_4_u32(*args)
@@ -145,7 +148,7 @@ def simple_ci_smi(smiClass, select, *args):
 __all__.append("simple_ci_smi")
 
 #int dell_smi_read_nv_storage         (u32 location, u32 *minValue, u32 *maxValue);
-DLL.dell_smi_read_nv_storage.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
+DLL.dell_smi_read_nv_storage.errcheck = errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 DLL.dell_smi_read_nv_storage.restype = ctypes.c_int
 DLL.dell_smi_read_nv_storage.argtypes = [
         ctypes.c_uint32,
@@ -162,7 +165,7 @@ def read_nv_storage(location):
 __all__.append("read_nv_storage")
 
 #int dell_smi_read_battery_mode_setting(u32 location, u32 *minValue, u32 *maxValue);
-DLL.dell_smi_read_battery_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
+DLL.dell_smi_read_battery_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 DLL.dell_smi_read_battery_mode_setting.restype = ctypes.c_int
 DLL.dell_smi_read_battery_mode_setting.argtypes = [
         ctypes.c_uint32,
@@ -179,7 +182,7 @@ def read_battery_mode_setting(location):
 __all__.append("read_battery_mode_setting")
 
 #int dell_smi_read_ac_mode_setting     (u32 location, u32 *minValue, u32 *maxValue);
-DLL.dell_smi_read_ac_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_strerror()))
+DLL.dell_smi_read_ac_mode_setting.errcheck = errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 DLL.dell_smi_read_ac_mode_setting.restype = ctypes.c_int
 DLL.dell_smi_read_ac_mode_setting.argtypes = [
         ctypes.c_uint32,
@@ -199,21 +202,21 @@ __all__.append("read_ac_mode_setting")
 #int dell_smi_write_nv_storage         (u16 security_key, u32 location, u32 value, u32 *smiret);
 DLL.dell_smi_write_nv_storage.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 DLL.dell_smi_write_nv_storage.restype = ctypes.c_int
-DLL.dell_smi_write_nv_storage.errcheck=errorOnNegativeFN()
+DLL.dell_smi_write_nv_storage.errcheck=errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 write_nv_storage = DLL.dell_smi_write_nv_storage
 __all__.append("write_nv_storage")
 
 #int dell_smi_write_battery_mode_setting(u16 security_key, u32 location, u32 value, u32 *smiret);
 DLL.dell_smi_write_battery_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 DLL.dell_smi_write_battery_mode_setting.restype = ctypes.c_int
-DLL.dell_smi_write_battery_mode_setting.errcheck=errorOnNegativeFN()
+DLL.dell_smi_write_battery_mode_setting.errcheck=errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 write_battery_mode_setting = DLL.dell_smi_write_battery_mode_setting
 __all__.append("write_battery_mode_setting")
 
 #int dell_smi_write_ac_mode_setting     (u16 security_key, u32 location, u32 value, u32 *smiret);
 DLL.dell_smi_write_ac_mode_setting.argtypes = [ctypes.c_uint16, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
 DLL.dell_smi_write_ac_mode_setting.restype = ctypes.c_int
-DLL.dell_smi_write_ac_mode_setting.errcheck=errorOnNegativeFN()
+DLL.dell_smi_write_ac_mode_setting.errcheck=errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
 write_ac_mode_setting = DLL.dell_smi_write_ac_mode_setting
 __all__.append("write_ac_mode_setting")
 
@@ -222,7 +225,7 @@ def securityException(r):
     if r == -1:
         return BadPassword()
     if r == -2:
-        return Exception()
+        return SMIExecutionError()
 
 #int dell_smi_get_security_key(const char *pass_scancode, u16 *security_key);
 DLL.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
@@ -301,7 +304,7 @@ def _obj_strerror(obj):
 # dont define argtypes because this is a varargs function...
 #DLL.dell_smi_factory.argtypes = [ctypes.c_int, ]
 DLL.dell_smi_factory.restype = ctypes.POINTER(_DellSmi)
-DLL.dell_smi_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: Exception(_obj_strerror(r)))
+DLL.dell_smi_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: SmiCreateError(_obj_strerror(r)))
 
 #void dell_smi_obj_free(struct dell_smi_obj *);
 DLL.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_DellSmi) ]
@@ -326,27 +329,28 @@ DLL.dell_smi_obj_get_res.restype = ctypes.c_uint32
 #u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
 DLL.dell_smi_obj_make_buffer_frombios_auto.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_frombios_auto.restype = ctypes.c_void_p
-DLL.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
+DLL.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnNullPtrFN(lambda r,f,a: SmiBufferCreateError(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
 DLL.dell_smi_obj_make_buffer_frombios_withheader.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_frombios_withheader.restype = ctypes.c_void_p
-DLL.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
+DLL.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnNullPtrFN(lambda r,f,a: SmiBufferCreateError(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
 DLL.dell_smi_obj_make_buffer_frombios_withoutheader.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_frombios_withoutheader.restype = ctypes.c_void_p
-DLL.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
+DLL.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnNullPtrFN(lambda r,f,a: SmiBufferCreateError(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
 DLL.dell_smi_obj_make_buffer_tobios.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_tobios.restype = ctypes.c_void_p
-DLL.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
+DLL.dell_smi_obj_make_buffer_tobios.errcheck = errorOnNullPtrFN(lambda r,f,a: SmiBufferCreateError(_obj_strerror(a[0])))
 
 #void dell_smi_obj_execute(struct dell_smi_obj *);
 DLL.dell_smi_obj_execute.argtypes = [ ctypes.POINTER(_DellSmi) ]
 DLL.dell_smi_obj_execute.restype = ctypes.c_int
-DLL.dell_smi_obj_execute.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
+# dont use error check since class does this
+#DLL.dell_smi_obj_execute.errcheck = errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_obj_strerror(a[0])))
 
 
 
