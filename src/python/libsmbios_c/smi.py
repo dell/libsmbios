@@ -49,7 +49,7 @@ def DellSmi(flags=DELL_SMI_GET_NEW, *args):
         _DellSmi._instance = _DellSmi( flags, *args)
     return _DellSmi._instance
 
-class _DellSmi(object):
+class _DellSmi(ctypes.Structure):
     _instance = None
 
     decorate(traceLog())
@@ -58,7 +58,7 @@ class _DellSmi(object):
         self._smiobj = DLL.dell_smi_factory(*args)
         self.bufs = [0,0,0,0]
 
-    decorate(traceLog())
+    # dont decorate __del__
     def __del__(self):
         DLL.dell_smi_obj_free(self._smiobj)
 
@@ -289,10 +289,9 @@ __all__.append("password_change")
 ################################################################################
 
 #struct dell_smi_obj;
-class _dell_smi_obj(ctypes.Structure): pass
 
 # define strerror first so we can use it in error checking other functions.
-DLL.dell_smi_obj_strerror.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
+DLL.dell_smi_obj_strerror.argtypes = [ ctypes.POINTER(_DellSmi) ]
 DLL.dell_smi_obj_strerror.restype = ctypes.c_char_p
 decorate(traceLog())
 def _obj_strerror(obj):
@@ -301,51 +300,51 @@ def _obj_strerror(obj):
 #struct dell_smi_obj *dell_smi_factory(int flags, ...);
 # dont define argtypes because this is a varargs function...
 #DLL.dell_smi_factory.argtypes = [ctypes.c_int, ]
-DLL.dell_smi_factory.restype = ctypes.POINTER(_dell_smi_obj)
+DLL.dell_smi_factory.restype = ctypes.POINTER(_DellSmi)
 DLL.dell_smi_factory.errcheck = errorOnNullPtrFN(lambda r,f,a: Exception(_obj_strerror(r)))
 
 #void dell_smi_obj_free(struct dell_smi_obj *);
-DLL.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
+DLL.dell_smi_obj_free.argtypes = [ ctypes.POINTER(_DellSmi) ]
 DLL.dell_smi_obj_free.restype = None
 
 #void dell_smi_obj_set_class(struct dell_smi_obj *, u16 );
-DLL.dell_smi_obj_set_class.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint16 ]
+DLL.dell_smi_obj_set_class.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint16 ]
 DLL.dell_smi_obj_set_class.restype = None
 
 #void dell_smi_obj_set_select(struct dell_smi_obj *, u16 );
-DLL.dell_smi_obj_set_select.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint16 ]
+DLL.dell_smi_obj_set_select.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint16 ]
 DLL.dell_smi_obj_set_select.restype = None
 
 #void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
-DLL.dell_smi_obj_set_arg.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_uint32 ]
+DLL.dell_smi_obj_set_arg.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_uint32 ]
 DLL.dell_smi_obj_set_arg.restype = None
 
 #u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
-DLL.dell_smi_obj_get_res.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8 ]
+DLL.dell_smi_obj_get_res.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8 ]
 DLL.dell_smi_obj_get_res.restype = ctypes.c_uint32
 
 #u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
-DLL.dell_smi_obj_make_buffer_frombios_auto.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+DLL.dell_smi_obj_make_buffer_frombios_auto.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_frombios_auto.restype = ctypes.c_void_p
 DLL.dell_smi_obj_make_buffer_frombios_auto.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
-DLL.dell_smi_obj_make_buffer_frombios_withheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+DLL.dell_smi_obj_make_buffer_frombios_withheader.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_frombios_withheader.restype = ctypes.c_void_p
 DLL.dell_smi_obj_make_buffer_frombios_withheader.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
-DLL.dell_smi_obj_make_buffer_frombios_withoutheader.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+DLL.dell_smi_obj_make_buffer_frombios_withoutheader.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_frombios_withoutheader.restype = ctypes.c_void_p
 DLL.dell_smi_obj_make_buffer_frombios_withoutheader.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
-DLL.dell_smi_obj_make_buffer_tobios.argtypes = [ ctypes.POINTER(_dell_smi_obj), ctypes.c_uint8, ctypes.c_size_t ]
+DLL.dell_smi_obj_make_buffer_tobios.argtypes = [ ctypes.POINTER(_DellSmi), ctypes.c_uint8, ctypes.c_size_t ]
 DLL.dell_smi_obj_make_buffer_tobios.restype = ctypes.c_void_p
 DLL.dell_smi_obj_make_buffer_tobios.errcheck = errorOnZeroFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
 #void dell_smi_obj_execute(struct dell_smi_obj *);
-DLL.dell_smi_obj_execute.argtypes = [ ctypes.POINTER(_dell_smi_obj) ]
+DLL.dell_smi_obj_execute.argtypes = [ ctypes.POINTER(_DellSmi) ]
 DLL.dell_smi_obj_execute.restype = ctypes.c_int
 DLL.dell_smi_obj_execute.errcheck = errorOnNegativeFN(lambda r,f,a: Exception(_obj_strerror(a[0])))
 
