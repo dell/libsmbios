@@ -41,7 +41,7 @@ class _CmosAccess(ctypes.Structure):
         self._cmosobj = None
         self._cmosobj = DLL.cmos_obj_factory(*args)
 
-    decorate(traceLog())
+    # dont decorate __del__
     def __del__(self):
         DLL.cmos_obj_free(self._cmosobj)
 

@@ -41,7 +41,7 @@ class _MemoryAccess(ctypes.Structure):
         self._memobj = None
         self._memobj = DLL.memory_obj_factory(*args)
             
-    decorate(traceLog())
+    # dont decorate __del__
     def __del__(self):
         DLL.memory_obj_free(self._memobj)
 
