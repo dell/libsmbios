@@ -32,7 +32,8 @@ def freeLibStringFN(free_fn, exception_fn=None):
     def _fn(result, func, args):
         pystr = ctypes.cast(result, ctypes.c_char_p).value
         if pystr is None:
-            _doExc(exception_fn, result, func, args, _("null string returned") )
+            pystr = ""
+            #_doExc(exception_fn, result, func, args, _("null string returned") )
 
         free_fn(result)
         return pystr
