@@ -261,22 +261,23 @@ class HdrFile(object):
 
     decorate(traceLog())
     def dumpInfo(self):
-        print "test for %s" % self.filename
+        print _("BIOS HDR file information dump.")
         print
-        print "ID: %s" % self.hdr.headerId
-        print "Length: %s" % self.hdr.headerLength
-        print "Major: %s" % self.hdr.headerMajorVer
-        print "Minor: %s" % self.hdr.headerMinorVer
-        print "numSystems: %s" % self.hdr.numSystems
-        print "quickCheck: %s" % self.hdr.quickCheck
-        print "biosVersion: %s" % self.getBiosVersion()
-        print "miscFlags: %s" % self.hdr.miscFlags
+        print _("Filename: %s") % self.filename
+        print _("File magic header: %s") % self.hdr.headerId
+        print _("Header length: %s") % self.hdr.headerLength
+        print _("Header major version: %s") % self.hdr.headerMajorVer
+        print _("Header minor version: %s") % self.hdr.headerMinorVer
+        print _("Number of supported systems: %s") % self.hdr.numSystems
+        print _("Quick check field: %s") % self.hdr.quickCheck
+        print _("BIOS Version: %s") % self.getBiosVersion()
+        print _("Misc flags: %s") % self.hdr.miscFlags
         #print "biosInternalOnly: %s" % self.hdr.biosInternalOnly
         #for i in self.hdr.reserved:
             #print "reserved: 0x%04x" % i
-        print "compatFlags: %s" % self.hdr.compatFlags
+        print _("Compatibility flags: %s") % self.hdr.compatFlags
         for id, hwrev in self.systemIds():
-            print "System ID: 0x%04x  Hardware Rev: %d" % (id, hwrev)
+            print _("System ID: 0x%04x  Hardware Revision: %d") % (id, hwrev)
 
 class BaseRbu(object):
     subclasses = []
@@ -341,7 +342,7 @@ class BackCompatRbu(BaseRbu):
 
     decorate(traceLog())
     def cancelUpdate(self):
-        print "Shelling out to run old dellBiosUpdate"
+        print _("Performing BIOS update cancellation using old dellBiosUpdate executable.")
         os.system("dellBiosUpdate -c")
 
 class MonolithicRbu(BaseRbu):
@@ -531,9 +532,9 @@ def ensureRbuDriver():
 
 def conditionalReboot(options):
     if options.reboot is None:
-        print "No reboot option specified. The --reboot option is highly recommended."
+        print _("No reboot option specified. The --reboot option is highly recommended.")
     elif options.reboot:
-        print "Rebooting system to update the BIOS."
+        print _("Rebooting system to update the BIOS.")
         while 1:
             os.system("/sbin/shutdown -r now")
             time.sleep(10)
@@ -549,7 +550,6 @@ def main():
 
     try:
         if options.hdr_info:
-            print _("Getting info for HDR file:")
             for filename in options.hdr_info:
                 h = HdrFile(filename)
                 h.dumpInfo()
