@@ -241,7 +241,6 @@ void __internal init_d4_token(struct token_table *table, struct token_obj *t)
     t->is_active = _d4_is_active;
     t->activate = _d4_activate;
     t->get_string = _d4_get_string;
-    t->get_string_len = _d4_get_string_len;
     t->set_string = _d4_set_string;
     t->try_password = 0;
     t->private_data = 0;

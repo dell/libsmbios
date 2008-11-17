@@ -66,12 +66,12 @@ static int _da_is_bool(const struct token_obj *t)
 static int _da_is_string(const struct token_obj *t)
 {
     fnprintf("\n");
-    return false;
+    return true;
 }
 
 static int _da_is_active(const struct token_obj *t)
 {
-    fnprintf("\n");
+    fnprintf("token 0x%04x  location: 0x%04x  value 0x%04x\n", cast_token(t)->tokenId, cast_token(t)->location, cast_token(t)->value);
     int retval = 0;
     u32 curVal=0;
     int ret = dell_smi_read_nv_storage(cast_token(t)->location, &curVal, 0, 0);
@@ -99,7 +99,8 @@ union void_u16 {
 
 static int _da_activate(const struct token_obj *t)
 {
-    fnprintf("\n");
+    fnprintf("token 0x%04x  location: 0x%04x  value 0x%04x\n", cast_token(t)->tokenId, cast_token(t)->location, cast_token(t)->value);
+    // security key in private_data
     union void_u16 *indirect = (union void_u16*) &(t->private_data);
     int retval = dell_smi_write_nv_storage(indirect->val, cast_token(t)->location, cast_token(t)->value, 0);
 
@@ -108,6 +109,55 @@ static int _da_activate(const struct token_obj *t)
         strlcat( t->errstring, dell_smi_strerror(), ERROR_BUFSIZE );
     }
 
+    return retval;
+}
+
+static char * _da_get_string(const struct token_obj *t, size_t *len)
+{
+    char *retval = 0;
+    u32 toRead = 0;
+    fnprintf("token 0x%04x  location: 0x%04x  value 0x%04x\n", cast_token(t)->tokenId, cast_token(t)->location, cast_token(t)->value);
+    int ret = dell_smi_read_nv_storage(cast_token(t)->location, &toRead, 0, 0);
+
+    if (ret) {
+        strlcpy( t->errstring, _("Low level SMI call failed.\n"), ERROR_BUFSIZE);
+        strlcat( t->errstring, dell_smi_strerror(), ERROR_BUFSIZE );
+        goto out;
+    }
+
+    if (len)
+        *len = 2;
+
+    retval = calloc(1, sizeof(u16));
+    memcpy(retval, &toRead, sizeof(u16));
+
+out:
+    return retval;
+}
+
+static int _da_set_string(const struct token_obj *t, const char *str, size_t size)
+{
+    fnprintf("\n");
+    // security key in private_data
+    union void_u16 *indirect = (union void_u16*) &(t->private_data);
+    fnprintf("token 0x%04x  location: 0x%04x  value 0x%04x\n", cast_token(t)->tokenId, cast_token(t)->location, cast_token(t)->value);
+
+    u16 toWrite = 0;
+    if (str && size >= 2)
+        toWrite = *(u16 *)str;
+    else if (str && size >= 1)
+        toWrite = *(u8 *)str;
+
+    fnprintf("setting string: 0x%04x\n", toWrite);
+
+    int retval = dell_smi_write_nv_storage(indirect->val, cast_token(t)->location, toWrite, 0);
+
+    if (retval) {
+        strlcpy( t->errstring, _("Low level SMI call failed.\n"), ERROR_BUFSIZE);
+        strlcat( t->errstring, dell_smi_strerror(), ERROR_BUFSIZE );
+    }
+
+    fnprintf("retval %d\n", retval);
     return retval;
 }
 
@@ -135,9 +185,8 @@ void __internal init_da_token(struct token_obj *t)
     t->is_string = _da_is_string;
     t->is_active = _da_is_active;
     t->activate = _da_activate;
-    t->get_string = 0;
-    t->get_string_len = 0;
-    t->set_string = 0;
+    t->get_string = _da_get_string;
+    t->set_string = _da_set_string;
     t->try_password = _da_try_password;
     t->private_data = 0;
 }

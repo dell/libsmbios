@@ -173,13 +173,15 @@ make_token_obj_fn( bool, 0, is_string, "%d" )
 char * token_obj_get_string (const struct token_obj *t, size_t *len)
 {
     fnprintf("\n");
-    if (t) return t-> get_string (t, len);
+    if (t && t->get_string && token_obj_is_string(t))
+        return t-> get_string (t, len);
     return 0;
 }
 
 int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t size)
 {
-    if (t)
+    fnprintf("\n");
+    if (t && t->set_string && token_obj_is_string(t))
         return t->set_string (t, newstr, size);
     return 0;
 }
@@ -200,11 +202,6 @@ const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *
 const void *token_obj_get_ptr(const struct token_obj *t)
 {
     return t->token_ptr;
-}
-
-void token_free_string(char *s)
-{
-    free(s);
 }
 
 
