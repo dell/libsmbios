@@ -2,10 +2,10 @@ import logging
 import logging.config
 from optparse import OptionParser
 import os
-import string
 import sys
 
 from libsmbios_c import memory, smi, cmos, pkgconfdir, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import makePrintable
 
 import gettext
 t = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True)
@@ -110,23 +110,6 @@ def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
             sys.stdout.write("\n")
             chars_printed=indent
             sys.stdout.write(" "*indent)
-
-def makePrintable(s):
-    printable = 1
-    for ch in s:
-        if ch not in string.printable:
-            printable=0
-
-    if printable:
-        return s
-
-    else:
-        retstr=""
-        i = 0
-        for ch in s:
-            i = i+1
-            retstr = retstr + "0x%02x" % ord(ch)
-        return retstr
 
 def getSecurityKey(options):
     if options.security_key is None:

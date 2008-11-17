@@ -5,9 +5,9 @@
 
 import logging
 import os
+import string
 import sys
 import types
-
 
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -19,6 +19,23 @@ try:
     from peak.util.decorators import rewrap, decorate
 except ImportError:
     from _peak_util_decorators import rewrap, decorate
+
+def makePrintable(s):
+    printable = 1
+    for ch in s:
+        if ch not in string.printable:
+            printable=0
+
+    if printable:
+        return s
+
+    else:
+        retstr=""
+        i = 0
+        for ch in s:
+            i = i+1
+            retstr = retstr + "0x%02x" % ord(ch)
+        return retstr
 
 # defaults to module verbose log
 # does a late binding on log. Forwards all attributes to logger.
