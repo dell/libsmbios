@@ -5,22 +5,43 @@ import os
 import string
 import sys
 
-from libsmbios_c import memory, smi, cmos, pkgconfdir
+from libsmbios_c import memory, smi, cmos, pkgconfdir, localedir, GETTEXT_PACKAGE
+
+import gettext
+t = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True)
+_ = t.ugettext
+
+standardFailMessage = _("\n\
+Common problems are:\n\
+\n\
+    -- Insufficient permissions to perform operation.\n\
+       Try running as a more privileged account.\n\
+          Linux  : run as 'root' user\n\
+          Windows: run as 'administrator' user\n\
+\n\
+    -- dell_rbu device driver not loaded.\n\
+       Try loading the dell_rbu driver\n\
+          Linux  : modprobe dell_rbu\n\
+          Windows: dell_rbu driver not yet available.\n\
+")
 
 def getStdOptionParser(usage, version):
     parser = OptionParser(usage=usage, version=version)
     return addStdOptions(parser)
 
-def addStdOptions(parser):
+def addStdOptions(parser, passwordOpts=True, securityKeyOpt=False):
     parser.add_option("-v", "--verbose", action="count", dest="verbosity", default=1, help=_("Display more verbose output."))
     parser.add_option("-q", "--quiet", action="store_const", const=0, dest="verbosity", help=_("Minimize program output. Only errors and warnings are displayed."))
     parser.add_option("--trace", action="store_true", dest="trace", default=False, help=_("Enable verbose function tracing."))
     parser.add_option("--logconfig", action="store", default=os.path.join(pkgconfdir, "logging.conf"), help=_("Specify alternate config log."))
 
-    parser.add_option('--security-key', action="store", dest="security_key", help=_("BIOS pre-calculated security key."))
-    parser.add_option('--password', action="store", dest="password",
+    if securityKeyOpt:
+        parser.add_option('--security-key', action="store", dest="security_key", default=None, help=_("BIOS pre-calculated security key."))
+
+    if passwordOpts:
+        parser.add_option('--password', action="store", dest="password",
                       help=_("BIOS Setup password for set/activate operations."))
-    parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
+        parser.add_option('-r', '--rawpassword', action="store_true", dest="raw", default=False,
                       help=_("Do not auto-convert password to scancodes."))
 
     parser.add_option('--memory-dat', action="store", type="string", dest="memory_dat",
@@ -45,7 +66,7 @@ def setup_std_options(options):
     if options.raw:
         options.password_scancode = options.password
 
-    if options.security_key:
+    if getattr(options, "security_key", None) is not None:
         options.security_key = int(options.security_key, 0)
 
 
