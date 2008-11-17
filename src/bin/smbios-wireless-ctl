@@ -40,7 +40,6 @@ gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 moduleLog = getLog()
 verboseLog = getLog(prefix="verbose.")
 
-class CmdlineError(Exception): pass
 class RuntimeControlUnsupported(Exception): pass
 
 def command_parse():
