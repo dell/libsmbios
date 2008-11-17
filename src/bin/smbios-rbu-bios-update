@@ -7,7 +7,7 @@
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
-"""dumpCmos"""
+"""smbios-rbu-bios-update"""
 
 from __future__ import generators, division
 
@@ -34,12 +34,12 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
-locale.setlocale(locale.LC_ALL, '')
-gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
-
 import cli
 from libsmbios_c import system_info as sysinfo, smbios, token, localedir, GETTEXT_PACKAGE
 from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
 # use python-decoratortools if it is installed, otherwise use our own local
 # copy. Imported this locally because it doesnt appear to be available on SUSE
