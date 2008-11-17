@@ -34,9 +34,13 @@ __VERSION__=RELEASE_VERSION
 
 import cli
 from libsmbios_c import token, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 token_wake_hour = 0x2b
 token_wake_min = 0x2c
@@ -69,8 +73,8 @@ def xform_options(options):
     options.min_bcd = ((options.minute // 10) <<4) + (options.minute % 10)
 
 def getWakeupTime(table):
-    hour = struct.unpack("b", table[token_wake_hour].getString())
-    minute = struct.unpack("b", table[token_wake_min].getString())
+    hour = struct.unpack("b", table[token_wake_hour].getString()[0])
+    minute = struct.unpack("b", table[token_wake_min].getString()[0])
     # time is BCD coded
     return ( int("%x" % hour), int("%x"%minute) )
 
@@ -91,18 +95,36 @@ def main():
     cli.setup_std_options(options)
     xform_options(options)
 
-    table = token.TokenTable()
+    try:
+        table = token.TokenTable()
 
-    print _("Current wakeup settings:")
-    showCurrentWakeup(table)
-
-    if options.action:
-        print
-        print _("Setting new wakeup time:")
-        table[options.action].activate()
-        table[token_wake_hour].setString(struct.pack("b", options.hour_bcd))
-        table[token_wake_min].setString(struct.pack("b", options.min_bcd))
+        print _("Current wakeup settings:")
         showCurrentWakeup(table)
+
+        if options.action:
+            print
+            print _("Setting new wakeup time:")
+            table[options.action].tryPassword(options.password_ascii, options.password_scancode)
+            table[options.action].activate()
+            table[token_wake_hour].tryPassword(options.password_ascii, options.password_scancode)
+            table[token_wake_hour].setString(struct.pack("b", options.hour_bcd))
+            table[token_wake_min].tryPassword(options.password_ascii, options.password_scancode)
+            table[token_wake_min].setString(struct.pack("b", options.min_bcd))
+            showCurrentWakeup(table)
+
+    except (token.TokenTableParseError, ), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
 
     return exit_code
 

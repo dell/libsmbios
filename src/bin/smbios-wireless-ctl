@@ -21,9 +21,7 @@ import traceback
 # the following vars are all substituted on install
 # this bin isnt byte-compiled, so this is ok
 RELEASE_VERSION="uninstalled-version"
-GETTEXT_PACKAGE="libsmbios" #replaced
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
-localedir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "..", "po")
 clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
 # end vars
 
@@ -33,13 +31,14 @@ sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
 import cli
-import libsmbios_c.token as token
-import libsmbios_c.smbios as smbios
-import libsmbios_c.smi as smi
-import libsmbios_c.system_info as sysinfo
+from libsmbios_c import token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 class CmdlineError(Exception): pass
 class RuntimeControlUnsupported(Exception): pass
@@ -80,7 +79,7 @@ def command_parse():
     parser.add_option('--st_locator', action="store", type="int", default=None, dest="st_locator",
             help= _("Enable or disable the WIFI locator switch"))
 
-    cli.addStdOptions(parser)
+    cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
     return parser.parse_args()
 
 radios = {
@@ -125,14 +124,15 @@ def radioBootCtl(radio, enable):
             tokenTable[ legacy ].activate()
     except IndexError:
         print _("\tThis system does not support boot time settings for %s") % radio["name"]
-        pass
+
+class InvalidConfig(Exception): pass
 
 def radioRuntimeCtl(radio, enable):
     try:
         print _("Set runtime settings for %s") % radio['name']
         tokenTable = token.TokenTable()
         if enable and not tokenTable[radio["radioEnable"]].isActive():
-            raise Exception( _("Runtime setting has no effect when boot time config is disabled. Ignoring.") )
+            raise InvalidConfig( _("Runtime setting has no effect when boot time config is disabled. Ignoring.") )
 
         disable = 1
         if enable: disable=0
@@ -140,8 +140,9 @@ def radioRuntimeCtl(radio, enable):
         if res[smi.cbRES1] != 0:
             raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless settings.") )
 
-    except (Exception, RuntimeControlUnsupported), e:
+    except (InvalidConfig, RuntimeControlUnsupported), e:
         print "\t%s" % e
+        raise
 
 def switchBootCtl(radio, enable):
     print _("Set boot switch settings for %s") % radio["name"]
@@ -285,33 +286,56 @@ def main():
     if not options.runtime:
         options.boot=1
 
-    if options.info:
-        print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
-        print _("smbios-wireless-ctl version : %s") % __VERSION__
-        outputWirelessInfo()
-        options.st_wlan = 1
-        options.st_bt = 1
-        options.st_wwan = 1
-        options.st_locator = 1
+    try:
+        if options.info:
+            print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
+            print _("smbios-wireless-ctl version : %s") % __VERSION__
+            outputWirelessInfo()
+            options.st_wlan = 1
+            options.st_bt = 1
+            options.st_wwan = 1
+            options.st_locator = 1
 
-    for i in ("wlan", "bt", "wwan"):
-        if getattr(options, i, None) is not None:
-            if options.boot:
-                radioBootCtl(radios[i], getattr(options, i))
-            if options.runtime:
-                radioRuntimeCtl(radios[i], getattr(options, i))
+        for i in ("wlan", "bt", "wwan"):
+            if getattr(options, i, None) is not None:
+                if options.boot:
+                    radioBootCtl(radios[i], getattr(options, i))
+                if options.runtime:
+                    radioRuntimeCtl(radios[i], getattr(options, i))
 
-        if getattr(options, "sw_%s" % i, None) is not None:
-            if options.boot:
-                switchBootCtl(radios[i], getattr(options, i))
-            if options.runtime:
-                switchRuntimeCtl(radios[i], getattr(options, i))
+            if getattr(options, "sw_%s" % i, None) is not None:
+                if options.boot:
+                    switchBootCtl(radios[i], getattr(options, i))
+                if options.runtime:
+                    switchRuntimeCtl(radios[i], getattr(options, i))
 
-        if getattr(options, "st_%s" % i, None):
-            wirelessInfo(radios[i])
+            if getattr(options, "st_%s" % i, None):
+                wirelessInfo(radios[i])
 
-    if options.st_locator:
-        outputSwitchStatus()
+        if options.st_locator:
+            outputSwitchStatus()
+
+    except (smi.SMIExecutionError, ), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not execute SMI.") )
+        verboseLog.info( _("The smi library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (smbios.TableParseError, token.TokenTableParseError), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
 
     return exit_code
 

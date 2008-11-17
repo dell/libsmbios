@@ -32,9 +32,13 @@ __VERSION__=RELEASE_VERSION
 
 import cli
 from  libsmbios_c import system_info as sysinfo, smbios, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 def notSettable(*args):
     raise exceptions.Exception("this property is read-only")
@@ -79,30 +83,38 @@ def main():
     (options, args) = command_parse()
     cli.setup_std_options(options)
 
-    #instantiate smbios table to ensure we have good perms, etc
-    s = smbios.SmbiosTable()
+    try:
+        #instantiate smbios table to ensure we have good perms, etc
+        s = smbios.SmbiosTable()
 
-    if options.set and len(options.taglist) > 1:
-        raise exceptions.Exception( _("Specify which tag to set.") )
-    elif options.set:
-        print _("Current tag value:")
+        if options.set and len(options.taglist) > 1:
+            raise exceptions.Exception( _("Specify which tag to set.") )
+        elif options.set:
+            print _("Current tag value:")
 
-    maxlen=0
-    for t in options.taglist:
-        slen = len(info_list[t][0]) + 1
-        if slen>maxlen: maxlen=slen
+        maxlen=0
+        for t in options.taglist:
+            slen = len(info_list[t][0]) + 1
+            if slen>maxlen: maxlen=slen
 
-    for info in [ info_list[t] for t in output_order if t in options.taglist ]:
-        label = info[0]
-        sys.stdout.write( "%s:" % label)
-        sys.stdout.write( " " * (maxlen-len(label)))
-        sys.stdout.write( "%s\n" % info[1]() )
+        for info in [ info_list[t] for t in output_order if t in options.taglist ]:
+            label = info[0]
+            sys.stdout.write( "%s:" % label)
+            sys.stdout.write( " " * (maxlen-len(label)))
+            sys.stdout.write( "%s\n" % info[1]() )
 
-    if options.set:
-        print
-        print _("Setting new tag value: %s") % options.set
-        fn = info_list[ options.taglist[0] ][2]
-        fn(options.set, options.password_ascii, options.password_scancode)
+        if options.set:
+            print
+            print _("Setting new tag value: %s") % options.set
+            fn = info_list[ options.taglist[0] ][2]
+            fn(options.set, options.password_ascii, options.password_scancode)
+
+    except (smbios.TableParseError,), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
 
     return exit_code
 

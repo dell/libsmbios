@@ -35,11 +35,15 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
-from libsmbios_c import token as tok, localedir, GETTEXT_PACKAGE, pkgdatadir
 import cli
+from libsmbios_c import token, localedir, GETTEXT_PACKAGE, pkgdatadir
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 TOKENLIST_CSV=os.path.join(pkgdatadir, "token_list.csv")
 TOKENBLACKLIST_CSV=os.path.join(pkgdatadir, "token_blacklist.csv")
@@ -174,18 +178,18 @@ def tokenInfo(tokenObj, action):
 
     type = _("<wierd unknown type>")
     value = _("<unknown value>")
-    if tokenObj.isString():
-        if action == "is-string": exit_code = 0
-        type = "string"
-        value = tokenObj.getString()
-
-    elif tokenObj.isBool():
+    if tokenObj.isBool():
         if action == "is-bool": exit_code = 0
         type="bool"
         value="false"
         if tokenObj.isActive():
             if action == "is-active": exit_code = 0
             value="true"
+
+    elif tokenObj.isString():
+        if action == "is-string": exit_code = 0
+        type = "string"
+        value = tokenObj.getString()
 
     return (exit_code, type, value)
 
@@ -250,44 +254,58 @@ def main():
     (options, args) = command_parse()
     cli.setup_std_options(options)
 
-    tokenXlator = TokenTranslatorCsv(csvlist=options.token_csv, csvblacklist=options.token_blacklist_csv)
+    try:
+        tokenXlator = TokenTranslatorCsv(csvlist=options.token_csv, csvblacklist=options.token_blacklist_csv)
 
-    tokenTable = tok.TokenTable()
+        tokenTable = token.TokenTable()
 
-    if options.action == "dump-tokens":
-        dumpTokens(tokenTable, tokenXlator, options)
-        return exit_code
+        if options.action == "dump-tokens":
+            dumpTokens(tokenTable, tokenXlator, options)
+            return exit_code
 
-    tokenObj = getTokenObj(tokenTable, tokenXlator, options)
-    tokenObj.tryPassword(options.password_ascii, options.password_scancode)
+        tokenObj = getTokenObj(tokenTable, tokenXlator, options)
+        tokenObj.tryPassword(options.password_ascii, options.password_scancode)
 
-    if options.action == "set-string":
-        (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-        print _("Original Values")
-        print _("        type: %s") % type
-        print _("       value: %s") % cli.makePrintable(value)
-        print
-        print _("Setting string value ...")
-        tokenObj.setString(args[0])
-        (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-        options.action="dump-tokens"
-        print "New values"
+        if options.action == "set-string":
+            (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
+            print _("Original Values")
+            print _("        type: %s") % type
+            print _("       value: %s") % cli.makePrintable(value)
+            print
+            print _("Setting string value ...")
+            tokenObj.setString(args[0])
+            (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
+            options.action="dump-tokens"
+            print "New values"
 
-    if options.action == "activate":
-        (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-        print _("Original Values")
-        print _("        type: %s") % type
-        print _("       value: %s") % cli.makePrintable(value)
-        print
-        print _("Activating token...")
-        tokenObj.activate()
-        options.action="dump-tokens"
-        print _("New values")
+        if options.action == "activate":
+            (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
+            print _("Original Values")
+            print _("        type: %s") % type
+            print _("       value: %s") % cli.makePrintable(value)
+            print
+            print _("Activating token...")
+            tokenObj.activate()
+            options.action="dump-tokens"
+            print _("New values")
 
-    if options.action in ("is-bool", "is-string", "is-active", "get-string", "dump-tokens"):
-        (exit_code, type, value) = tokenInfo(tokenObj, options.action)
-        print _("        type: %s") % type
-        print _("       value: %s") % cli.makePrintable(value)
+        if options.action in ("is-bool", "is-string", "is-active", "get-string", "dump-tokens"):
+            (exit_code, type, value) = tokenInfo(tokenObj, options.action)
+            print _("        type: %s") % type
+            print _("       value: %s") % cli.makePrintable(value)
+
+    except (token.TokenTableParseError, ), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
 
     return exit_code
 

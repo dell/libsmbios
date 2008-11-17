@@ -34,8 +34,10 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 __VERSION__=RELEASE_VERSION
 
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
 import cli
-import libsmbios_c
 from libsmbios_c import system_info as sysinfo, smbios, token, localedir, GETTEXT_PACKAGE
 from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
@@ -49,9 +51,6 @@ except ImportError:
 
 moduleLog = getLog()
 verboseLog = getLog(prefix="verbose.")
-
-locale.setlocale(locale.LC_ALL, '')
-gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
 class CmdlineError(Exception): pass
 
@@ -76,20 +75,6 @@ completion_messages = {
     0x000D: _("The image could not be found in memory, i.e. the header could not be located."),
     0xFFFF: _("No update operation has been performed on the system."),
 }
-
-failmessage = _("""
-Common problems are:
-
-    -- Insufficient permissions to perform operation.
-       Try running as a more privileged account.
-          Linux  : run as 'root' user
-          Windows: run as 'administrator' user
-
-    -- dell_rbu device driver not loaded.
-       Try loading the dell_rbu driver
-          Linux  : modprobe dell_rbu
-          Windows: dell_rbu driver not yet available.
-""")
 
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
@@ -580,18 +565,18 @@ def main():
     except RbuNotSupported, e:
         exit_code=2
         print _("RBU is not supported on this system.")
-    except (libsmbios_c.smbios.TableParseError, token.TokenTableParseError), e:
+    except (smbios.TableParseError, token.TokenTableParseError), e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
-        moduleLog.info( failmessage )
+        moduleLog.info( cli.standardFailMessage )
     except (token.TokenManipulationFailure,), e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )
         verboseLog.info( str(e) )
-        moduleLog.info( failmessage )
+        moduleLog.info( cli.standardFailMessage )
 
     return exit_code
 
