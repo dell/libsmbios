@@ -16,7 +16,7 @@ import ctypes
 import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
-from _common import errorOnNullPtrFN, errorOnNegativeFN
+from _common import errorOnNullPtrFN, errorOnNegativeFN, freeLibStringFN
 from trace_decorator import decorate, traceLog, getLog
 
 __all__ = ["TokenTable", "TOKEN_DEFAULTS", "TOKEN_GET_SINGLETON", "TOKEN_GET_NEW", "TOKEN_UNIT_TEST_MODE"]
@@ -33,6 +33,10 @@ class Token(ctypes.Structure):
     decorate(traceLog())
     def getId(self):
         return DLL.token_obj_get_id(self)
+
+    # dont trace or we recurse...
+    def __repr__(self):
+        return "<libsmbios_c.Token ID 0x%04x>" % DLL.token_obj_get_id(self)
 
     decorate(traceLog())
     def getType(self):
@@ -190,10 +194,25 @@ DLL.token_obj_activate.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulat
 DLL.token_obj_is_string.argtypes = [ ctypes.POINTER(Token) ]
 DLL.token_obj_is_string.restype = ctypes.c_bool
 
+decorate(traceLog())
+def customFree(result, func, args):
+    getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
+    size = args[1]._obj.value
+    pystr = ""
+    if bool(result):
+        pystr = result[0:size-1]
+        DLL.token_string_free(result)
+    else:
+        raise TokenManipulationFailure(_table_strerror(a[0]))
+    return pystr
+
 #char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);
 DLL.token_obj_get_string.argtypes = [ ctypes.POINTER(Token), ctypes.POINTER(ctypes.c_size_t) ]
-DLL.token_obj_get_string.restype = ctypes.c_void_p
-DLL.token_obj_get_string.errcheck = errorOnNullPtrFN(lambda r,f,a: TokenManipulationFailure(_table_strerror(a[0])))
+DLL.token_obj_get_string.restype = ctypes.POINTER(ctypes.c_char)
+DLL.token_obj_get_string.errcheck=customFree
+
+DLL.token_string_free.argtypes = [ ctypes.POINTER(ctypes.c_char) ]
+DLL.token_string_free.restype = None
 
 #int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);
 DLL.token_obj_set_string.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.c_size_t ]
