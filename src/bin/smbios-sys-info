@@ -7,7 +7,7 @@
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
-"""dumpCmos"""
+"""smbios-sys-info"""
 
 from __future__ import generators
 

@@ -7,7 +7,7 @@
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
-"""dumpCmos"""
+"""smbios-token-ctl"""
 
 from __future__ import generators
 
