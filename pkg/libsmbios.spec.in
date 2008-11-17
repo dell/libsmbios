@@ -17,6 +17,7 @@
 # some distros already have fdupes macro. If not, we just set it to something innocuous
 %{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
 
+%define ctypes_BR python-ctypes
 %define cppunit_BR cppunit-devel
 %define fdupes_BR hardlink
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
@@ -25,6 +26,10 @@
 
 # suse/sles
 %if 0%{?suse_version}
+%if 0%{?suse_version} >= 1020
+    # suse never added python-ctypes provides to python 2.5 :(
+    define ctypes_BR %{nil}
+%endif
 %if 0%{?suse_version} > 1020
     %define fdupes_BR fdupes
 %else
@@ -82,7 +87,7 @@ should use the libsmbios C interface.
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
 Requires: %{package_name} = %{version}-%{release}
-Requires: python python-ctypes
+Requires: python %{ctypes_BR}
 
 %description -n python-smbios
 This package provides a Python interface to libsmbios
