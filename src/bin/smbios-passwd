@@ -43,8 +43,9 @@ verboseLog = getLog(prefix="verbose.")
 class CmdlineError(Exception): pass
 
 def command_parse():
-    parser = cli.getStdOptionParser(usage=__doc__, version=__VERSION__)
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
     parser.add_option('--info', action="store_const", const="info", dest="action", default=None, help= _("Show password information"))
+    cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=False)
     return parser.parse_args()
 
 def info(options):
