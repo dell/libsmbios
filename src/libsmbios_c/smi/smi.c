@@ -42,6 +42,7 @@ const char *dell_smi_strerror()
 int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 {
     int retval = -1;
+    fnprintf("\n");
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_DEFAULTS);
     if(!smi)
         goto out;
@@ -76,6 +77,7 @@ out:
 static int read_setting(u16 select, u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
     u32 args[4] = {location, 0,}, res[4] = {0,};
+    fnprintf("\n");
     int retval = dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
     if(curValue)
         *curValue = res[cbARG2];
@@ -88,11 +90,13 @@ static int read_setting(u16 select, u32 location, u32 *curValue, u32 *minValue, 
 
 int dell_smi_read_nv_storage         (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
+    fnprintf("\n");
     return read_setting(0, location, curValue, minValue, maxValue); // 0 = select code for nv storage
 }
 
 int dell_smi_read_battery_mode_setting(u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
+    fnprintf("\n");
     return read_setting(1, location, curValue, minValue, maxValue); // 1 = select code for battery mode
 }
 
