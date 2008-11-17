@@ -19,6 +19,14 @@ from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN, freeLibStringFN
 from trace_decorator import decorate, traceLog, getLog
 
+# use python-decoratortools if it is installed, otherwise use our own local
+# copy. Imported this locally because it doesnt appear to be available on SUSE
+# and the fedora RPM doesnt appear to compile cleanly on SUSE
+try:
+    from peak.util.decorators import decorate_class
+except ImportError:
+    from libsmbios_c._peak_util_decorators import decorate_class
+
 __all__ = ["TokenTable", "TOKEN_DEFAULTS", "TOKEN_GET_SINGLETON", "TOKEN_GET_NEW", "TOKEN_UNIT_TEST_MODE"]
 
 TOKEN_DEFAULTS      =0x0000
@@ -60,7 +68,9 @@ class Token(ctypes.Structure):
 
     decorate(traceLog())
     def getPtr(self):
-        return ctypes.cast(DLL.token_obj_get_ptr(self),  ctypes.POINTER(_Token_LL.subclasses[ self.getType() ])).contents
+        ptr = DLL.token_obj_get_ptr(self)
+        typ = ctypes.POINTER(TokenPtr.subclasses[ self.getType() ])
+        return ctypes.cast(ptr, typ).contents
 
     decorate(traceLog())
     def getString(self):
@@ -80,18 +90,30 @@ class Token(ctypes.Structure):
     def tryPassword(self, pass_ascii, pass_scancode):
         return DLL.token_obj_try_password(self, pass_ascii, pass_scancode)
 
-class _Token_LL(ctypes.Structure):
+
+# use this class decorator on subclasses
+def TokenPtrSubclass(kind):
+    def decorator(cls):
+        TokenPtr.subclasses[kind] = cls
+        return cls
+    decorate_class(decorator)
+
+class TokenPtr(ctypes.Structure):
     subclasses = {}
+    _pack_ = 1
+    _fields_ = []
+    def __repr__(self): print "<token ptr>"
+    def __str__(self): print "<token ptr>"
 
 class _TokenD4(ctypes.Structure):
+    TokenPtrSubclass(0xD4)
     _pack_ = 1
     _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint16), ("value", ctypes.c_uint16)]
-_Token_LL.subclasses[0xD4] = _TokenD4
 
-class _TokenDA(Token):
+class _TokenDA(ctypes.Structure):
+    TokenPtrSubclass(0xDA)
     _pack_ = 1
     _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint8), ("andMask", ctypes.c_uint8), ("orValue", ctypes.c_uint8)]
-_Token_LL.subclasses[0xDA] = _TokenDA
 
 decorate(traceLog())
 def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
@@ -229,7 +251,7 @@ DLL.token_obj_try_password.restype = ctypes.c_int
 
 #const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
 DLL.token_obj_get_ptr.argtypes = [ ctypes.POINTER(Token), ]
-DLL.token_obj_get_ptr.restype = ctypes.POINTER(_Token_LL)
+DLL.token_obj_get_ptr.restype = ctypes.POINTER(TokenPtr)
 DLL.token_obj_get_ptr.errcheck = errorOnNullPtrFN(lambda r,f,a: TokenManipulationFailure(_table_strerror(r)))
 
 
