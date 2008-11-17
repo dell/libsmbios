@@ -32,6 +32,7 @@ EXTERN_C_BEGIN;
 #define TOKEN_GET_SINGLETON  0x0001
 #define TOKEN_GET_NEW        0x0002
 #define TOKEN_UNIT_TEST_MODE 0x0004
+#define TOKEN_NO_ERR_CLEAR   0x0008
 
 struct token_table;
 struct token_obj;

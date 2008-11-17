@@ -38,7 +38,7 @@
 const char * token_strerror()
 {
     const char *retval = 0;
-    struct token_table *table = token_table_factory(TOKEN_DEFAULTS);
+    struct token_table *table = token_table_factory(TOKEN_DEFAULTS | TOKEN_NO_ERR_CLEAR);
     fnprintf("\n");
     if (table)
         retval = token_table_strerror(table);

@@ -96,7 +96,7 @@ struct token_table *token_table_factory(int flags, ...)
     toReturn = 0;
 
 out:
-    if (toReturn)
+    if (toReturn && ! (flags & TOKEN_NO_ERR_CLEAR))
         clear_err(toReturn);
     return toReturn;
 }

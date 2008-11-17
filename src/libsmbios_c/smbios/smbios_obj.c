@@ -100,7 +100,7 @@ out_init_fail:
     toReturn = 0;
 
 out:
-    if (toReturn)
+    if (toReturn && ! (flags & SMBIOS_NO_ERR_CLEAR))
         clear_err(toReturn);
     return toReturn;
 }
