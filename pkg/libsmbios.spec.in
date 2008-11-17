@@ -28,7 +28,7 @@
 %if 0%{?suse_version}
 %if 0%{?suse_version} >= 1020
     # suse never added python-ctypes provides to python 2.5 :(
-    define ctypes_BR %{nil}
+    %define ctypes_BR %{nil}
 %endif
 %if 0%{?suse_version} > 1020
     %define fdupes_BR fdupes
@@ -240,6 +240,10 @@ rm -rf %{buildroot}
 
 %dir %{_sysconfdir}/libsmbios
 %config(noreplace) %{_sysconfdir}/libsmbios/*
+
+# YUM Plugin
+%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
+%{_exec_prefix}/lib/yum-plugins/*
 
 # legacy C++
 %{_sbindir}/dellBiosUpdate-compat
