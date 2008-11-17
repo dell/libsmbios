@@ -134,6 +134,9 @@ const char * token_obj_strerror(const struct token_obj *tok)
 
 const struct token_obj *token_table_get_next(const struct token_table *t, const struct token_obj *cur)
 {
+    if (!t)
+        return 0;
+
     if (!cur)
         return t->list_head;
 
@@ -157,7 +160,7 @@ const struct token_obj *token_table_get_next_by_id(const struct token_table *t, 
     {\
         fnprintf("\n"); \
         ret retval = defret;    \
-        if (t) retval = t-> callname (t);     \
+        if (t && t-> callname) retval = t-> callname (t);     \
         fnprintf(" return: " retfmt "\n", retval);  \
         return retval;\
     }
@@ -196,12 +199,16 @@ int token_obj_try_password(const struct token_obj *t, const char *pass_ascii, co
 
 const struct smbios_struct *token_obj_get_smbios_struct(const struct token_obj *t)
 {
-    return t->smbios_structure;
+    if (t)
+        return t->smbios_structure;
+    return 0;
 }
 
 const void *token_obj_get_ptr(const struct token_obj *t)
 {
-    return t->token_ptr;
+    if (t)
+        return t->token_ptr;
+    return 0;
 }
 
 
