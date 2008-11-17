@@ -4,12 +4,11 @@
 # This file is distributed under the same license as the libsmbios package.
 # Michael Brown <Michael_E_Brown@dell.com>, 2008.
 #
-#: src/bin/smbios-rbu-bios-update:80
 msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-11-14 01:33-0600\n"
+"POT-Creation-Date: 2008-11-17 13:30-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,372 +16,402 @@ msgstr ""
 "Content-Type: text/plain; charset=GB2312\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/bin/smbios-passwd:54
+#: src/bin/smbios-passwd:47
+msgid "Show password information"
+msgstr ""
+
+#: src/bin/smbios-passwd:52
 msgid "Keyboard Scancodes"
 msgstr ""
 
-#: src/bin/smbios-passwd:55
+#: src/bin/smbios-passwd:53
 msgid "ASCII"
 msgstr ""
 
-#: src/bin/smbios-passwd:59
+#: src/bin/smbios-passwd:57
 msgid "User password"
 msgstr ""
 
-#: src/bin/smbios-passwd:60
+#: src/bin/smbios-passwd:58
 msgid "Admin password"
 msgstr ""
 
-#: src/bin/smbios-passwd:61
+#: src/bin/smbios-passwd:59
 msgid "Owner password"
 msgstr ""
 
-#: src/bin/smbios-sys-info:49
-msgid "Libsmbios version"
+#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:114
+#: src/bin/smbios-token-ctl:299 src/bin/smbios-wakeup-ctl:117
+#: src/bin/smbios-wireless-ctl:326 src/bin/smbios-lcd-brightness:115
+#: src/bin/smbios-rbu-bios-update:570
+msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
-#: src/bin/smbios-sys-info:50
-msgid "Product Name"
-msgstr ""
-
-#: src/bin/smbios-sys-info:51
-msgid "Vendor"
-msgstr ""
-
-#: src/bin/smbios-sys-info:52
-msgid "BIOS Version"
+#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:115
+#: src/bin/smbios-token-ctl:300 src/bin/smbios-wakeup-ctl:118
+#: src/bin/smbios-wireless-ctl:327 src/bin/smbios-lcd-brightness:116
+#: src/bin/smbios-rbu-bios-update:571
+msgid "The smbios library returned this error:"
 msgstr ""
 
 #: src/bin/smbios-sys-info:53
-msgid "Product ID"
+msgid "Libsmbios version"
 msgstr ""
 
 #: src/bin/smbios-sys-info:54
-msgid "Service Tag"
+msgid "Product Name"
 msgstr ""
 
 #: src/bin/smbios-sys-info:55
-msgid "Express Service Code"
+msgid "Vendor"
 msgstr ""
 
 #: src/bin/smbios-sys-info:56
-msgid "Asset Tag"
+msgid "BIOS Version"
 msgstr ""
 
 #: src/bin/smbios-sys-info:57
+msgid "Product ID"
+msgstr ""
+
+#: src/bin/smbios-sys-info:58
+msgid "Service Tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:59
+msgid "Express Service Code"
+msgstr ""
+
+#: src/bin/smbios-sys-info:60
+msgid "Asset Tag"
+msgstr ""
+
+#: src/bin/smbios-sys-info:61
 msgid "Property Ownership Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:69
+#: src/bin/smbios-sys-info:73
 msgid "Show or set service tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:70
+#: src/bin/smbios-sys-info:74
 msgid "Show or set asset tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:71
+#: src/bin/smbios-sys-info:75
 msgid "Show or set property tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:72
+#: src/bin/smbios-sys-info:76
 msgid "Set specified tag to new value"
 msgstr ""
 
-#: src/bin/smbios-sys-info:86
+#: src/bin/smbios-sys-info:91
 msgid "Specify which tag to set."
 msgstr ""
 
-#: src/bin/smbios-sys-info:88
+#: src/bin/smbios-sys-info:93
 msgid "Current tag value:"
 msgstr ""
 
-#: src/bin/smbios-sys-info:103
+#: src/bin/smbios-sys-info:108
 #, c-format
 msgid "Setting new tag value: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:54
+#: src/bin/smbios-token-ctl:58
 msgid "Action: dump token table"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:57
+#: src/bin/smbios-token-ctl:61
 msgid "Action: return true if specified token is a string."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:61
+#: src/bin/smbios-token-ctl:65
 msgid "Action: return true if specified token is a bool."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:65
+#: src/bin/smbios-token-ctl:69
 msgid "Action: return true if specified bool token is active."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:69
+#: src/bin/smbios-token-ctl:73
 msgid "Action: get string token value."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:73
+#: src/bin/smbios-token-ctl:77
 msgid "Action: activate specified bool token."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:77
+#: src/bin/smbios-token-ctl:81
 msgid "Action: set string token value."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:81
+#: src/bin/smbios-token-ctl:85
 msgid "Filter only token with ID."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:83
+#: src/bin/smbios-token-ctl:87
 msgid "Filter only token with name."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:85
+#: src/bin/smbios-token-ctl:89
 msgid "Filter only token with setting."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:88
+#: src/bin/smbios-token-ctl:92
 msgid "path to the token.csv file."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:90
+#: src/bin/smbios-token-ctl:94
 msgid "Path to token blacklist file."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:111 src/bin/smbios-token-ctl:112
-#: src/bin/smbios-token-ctl:113 src/bin/smbios-token-ctl:114
+#: src/bin/smbios-token-ctl:115 src/bin/smbios-token-ctl:116
+#: src/bin/smbios-token-ctl:117 src/bin/smbios-token-ctl:118
 msgid "unknown"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:155
+#: src/bin/smbios-token-ctl:159
 msgid "Ignoring parsing error in CSV file:"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:167
+#: src/bin/smbios-token-ctl:171
 #, c-format
 msgid "Skipping '%s' due to IOError.\n"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:168
+#: src/bin/smbios-token-ctl:172
 #, c-format
 msgid "The error message was: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:175
+#: src/bin/smbios-token-ctl:179
 msgid "<wierd unknown type>"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:176
+#: src/bin/smbios-token-ctl:180
 msgid "<unknown value>"
-msgstr ""
-
-#: src/bin/smbios-token-ctl:212
-#, c-format
-msgid "  Token: %s - %s (%s)"
 msgstr ""
 
 #: src/bin/smbios-token-ctl:216
 #, c-format
-msgid "  value: %s = %s"
+msgid "  Token: %s - %s (%s)"
 msgstr ""
 
 #: src/bin/smbios-token-ctl:220
+#, c-format
+msgid "  value: %s = %s"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:224
 msgid "   Desc: "
 msgstr ""
 
-#: src/bin/smbios-token-ctl:231
+#: src/bin/smbios-token-ctl:235
 msgid "require token-id or token name/setting pair."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:245
+#: src/bin/smbios-token-ctl:249
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:266 src/bin/smbios-token-ctl:278
+#: src/bin/smbios-token-ctl:271 src/bin/smbios-token-ctl:283
 msgid "Original Values"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:267 src/bin/smbios-token-ctl:279
-#: src/bin/smbios-token-ctl:289
+#: src/bin/smbios-token-ctl:272 src/bin/smbios-token-ctl:284
+#: src/bin/smbios-token-ctl:294
 #, c-format
 msgid "        type: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:268 src/bin/smbios-token-ctl:280
-#: src/bin/smbios-token-ctl:290
+#: src/bin/smbios-token-ctl:273 src/bin/smbios-token-ctl:285
+#: src/bin/smbios-token-ctl:295
 #, c-format
 msgid "       value: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:270
+#: src/bin/smbios-token-ctl:275
 msgid "Setting string value ..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:282
+#: src/bin/smbios-token-ctl:287
 msgid "Activating token..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:285
+#: src/bin/smbios-token-ctl:290
 msgid "New values"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:51
-msgid "Set wakeup hour. Must be 0-23"
+#: src/bin/smbios-token-ctl:305 src/bin/smbios-wakeup-ctl:124
+#: src/bin/smbios-wireless-ctl:333 src/bin/smbios-lcd-brightness:122
+#: src/bin/smbios-rbu-bios-update:576
+msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:52
-msgid "Set wakeup minute. Must be 0-59"
-msgstr ""
-
-#: src/bin/smbios-wakeup-ctl:53
-msgid "Set wakeup for every day"
-msgstr ""
-
-#: src/bin/smbios-wakeup-ctl:54
-msgid "Set wakeup for weekdays only"
+#: src/bin/smbios-token-ctl:306 src/bin/smbios-wakeup-ctl:125
+#: src/bin/smbios-wireless-ctl:334 src/bin/smbios-lcd-brightness:123
+#: src/bin/smbios-rbu-bios-update:577
+msgid "The token library returned this error:"
 msgstr ""
 
 #: src/bin/smbios-wakeup-ctl:55
-msgid "Disable wakeups"
+msgid "Set wakeup hour. Must be 0-23"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:62
-#, c-format
-msgid "Wakeup hour must be between 0 and 23. You passed: '%s'"
+#: src/bin/smbios-wakeup-ctl:56
+msgid "Set wakeup minute. Must be 0-59"
+msgstr ""
+
+#: src/bin/smbios-wakeup-ctl:57
+msgid "Set wakeup for every day"
+msgstr ""
+
+#: src/bin/smbios-wakeup-ctl:58
+msgid "Set wakeup for weekdays only"
+msgstr ""
+
+#: src/bin/smbios-wakeup-ctl:59
+msgid "Disable wakeups"
 msgstr ""
 
 #: src/bin/smbios-wakeup-ctl:66
 #, c-format
+msgid "Wakeup hour must be between 0 and 23. You passed: '%s'"
+msgstr ""
+
+#: src/bin/smbios-wakeup-ctl:70
+#, c-format
 msgid "Wakeup min must be between 0 and 59. You passed: '%s'"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:79
+#: src/bin/smbios-wakeup-ctl:83
 msgid "\tWakeup disabled"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:81
+#: src/bin/smbios-wakeup-ctl:85
 msgid "\tWakeup every day"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:82 src/bin/smbios-wakeup-ctl:85
+#: src/bin/smbios-wakeup-ctl:86 src/bin/smbios-wakeup-ctl:89
 #, c-format
 msgid "\tWakeup time:  %02d:%02d"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:84
+#: src/bin/smbios-wakeup-ctl:88
 msgid "\tWakeup weekdays"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:96
+#: src/bin/smbios-wakeup-ctl:101
 msgid "Current wakeup settings:"
 msgstr ""
 
-#: src/bin/smbios-wakeup-ctl:101
+#: src/bin/smbios-wakeup-ctl:106
 msgid "Setting new wakeup time:"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:50
+#: src/bin/smbios-wireless-ctl:48
 msgid "Show wireless configuration (default)"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:52
+#: src/bin/smbios-wireless-ctl:50
 msgid "Set BIOS boot-time setting."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:53
+#: src/bin/smbios-wireless-ctl:51
 msgid "Do not set BIOS boot-time setting."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:55
+#: src/bin/smbios-wireless-ctl:53
 msgid "Set BIOS runtime setting (default)."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:57
+#: src/bin/smbios-wireless-ctl:55
 msgid "Do not set BIOS runtime setting."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:60
+#: src/bin/smbios-wireless-ctl:58
 msgid "Set radio runtime status for wireless LAN"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:62
+#: src/bin/smbios-wireless-ctl:60
 msgid "Set radio runtime status for Bluetooth"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:64
+#: src/bin/smbios-wireless-ctl:62
 msgid "Set radio runtime status for cellular (wireless WAN)"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:67
+#: src/bin/smbios-wireless-ctl:65
 msgid "Set hardware switch so that it controls radio for wireless LAN"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:69
+#: src/bin/smbios-wireless-ctl:67
 msgid "Set hardware switch so that it controls radio for Bluetooth"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:71
+#: src/bin/smbios-wireless-ctl:69
 msgid ""
 "Set hardware switch so that it controls radio for cellular (wireless WAN)"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:74
+#: src/bin/smbios-wireless-ctl:72
 msgid ""
 "Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
 "unsupported. 4 = unknown."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:76
+#: src/bin/smbios-wireless-ctl:74
 msgid ""
 "Get status for Bluetooth. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
 "unsupported. 4 = unknown."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:78
+#: src/bin/smbios-wireless-ctl:76
 msgid ""
 "Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not "
 "present. 3 = unsupported. 4 = unknown."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:81
+#: src/bin/smbios-wireless-ctl:79
 msgid "Enable or disable the WIFI locator switch"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:90
+#: src/bin/smbios-wireless-ctl:88
 msgid "WLAN"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:98
+#: src/bin/smbios-wireless-ctl:96
 msgid "Bluetooth"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:104
+#: src/bin/smbios-wireless-ctl:102
 msgid "WWAN"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:113
+#: src/bin/smbios-wireless-ctl:111
 #, c-format
 msgid "Set boot settings for %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:127
+#: src/bin/smbios-wireless-ctl:125
 #, c-format
 msgid "\tThis system does not support boot time settings for %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:132
+#: src/bin/smbios-wireless-ctl:131
 #, c-format
 msgid "Set runtime settings for %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:135
+#: src/bin/smbios-wireless-ctl:134
 msgid ""
 "Runtime setting has no effect when boot time config is disabled. Ignoring."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:141 src/bin/smbios-wireless-ctl:206
+#: src/bin/smbios-wireless-ctl:140 src/bin/smbios-wireless-ctl:206
 #: src/bin/smbios-wireless-ctl:249
 msgid "This system does not support runtime control of wireless settings."
 msgstr ""
@@ -579,377 +608,369 @@ msgstr ""
 msgid "\tWiFi Locator config: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:289
+#: src/bin/smbios-wireless-ctl:290
 #, c-format
 msgid "Libsmbios version : %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:290
+#: src/bin/smbios-wireless-ctl:291
 #, c-format
 msgid "smbios-wireless-ctl version : %s"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:45
-msgid "Set new value"
+#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-lcd-brightness:108
+msgid "ERROR: Could not execute SMI."
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:46
-msgid "Set new value to be used while running on battery power"
+#: src/bin/smbios-wireless-ctl:320 src/bin/smbios-lcd-brightness:109
+msgid "The smi library returned this error:"
 msgstr ""
 
 #: src/bin/smbios-lcd-brightness:47
+msgid "Set new value"
+msgstr ""
+
+#: src/bin/smbios-lcd-brightness:48
+msgid "Set new value to be used while running on battery power"
+msgstr ""
+
+#: src/bin/smbios-lcd-brightness:49
 msgid "Set new value to be used while running on AC power"
-msgstr ""
-
-#: src/bin/smbios-lcd-brightness:52
-#, c-format
-msgid "Reading current %s mode setting"
-msgstr ""
-
-#: src/bin/smbios-lcd-brightness:53
-#, c-format
-msgid "    current: %s"
 msgstr ""
 
 #: src/bin/smbios-lcd-brightness:54
 #, c-format
-msgid "        min: %s"
+msgid "Reading current %s mode setting"
 msgstr ""
 
 #: src/bin/smbios-lcd-brightness:55
 #, c-format
+msgid "    current: %s"
+msgstr ""
+
+#: src/bin/smbios-lcd-brightness:56
+#, c-format
+msgid "        min: %s"
+msgstr ""
+
+#: src/bin/smbios-lcd-brightness:57
+#, c-format
 msgid "        max: %s"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:59
+#: src/bin/smbios-lcd-brightness:61
 #, c-format
 msgid "Write new %s mode setting"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:73
+#: src/bin/smbios-lcd-brightness:75
 msgid "Battery"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:77
+#: src/bin/smbios-lcd-brightness:79
 msgid "AC"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:95
+#: src/bin/smbios-lcd-brightness:101
 msgid "Could not set value because the password was incorrect"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:97
+#: src/bin/smbios-lcd-brightness:104
 msgid "value outside legal bounds"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:63
+#: src/bin/smbios-rbu-bios-update:62
 msgid "The update was completed successfully."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:64
+#: src/bin/smbios-rbu-bios-update:63
 msgid "The image failed one or more consistency checks."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:65
+#: src/bin/smbios-rbu-bios-update:64
 msgid "The BIOS could not access the flash-memory device."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:66
+#: src/bin/smbios-rbu-bios-update:65
 msgid "The flash-memory device was not ready when an erase was attempted."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:67
+#: src/bin/smbios-rbu-bios-update:66
 msgid ""
 "Flash programming is currently disabled on the system, or the voltage is low."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:68
+#: src/bin/smbios-rbu-bios-update:67
 msgid "A battery must be installed for the operation to complete."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:69
+#: src/bin/smbios-rbu-bios-update:68
 msgid "A fully-charged battery must be present for the operation to complete."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:70
+#: src/bin/smbios-rbu-bios-update:69
 msgid ""
 "An external power adapter must be connected for the operation to complete."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:71
+#: src/bin/smbios-rbu-bios-update:70
 msgid "The 12V required to program the flash-memory could not be set."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:72
+#: src/bin/smbios-rbu-bios-update:71
 msgid "The 12V required to program the flash-memory could not be removed."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:73
+#: src/bin/smbios-rbu-bios-update:72
 msgid "A flash-memory failure occurred during a block-erase operation."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:74
+#: src/bin/smbios-rbu-bios-update:73
 msgid "A general failure occurred during the flash programming."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:75
+#: src/bin/smbios-rbu-bios-update:74
 msgid "A data miscompare error occurred during the flash programming."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:76
+#: src/bin/smbios-rbu-bios-update:75
 msgid ""
 "The image could not be found in memory, i.e. the header could not be located."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:77
+#: src/bin/smbios-rbu-bios-update:76
 msgid "No update operation has been performed on the system."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:96
+#: src/bin/smbios-rbu-bios-update:81
 msgid "The BIOS update file (.HDR file)"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:97
+#: src/bin/smbios-rbu-bios-update:82
 msgid "Show information about a given BIOS HDR file"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:98
+#: src/bin/smbios-rbu-bios-update:83
 msgid "Show system information and RBU completion codes"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:99
+#: src/bin/smbios-rbu-bios-update:84
 msgid "Cancel pending BIOS update"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:100
+#: src/bin/smbios-rbu-bios-update:85
 msgid "Stage BIOS for update at next reboot"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:101
+#: src/bin/smbios-rbu-bios-update:86
 msgid "Test HDR file to see if it is appropriate for this system"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:103
+#: src/bin/smbios-rbu-bios-update:88
 msgid "Automatically select the optimal update mode (default, recommended)"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:104
+#: src/bin/smbios-rbu-bios-update:89
 msgid "Force update to use packet-mode"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:105
+#: src/bin/smbios-rbu-bios-update:90
 msgid "Force update to use monolithic-mode"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:106
+#: src/bin/smbios-rbu-bios-update:91
 msgid "Force update to use old dellBiosUpdate binary"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:108
+#: src/bin/smbios-rbu-bios-update:93
 msgid "Allow BIOS downgrades and re-flash"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:109
+#: src/bin/smbios-rbu-bios-update:94
 msgid "Disable check for system-id (Dangerous)"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:111
+#: src/bin/smbios-rbu-bios-update:96
 msgid "Reboot the system after successfully staging update."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:112
+#: src/bin/smbios-rbu-bios-update:97
 msgid "Do not reboot the system after staging update."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:167
+#: src/bin/smbios-rbu-bios-update:152
 msgid "RBU Update information:"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:168
+#: src/bin/smbios-rbu-bios-update:153
 #, c-format
 msgid "\tMinimum size: %d"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:169
+#: src/bin/smbios-rbu-bios-update:154
 #, c-format
 msgid "\tCompletion Code: %d"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:170
+#: src/bin/smbios-rbu-bios-update:155
 #, c-format
 msgid "\tCompletion Message: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:171
+#: src/bin/smbios-rbu-bios-update:156
 #, c-format
 msgid "\tLast Update Date - Year  : %02x"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:172
+#: src/bin/smbios-rbu-bios-update:157
 #, c-format
 msgid "\tLast Update Date - Month : %02x"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:173
+#: src/bin/smbios-rbu-bios-update:158
 #, c-format
 msgid "\tLast Update Date - Day   : %02x"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:174
+#: src/bin/smbios-rbu-bios-update:159
 #, c-format
 msgid "\tLast Update Date - time  : %02x:%02x"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:175
+#: src/bin/smbios-rbu-bios-update:160
 #, c-format
 msgid "\tBoot Feature Flags: 0x%08x"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:176
+#: src/bin/smbios-rbu-bios-update:161
 #, c-format
 msgid "\tCharacteristics: 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:177
+#: src/bin/smbios-rbu-bios-update:162
 #, c-format
 msgid "\tUpdate modes supported: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:187
+#: src/bin/smbios-rbu-bios-update:172
 #, c-format
 msgid ""
 "The .HDR file does not list this system (0x%04x) as a supported system. The "
 "supported systems are: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:192
+#: src/bin/smbios-rbu-bios-update:177
 #, c-format
 msgid ""
 "The system bios version (%s) is the same as or newer than the .HDR file (%s)."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:202
+#: src/bin/smbios-rbu-bios-update:187
 msgid "Cancelling BIOS update..."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:207
+#: src/bin/smbios-rbu-bios-update:192
 msgid "BIOS update cancelled."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:264
+#: src/bin/smbios-rbu-bios-update:249
 msgid "BIOS HDR file information dump."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:266
+#: src/bin/smbios-rbu-bios-update:251
 #, c-format
 msgid "Filename: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:267
+#: src/bin/smbios-rbu-bios-update:252
 #, c-format
 msgid "File magic header: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:268
+#: src/bin/smbios-rbu-bios-update:253
 #, c-format
 msgid "Header length: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:269
+#: src/bin/smbios-rbu-bios-update:254
 #, c-format
 msgid "Header major version: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:270
+#: src/bin/smbios-rbu-bios-update:255
 #, c-format
 msgid "Header minor version: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:271
+#: src/bin/smbios-rbu-bios-update:256
 #, c-format
 msgid "Number of supported systems: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:272
+#: src/bin/smbios-rbu-bios-update:257
 #, c-format
 msgid "Quick check field: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:273
+#: src/bin/smbios-rbu-bios-update:258
 #, c-format
 msgid "BIOS Version: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:274
+#: src/bin/smbios-rbu-bios-update:259
 #, c-format
 msgid "Misc flags: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:278
+#: src/bin/smbios-rbu-bios-update:263
 #, c-format
 msgid "Compatibility flags: %s"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:280
+#: src/bin/smbios-rbu-bios-update:265
 #, c-format
 msgid "System ID: 0x%04x  Hardware Revision: %d"
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:324
+#: src/bin/smbios-rbu-bios-update:309
 msgid "Performing BIOS update in using old dellBiosUpdate executable."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:345
+#: src/bin/smbios-rbu-bios-update:330
 msgid ""
 "Performing BIOS update cancellation using old dellBiosUpdate executable."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:383
+#: src/bin/smbios-rbu-bios-update:368
 msgid "Performing BIOS update in monolithic mode."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:393 src/bin/smbios-rbu-bios-update:428
+#: src/bin/smbios-rbu-bios-update:378 src/bin/smbios-rbu-bios-update:413
 msgid "Update successfully staged. Reboot the system to begin BIOS update."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:418
+#: src/bin/smbios-rbu-bios-update:403
 msgid "Performing BIOS update in packet mode."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:535
+#: src/bin/smbios-rbu-bios-update:520
 msgid "No reboot option specified. The --reboot option is highly recommended."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:537
+#: src/bin/smbios-rbu-bios-update:522
 msgid "Rebooting system to update the BIOS."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:560
+#: src/bin/smbios-rbu-bios-update:545
 msgid "RBU Bios Update not supported on this system."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:574
+#: src/bin/smbios-rbu-bios-update:559
 msgid "The BIOS update did NOT complete successfully."
 msgstr ""
 
-#: src/bin/smbios-rbu-bios-update:582
+#: src/bin/smbios-rbu-bios-update:567
 msgid "RBU is not supported on this system."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:585
-msgid "ERROR: Could not parse system SMBIOS table."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:586
-msgid "The smbios library returned this error:"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:591
-msgid "ERROR: Could not manipulate system token."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:592
-msgid "The token library returned this error:"
 msgstr ""
 
 #: src/bin/smbios-upflag-ctl.c:49 src/bin/smbios-get-ut-data.c:55
@@ -1195,11 +1216,11 @@ msgstr ""
 msgid "Found table entry point but could not read table from memory. "
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_obj.c:285
+#: src/libsmbios_c/smi/smi_obj.c:286
 msgid "Failed to find appropriate SMBIOS 0xD4 structure.\n"
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_obj.c:294
+#: src/libsmbios_c/smi/smi_obj.c:295
 msgid "Failed to allocate memory for error string.\n"
 msgstr ""
 
@@ -1225,40 +1246,40 @@ msgstr ""
 msgid "Error while trying to write cmos. Lowlevel error was:\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_d4.c:310
+#: src/libsmbios_c/token/token_d4.c:309
 msgid "Error trying to set up CMOS checksum routines.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_d4.c:337
+#: src/libsmbios_c/token/token_d4.c:336
 msgid "Allocation failure while trying to create token object."
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:260
+#: src/libsmbios_c/token/token_obj.c:264
 msgid "Failed to obtain smbios table.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:270
+#: src/libsmbios_c/token/token_obj.c:274
 msgid "Memory allocation failure allocating error string.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:275
+#: src/libsmbios_c/token/token_obj.c:279
 msgid "Error while trying to add 0xD4 tokens.\n"
 msgstr ""
 
-#: src/python/libsmbios_c/_common.py:46
+#: src/python/libsmbios_c/_common.py:48
 msgid "null pointer returned"
 msgstr ""
 
-#: src/python/libsmbios_c/_common.py:54
+#: src/python/libsmbios_c/_common.py:57
 msgid "function returned error value of zero"
 msgstr ""
 
-#: src/python/libsmbios_c/_common.py:62
+#: src/python/libsmbios_c/_common.py:66
 msgid "function returned negative error code"
 msgstr ""
 
 #: src/python/libsmbios_c/smbios.py:86 src/python/libsmbios_c/smbios.py:97
-#: src/python/libsmbios_c/token.py:118
+#: src/python/libsmbios_c/token.py:144
 msgid "hit end of table."
 msgstr ""
 
@@ -1286,30 +1307,30 @@ msgstr ""
 msgid "Tried to get data past the end of the structure."
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:114
+#: src/python/libsmbios_c/smi.py:117
 msgid "SMI executed but returned error"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:116
+#: src/python/libsmbios_c/smi.py:119
 msgid "SMI is unsupported"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:118
+#: src/python/libsmbios_c/smi.py:121
 msgid "SMI did not execute"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:120
+#: src/python/libsmbios_c/smi.py:123
 msgid "The output buffer the BIOS requires is in the wrong format"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:122
+#: src/python/libsmbios_c/smi.py:125
 msgid "The output buffer the BIOS requires is too small"
 msgstr ""
 
-#: src/python/libsmbios_c/token.py:123
+#: src/python/libsmbios_c/token.py:149
 msgid "Cannot dereference NULL ID"
 msgstr ""
 
-#: src/python/libsmbios_c/token.py:129
+#: src/python/libsmbios_c/token.py:155
 msgid "no such ID"
 msgstr ""
