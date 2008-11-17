@@ -32,24 +32,22 @@ __VERSION__=RELEASE_VERSION
 
 import cli
 from libsmbios_c import smi, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 class CmdlineError(Exception): pass
 
 def command_parse():
     parser = cli.getStdOptionParser(usage=__doc__, version=__VERSION__)
+    parser.add_option('--info', action="store_const", const="info", dest="action", default=None, help= _("Show password information"))
     return parser.parse_args()
 
-def main():
-    exit_code = 0
-    (options, args) = command_parse()
-    cli.setup_std_options(options)
-
-    # first check we can actuall run SMIs (perms, etc)
-    s = smi.DellSmi()  # we dont actually do anything with this
-
+def info(options):
     format_strings = ( 
         ("DELL_SMI_PASSWORD_FMT_SCANCODE", _("Keyboard Scancodes")),
         ("DELL_SMI_PASSWORD_FMT_ASCII", _("ASCII")),
@@ -83,6 +81,26 @@ def main():
             sys.stdout.write("\tSECURITY KEY: 0x%04x\n" % smi.get_security_key(passToTry))
         else:
             sys.stdout.write("\tPassword did not match\n")
+
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+
+    try:
+        # first check we can actuall run SMIs (perms, etc)
+        s = smi.DellSmi()  # we dont actually do anything with this
+    
+        if options.action == "info":
+            info(options)
+
+    except (smi.SmiCreateError,), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
         
     return exit_code
 
