@@ -85,7 +85,7 @@ int DLL_SPEC token_set_string(u16 id, const char *value, size_t size);
  * Use this to free any memory buffer pointers that you get from this module.
  * For example, token_get_string(...)
  */
-void DLL_SPEC token_free_string(char *);
+void DLL_SPEC token_string_free(char *);
 
 /** Get a pointer to the smbios struct containing this token.
  */

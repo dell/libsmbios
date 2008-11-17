@@ -50,7 +50,7 @@ const char * token_strerror()
     {\
         struct token_table *table = 0;              \
         const struct token_obj *token = 0;          \
-        dbg_printf("%s\n", __PRETTY_FUNCTION__);       \
+        fnprintf("\n"); \
         table = token_table_factory(TOKEN_DEFAULTS); \
         if (!table) goto out;                       \
         token = token_table_get_next_by_id(table, 0, id); \
@@ -72,7 +72,7 @@ char * token_get_string (u16 id, size_t *len)
 {
     struct token_table *table = 0;
     const struct token_obj *token = 0;
-    dbg_printf("%s\n", __PRETTY_FUNCTION__);
+    fnprintf("\n");
     table = token_table_factory(TOKEN_DEFAULTS);
     if (!table) goto out;
     token = token_table_get_next_by_id(table, 0, id);
@@ -82,10 +82,17 @@ out:
     return 0;
 }
 
+void token_string_free(char *s)
+{
+    fnprintf("\n");
+    free(s);
+}
+
 int token_set_string(u16 id, const char *newstr, size_t size)
 {
     struct token_table *table = 0;
     const struct token_obj *token = 0;
+    fnprintf("\n");
     table = token_table_factory(TOKEN_DEFAULTS);
     if (!table) goto out;
     token = token_table_get_next_by_id(table, 0, id);
@@ -99,6 +106,7 @@ int token_try_password(u16 id, const char *pass_ascii, const char *pass_scancode
 {
     struct token_table *table = 0;
     const struct token_obj *token = 0;
+    fnprintf("\n");
     table = token_table_factory(TOKEN_DEFAULTS);
     if (!table) goto out;
     token = token_table_get_next_by_id(table, 0, id);
