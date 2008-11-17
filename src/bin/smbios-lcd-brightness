@@ -33,15 +33,17 @@ __VERSION__=RELEASE_VERSION
 
 import cli
 from libsmbios_c import smi, token, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
 
-class CmdlineError(Exception): pass
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
 
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
-    cli.addStdOptions(parser)
+    cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
     parser.add_option('--value', action="store", type="int", default=None, help= _("Set new value"))
     parser.add_option('--battery', '-b', action="store_const", dest="which", const="battery", default="battery", help= _("Set new value to be used while running on battery power"))
     parser.add_option('--ac', '-a', action="store_const", dest="which", const="ac", help= _("Set new value to be used while running on AC power"))
@@ -79,22 +81,48 @@ def main():
         writeFn = smi.write_ac_mode_setting
 
     DELL_LCD_BRIGHNESS_TOKEN = 0x007d;
-    table = token.TokenTable()
-    tok = table[DELL_LCD_BRIGHNESS_TOKEN]
 
-    (current, minval, maxval) = printCurrent(readFn, tok, mode)
+    class OutOfBounds(Exception): pass
 
     try:
+        table = token.TokenTable()
+        tok = table[DELL_LCD_BRIGHNESS_TOKEN]
+
+        (current, minval, maxval) = printCurrent(readFn, tok, mode)
+
         if options.value is not None:
             if options.value < minval or options.value > maxval:
                 raise OutOfBounds()
 
             setValue(writeFn, tok, mode, options, minval, maxval)
             printCurrent(readFn, tok, mode)
+
     except (smi.BadPassword,), e:
         print _("Could not set value because the password was incorrect")
+
     except (OutOfBounds,), e:
         print _("value outside legal bounds")
+
+    except (smi.SMIExecutionError, ), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not execute SMI.") )
+        verboseLog.info( _("The smi library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (token.TokenTableParseError,), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
 
     return exit_code
 
