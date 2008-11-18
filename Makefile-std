@@ -5,7 +5,6 @@
 AUTOMAKE_OPTIONS = subdir-objects
 SUBDIRS =
 
-# dont move these 5 lines, as this is how we override the autoconf version and package name
 RELEASE_NAME=@RELEASE_NAME@
 RELEASE_MAJOR=@RELEASE_MAJOR@
 RELEASE_MINOR=@RELEASE_MINOR@
@@ -26,6 +25,16 @@ EXTRA_PROGRAMS=
 CLEANFILES += $(EXTRA_PROGRAMS)
 CLEANFILES += *.pyc */*.pyc */*/*.pyc */*/*/*.pyc
 CLEANFILES += pkg/$(PACKAGE).spec
+
+.PHONY: git-tag
+git-tag:
+	git tag -u libsmbios -m "tag for official release: libsmbios $(RELEASE_STRING)" v$(RELEASE_STRING)
+
+.PHONY: get-version
+get-version:
+	@echo RELEASE_STRING=$(RELEASE_STRING)
+	@echo RELEASE_VERSION=$(RELEASE_VERSION)
+	@echo PACKAGE=$(PACKAGE)
 
 dist: ChangeLog AUTHORS
 ChangeLog:

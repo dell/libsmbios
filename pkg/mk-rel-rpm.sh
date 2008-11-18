@@ -26,9 +26,10 @@ make -e srpm
 
 . version
 
-git tag -u libsmbios -m "tag for official release: @PACKAGE_STRING@" v@PACKAGE_VERSION@
+make git-tag
+eval "$(make get-version)"
 
-DEST=$LIBSMBIOS_TOPDIR/download/@PACKAGE_NAME@/@PACKAGE_NAME@-@PACKAGE_VERSION@/
+DEST=$LIBSMBIOS_TOPDIR/download/$PACKAGE/$PACKAGE-$PACKAGE_VERSION/
 mkdir -p $DEST
 for i in *.tar.{gz,bz2} *.zip *.src.rpm; do
     [ -e $i ] || continue

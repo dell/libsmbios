@@ -131,6 +131,5 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([out/libsmbios_c++.dox:pkg/libsmbios_c++.dox.in])
 AC_CONFIG_FILES([out/libsmbios_c.dox:pkg/libsmbios_c.dox.in])
 AC_CONFIG_FILES([pkg/libsmbios.spec])
-AC_CONFIG_FILES([pkg/mk-rel-rpm.sh])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_OUTPUT
