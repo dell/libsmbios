@@ -68,6 +68,13 @@ Provides: libsmbios-libs = 0:%{version}-%{release}
 # uncomment for official fedora
 #Obsoletes: libsmbios-libs < 2.0.0
 
+# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
+# be installed at buildtime. This means we have to BuildRequire them, even if
+# we dont really need them at build time.
+%if 0%{?suse_version} >= 1100
+BuildRequires: yum
+%endif
+
 # libsmbios only ever makes sense on intel compatible arches
 # no DMI tables on ppc, s390, etc.
 ExclusiveArch: x86_64 ia64 %{ix86}
