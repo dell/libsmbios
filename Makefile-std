@@ -28,7 +28,7 @@ CLEANFILES += pkg/$(PACKAGE).spec
 
 .PHONY: git-tag
 git-tag:
-	git tag -u libsmbios -m "tag for official release: libsmbios $(RELEASE_STRING)" v$(RELEASE_STRING)
+	git tag -u libsmbios -m "tag for official release: libsmbios $(RELEASE_STRING)" v$(RELEASE_VERSION)
 
 .PHONY: get-version
 get-version:
