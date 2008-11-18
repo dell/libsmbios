@@ -21,15 +21,13 @@ rm -rf _builddir
 mkdir _builddir
 pushd _builddir
 ../configure
-make -e distcheck
-make -e srpm
-
-. version
+make rpm RPM_DEFINES="--without unit-tests"
+make distcheck
 
 make git-tag
 eval "$(make get-version)"
 
-DEST=$LIBSMBIOS_TOPDIR/download/$PACKAGE/$PACKAGE-$PACKAGE_VERSION/
+DEST=$LIBSMBIOS_TOPDIR/download/$PACKAGE/$PACKAGE-$RELEASE_VERSION/
 mkdir -p $DEST
 for i in *.tar.{gz,bz2} *.zip *.src.rpm; do
     [ -e $i ] || continue
