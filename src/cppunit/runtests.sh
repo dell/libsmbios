@@ -10,6 +10,8 @@ mkdir -p $TMPDIR
 
 [ -n "$TST" ] || TST=out
 
+export MALLOC_PERTURB_=0xBABADABA
+
 reconstruct_memdump() {
     source_dir=$1
     target_dir=$2
