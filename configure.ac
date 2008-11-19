@@ -98,6 +98,8 @@ fi
 # relies on more registers than available on ia64; there's no ia64 system with
 # media direct, so it's disabled on ia64
 AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
+AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" = linux-gnu])
+AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
 
 GETTEXT_PACKAGE=libsmbios
 AC_SUBST(GETTEXT_PACKAGE)
