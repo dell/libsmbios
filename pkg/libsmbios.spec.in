@@ -63,10 +63,11 @@ Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR}
-Provides: libsmbios = 0:%{version}-%{release}
 Provides: libsmbios-libs = 0:%{version}-%{release}
 # uncomment for official fedora
 #Obsoletes: libsmbios-libs < 2.0.0
+Obsoletes: libsmbios < 0:%{version}-%{release}
+Provides: libsmbios = 0:%{version}-%{release}
 
 # SUSE build has anal directory ownership check. RPM which owns all dirs *must*
 # be installed at buildtime. This means we have to BuildRequire them, even if
