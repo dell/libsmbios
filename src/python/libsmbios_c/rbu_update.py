@@ -24,6 +24,10 @@ from _common import errorOnNullPtrFN, errorOnNegativeFN, freeLibStringFN
 from libsmbios_c import system_info as sysinfo, smbios, token, localedir, GETTEXT_PACKAGE
 from trace_decorator import decorate, traceLog, getLog
 
+from _vars import *
+import gettext
+_ = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True).ugettext
+
 # use python-decoratortools if it is installed, otherwise use our own local
 # copy. Imported this locally because it doesnt appear to be available on SUSE
 # and the fedora RPM doesnt appear to compile cleanly on SUSE

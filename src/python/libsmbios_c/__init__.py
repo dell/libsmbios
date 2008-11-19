@@ -33,9 +33,9 @@ import rbu_update
 
 # push gettext vars into namespaces
 import gettext
-t = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True)
+_t = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True)
 for i in (cmos, memory, smbios, smi, system_info, token, _common):
-    setattr(i, "_", t.ugettext)
+    setattr(i, "_", _t.ugettext)
 
 __VERSION__ = RELEASE_VERSION
 
