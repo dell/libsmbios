@@ -97,10 +97,16 @@ def main():
             setValue(writeFn, tok, mode, options, minval, maxval)
             printCurrent(readFn, tok, mode)
 
+    except (IndexError,), e:
+        exit_code = 10
+        print _("LCD Brightness is not settable on this machine using this utility.")
+
     except (smi.BadPassword,), e:
+        exit_code = 5
         print _("Could not set value because the password was incorrect")
 
     except (OutOfBounds,), e:
+        exit_code = 6
         print _("value outside legal bounds")
 
     except (smi.SMIExecutionError, ), e:
