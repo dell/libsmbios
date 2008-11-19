@@ -192,7 +192,7 @@ int token_obj_set_string(const struct token_obj *t, const char *newstr, size_t s
 int token_obj_try_password(const struct token_obj *t, const char *pass_ascii, const char *pass_scan)
 {
     fnprintf("\n");
-    if (t)
+    if (t && t->try_password)
         return t->try_password (t, pass_ascii, pass_scan);
     return 0;
 }
