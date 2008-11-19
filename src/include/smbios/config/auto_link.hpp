@@ -34,7 +34,7 @@
 #  define BOOST_DO_STRINGIZE(X) #X
 #endif
 
-#ifdef LIBSMBIOS_PLATFORM_WIN32
+#if (defined(LIBSMBIOS_PLATFORM_WIN32) || defined(LIBSMBIOS_PLATFORM_WIN64)) && defined(_MSC_VER)
 // The rest of the code in this file is used to automatically select which 
 // version libsmbios library to link to.
 
