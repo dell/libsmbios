@@ -221,8 +221,8 @@ def customFree(result, func, args):
     getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
     size = args[1]._obj.value
     pystr = ""
-    if bool(result):
-        pystr = result[0:size-1]
+    if bool(result) and size >= 0:
+        pystr = result[0:size]
         DLL.token_string_free(result)
     else:
         raise TokenManipulationFailure(_table_strerror(a[0]))
