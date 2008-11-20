@@ -152,7 +152,7 @@ class _TokenTable(ctypes.Structure):
         if bool(cur):
             return cur.contents
         else:
-            raise exceptions.IndexError( _("no such ID") )
+            raise exceptions.IndexError( _("ID 0x%04x not found") % id )
 
 
 #// format error string
