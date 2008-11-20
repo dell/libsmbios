@@ -51,7 +51,8 @@
 #define LIBSMBIOS_HAS_PRETTY_FUNCTION
 #define LIBSMBIOS_HAS_FUNCTION
 #define LIBSMBIOS_PACKED_ATTR      __attribute__ ((packed))
-#define UNREFERENCED_PARAMETER(P)  (void)(P)
+#define UNREFERENCED_PARAMETER(P)  ((void)(P))
+#define MARK_UNUSED  __attribute__ ((unused))
 
 #define _dbg_iostream_out(stream, line) do { stream << line; } while(0)
 #define _dbg_cout(line) _dbg_iostream_out(cout, line)

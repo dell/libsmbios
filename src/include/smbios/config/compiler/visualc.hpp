@@ -31,6 +31,7 @@
 #endif
 
 #define UNREFERENCED_PARAMETER(P)  (P)
+#define MARK_UNUSED
 #define LIBSMBIOS_PACKED_ATTR
 #define _dbg_iostream_out(stream, line) do { stream << line; } while(0)
 #define _dbg_cout(line) _dbg_iostream_out(cout, line)
