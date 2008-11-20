@@ -28,6 +28,12 @@
 
 using namespace std;
 
+#ifdef _MSC_VER
+#define NTDLL L"ntdll.dll"
+#else
+#define NTDLL "ntdll.dll"
+#endif
+
 namespace cmos
 {
 
@@ -38,7 +44,7 @@ namespace cmos
     {
         HMODULE hNtdll;
 
-        hNtdll = GetModuleHandle(L"ntdll.dll");
+        hNtdll = GetModuleHandle(NTDLL);
         if (!hNtdll)
             return FALSE;
 

@@ -183,9 +183,8 @@ namespace smbios
             if(smbiosBuffer)
                     ret = true;
         }
-        catch(const exception &e)
+        catch( MARK_UNUSED const exception &e)
         {
-            UNREFERENCED_PARAMETER(e); // avoid unused var warning when !DEBUG
             DCERR("got Exception: " << e.what() << endl);
         }
 

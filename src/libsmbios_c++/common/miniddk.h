@@ -52,7 +52,10 @@ typedef struct _UNICODE_STRING
 UNICODE_STRING;
 typedef UNICODE_STRING *PUNICODE_STRING;
 typedef const UNICODE_STRING *PCUNICODE_STRING;
+
+#if defined(_MSC_VER)
 #define UNICODE_NULL ((WCHAR)0) // winnt
+#endif
 
 //
 // Valid values for the Attributes field
@@ -128,6 +131,7 @@ typedef enum _SECTION_INHERIT {
 //
 
 // begin_winnt
+#if defined(_MSC_VER)
 #define SECTION_QUERY       0x0001
 #define SECTION_MAP_WRITE   0x0002
 #define SECTION_MAP_READ    0x0004
@@ -139,6 +143,7 @@ typedef enum _SECTION_INHERIT {
                             SECTION_MAP_READ |       \
                             SECTION_MAP_EXECUTE |    \
                             SECTION_EXTEND_SIZE)
+#endif
 
 // From ntddk.h
 #define NtCurrentProcess() ( (HANDLE) -1 )
@@ -237,15 +242,19 @@ typedef struct _WMISMBIOSINFO {
 
 #endif
 
+#ifdef _MSC_VER
 #pragma pack(push,1)
+#endif
 typedef struct MEM_STRUCT
 {
     DWORD Addr;
     DWORD Reserved1;
     void *pBuf;
     DWORD NumBytes;
-}
+} LIBSMBIOS_PACKED_ATTR
 MEM_STRUCT;
+#ifdef _MSC_VER
 #pragma pack(pop,1)
+#endif
 
 #endif /* MINIDDK_H */

@@ -47,6 +47,14 @@
 using namespace smbiosLowlevel;
 using namespace std;
 
+#ifdef _MSC_VER
+#define NTDLL L"ntdll.dll"
+#define KERNEL32 L"kernel32.dll"
+#else
+#define NTDLL "ntdll.dll"
+#define KERNEL32 "kernel32.dll"
+#endif
+
 namespace smbios
 {
     // Non Member Functions
@@ -56,7 +64,7 @@ namespace smbios
     {
         HMODULE hKerneldll;
 
-        hKerneldll = GetModuleHandle( L"kernel32.dll" );
+        hKerneldll = GetModuleHandle(KERNEL32);
         if (!hKerneldll)
             return FALSE;
 

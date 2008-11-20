@@ -25,6 +25,14 @@
 
 using namespace std;
 
+#ifdef _MSC_VER
+#define NTDLL L"ntdll.dll"
+#define KERNEL32 L"kernel32.dll"
+#else
+#define NTDLL "ntdll.dll"
+#define KERNEL32 "kernel32.dll"
+#endif
+
 namespace memory
 {
     MemoryFactoryImpl::MemoryFactoryImpl()
@@ -52,8 +60,8 @@ namespace memory
         HMODULE hNtdll;
         HMODULE hKerneldll;
 
-        hNtdll = GetModuleHandle(L"ntdll.dll");
-        hKerneldll = GetModuleHandle( L"kernel32.dll" );
+        hNtdll = GetModuleHandle(NTDLL);
+        hKerneldll = GetModuleHandle(KERNEL32);
         if (!(hNtdll && hKerneldll))
             return FALSE;
 
