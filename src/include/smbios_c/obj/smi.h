@@ -33,22 +33,22 @@ EXTERN_C_BEGIN;
 struct dell_smi_obj;
 
 // construct
-struct dell_smi_obj *dell_smi_factory(int flags, ...);
+DLL_SPEC struct dell_smi_obj *dell_smi_factory(int flags, ...);
 
 // destruct
-void dell_smi_obj_free(struct dell_smi_obj *);
+DLL_SPEC void dell_smi_obj_free(struct dell_smi_obj *);
 
-const char *dell_smi_obj_strerror(struct dell_smi_obj *);
+DLL_SPEC const char *dell_smi_obj_strerror(struct dell_smi_obj *);
 
-void dell_smi_obj_set_class(struct dell_smi_obj *, u16 );
-void dell_smi_obj_set_select(struct dell_smi_obj *, u16 );
-void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
-u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
-u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
-u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
-u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
-u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
-int  dell_smi_obj_execute(struct dell_smi_obj *);
+DLL_SPEC void dell_smi_obj_set_class(struct dell_smi_obj *, u16 );
+DLL_SPEC void dell_smi_obj_set_select(struct dell_smi_obj *, u16 );
+DLL_SPEC void dell_smi_obj_set_arg(struct dell_smi_obj *, u8 argno, u32 value);
+DLL_SPEC u32  dell_smi_obj_get_res(struct dell_smi_obj *, u8 argno);
+DLL_SPEC u8  *dell_smi_obj_make_buffer_frombios_auto(struct dell_smi_obj *, u8 argno, size_t size);
+DLL_SPEC u8  *dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *, u8 argno, size_t size);
+DLL_SPEC u8  *dell_smi_obj_make_buffer_frombios_withoutheader(struct dell_smi_obj *, u8 argno, size_t size);
+DLL_SPEC u8  *dell_smi_obj_make_buffer_tobios(struct dell_smi_obj *, u8 argno, size_t size);
+DLL_SPEC int  dell_smi_obj_execute(struct dell_smi_obj *);
 
 EXTERN_C_END;
 

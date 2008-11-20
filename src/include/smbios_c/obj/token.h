@@ -38,20 +38,20 @@ struct token_table;
 struct token_obj;
 
 // construct
-struct token_table * DLL_SPEC token_table_factory(int flags, ...);
+DLL_SPEC struct token_table * DLL_SPEC token_table_factory(int flags, ...);
 
 // destruct
-void  DLL_SPEC token_table_free(struct token_table *);
+DLL_SPEC void  DLL_SPEC token_table_free(struct token_table *);
 
 // format error string
-const char * DLL_SPEC token_table_strerror(const struct token_table *);
-const char * DLL_SPEC token_obj_strerror(const struct token_obj *);
+DLL_SPEC const char * DLL_SPEC token_table_strerror(const struct token_table *);
+DLL_SPEC const char * DLL_SPEC token_obj_strerror(const struct token_obj *);
 
 // for looping/searching
-const struct token_obj * DLL_SPEC token_table_get_next(const struct token_table *, const struct token_obj *cur);
-const struct token_obj * DLL_SPEC token_table_get_next_by_id(const struct token_table *, const struct token_obj *cur, u16 id);
+DLL_SPEC const struct token_obj * DLL_SPEC token_table_get_next(const struct token_table *, const struct token_obj *cur);
+DLL_SPEC const struct token_obj * DLL_SPEC token_table_get_next_by_id(const struct token_table *, const struct token_obj *cur, u16 id);
 
-u16  DLL_SPEC token_obj_get_id(const struct token_obj *);
+DLL_SPEC u16  DLL_SPEC token_obj_get_id(const struct token_obj *);
 
 #define token_table_for_each(table_name, struct_name)  \
         for(    \
@@ -67,18 +67,18 @@ u16  DLL_SPEC token_obj_get_id(const struct token_obj *);
             struct_name = token_table_get_next_id(table_name, struct_name, id)\
            )
 
-int  DLL_SPEC token_obj_get_type(const struct token_obj *);
-bool  DLL_SPEC token_obj_is_bool(const struct token_obj *);
-int  DLL_SPEC token_obj_is_active(const struct token_obj *);  // return 0,1 or negative error
-int  DLL_SPEC token_obj_activate(const struct token_obj *);   // return error
+DLL_SPEC int  DLL_SPEC token_obj_get_type(const struct token_obj *);
+DLL_SPEC bool  DLL_SPEC token_obj_is_bool(const struct token_obj *);
+DLL_SPEC int  DLL_SPEC token_obj_is_active(const struct token_obj *);  // return 0,1 or negative error
+DLL_SPEC int  DLL_SPEC token_obj_activate(const struct token_obj *);   // return error
 
-bool  DLL_SPEC token_obj_is_string(const struct token_obj *);
-char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);  // return 0 on error
-int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);  // return error
+DLL_SPEC bool  DLL_SPEC token_obj_is_string(const struct token_obj *);
+DLL_SPEC char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);  // return 0 on error
+DLL_SPEC int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);  // return error
 
-const struct smbios_struct * DLL_SPEC token_obj_get_smbios_struct(const struct token_obj *);
-int  DLL_SPEC token_obj_try_password(const struct token_obj *, const char *pass_ascii, const char *pass_scancode);
-const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
+DLL_SPEC const struct smbios_struct * DLL_SPEC token_obj_get_smbios_struct(const struct token_obj *);
+DLL_SPEC int  DLL_SPEC token_obj_try_password(const struct token_obj *, const char *pass_ascii, const char *pass_scancode);
+DLL_SPEC const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
 
 #if defined(_MSC_VER)
 #pragma pack(push,1)
