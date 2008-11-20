@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-11-17 23:17-0600\n"
+"POT-Creation-Date: 2008-11-19 01:04-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Dutch\n"
@@ -42,14 +42,14 @@ msgstr ""
 
 #: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:114
 #: src/bin/smbios-token-ctl:299 src/bin/smbios-wakeup-ctl:117
-#: src/bin/smbios-wireless-ctl:326 src/bin/smbios-lcd-brightness:115
+#: src/bin/smbios-wireless-ctl:326 src/bin/smbios-lcd-brightness:121
 #: src/bin/smbios-rbu-bios-update:175
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
 #: src/bin/smbios-passwd:102 src/bin/smbios-sys-info:115
 #: src/bin/smbios-token-ctl:300 src/bin/smbios-wakeup-ctl:118
-#: src/bin/smbios-wireless-ctl:327 src/bin/smbios-lcd-brightness:116
+#: src/bin/smbios-wireless-ctl:327 src/bin/smbios-lcd-brightness:122
 #: src/bin/smbios-rbu-bios-update:176
 msgid "The smbios library returned this error:"
 msgstr ""
@@ -246,13 +246,13 @@ msgid "New values"
 msgstr ""
 
 #: src/bin/smbios-token-ctl:305 src/bin/smbios-wakeup-ctl:124
-#: src/bin/smbios-wireless-ctl:333 src/bin/smbios-lcd-brightness:122
+#: src/bin/smbios-wireless-ctl:333 src/bin/smbios-lcd-brightness:128
 #: src/bin/smbios-rbu-bios-update:181
 msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
 #: src/bin/smbios-token-ctl:306 src/bin/smbios-wakeup-ctl:125
-#: src/bin/smbios-wireless-ctl:334 src/bin/smbios-lcd-brightness:123
+#: src/bin/smbios-wireless-ctl:334 src/bin/smbios-lcd-brightness:129
 #: src/bin/smbios-rbu-bios-update:182
 msgid "The token library returned this error:"
 msgstr ""
@@ -618,11 +618,11 @@ msgstr ""
 msgid "smbios-wireless-ctl version : %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-lcd-brightness:108
+#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-lcd-brightness:114
 msgid "ERROR: Could not execute SMI."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:320 src/bin/smbios-lcd-brightness:109
+#: src/bin/smbios-wireless-ctl:320 src/bin/smbios-lcd-brightness:115
 msgid "The smi library returned this error:"
 msgstr ""
 
@@ -671,11 +671,15 @@ msgstr ""
 msgid "AC"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:101
+#: src/bin/smbios-lcd-brightness:102
+msgid "LCD Brightness is not settable on this machine using this utility."
+msgstr ""
+
+#: src/bin/smbios-lcd-brightness:106
 msgid "Could not set value because the password was incorrect"
 msgstr ""
 
-#: src/bin/smbios-lcd-brightness:104
+#: src/bin/smbios-lcd-brightness:110
 msgid "value outside legal bounds"
 msgstr ""
 
