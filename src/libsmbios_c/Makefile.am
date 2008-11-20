@@ -1,11 +1,10 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
 lib_LTLIBRARIES += out/libsmbios_c.la
-out_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE)
+out_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE) $(AM_LDFLAGS)
 out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
 
-EXTRA_DIST += src/include/smbios_c	\
-    src/libsmbios_c/memory/memory_ut.c
+EXTRA_DIST += src/include/smbios_c
 
 # need to compile in memory_ut.c on windows (eventually)
 
@@ -27,21 +26,17 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/cmos/cmos_impl.h			\
     src/libsmbios_c/cmos/cmos.c				\
     src/libsmbios_c/cmos/cmos_ut.c			\
-    src/libsmbios_c/cmos/cmos_linux.c			\
     src/libsmbios_c/cmos/cmos_obj.c			\
     src/libsmbios_c/memory/memory_impl.h		\
-    src/libsmbios_c/memory/memory_linux.c		\
     src/libsmbios_c/memory/memory_obj.c			\
     src/libsmbios_c/memory/memory.c			\
     src/libsmbios_c/smbios/smbios.c			\
     src/libsmbios_c/smbios/smbios_impl.h		\
-    src/libsmbios_c/smbios/smbios_linux.c		\
     src/libsmbios_c/smbios/smbios_fixups.c		\
     src/libsmbios_c/smbios/smbios_obj.c			\
     src/libsmbios_c/smi/smi.c				\
     src/libsmbios_c/smi/smi_obj.c			\
     src/libsmbios_c/smi/smi_password.c			\
-    src/libsmbios_c/smi/smi_linux.c			\
     src/libsmbios_c/smi/smi_impl.h			\
     src/libsmbios_c/system_info/id_byte.c		\
     src/libsmbios_c/system_info/asset_tag.c		\
@@ -58,5 +53,29 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/token/token_d4.c			\
     src/libsmbios_c/token/token_da.c			\
     src/libsmbios_c/token/token_impl.h
+
+
+libsmbios_c_LINUX_SOURCES = \
+    src/libsmbios_c/cmos/cmos_linux.c			\
+    src/libsmbios_c/memory/memory_linux.c		\
+    src/libsmbios_c/smbios/smbios_linux.c		\
+    src/libsmbios_c/smi/smi_linux.c
+
+libsmbios_c_WINDOWS_SOURCES = 	\
+    src/libsmbios_c/cmos/cmos_windows.c			\
+    src/libsmbios_c/memory/memory_windows.c		\
+    src/libsmbios_c/memory/memory_ut.c			\
+    src/libsmbios_c/smbios/smbios_windows.c		\
+    src/libsmbios_c/smi/smi_windows.c
+
+if BUILD_WINDOWS
+out_libsmbios_c_la_SOURCES += $(libsmbios_c_WINDOWS_SOURCES)
+EXTRA_DIST += $(libsmbios_c_LINUX_SOURCES)
+endif
+
+if BUILD_LINUX
+out_libsmbios_c_la_SOURCES += $(libsmbios_c_LINUX_SOURCES)
+EXTRA_DIST += $(libsmbios_c_WINDOWS_SOURCES)
+endif
 
 
