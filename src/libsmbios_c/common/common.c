@@ -23,7 +23,7 @@ __attribute__((constructor)) static void lib_initialize (void)
 }
 
 
-
+#ifdef LIBSMBIOS_C_PLATFORM_LINUX
 void fixed_strerror(int errval, char *errbuf, size_t bufsize)
 {
     fnprintf("\n");
@@ -37,4 +37,5 @@ void fixed_strerror(int errval, char *errbuf, size_t bufsize)
             strlcat(errbuf, buf, bufsize);
     }
 }
+#endif
 
