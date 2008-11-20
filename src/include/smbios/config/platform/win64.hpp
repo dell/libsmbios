@@ -1,16 +1,16 @@
-//  (C) Copyright John Maddock 2001 - 2003. 
-//  (C) Copyright Bill Kempf 2001. 
-//  (C) Copyright Aleksey Gurtovoy 2003. 
-//  Use, modification and distribution are subject to the 
-//  Boost Software License, Version 1.0. (See accompanying file 
+//  (C) Copyright John Maddock 2001 - 2003.
+//  (C) Copyright Bill Kempf 2001.
+//  (C) Copyright Aleksey Gurtovoy 2003.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for most recent version.
 
-//  Win32 specific config options:
+//  Win64 specific config options:
 
-#define LIBSMBIOS_PLATFORM "Win32"
-#define LIBSMBIOS_PLATFORM_WIN32
+#define LIBSMBIOS_PLATFORM "Win64"
+#define LIBSMBIOS_PLATFORM_WIN64
 
 // Windows has a special platform-specific smbios table accessor method
 // that can be used if generic memory access fails.
@@ -38,9 +38,9 @@
 #define LIBSMBIOS_NO_STDC_NAMESPACE
 
 //
-// Win32 will normally be using native Win32 threads,
+// Win64 will normally be using native Win64 threads,
 // but there is a pthread library available as an option,
-// we used to disable this when LIBSMBIOS_DISABLE_WIN32 was 
+// we used to disable this when LIBSMBIOS_DISABLE_WIN64 was
 // defined but no longer - this should allow some
 // files to be compiled in strict mode - while maintaining
 // a consistent setting of LIBSMBIOS_HAS_THREADS across
@@ -50,7 +50,7 @@
 #  define LIBSMBIOS_HAS_WINTHREADS
 #endif
 
-#ifndef LIBSMBIOS_DISABLE_WIN32
+#ifndef LIBSMBIOS_DISABLE_WIN64
 // WEK: Added
 #define LIBSMBIOS_HAS_FTIME
 
