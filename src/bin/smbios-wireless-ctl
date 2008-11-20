@@ -223,7 +223,10 @@ def wirelessInfo(radio):
                 ret = STATUS_NOT_PRESENT;
                 print _("\t%s not installed") % radio["name"]
 
-            print onOff(tokenTable[radio["switchEnable"]].isActive(), _("\t%s controlled by wireless switch at boot"), _("\t%s not controlled by wireless switch at boot")) % radio["name"]
+            try:
+                print onOff(tokenTable[radio["switchEnable"]].isActive(), _("\t%s controlled by wireless switch at boot"), _("\t%s not controlled by wireless switch at boot")) % radio["name"]
+            except (IndexError,), e:
+                print "Boot-time wireless switch setting not present."
 
         else:
             ret = STATUS_UNSUPPORTED
