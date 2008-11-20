@@ -160,7 +160,7 @@ def switchBootCtl(radio, enable):
             tokenTable[legacy].activate()
 
     except IndexError:
-        print "\t%s" % _("This system does not support wireless switch configuration.")
+        print "\t%s" % _("This system does not support boot-time wireless switch configuration for %s.") % radio["name"]
         
 
 def switchRuntimeCtl(radio, enable):
