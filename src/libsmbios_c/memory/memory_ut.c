@@ -165,7 +165,7 @@ static void UT_cleanup(struct memory_access_obj *this)
 }
 
 
-void init_mem_struct_filename_READ(struct memory_access_obj *m, const char *fn)
+int init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);
@@ -178,6 +178,8 @@ void init_mem_struct_filename_READ(struct memory_access_obj *m, const char *fn)
     m->cleanup = UT_cleanup;
     m->close = 1;
     m->initialized = 1;
+
+    return 0;
 }
 
 
