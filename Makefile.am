@@ -18,8 +18,11 @@ check_PROGRAMS =
 noinst_LTLIBRARIES =
 lib_LTLIBRARIES=
 
-export GETTEXT_PACKAGE
 AM_LDFLAGS = -L$(top_builddir)/out/
+
+if BUILD_WINDOWS
+AM_LDFLAGS += --avoid-version  -no-undefined
+endif
 
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
 AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
