@@ -321,7 +321,7 @@ out:
             u32 args[4] = {0,};
             // select 4 == verify password
             std::auto_ptr<smi::IDellCallingInterfaceSmi> smi(setupCallingInterfaceSmi(toCheck[i], 4, args));
-            smi->setBufferContents(reinterpret_cast<const u8*>(password.c_str()), strnlen(password.c_str(), maxLen));
+            smi->setBufferContents(reinterpret_cast<const u8*>(password.c_str()), min(strlen(password.c_str()), (size_t) maxLen));
             smi->setArgAsPhysicalAddress( 0, 0 );
             smi->execute();
 
@@ -598,7 +598,7 @@ out:
                 // class 20 == property tag
                 std::auto_ptr<smi::IDellCallingInterfaceSmi> smi(setupCallingInterfaceSmi(20, 1, args));
                 smi->setBufferSize(120); // 80 is max len, making sure it doesn't overflow now. :-)
-                smi->setBufferContents(reinterpret_cast<const u8*>(newTag), strnlen(newTag, 80));
+                smi->setBufferContents(reinterpret_cast<const u8*>(newTag), min(strlen(newTag), (size_t)80));
                 smi->setArgAsPhysicalAddress( 0, 0 );
                 smi->execute();
                 break;
