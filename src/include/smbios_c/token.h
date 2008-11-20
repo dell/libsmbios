@@ -97,7 +97,7 @@ const void * DLL_SPEC token_get_ptr(u16 id);
 
 /** For tokens that are password protected, check password
  */
-int token_try_password(u16 id, const char *pass_ascii, const char *pass_scancode);
+DLL_SPEC int token_try_password(u16 id, const char *pass_ascii, const char *pass_scancode);
 
 
 EXTERN_C_END;
