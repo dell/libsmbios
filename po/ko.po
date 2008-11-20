@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-11-19 01:04-0600\n"
+"POT-Creation-Date: 2008-11-20 15:02-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Korean\n"
@@ -42,14 +42,14 @@ msgstr ""
 
 #: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:114
 #: src/bin/smbios-token-ctl:299 src/bin/smbios-wakeup-ctl:117
-#: src/bin/smbios-wireless-ctl:326 src/bin/smbios-lcd-brightness:121
+#: src/bin/smbios-wireless-ctl:329 src/bin/smbios-lcd-brightness:121
 #: src/bin/smbios-rbu-bios-update:175
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
 #: src/bin/smbios-passwd:102 src/bin/smbios-sys-info:115
 #: src/bin/smbios-token-ctl:300 src/bin/smbios-wakeup-ctl:118
-#: src/bin/smbios-wireless-ctl:327 src/bin/smbios-lcd-brightness:122
+#: src/bin/smbios-wireless-ctl:330 src/bin/smbios-lcd-brightness:122
 #: src/bin/smbios-rbu-bios-update:176
 msgid "The smbios library returned this error:"
 msgstr ""
@@ -246,13 +246,13 @@ msgid "New values"
 msgstr ""
 
 #: src/bin/smbios-token-ctl:305 src/bin/smbios-wakeup-ctl:124
-#: src/bin/smbios-wireless-ctl:333 src/bin/smbios-lcd-brightness:128
+#: src/bin/smbios-wireless-ctl:336 src/bin/smbios-lcd-brightness:128
 #: src/bin/smbios-rbu-bios-update:181
 msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
 #: src/bin/smbios-token-ctl:306 src/bin/smbios-wakeup-ctl:125
-#: src/bin/smbios-wireless-ctl:334 src/bin/smbios-lcd-brightness:129
+#: src/bin/smbios-wireless-ctl:337 src/bin/smbios-lcd-brightness:129
 #: src/bin/smbios-rbu-bios-update:182
 msgid "The token library returned this error:"
 msgstr ""
@@ -412,7 +412,7 @@ msgid ""
 msgstr ""
 
 #: src/bin/smbios-wireless-ctl:140 src/bin/smbios-wireless-ctl:206
-#: src/bin/smbios-wireless-ctl:249
+#: src/bin/smbios-wireless-ctl:252
 msgid "This system does not support runtime control of wireless settings."
 msgstr ""
 
@@ -431,7 +431,7 @@ msgid "Set runtime switch settings for %s"
 msgstr ""
 
 #: src/bin/smbios-wireless-ctl:174 src/bin/smbios-wireless-ctl:183
-#: src/bin/smbios-wireless-ctl:268
+#: src/bin/smbios-wireless-ctl:271
 msgid ""
 "This system does not support runtime control of wireless switch settings."
 msgstr ""
@@ -478,151 +478,156 @@ msgstr ""
 msgid "\t%s not installed"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:226
+#: src/bin/smbios-wireless-ctl:227
 #, c-format
 msgid "\t%s controlled by wireless switch at boot"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:226
+#: src/bin/smbios-wireless-ctl:227
 #, c-format
 msgid "\t%s not controlled by wireless switch at boot"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:230
+#: src/bin/smbios-wireless-ctl:229
+#, c-format
+msgid "\t%s boot-time wireless switch setting not present"
+msgstr ""
+
+#: src/bin/smbios-wireless-ctl:233
 #, c-format
 msgid "\t%s not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:237
+#: src/bin/smbios-wireless-ctl:240
 #, c-format
 msgid "\t%s legacy switch enabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:237
+#: src/bin/smbios-wireless-ctl:240
 #, c-format
 msgid "\t%s legacy switch disabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:242
+#: src/bin/smbios-wireless-ctl:245
 #, c-format
 msgid "\tStatus Code: %d"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:245
+#: src/bin/smbios-wireless-ctl:248
 msgid "Wireless Info:"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:251
+#: src/bin/smbios-wireless-ctl:254
 msgid "\tHardware switch supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:254
+#: src/bin/smbios-wireless-ctl:257
 msgid "\tHardware switch not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:256
+#: src/bin/smbios-wireless-ctl:259
 msgid "\tWiFi Locator supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:256
+#: src/bin/smbios-wireless-ctl:259
 msgid "\tWiFi Locator not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:257
+#: src/bin/smbios-wireless-ctl:260
 msgid "\tWireless Keyboard supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:257
+#: src/bin/smbios-wireless-ctl:260
 msgid "\tWireless Keyboard not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:258
+#: src/bin/smbios-wireless-ctl:261
 #, c-format
 msgid "\tNVRAM Size: %d bytes"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:259
+#: src/bin/smbios-wireless-ctl:262
 #, c-format
 msgid "\tNVRAM format version: %d"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:264
+#: src/bin/smbios-wireless-ctl:267
 msgid ""
 "\n"
 "Wireless Switch Configuration"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:269
+#: src/bin/smbios-wireless-ctl:272
 #, c-format
 msgid "\tWLAN switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:269 src/bin/smbios-wireless-ctl:270
-#: src/bin/smbios-wireless-ctl:271
+#: src/bin/smbios-wireless-ctl:272 src/bin/smbios-wireless-ctl:273
+#: src/bin/smbios-wireless-ctl:274
 msgid "on"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:269 src/bin/smbios-wireless-ctl:270
-#: src/bin/smbios-wireless-ctl:271
+#: src/bin/smbios-wireless-ctl:272 src/bin/smbios-wireless-ctl:273
+#: src/bin/smbios-wireless-ctl:274
 msgid "off"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:270
+#: src/bin/smbios-wireless-ctl:273
 #, c-format
 msgid "\tBluetooth switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:271
+#: src/bin/smbios-wireless-ctl:274
 #, c-format
 msgid "\tWWAN switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:272
+#: src/bin/smbios-wireless-ctl:275
 #, c-format
 msgid "\tswitch config: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:272 src/bin/smbios-wireless-ctl:274
+#: src/bin/smbios-wireless-ctl:275 src/bin/smbios-wireless-ctl:277
 msgid "locked"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:272 src/bin/smbios-wireless-ctl:274
+#: src/bin/smbios-wireless-ctl:275 src/bin/smbios-wireless-ctl:277
 msgid "not locked"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:273
+#: src/bin/smbios-wireless-ctl:276
 #, c-format
 msgid "\tWiFi locator: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:273
+#: src/bin/smbios-wireless-ctl:276
 msgid "enabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:273
+#: src/bin/smbios-wireless-ctl:276
 msgid "disabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:274
+#: src/bin/smbios-wireless-ctl:277
 #, c-format
 msgid "\tWiFi Locator config: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:290
+#: src/bin/smbios-wireless-ctl:293
 #, c-format
 msgid "Libsmbios version : %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:291
+#: src/bin/smbios-wireless-ctl:294
 #, c-format
 msgid "smbios-wireless-ctl version : %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-lcd-brightness:114
+#: src/bin/smbios-wireless-ctl:322 src/bin/smbios-lcd-brightness:114
 msgid "ERROR: Could not execute SMI."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:320 src/bin/smbios-lcd-brightness:115
+#: src/bin/smbios-wireless-ctl:323 src/bin/smbios-lcd-brightness:115
 msgid "The smi library returned this error:"
 msgstr ""
 
@@ -1188,5 +1193,6 @@ msgid "Cannot dereference NULL ID"
 msgstr ""
 
 #: src/python/libsmbios_c/token.py:155
-msgid "no such ID"
+#, python-format
+msgid "ID 0x%04x not found"
 msgstr ""
