@@ -26,6 +26,7 @@ LIBTOOL_AGE=1
 
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE
 AM_MAINTAINER_MODE
@@ -52,9 +53,15 @@ AC_PROG_CC_C99
 AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_CPP
-AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 AM_PATH_PYTHON
+
+# windows dll support
+# newer libtool uses this:
+#LT_INIT([shared static win32-dll dlopen])
+# but the version we are using uses this:
+AC_LIBTOOL_WIN32_DLL
+AC_PROG_LIBTOOL
 
 # Checks for libraries.
 
