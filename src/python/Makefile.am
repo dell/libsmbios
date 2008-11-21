@@ -13,12 +13,14 @@ pkgpython_PYTHON = \
 	src/python/libsmbios_c/trace_decorator.py		\
 	src/python/libsmbios_c/__init__.py		\
 	src/python/libsmbios_c/smbios.py		\
-	src/python/libsmbios_c/_vars.py		\
 	src/python/libsmbios_c/memory.py		\
 	src/python/libsmbios_c/smi.py		\
 	src/python/libsmbios_c/_peak_util_decorators.py		\
 	src/python/libsmbios_c/system_info.py
 
+# src/python/libsmbios_c/_vars.py is only for in-tree use
+# it is used to generate src/python/_vars.py which is installed
+EXTRA_DIST += src/python/libsmbios_c/_vars.py
 pkgpython_PYTHON += src/python/_vars.py
 DISTCLEANFILES +=   src/python/_vars.py
 src/python/_vars.py: src/python/libsmbios_c/_vars.py  configure Makefile config.status
@@ -28,6 +30,3 @@ src/python/_vars.py: src/python/libsmbios_c/_vars.py  configure Makefile config.
 	do	\
 		perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $@;\
 	done
-
-# this is only for in-tree use.
-EXTRA_DIST += src/python/libsmbios_c/_vars.py
