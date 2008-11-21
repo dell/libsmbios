@@ -112,6 +112,10 @@ def main():
             table[token_wake_min].setString(struct.pack("b", options.min_bcd))
             showCurrentWakeup(table)
 
+    except (IndexError, ), e:
+        exit_code=10
+        moduleLog.info( _("ERROR: This system does not support programmed wakeups.") )
+
     except (token.TokenTableParseError, ), e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
