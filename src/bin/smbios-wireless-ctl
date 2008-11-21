@@ -67,6 +67,8 @@ def command_parse():
             help= _("Set hardware switch so that it controls radio for Bluetooth"))
     parser.add_option('--sw_wwan', action="store", type="int", default=None, dest="sw_wwan",
             help= _("Set hardware switch so that it controls radio for cellular (wireless WAN)"))
+    parser.add_option('--sw_locator', action="store", type="int", default=None, dest="sw_locator",
+            help= _("Enable or disable the WIFI locator switch"))
 
     parser.add_option('--st_wlan', action="store_true", default=False, dest="st_wlan",
             help= _("Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
@@ -76,7 +78,7 @@ def command_parse():
             help= _("Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not present. 3 = unsupported. 4 = unknown."))
 
     parser.add_option('--st_locator', action="store", type="int", default=None, dest="st_locator",
-            help= _("Enable or disable the WIFI locator switch"))
+            help= _("Get status for locator switch"))
 
     cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
     return parser.parse_args()
@@ -103,6 +105,7 @@ radios = {
             },
 
     "locator": {
+            "name": _("Locator"),
             "switchEnable": 0x017E, "switchDisable": 0x017D, "switchRuntime": (2, 1),
             },
     }
@@ -164,7 +167,7 @@ def switchBootCtl(radio, enable):
         
 
 def switchRuntimeCtl(radio, enable):
-    print _("Set runtime switch settings for %s") % radio["name"]
+    print _("\nSet runtime switch settings for %s") % radio["name"]
     try:
         whichConfig, whichSwitch = radio["switchRuntime"]
         verboseLog.debug("config: %s switch: %s" % (whichConfig, whichSwitch))
@@ -182,7 +185,7 @@ def switchRuntimeCtl(radio, enable):
             newconfig = newconfig | whichSwitch
 
         verboseLog.debug("set: 0x%08x" % (0x2 | (whichConfig << 8) | (newconfig << 16)))
-        smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newconfig << 16)))
+        res = smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newconfig << 16)))
         verboseLog.debug("cbRES1: 0x%04x" % res[smi.cbRES1])
         verboseLog.debug("cbRES2: 0x%04x" % res[smi.cbRES2])
         verboseLog.debug("cbRES3: 0x%04x" % res[smi.cbRES3])
@@ -318,12 +321,18 @@ def main():
                     switchBootCtl(radios[i], getattr(options, "sw_%s" % i))
                 if options.runtime:
                     switchRuntimeCtl(radios[i], getattr(options, "sw_%s" % i))
+                setattr(options, "st_%s" % i, 1)
 
             if getattr(options, "st_%s" % i, None):
                 wirelessInfo(radios[i])
 
+        if options.sw_locator is not None:
+            switchRuntimeCtl(radios["locator"], options.sw_locator)
+            options.st_locator = 1
+
         if options.st_locator:
             outputSwitchStatus()
+
 
     except (smi.SMIExecutionError, ), e:
         exit_code=3
