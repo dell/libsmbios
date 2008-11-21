@@ -127,8 +127,6 @@ def conditionalReboot(options):
             os.system("/usr/bin/reboot")
             time.sleep(10)
 
-class RbuNotSupported(Exception): pass
-
 def main():
     exit_code = 0
     (options, args) = command_parse()
@@ -140,10 +138,7 @@ def main():
                 h = HdrFile(filename)
                 dumpHdrFileInfo(h)
         elif options.action == "system_info":
-            try:
-                system_info()
-            except IndexError, e:
-                raise RbuNotSupported( _("RBU Bios Update not supported on this system.") )
+            system_info()
 
         elif options.action == "cancel":
             ensureRbuDriver()
@@ -167,9 +162,9 @@ def main():
             smbios.SmbiosTable() # check permissions
             exit_code = updateBios(HdrFile(options.hdr), options, testMode=1)
 
-    except RbuNotSupported, e:
+    except IndexError, e:
+        moduleLog.info( _("RBU Bios Update not supported on this system.") )
         exit_code=2
-        print _("RBU is not supported on this system.")
     except (smbios.TableParseError, token.TokenTableParseError), e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
