@@ -16,7 +16,7 @@
  * See the GNU General Public License for more details.
  */
 
-#if defined(DEBUG_SYSINFO)
+#if defined(DEBUG_SMI)
 #define DEBUG_OUTPUT_ALL
 #endif
 
