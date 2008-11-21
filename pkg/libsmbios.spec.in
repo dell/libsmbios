@@ -69,13 +69,6 @@ Provides: libsmbios-libs = 0:%{version}-%{release}
 Obsoletes: libsmbios < 0:%{version}-%{release}
 Provides: libsmbios = 0:%{version}-%{release}
 
-# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
-# be installed at buildtime. This means we have to BuildRequire them, even if
-# we dont really need them at build time.
-%if 0%{?suse_version} >= 1100
-BuildRequires: yum
-%endif
-
 # libsmbios only ever makes sense on intel compatible arches
 # no DMI tables on ppc, s390, etc.
 ExclusiveArch: x86_64 ia64 %{ix86}
@@ -252,6 +245,13 @@ rm -rf %{buildroot}
 # YUM Plugin
 %config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
 %{_exec_prefix}/lib/yum-plugins/*
+# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
+# be installed at buildtime.
+%if 0%{?suse_version} >= 1100
+%dir %{_sysconfdir}/yum
+%dir %{_sysconfdir}/yum/pluginconf.d/
+%dir %{_exec_prefix}/lib/yum-plugins/
+%endif
 
 # legacy C++
 %{_sbindir}/dellBiosUpdate-compat
