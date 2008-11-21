@@ -54,7 +54,7 @@ info_list = {
         "product-name": ( _("Product Name"), sysinfo.get_system_name, notSettable ),
         "product-vendor": ( _("Vendor"), sysinfo.get_vendor_name, notSettable),
         "bios-version": ( _("BIOS Version"), sysinfo.get_bios_version, notSettable),
-        "product-id": ( _("Product ID"), get_system_id, notSettable),
+        "product-id": ( _("System ID"), get_system_id, notSettable),
         "service-tag": ( _("Service Tag"), sysinfo.get_service_tag, sysinfo.set_service_tag),
         "express-service-code": ( _("Express Service Code"), getEsc, notSettable),
         "asset-tag": ( _("Asset Tag"), sysinfo.get_asset_tag, sysinfo.set_asset_tag ),
