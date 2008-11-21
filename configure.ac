@@ -5,12 +5,12 @@
 ####################################
 ####################################
 # change version here.
-AC_INIT([libsmbios],[2.2.3])
+AC_INIT([libsmbios],[2.2.4])
 
 RELEASE_NAME=libsmbios
 RELEASE_MAJOR=2
 RELEASE_MINOR=2
-RELEASE_SUBLEVEL=3
+RELEASE_SUBLEVEL=4
 RELEASE_EXTRALEVEL=
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
@@ -105,7 +105,7 @@ fi
 # relies on more registers than available on ia64; there's no ia64 system with
 # media direct, so it's disabled on ia64
 AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
-AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" = linux-gnu])
+AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" != mingw32])
 AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
 
 GETTEXT_PACKAGE=libsmbios
