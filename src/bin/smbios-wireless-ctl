@@ -167,6 +167,7 @@ def switchRuntimeCtl(radio, enable):
     print _("Set runtime switch settings for %s") % radio["name"]
     try:
         whichConfig, whichSwitch = radio["switchRuntime"]
+        verboseLog.debug("config: %s switch: %s" % (whichConfig, whichSwitch))
         oldconfig=0
         if whichConfig == 1:
             res = smi.simple_ci_smi( 17, 11, 2 )
@@ -174,11 +175,18 @@ def switchRuntimeCtl(radio, enable):
                 raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless switch settings.") )
             oldconfig = res[smi.cbRES2] & 0xFF
 
-        newConfig = (oldconfig & ~whichSwitch)
+        verboseLog.debug("oldconfig %s" % oldconfig)
+        newconfig = (oldconfig & ~whichSwitch)
         if enable:
+            verboseLog.debug("enabling: 0x%08x -> 0x%08x" % (newconfig, (newconfig|whichSwitch))) 
             newconfig = newconfig | whichSwitch
 
-        smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newConfig << 16)))
+        verboseLog.debug("set: 0x%08x" % (0x2 | (whichConfig << 8) | (newconfig << 16)))
+        smi.simple_ci_smi( 17, 11, (0x2 | (whichConfig << 8) | (newconfig << 16)))
+        verboseLog.debug("cbRES1: 0x%04x" % res[smi.cbRES1])
+        verboseLog.debug("cbRES2: 0x%04x" % res[smi.cbRES2])
+        verboseLog.debug("cbRES3: 0x%04x" % res[smi.cbRES3])
+        verboseLog.debug("cbRES4: 0x%04x" % res[smi.cbRES4])
         if res[smi.cbRES1] != 0:
             raise RuntimeControlUnsupported( _("This system does not support runtime control of wireless switch settings.") )
     except (RuntimeControlUnsupported,), e:
@@ -307,9 +315,9 @@ def main():
 
             if getattr(options, "sw_%s" % i, None) is not None:
                 if options.boot:
-                    switchBootCtl(radios[i], getattr(options, i))
+                    switchBootCtl(radios[i], getattr(options, "sw_%s" % i))
                 if options.runtime:
-                    switchRuntimeCtl(radios[i], getattr(options, i))
+                    switchRuntimeCtl(radios[i], getattr(options, "sw_%s" % i))
 
             if getattr(options, "st_%s" % i, None):
                 wirelessInfo(radios[i])
