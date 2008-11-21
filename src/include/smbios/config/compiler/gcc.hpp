@@ -52,7 +52,13 @@
 #define LIBSMBIOS_HAS_FUNCTION
 #define LIBSMBIOS_PACKED_ATTR      __attribute__ ((packed))
 #define UNREFERENCED_PARAMETER(P)  ((void)(P))
+
+#   if __GNUC__ > 4
+// internal compiler error in RHEL4 gcc when this is used.
 #define MARK_UNUSED  __attribute__ ((unused))
+#else
+#define MARK_UNUSED
+#endif
 
 #define _dbg_iostream_out(stream, line) do { stream << line; } while(0)
 #define _dbg_cout(line) _dbg_iostream_out(cout, line)
