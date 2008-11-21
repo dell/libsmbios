@@ -87,6 +87,7 @@ radios = {
     "wlan": {
             "radioEnable" : 0x0180, "radioDisable" : 0x017F, "radioRuntimeId": 1,
             "switchEnable": 0x0186, "switchDisable": 0x0185, "switchRuntime" : (1, 1),
+            "switch_bit": 0,
              "supported_bit": 2, "installed_bit": 8, "disabled_bit": 17, "name": _("WLAN"),
              "legacyEnable": 0x010c, "legacyDisable": 0x010d,
              "legacySwitchEnable": 0x0116, "legacySwitchDisable": 0x0115,
@@ -95,17 +96,20 @@ radios = {
     "bt":   {
             "radioEnable" : 0x0152, "radioDisable" : 0x0153, "radioRuntimeId": 2,
             "switchEnable": 0x0182, "switchDisable": 0x0181, "switchRuntime" : (1, 2),
+            "switch_bit": 1,
              "supported_bit": 3, "installed_bit": 9, "disabled_bit": 18, "name": _("Bluetooth"),
             },
 
     "wwan": {
             "radioEnable" : 0x017C, "radioDisable" : 0x017B, "radioRuntimeId": 3,
             "switchEnable": 0x0184, "switchDisable": 0x0183, "switchRuntime" : (1, 4),
+            "switch_bit": 2,
              "supported_bit": 4, "installed_bit": 10, "disabled_bit": 19, "name": _("WWAN"),
             },
 
     "locator": {
             "name": _("Locator"),
+            "switch_bit": 8,
             "switchEnable": 0x017E, "switchDisable": 0x017D, "switchRuntime": (2, 1),
             },
     }
@@ -239,6 +243,9 @@ def wirelessInfo(radio):
             except (IndexError,), e:
                 print _("\t%s boot-time wireless switch setting not present") % radio["name"]
 
+            switch = smi.simple_ci_smi( 17, 11, 2 )
+            print onOff((switch[smi.cbRES2] & (1<<radio["switch_bit"])), _("\t%s runtime switch control currently enabled"), _("\t%s runtime switch control currently disabled")) % radio["name"]
+
         else:
             ret = STATUS_UNSUPPORTED
             print _("\t%s not supported") % radio["name"]
@@ -322,7 +329,7 @@ def main():
                     switchBootCtl(radios[i], getattr(options, "sw_%s" % i))
                 if options.runtime:
                     switchRuntimeCtl(radios[i], getattr(options, "sw_%s" % i))
-                options.st_locator = 1
+                setattr(options, "st_%s" % i, 1)
 
             if getattr(options, "st_%s" % i, None):
                 wirelessInfo(radios[i])
