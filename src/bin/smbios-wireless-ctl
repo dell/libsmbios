@@ -315,13 +315,14 @@ def main():
                     radioBootCtl(radios[i], getattr(options, i))
                 if options.runtime:
                     radioRuntimeCtl(radios[i], getattr(options, i))
+                setattr(options, "st_%s" % i, 1)
 
             if getattr(options, "sw_%s" % i, None) is not None:
                 if options.boot:
                     switchBootCtl(radios[i], getattr(options, "sw_%s" % i))
                 if options.runtime:
                     switchRuntimeCtl(radios[i], getattr(options, "sw_%s" % i))
-                setattr(options, "st_%s" % i, 1)
+                options.st_locator = 1
 
             if getattr(options, "st_%s" % i, None):
                 wirelessInfo(radios[i])
