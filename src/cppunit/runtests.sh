@@ -52,6 +52,9 @@ run_test() {
     test_binary=$1
     source_dir=$2
     echo -e $3
+    if [ ! -e $TST/${test_binary} -a -e $TST/${test_binary}.exe ]; then
+        test_binary=${test_binary}.exe
+    fi
     rm -rf $TMPDIR/*
     if [ -n "$source_dir" ]; then
         cp $source_dir/* $target_dir/ ||:
