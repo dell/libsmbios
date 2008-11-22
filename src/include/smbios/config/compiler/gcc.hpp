@@ -51,7 +51,10 @@
 #define LIBSMBIOS_HAS_PRETTY_FUNCTION
 #define LIBSMBIOS_HAS_FUNCTION
 #define LIBSMBIOS_PACKED_ATTR      __attribute__ ((packed))
+
+#ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P)  ((void)(P))
+#endif
 
 #   if __GNUC__ > 4
 // internal compiler error in RHEL4 gcc when this is used.
