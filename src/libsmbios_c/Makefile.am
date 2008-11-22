@@ -62,6 +62,8 @@ libsmbios_c_LINUX_SOURCES = \
     src/libsmbios_c/smi/smi_linux.c
 
 libsmbios_c_WINDOWS_SOURCES = 	\
+    src/libsmbios_c/common/common_windows.c		\
+    src/libsmbios_c/common/common_windows.h		\
     src/libsmbios_c/cmos/cmos_windows.c			\
     src/libsmbios_c/memory/memory_windows.c		\
     src/libsmbios_c/memory/memory_ut.c			\

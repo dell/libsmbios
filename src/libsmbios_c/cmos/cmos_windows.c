@@ -31,11 +31,62 @@
 
 // private
 #include "cmos_impl.h"
+#include "common_windows.h"
+
+static int windows_read_fn(const struct cmos_access_obj *this, u8 *byte, u32 indexPort, u32 dataPort, u32 offset)
+{
+    NTSTATUS status;
+    IO_STRUCT io;
+    int retval = -1;
+
+    memset(&io, 0, sizeof(io));
+    io.Addr = indexPort;
+    io.pBuf = &offset;
+    io.NumBytes = 1;
+    io.Reserved4 = 1;
+    io.Reserved6 = 1;
+
+    status = ZwSystemDebugControl(DebugSysWriteIoSpace, &io, sizeof(io), NULL, 0, NULL);
+    if (!NT_SUCCESS(status))
+        goto out;
+
+    memset(&io, 0, sizeof(io));
+    io.Addr = dataPort;
+    io.pBuf = byte;
+    io.NumBytes = 1;
+    io.Reserved4 = 1;
+    io.Reserved6 = 1;
+
+    status = ZwSystemDebugControl(DebugSysReadIoSpace, &io, sizeof(io), NULL, 0, NULL);
+    if (!NT_SUCCESS(status))
+        goto out;
+
+    retval = 0;
+
+out:
+    return retval;
+}
+
 
 int __internal init_cmos_struct(struct cmos_access_obj *m)
 {
-    printf("WINDOWS NOT IMPLEMENTED YET!!!! \n");
-    return -1;
-}
+    printf("Loaded Windows CMOS STUFF. not yet ready.\n");
 
+    if (!LoadNtdllFuncs())
+        goto out_err;
+
+    if (!EnableDebug())
+        goto out_err;
+
+    m->read_fn = windows_read_fn;
+
+    return -1; /// NOT YET IMPLEMENTED
+    goto out;
+
+out_err:
+    return -1;
+
+out:
+    return 0;
+}
 
