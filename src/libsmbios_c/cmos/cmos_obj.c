@@ -116,20 +116,33 @@ int  cmos_obj_read_byte(const struct cmos_access_obj *m, u8 *byte, u32 indexPort
 {
     clear_err(m);
     int retval = -6;  // bad *buffer ptr
+    if (!byte)
+        goto out;
+
+    retval = -5; // bad memory_access_obj
     if (!m)
-        retval = -5; // bad memory_access_obj
+        goto out;
 
-    if (m && byte)
-        retval = m->read_fn(m, byte, indexPort, dataPort, offset);
+    retval = -7; // not implemented
+    if (!m->read_fn)
+        goto out;
 
+    retval = m->read_fn(m, byte, indexPort, dataPort, offset);
+
+out:
     return retval;
 }
 
 int  cmos_obj_write_byte(const struct cmos_access_obj *m, u8 byte, u32 indexPort, u32 dataPort, u32 offset)
 {
     clear_err(m);
-    int retval = -6;  // bad *buffer ptr
+
+    int retval = -5; // bad memory_access_obj
     if (!m)
+        goto out;
+
+    retval = -7; // not implemented
+    if (!m->write_fn)
         goto out;
 
     ((struct cmos_access_obj *)m)->write_lock++;
