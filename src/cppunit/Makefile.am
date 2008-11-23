@@ -8,6 +8,14 @@ EXTRA_DIST += \
 
 TESTS = src/cppunit/runtests.sh
 
+UT_CFLAGS=
+if BUILD_LINUX
+UT_CFLAGS+=" -DBUILD_LINUX"
+endif
+if BUILD_WINDOWS
+UT_CFLAGS+=" -DBUILD_WINDOWS"
+endif
+
 # convenience library for test stuff
 check_LTLIBRARIES = out/libtestmain.la
 out_libtestmain_la_SOURCES = src/cppunit/outputctl.h src/cppunit/main.cpp src/cppunit/main.h
@@ -22,7 +30,7 @@ out_libxmlutil_la_LIBADD =  $(LIBXML2_LIBS)
 out_libxmlutil_la_CXXFLAGS = $(LIBXML2_CFLAGS) $(AM_CXXFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
 out_libxmlutil_la_LDFLAGS = -static
 
-TEST_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
+TEST_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common $(UT_CFLAGS)
 
 check_PROGRAMS += out/testRbu
 out_testRbu_SOURCES = src/cppunit/testRbu.h src/cppunit/testRbu.cpp
@@ -58,11 +66,11 @@ check_PROGRAMS += out/testC_smi
 out_testC_smi_SOURCES = src/cppunit/testC_smi.h src/cppunit/testC_smi.cpp
 out_testC_smi_LDADD = out/libtestmain.la $(AM_LDADD)
 out_testC_smi_LDFLAGS = $(AM_LDFLAGS) -static
-out_testC_smi_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS)
+out_testC_smi_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(UT_CFLAGS)
 
 check_PROGRAMS += out/testC_memory_cmos
 out_testC_memory_cmos_SOURCES = src/cppunit/testC_memory_cmos.h src/cppunit/testC_memory_cmos.cpp
 out_testC_memory_cmos_LDADD = out/libtestmain.la $(AM_LDADD)
 out_testC_memory_cmos_LDFLAGS = $(AM_LDFLAGS) -static
-out_testC_memory_cmos_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS)
+out_testC_memory_cmos_CXXFLAGS = $(CPPUNIT_CXXFLAGS) $(AM_CXXFLAGS) $(UT_CFLAGS)
 

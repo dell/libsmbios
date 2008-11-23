@@ -211,7 +211,9 @@ void set_basedir(const char *newdir);
 void testCsmi::testLinuxSmi()
 {
     STD_TEST_START(getTestName().c_str() << "  ");
+#ifdef BUILD_LINUX
     struct dell_smi_obj *smi = dell_smi_factory(DELL_SMI_GET_NEW);
+    CPPUNIT_ASSERT(smi);
 
     string d = getWritableDirectory() + "/";
     set_basedir(d.c_str());
@@ -251,6 +253,7 @@ void testCsmi::testLinuxSmi()
     //CPPUNIT_ASSERT_EQUAL( (u8)'a', buf[31] );
 
     dell_smi_obj_free(smi);
+#endif
     STD_TEST_END("");
 }
 
