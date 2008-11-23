@@ -34,7 +34,7 @@
 
 __internal int init_mem_struct(struct memory_access_obj *m)
 {
-    printf("WINDOWS NOT IMPLEMENTED YET!!!! \n");
+    printf("WINDOWS MEMORY ACCESS NOT IMPLEMENTED YET!!!! \n");
     return -1;
 }
 

@@ -34,7 +34,7 @@
 
 int __internal init_dell_smi_obj(struct dell_smi_obj *this)
 {
-    printf("WINDOWS NOT IMPLEMENTED YET!!!! \n");
+    printf("WINDOWS SMI NOT IMPLEMENTED YET!!!! \n");
     return -1;
 }
 
