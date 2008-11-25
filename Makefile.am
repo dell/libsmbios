@@ -21,7 +21,7 @@ lib_LTLIBRARIES=
 AM_LDFLAGS = -L$(top_builddir)/out/
 
 if BUILD_WINDOWS
-AM_LDFLAGS += --avoid-version  -no-undefined
+AM_LDFLAGS += --avoid-version  -no-undefined --enable-auto-import
 endif
 
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
