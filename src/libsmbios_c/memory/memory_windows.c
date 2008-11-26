@@ -283,6 +283,7 @@ void fillBuffer( u8 *buffer, u64 offset, unsigned int length)
     readPhysicalMemoryDebugSysctl( buffer, offset, length );
 
 out:
+    return;
 }
 
 
