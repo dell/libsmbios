@@ -202,7 +202,7 @@ int readPhysicalMemoryDebugSysctl( u8 *buffer, u64 offset, unsigned int length)
 
 int fillBufferCache() 
 {
-    DWORD iSignature = 0x46000000 | 0x00490000 | 0x00005200 | 0x0000004D ; //FIRM
+    DWORD iSignature = 0x4649524D; //FIRM
     char *error = 0;
     int retval = -1;
 
@@ -269,25 +269,20 @@ void destroy()
 void fillBuffer( u8 *buffer, u64 offset, unsigned int length)
 {
 
-    if( EnumSystemFirmwareTables && GetSystemFirmwareTable )
-    {
-        // Use the newer W2K3 SP1 APIs if they are available.
-        // If we first call readPhysicalMemoryMap and readPhysicalMemoryDebugSysctl
-        // and then call enumSystemFirmwareTables, the new GetSystemFirmwareTable API
-        // of W2K3 SP1 returns invalid data.
-        readmemEnumSystemFirmwareTables( buffer, offset, length );
-    }
-    else
-    {
-        if(hPhysMem)
-        {
-            readPhysicalMemoryMap( hPhysMem, buffer, offset, length );
-        }
-        else
-        {
-            readPhysicalMemoryDebugSysctl( buffer, offset, length );
-        }
-    }
+    // Use the newer W2K3 SP1 APIs if they are available.  If we first call
+    // readPhysicalMemoryMap and readPhysicalMemoryDebugSysctl and then call
+    // enumSystemFirmwareTables, the new GetSystemFirmwareTable API of W2K3 SP1
+    // returns invalid data.
+    if (EnumSystemFirmwareTables && GetSystemFirmwareTable )
+        if (0 == readmemEnumSystemFirmwareTables( buffer, offset, length ))
+            goto out
+
+    if (hPhysMem && 0 == readPhysicalMemoryMap( hPhysMem, buffer, offset, length ))
+        goto out;
+
+    readPhysicalMemoryDebugSysctl( buffer, offset, length );
+
+out:
 }
 
 
