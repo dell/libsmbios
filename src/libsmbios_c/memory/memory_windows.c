@@ -275,7 +275,7 @@ void fillBuffer( u8 *buffer, u64 offset, unsigned int length)
     // returns invalid data.
     if (EnumSystemFirmwareTables && GetSystemFirmwareTable )
         if (0 == readmemEnumSystemFirmwareTables( buffer, offset, length ))
-            goto out
+            goto out;
 
     if (hPhysMem && 0 == readPhysicalMemoryMap( hPhysMem, buffer, offset, length ))
         goto out;
