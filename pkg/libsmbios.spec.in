@@ -104,10 +104,12 @@ Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
 
-%package -n libsmbios-devel
+%package -n libsmbios2-devel
 Summary: Development headers and archives
 Group: Development/Libraries
 Requires: libsmbios = %{version}-%{release}
+Provides: libsmbios-devel = %{version}-%{release}
+Obsoletes: libsmbios-devel < %{version}-%{release}
 
 %description -n libsmbios-devel
 Libsmbios is a library and utilities that can be used by client programs to get
