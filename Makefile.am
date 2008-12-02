@@ -18,10 +18,13 @@ check_PROGRAMS =
 noinst_LTLIBRARIES =
 lib_LTLIBRARIES=
 
-AM_LDFLAGS = -L$(top_builddir)/out/
+AM_LDFLAGS = -L$(top_builddir)/out/ -Wl,--no-undefined
+#if BINUTILS > 2.17
+#AM_LDFLAGS += -Wl,--as-needed
+#endif
 
 if BUILD_WINDOWS
-AM_LDFLAGS += --avoid-version  -no-undefined --enable-auto-import
+AM_LDFLAGS += -Wl,--avoid-version -Wl,--enable-auto-import
 endif
 
 #-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
