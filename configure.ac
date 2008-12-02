@@ -133,7 +133,8 @@ AC_SUBST([LIBTOOL_AGE])
 
 LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)
-AC_SUBST([ LIBXML2_LIBS LIBXML2_CFLAGS ])
+AC_SUBST(LIBXML2_LIBS)
+AC_SUBST(LIBXML2_CFLAGS)
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
