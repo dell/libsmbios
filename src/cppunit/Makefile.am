@@ -10,10 +10,10 @@ TESTS = src/cppunit/runtests.sh
 
 UT_CFLAGS=
 if BUILD_LINUX
-UT_CFLAGS+=" -DBUILD_LINUX"
+UT_CFLAGS += -DBUILD_LINUX
 endif
 if BUILD_WINDOWS
-UT_CFLAGS+=" -DBUILD_WINDOWS"
+UT_CFLAGS += -DBUILD_WINDOWS
 endif
 
 # convenience library for test stuff
