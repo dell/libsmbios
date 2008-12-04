@@ -2,8 +2,6 @@
 #  This is a template of all of the 'Standard' stuff that we use in all our
 #  projects.
 
-AUTOMAKE_OPTIONS = subdir-objects
-SUBDIRS =
 
 RELEASE_NAME=@RELEASE_NAME@
 RELEASE_MAJOR=@RELEASE_MAJOR@
@@ -36,7 +34,6 @@ get-version:
 	@echo RELEASE_VERSION=$(RELEASE_VERSION)
 	@echo PACKAGE=$(PACKAGE)
 
-dist: ChangeLog AUTHORS
 ChangeLog:
 	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
 

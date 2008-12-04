@@ -35,6 +35,8 @@ AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror 
 
 AM_LDADD = $(LIBINTL)
 
+SUBDIRS = po
+
 include Makefile-std
 include src/libsmbios_c++/Makefile.am
 include src/libsmbios_c/Makefile.am
@@ -48,7 +50,6 @@ pkgconfdir=$(sysconfdir)/$(PACKAGE)
 dist_pkgconf_DATA=etc/logging.conf
 
 CLEANFILES+=_buildtemp smbios-utils*.rpm out
-SUBDIRS += po
 ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES += $(EXTRA_PROGRAMS)
@@ -56,7 +57,7 @@ CLEANFILES += $(EXTRA_PROGRAMS)
 # bug in po/Makefile or something...
 DISTCLEANFILES += ./po/stamp-po
 
-clean-generic:
+clean-local:
 	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
 
 .PHONY: valgrind
