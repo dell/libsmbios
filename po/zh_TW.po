@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-11-20 23:05-0600\n"
+"POT-Creation-Date: 2008-12-03 11:22-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Chinese (traditional)\n"
@@ -71,7 +71,7 @@ msgid "BIOS Version"
 msgstr ""
 
 #: src/bin/smbios-sys-info:57
-msgid "Product ID"
+msgid "System ID"
 msgstr ""
 
 #: src/bin/smbios-sys-info:58
@@ -1018,7 +1018,7 @@ msgstr ""
 msgid "State Byte: 0x%04x\n"
 msgstr ""
 
-#: src/libsmbios_c/cmos/cmos_obj.c:276
+#: src/libsmbios_c/cmos/cmos_obj.c:289
 msgid ""
 "There was an allocation failure while trying to construct the cmos object."
 msgstr ""
