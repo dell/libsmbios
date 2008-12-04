@@ -60,7 +60,7 @@ def command_parse():
     parser.add_option('--hdr-info', metavar="HDR_FILE", action="append", default=[], help= _("Show information about a given BIOS HDR file"))
     parser.add_option('--system-info', action="store_const", const="system_info", dest="action", default=None, help= _("Show system information and RBU completion codes"))
     parser.add_option('--cancel', action="store_const", const="cancel", dest="action", help= _("Cancel pending BIOS update"))
-    parser.add_option('--update', action="store_const", const="update", dest="action", help= _("Stage BIOS for update at next reboot"))
+    parser.add_option("-u", '--update', action="store_const", const="update", dest="action", help= _("Stage BIOS for update at next reboot"))
     parser.add_option('--test', action="store_const", const="test", dest="action", help= _("Test HDR file to see if it is appropriate for this system"))
 
     parser.add_option('--auto-detect-mode', action="store_const", const="auto", dest="update_mode", default="auto", help= _("Automatically select the optimal update mode (default, recommended)"))
