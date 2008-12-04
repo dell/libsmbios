@@ -5,12 +5,12 @@
 ####################################
 ####################################
 # change version here.
-AC_INIT([libsmbios],[2.2.5])
+AC_INIT([libsmbios],[2.2.6])
 
 RELEASE_NAME=libsmbios
 RELEASE_MAJOR=2
 RELEASE_MINOR=2
-RELEASE_SUBLEVEL=5
+RELEASE_SUBLEVEL=6
 RELEASE_EXTRALEVEL=
 
 # Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
@@ -19,7 +19,7 @@ RELEASE_EXTRALEVEL=
 # If any interfaces have been added since the last public release, then increment age.
 # If any interfaces have been removed since the last public release, then set age to 0.
 LIBTOOL_CURRENT=3
-LIBTOOL_REVISION=0
+LIBTOOL_REVISION=1
 LIBTOOL_AGE=1
 ####################################
 ####################################
