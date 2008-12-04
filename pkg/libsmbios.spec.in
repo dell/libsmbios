@@ -1,3 +1,5 @@
+# @configure_input@
+
 # these are all substituted by autoconf
 %define major @RELEASE_MAJOR@
 %define minor @RELEASE_MINOR@
