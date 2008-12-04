@@ -113,7 +113,7 @@ Requires: libsmbios = %{version}-%{release}
 Provides: libsmbios-devel = %{version}-%{release}
 Obsoletes: libsmbios-devel < %{version}-%{release}
 
-%description -n libsmbios-devel
+%description -n libsmbios2-devel
 Libsmbios is a library and utilities that can be used by client programs to get
 information from standard BIOS tables, such as the SMBIOS table.
 
@@ -225,7 +225,7 @@ rm -rf %{buildroot}
 %doc COPYING-GPL COPYING-OSL README
 %{py_sitedir}/*
 
-%files -n libsmbios-devel -f _build/buildlogs.txt
+%files -n libsmbios2-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 /usr/include/smbios
