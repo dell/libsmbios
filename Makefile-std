@@ -3,18 +3,21 @@
 #  projects.
 
 
-RELEASE_NAME=@RELEASE_NAME@
 RELEASE_MAJOR=@RELEASE_MAJOR@
 RELEASE_MINOR=@RELEASE_MINOR@
-RELEASE_SUBLEVEL=@RELEASE_SUBLEVEL@
-RELEASE_EXTRALEVEL=@RELEASE_EXTRALEVEL@
+RELEASE_MICRO=@RELEASE_MICRO@
+RELEASE_EXTRA=@RELEASE_EXTRA@
 
-RELEASE_VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_SUBLEVEL)$(RELEASE_EXTRALEVEL)
-RELEASE_STRING = $(RELEASE_NAME)-$(RELEASE_VERSION)
-VERSION = $(RELEASE_VERSION)
-PACKAGE = $(RELEASE_NAME)
+# override built-in defs which end up wrong
+PACKAGE_VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_MICRO)$(RELEASE_EXTRA)
+RELEASE_VERSION = $(PACKAGE_VERSION)
+# note that we add a "-" here. normal package_string has a space.
+PACKAGE_STRING = $(PACKAGE)-$(VERSION)
 
-CLEANFILES=$(RELEASE_NAME)-*.tar.gz $(RELEASE_NAME)-*.tar.bz2 $(RELEASE_NAME)-*.rpm _buildtemp version
+VERSION = $(PACKAGE_VERSION)
+PACKAGE = $(PACKAGE_NAME)
+
+CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.bz2 $(PACKAGE_NAME)-*.rpm _buildtemp version
 DISTCLEANFILES=*~
 
 EXTRA_DIST =
@@ -26,12 +29,13 @@ CLEANFILES += pkg/$(PACKAGE).spec
 
 .PHONY: git-tag
 git-tag:
-	git tag -u libsmbios -m "tag for official release: libsmbios $(RELEASE_STRING)" v$(RELEASE_VERSION)
+	git tag -u libsmbios -m "tag for official release: libsmbios $(PACKAGE_STRING)" v$(PACKAGE_VERSION)
 
 .PHONY: get-version
 get-version:
-	@echo RELEASE_STRING=$(RELEASE_STRING)
-	@echo RELEASE_VERSION=$(RELEASE_VERSION)
+	@echo PACKAGE_STRING=$(PACKAGE_STRING)
+	@echo RELEASE_VERSION=$(PACKAGE_VERSION)
+	@echo PACKAGE_VERSION=$(PACKAGE_VERSION)
 	@echo PACKAGE=$(PACKAGE)
 
 ChangeLog:
@@ -40,7 +44,7 @@ ChangeLog:
 AUTHORS:
 	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
-REPLACE_VARS=GETTEXT_PACKAGE RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
+REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
 export $(REPLACE_VARS)
 
 DATA_HOOK_REPLACE=
@@ -109,26 +113,26 @@ CHANGELOG_TEXT="Placeholder changelog entry. Please update this for release."
 changelog: $(CHANGELOG)
 .PHONY: $(CHANGELOG)
 $(CHANGELOG): version.mk
-	cd pkg/ && fakeroot debchange -v $(RELEASE_VERSION)-$(DEB_RELEASE) $(CHANGELOG_TEXT)
+	cd pkg/ && fakeroot debchange -v $(PACKAGE_VERSION)-$(DEB_RELEASE) $(CHANGELOG_TEXT)
 
-TARBALL=$(RELEASE_STRING).tar.gz
+TARBALL=$(PACKAGE_STRING).tar.gz
 
 debmagic:
 	[ -n "$$DEB_TMP_BUILDDIR" ] || (echo "Must set DEB_TMP_BUILDDIR=/tmp/... for deb and sdeb targets"; exit 1)
 	[ -n "$$DIST" ] || (echo "Must set DIST={gutsy,hardy,sid,...} for deb and sdeb targets"; exit 1)
 	[ -n "$$DIST" ] || echo "Remember to set DISTTAG='~gutsy1' for deb and sdeb targets for backports"
 	mkdir -p dist/$(DIST)
-	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(RELEASE_NAME)_$(RELEASE_VERSION).orig.tar.gz
+	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.gz
 	tar -C $(DEB_TMP_BUILDDIR) -xzf $(TARBALL)
-	cp -ar pkg/debian $(DEB_TMP_BUILDDIR)/$(RELEASE_STRING)/debian
-	chmod +x $(DEB_TMP_BUILDDIR)/$(RELEASE_STRING)/debian/rules
-	sed -e "s/#DISTTAG#/$(DISTTAG)/g" -e "s/#DIST#/$(DIST)/g" $(DEB_TMP_BUILDDIR)/$(RELEASE_STRING)/debian/changelog.in > $(DEB_TMP_BUILDDIR)/$(RELEASE_STRING)/debian/changelog
-	rm $(DEB_TMP_BUILDDIR)/$(RELEASE_STRING)/debian/changelog.in
-	cd $(DEB_TMP_BUILDDIR)/$(RELEASE_STRING) ; \
+	cp -ar pkg/debian $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian
+	chmod +x $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/rules
+	sed -e "s/#DISTTAG#/$(DISTTAG)/g" -e "s/#DIST#/$(DIST)/g" $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/changelog.in > $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/changelog
+	rm $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/changelog.in
+	cd $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING) ; \
 	./configure ; \
 	pdebuild --use-pdebuild-internal --buildresult $(TOPDIR)/dist/$(DIST) ; \
 	dpkg-buildpackage -D -S -sa -rfakeroot ; \
-	mv ../$(RELEASE_NAME)_* $(TOPDIR)/dist/$(DIST) ; \
+	mv ../$(PACKAGE_NAME)_* $(TOPDIR)/dist/$(DIST) ; \
 	cd -
 
 debs:

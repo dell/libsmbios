@@ -4,20 +4,19 @@
 
 ####################################
 ####################################
-# change version here.
-AC_INIT([libsmbios],[2.2.5])
+# change "unconfigure version" here.
+AC_INIT([libsmbios],[unconfigured version])
 
-RELEASE_NAME=libsmbios
-RELEASE_MAJOR=2
-RELEASE_MINOR=2
-RELEASE_SUBLEVEL=5
-RELEASE_EXTRALEVEL=
+# allow configurer to override version #
+test -n "$RELEASE_MAJOR"      || RELEASE_MAJOR=2
+test -n "$RELEASE_MINOR"      || RELEASE_MINOR=2
+test -n "$RELEASE_MICRO"      || RELEASE_MICRO=5
+test -n "$RELEASE_EXTRA"      || RELEASE_EXTRA=
 
-# Update the version information only immediately before a public release of your software. More frequent updates are unnecessary, and only guarantee that the current interface number gets larger faster.
-# If the library source code has changed at all since the last update, then increment revision (c:r:a becomes c:r+1:a).
-# If any interfaces have been added, removed, or changed since the last update, increment current, and set revision to 0.
-# If any interfaces have been added since the last public release, then increment age.
-# If any interfaces have been removed since the last public release, then set age to 0.
+#NOTE: libtool version, below, is different and distinct from 'marketing' version, above.
+# non-interface changes/bugfixes:            revision++;
+# interface add:                  current++; revision=0; age++;
+# interface remove/change:        current++; revision=0; age=0;
 LIBTOOL_CURRENT=3
 LIBTOOL_REVISION=0
 LIBTOOL_AGE=1
@@ -112,21 +111,22 @@ GETTEXT_PACKAGE=libsmbios
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
 
-if test -z "$RELEASE_EXTRALEVEL"; then
-    RELEASE_RPM_EXTRALEVEL=%{nil}
+if test -z "$RELEASE_EXTRA"; then
+    RELEASE_RPM_EXTRA=%{nil}
 else
-    RELEASE_RPM_EXTRALEVEL=$RELEASE_EXTRALEVEL
+    RELEASE_RPM_EXTRA=$RELEASE_EXTRA
 fi
 
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_VERSION,"$VERSION","Full package version string")
+AC_DEFINE_UNQUOTED(PACKAGE_STRING, ["$PACKAGE_NAME $RELEASE_MAJOR.$RELEASE_MINOR.$RELEASE_MICRO$RELEASE_EXTRA"], [package version])
+AC_DEFINE_UNQUOTED(PACKAGE_VERSION, ["$RELEASE_MAJOR.$RELEASE_MINOR.$RELEASE_MICRO$RELEASE_EXTRA"], [package version])
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_VERSION,"$RELEASE_MAJOR.$RELEASE_MINOR.$RELEASE_MICRO$RELEASE_EXTRA","Full package version string")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
-AC_SUBST(RELEASE_NAME)
 AC_SUBST(RELEASE_MAJOR)
 AC_SUBST(RELEASE_MINOR)
-AC_SUBST(RELEASE_SUBLEVEL)
-AC_SUBST(RELEASE_EXTRALEVEL)
-AC_SUBST(RELEASE_RPM_EXTRALEVEL)
+AC_SUBST(RELEASE_MICRO)
+AC_SUBST(RELEASE_EXTRA)
+AC_SUBST(RELEASE_RPM_EXTRA)
 AC_SUBST(LIBTOOL_CURRENT)
 AC_SUBST(LIBTOOL_REVISION)
 AC_SUBST(LIBTOOL_AGE)

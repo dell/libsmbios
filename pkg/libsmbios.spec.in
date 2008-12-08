@@ -3,9 +3,9 @@
 # these are all substituted by autoconf
 %define major @RELEASE_MAJOR@
 %define minor @RELEASE_MINOR@
-%define sub @RELEASE_SUBLEVEL@
-%define extralevel @RELEASE_RPM_EXTRALEVEL@
-%define release_version %{major}.%{minor}.%{sub}%{extralevel}
+%define micro @RELEASE_MICRO@
+%define extra @RELEASE_RPM_EXTRA@
+%define release_version %{major}.%{minor}.%{micro}%{extra}
 
 %define package_name  libsmbios2
 
@@ -142,13 +142,7 @@ cd _build
 echo '../configure "$@"' > configure
 chmod +x ./configure
 
-export CXXFLAGS="%{optflags}"
-export CFLAGS="%{optflags}"
-export RELEASE_MAJOR=%{major}
-export RELEASE_MINOR=%{minor}
-export RELEASE_SUBLEVEL=%{sub}
-export RELEASE_EXTRALEVEL=%{extralevel}
-%configure
+%configure RELEASE_MAJOR=%{major} RELEASE_MINOR=%{minor} RELEASE_MICRO=%{micro} RELEASE_EXTRA=%{extra} CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
 make -e %{?_smp_mflags} 2>&1 | tee build.log
