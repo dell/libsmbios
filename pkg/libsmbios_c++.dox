@@ -7,7 +7,7 @@
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = "libsmbios_c library"
 PROJECT_NUMBER         = 
-OUTPUT_DIRECTORY       = @top_builddir@/out/libsmbios_c/
+OUTPUT_DIRECTORY       = $(top_builddir)/out/libsmbios_c++/
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
@@ -19,7 +19,7 @@ FULL_PATH_NAMES        = YES
 STRIP_FROM_PATH        = 
 STRIP_FROM_INC_PATH    = 
 SHORT_NAMES            = NO
-JAVADOC_AUTOBRIEF      = YES
+JAVADOC_AUTOBRIEF      = NO
 QT_AUTOBRIEF           = NO
 MULTILINE_CPP_IS_BRIEF = NO
 DETAILS_AT_TOP         = NO
@@ -84,7 +84,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @top_srcdir@/src/include/smbios_c
+INPUT                  = $(top_srcdir)/src/include/smbios
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h \
                          *.hpp \
@@ -94,10 +94,10 @@ EXCLUDE                =
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 
-EXAMPLE_PATH           = @top_srcdir@/src/cppunit
+EXAMPLE_PATH           = $(top_srcdir)/src/cppunit
 EXAMPLE_PATTERNS       = 
 EXAMPLE_RECURSIVE      = YES
-IMAGE_PATH             = @top_srcdir@/doc/visio
+IMAGE_PATH             = $(top_srcdir)/doc/visio
 INPUT_FILTER           = 
 FILTER_PATTERNS        = 
 FILTER_SOURCE_FILES    = NO
@@ -198,12 +198,12 @@ PERLMOD_MAKEVAR_PREFIX =
 # Configuration options related to the preprocessor   
 #---------------------------------------------------------------------------
 ENABLE_PREPROCESSING   = YES
-MACRO_EXPANSION        = YES
+MACRO_EXPANSION        = NO
 EXPAND_ONLY_PREDEF     = YES
 SEARCH_INCLUDES        = YES
 INCLUDE_PATH           = 
 INCLUDE_FILE_PATTERNS  = 
-PREDEFINED             = EXTERN_C_BEGIN= EXTERN_C_END=
+PREDEFINED             = 
 EXPAND_AS_DEFINED      = 
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
@@ -220,8 +220,7 @@ PERL_PATH              = /usr/bin/perl
 CLASS_DIAGRAMS         = YES
 MSCGEN_PATH            = 
 HIDE_UNDOC_RELATIONS   = YES
-@HAS_DOT_TRUE@HAVE_DOT               = YES
-@HAS_DOT_FALSE@HAVE_DOT               = NO
+HAVE_DOT               = $(HAVE_DOT)
 DOT_FONTNAME           = FreeSans
 DOT_FONTPATH           = 
 CLASS_GRAPH            = YES
@@ -236,7 +235,7 @@ CALLER_GRAPH           = NO
 GRAPHICAL_HIERARCHY    = YES
 DIRECTORY_GRAPH        = YES
 DOT_IMAGE_FORMAT       = png
-DOT_PATH               = 
+DOT_PATH               = $(DOT)
 DOTFILE_DIRS           = 
 DOT_GRAPH_MAX_NODES    = 50
 MAX_DOT_GRAPH_DEPTH    = 0

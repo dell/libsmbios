@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = "SMBIOS Library"
 PROJECT_NUMBER         =
-OUTPUT_DIRECTORY       = @top_builddir@/out/full/
+OUTPUT_DIRECTORY       = $(top_builddir)/out/full/
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = NO
 BRIEF_MEMBER_DESC      = YES
@@ -64,17 +64,17 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @top_srcdir@/TODO \
-                         @top_srcdir@/src/include \
-                         @top_srcdir@/doc
+INPUT                  = $(top_srcdir)/TODO \
+                         $(top_srcdir)/src/include \
+                         $(top_srcdir)/doc
 FILE_PATTERNS          = *.c \
                          *.cpp \
                          *.h \
                          *.hpp \
                          *.txt
 RECURSIVE              = YES
-EXCLUDE                = @top_builddir@/out/full \
-                         @top_builddir@/out/interface
+EXCLUDE                = $(top_builddir)/out/full \
+                         $(top_builddir)/out/interface
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 
@@ -82,7 +82,7 @@ EXCLUDE_PATTERNS       =
 # directories that contain example code fragments that are included (see
 # the \include command).
 
-EXAMPLE_PATH           = @top_srcdir@/src/cppunit/
+EXAMPLE_PATH           = $(top_srcdir)/src/cppunit/
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
@@ -103,7 +103,7 @@ EXAMPLE_RECURSIVE      = YES
 # directories that contain image that are included in the documentation (see
 # the \image command).
 
-IMAGE_PATH             = @top_srcdir@/doc/visio/
+IMAGE_PATH             = $(top_srcdir)/doc/visio/
 INPUT_FILTER           =
 FILTER_SOURCE_FILES    = NO
 #---------------------------------------------------------------------------
@@ -216,8 +216,7 @@ PERL_PATH              = /usr/bin/perl
 #---------------------------------------------------------------------------
 CLASS_DIAGRAMS         = YES
 HIDE_UNDOC_RELATIONS   = YES
-@HAS_DOT_TRUE@HAVE_DOT               = YES
-@HAS_DOT_FALSE@HAVE_DOT               = NO
+HAVE_DOT               = $(HAVE_DOT)
 CLASS_GRAPH            = YES
 COLLABORATION_GRAPH    = YES
 UML_LOOK               = YES
@@ -227,7 +226,7 @@ INCLUDED_BY_GRAPH      = YES
 CALL_GRAPH             = YES
 GRAPHICAL_HIERARCHY    = YES
 DOT_IMAGE_FORMAT       = png
-DOT_PATH               = @DOT@
+DOT_PATH               = $(DOT)
 DOTFILE_DIRS           =
 MAX_DOT_GRAPH_WIDTH    = 1024
 MAX_DOT_GRAPH_HEIGHT   = 1024

@@ -86,18 +86,18 @@ AC_CHECK_FUNCS([strlcpy strlcat getpagesize memmove memset munmap strerror strnd
 
 dnl Check for doxygen support
 AC_PATH_PROG([DOXYGEN], [doxygen])
-AM_CONDITIONAL(HAS_DOXYGEN, test $DOXYGEN)
+AM_CONDITIONAL(HAVE_DOXYGEN, [test $DOXYGEN])
 if test x$wantdoxygen != xyes ; then
     DOXYGEN=
-    AM_CONDITIONAL(HAS_DOXYGEN, false)
+    AM_CONDITIONAL(HAVE_DOXYGEN, [false])
 fi
 
 dnl Check for graphviz support
 AC_PATH_PROG([DOT], [dot])
-AM_CONDITIONAL(HAS_DOT, test $DOT)
+AM_CONDITIONAL(HAVE_DOT, [test $DOT])
 if test x$wantgraphviz != xyes ; then
     DOT=
-    AM_CONDITIONAL(HAS_DOT, false)
+    AM_CONDITIONAL(HAVE_DOT, [false])
 fi
 
 # the manual assembly in the media direct sources fails to build on ia64 as it
@@ -144,8 +144,6 @@ sed -i "s|(^#define PACKAGE_STRING).*|\$1 \"$PACKAGE_STRING\"|" confdefs.h
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
-AC_CONFIG_FILES([out/libsmbios_c++.dox:pkg/libsmbios_c++.dox.in])
-AC_CONFIG_FILES([out/libsmbios_c.dox:pkg/libsmbios_c.dox.in])
 AC_CONFIG_FILES([pkg/libsmbios.spec])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_OUTPUT

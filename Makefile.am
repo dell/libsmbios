@@ -83,21 +83,31 @@ coverage:
 
 
 ########## DOCS ################
-if HAS_DOXYGEN
+if HAVE_DOXYGEN
 all: doxygen
 doxygen: out/libsmbios_c/html/index.html
 doxygen: out/libsmbios_c++/html/index.html
 endif
 
-out/libsmbios_c/html/index.html: out/libsmbios_c.dox $(wildcard $(top_srcdir)/src/include/smbios_c/*.h)
-	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
+DOT=@DOT@
+if HAVE_DOT
+HAVE_DOT=YES
+else
+HAVE_DOT=NO
+endif
+export DOT HAVE_DOT top_builddir top_srcdir
 
-out/libsmbios_c++/html/index.html: out/libsmbios_c++.dox $(wildcard $(top_srcdir)/src/include/smbios/*.h)
-	cd out; doxygen $$(basename $<) > $$(basename $< .dox).out
+out/libsmbios_c/html/index.html: $(top_srcdir)/pkg/libsmbios_c.dox $(wildcard $(top_srcdir)/src/include/smbios_c/*.h)
+	doxygen $< > out/$$(basename $< .dox).out
+
+out/libsmbios_c++/html/index.html: $(top_srcdir)/pkg/libsmbios_c++.dox $(wildcard $(top_srcdir)/src/include/smbios/*.h)
+	doxygen $< > out/$$(basename $< .dox).out
 
 ########## END DOCS ################
 
 EXTRA_DIST += \
+ pkg/libsmbios_c++.dox  \
+ pkg/libsmbios_c.dox    \
  pkg/libsmbios.spec 	\
  pkg/scripts 		\
  pkg/VC.2005 		\
