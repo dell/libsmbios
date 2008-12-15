@@ -64,6 +64,9 @@ install-exec-hook:
 	    done	;\
 	done
 
+# set default project. can be overridden on cmdline with 'make -e ...'
+PROJECT=home:$(USER)
+
 .PHONY: upload_buildservice
 upload_buildservice: dist
 	[ -n "$(PROJECT)" ] || (echo "Must specify PROJECT"; exit 1)
