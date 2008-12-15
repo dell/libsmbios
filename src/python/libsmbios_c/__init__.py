@@ -37,7 +37,7 @@ _t = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True)
 for i in (cmos, memory, smbios, smi, system_info, token, _common):
     setattr(i, "_", _t.ugettext)
 
-__VERSION__ = RELEASE_VERSION
+__VERSION__ = "uninstalled-version"
 
 _all_ = [
     "cmos", "memory", "smbios", "smi", "system_info", "token",

@@ -10,6 +10,10 @@ out_libgetopt_la_LDFLAGS = -static
 
 pkgdatadir = $(datadir)/smbios-utils
 
+# update __VERSION__ variable for python executables
+__VERSION__ = $(PACKAGE_VERSION)
+REPLACE_VARS += __VERSION__
+
 #
 # Python executables
 #

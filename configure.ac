@@ -136,6 +136,12 @@ LIBXML2_CFLAGS=$(xml2-config --cflags)
 AC_SUBST(LIBXML2_LIBS)
 AC_SUBST(LIBXML2_CFLAGS)
 
+VERSION=[`echo ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_MICRO}${RELEASE_EXTRA}`]
+PACKAGE_VERSION=$VERSION
+PACKAGE_STRING=[`echo ${RELEASE_NAME}-${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_MICRO}${RELEASE_EXTRA}`]
+sed -i "s|(^#define PACKAGE_VERSION).*|\$1 \"$PACKAGE_VERSION\"|" confdefs.h
+sed -i "s|(^#define PACKAGE_STRING).*|\$1 \"$PACKAGE_STRING\"|" confdefs.h
+
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([out/libsmbios_c++.dox:pkg/libsmbios_c++.dox.in])

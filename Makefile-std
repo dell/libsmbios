@@ -9,12 +9,10 @@ RELEASE_MICRO=@RELEASE_MICRO@
 RELEASE_EXTRA=@RELEASE_EXTRA@
 
 # override built-in defs which end up wrong
-PACKAGE_VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_MICRO)$(RELEASE_EXTRA)
-RELEASE_VERSION = $(PACKAGE_VERSION)
+VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_MICRO)$(RELEASE_EXTRA)
 # note that we add a "-" here. normal package_string has a space.
 PACKAGE_STRING = $(PACKAGE)-$(VERSION)
-
-VERSION = $(PACKAGE_VERSION)
+PACKAGE_VERSION = $(VERSION)
 PACKAGE = $(PACKAGE_NAME)
 
 CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.bz2 $(PACKAGE_NAME)-*.rpm _buildtemp version
@@ -34,7 +32,6 @@ git-tag:
 .PHONY: get-version
 get-version:
 	@echo PACKAGE_STRING=$(PACKAGE_STRING)
-	@echo RELEASE_VERSION=$(PACKAGE_VERSION)
 	@echo PACKAGE_VERSION=$(PACKAGE_VERSION)
 	@echo PACKAGE=$(PACKAGE)
 
@@ -44,7 +41,7 @@ ChangeLog:
 AUTHORS:
 	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
-REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION RELEASE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
+REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
 export $(REPLACE_VARS)
 
 DATA_HOOK_REPLACE=

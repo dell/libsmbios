@@ -23,7 +23,7 @@ import traceback
 
 # the following vars are all substituted on install
 # this bin isnt byte-compiled, so this is ok
-RELEASE_VERSION="uninstalled-version"
+__VERSION__="uninstalled-version"
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
 clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
 # end vars
@@ -31,7 +31,6 @@ clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cl
 # import all local modules after this.
 sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
-__VERSION__=RELEASE_VERSION
 
 import cli
 from libsmbios_c import system_info as sysinfo, smbios, token, localedir, GETTEXT_PACKAGE
