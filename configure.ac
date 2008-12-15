@@ -10,7 +10,7 @@ AC_INIT([libsmbios],[unconfigured version])
 # allow configurer to override version #
 test -n "$RELEASE_MAJOR"      || RELEASE_MAJOR=2
 test -n "$RELEASE_MINOR"      || RELEASE_MINOR=2
-test -n "$RELEASE_MICRO"      || RELEASE_MICRO=5
+test -n "$RELEASE_MICRO"      || RELEASE_MICRO=6
 test -n "$RELEASE_EXTRA"      || RELEASE_EXTRA=
 
 #NOTE: libtool version, below, is different and distinct from 'marketing' version, above.
