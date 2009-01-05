@@ -23,7 +23,7 @@ EXTRA_PROGRAMS=
 
 CLEANFILES += $(EXTRA_PROGRAMS)
 CLEANFILES += *.pyc */*.pyc */*/*.pyc */*/*/*.pyc
-CLEANFILES += pkg/$(PACKAGE).spec
+DISTCLEANFILES += pkg/$(PACKAGE).spec
 
 .PHONY: git-tag
 git-tag:
