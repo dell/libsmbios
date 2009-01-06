@@ -239,6 +239,7 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     size_t alloc_size = sizeof(struct callintf_cmd) + sizeof(this->smi_buf);
     int retval = -1;
     size_t curstrsize;
+    u8 *buffer = 0;
 
     fnprintf("\n");
 
@@ -248,7 +249,7 @@ int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 
     // allocate buffer
     fnprintf(" allocate buffer: %zd\n", alloc_size);
-    u8 *buffer = calloc(1, alloc_size);
+    buffer = calloc(1, alloc_size);
     kernel_buf = (struct callintf_cmd *)buffer;
 
     // LOCK
@@ -308,6 +309,7 @@ err_out:
 
 out:
     free(buffer);
+    fnprintf("retval: %d\n", retval);
     return retval;
 }
 
