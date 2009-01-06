@@ -247,7 +247,9 @@ rm -rf %{buildroot}
 %doc _build/out/libsmbios_c
 
 %files -n smbios-utils
-# no files.
+# opensuse 11.1 enforces non-empty file list :(
+%doc COPYING-GPL COPYING-OSL README
+# no other files. 
 
 %files -n smbios-utils-bin
 %defattr(-,root,root,-)
