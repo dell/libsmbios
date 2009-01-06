@@ -298,11 +298,11 @@ out:
     return retval;
 }
 
-int __internal add_d4_tokens(struct token_table *t)
+int __internal add_d4_tokens(struct token_table *table)
 {
     int retval = 0, ret;
     const char *error;
-    smbios_table_for_each_struct_type(t->smbios_table, s, 0xD4) {
+    smbios_table_for_each_struct_type(table->smbios_table, s, 0xD4) {
         struct indexed_io_access_structure *d4_struct = (struct indexed_io_access_structure*)s;
         struct indexed_io_token *token = d4_struct->tokens;
 
@@ -312,6 +312,12 @@ int __internal add_d4_tokens(struct token_table *t)
             goto out_err;
 
         while (token->tokenId != TokenTypeEOT) {
+            if (token->tokenId == TokenTypeUnused)
+            {
+                token++;
+                continue;
+            }
+
             if ( (void* )(token + sizeof(*token) ) > (void *)(d4_struct + d4_struct->length ))
             {
                 fnprintf("\n");
@@ -340,14 +346,14 @@ int __internal add_d4_tokens(struct token_table *t)
 
             n->token_ptr = token;
             n->smbios_structure = s;
-            init_d4_token(t, n);
-            add_token(t, n);
+            init_d4_token(table, n);
+            add_token(table, n);
             token++;
         }
     }
     goto out;
 out_err:
-    strlcat(t->errstring, error, ERROR_BUFSIZE);
+    strlcat(table->errstring, error, ERROR_BUFSIZE);
     retval = -1;
 out:
     return retval;
