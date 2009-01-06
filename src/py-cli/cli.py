@@ -19,7 +19,7 @@ Common problems are:\n\
           Linux  : run as 'root' user\n\
           Windows: run as 'administrator' user\n\
 \n\
-    -- dell_rbu device driver not loaded.\n\
+    -- dell_rbu or dcdbas device drivers not loaded.\n\
        Try loading the dell_rbu driver\n\
           Linux  : modprobe dell_rbu\n\
           Windows: dell_rbu driver not yet available.\n\
