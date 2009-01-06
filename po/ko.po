@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-12-15 09:49-0600\n"
+"POT-Creation-Date: 2009-01-06 13:53-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Korean\n"
@@ -1047,7 +1047,7 @@ msgstr ""
 
 #: src/libsmbios_c/memory/memory_linux.c:196
 #: src/libsmbios_c/memory/memory_linux.c:292
-#: src/libsmbios_c/smi/smi_linux.c:304
+#: src/libsmbios_c/smi/smi_linux.c:305
 msgid ""
 "\n"
 "The OS Error string was: "
@@ -1107,7 +1107,7 @@ msgstr ""
 msgid "Failed to allocate memory for error string.\n"
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_linux.c:303
+#: src/libsmbios_c/smi/smi_linux.c:304
 msgid ""
 "There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' "
 "kernel module loaded?"
@@ -1133,19 +1133,19 @@ msgstr ""
 msgid "Error trying to set up CMOS checksum routines.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_d4.c:336
+#: src/libsmbios_c/token/token_d4.c:342
 msgid "Allocation failure while trying to create token object."
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:264
+#: src/libsmbios_c/token/token_obj.c:268
 msgid "Failed to obtain smbios table.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:274
+#: src/libsmbios_c/token/token_obj.c:278
 msgid "Memory allocation failure allocating error string.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:279
+#: src/libsmbios_c/token/token_obj.c:283
 msgid "Error while trying to add 0xD4 tokens.\n"
 msgstr ""
 
