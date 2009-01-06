@@ -248,6 +248,7 @@ rm -rf %{buildroot}
 
 %files -n smbios-utils
 # opensuse 11.1 enforces non-empty file list :(
+%defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 # no other files. 
 
