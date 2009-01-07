@@ -205,12 +205,12 @@ DLL.token_obj_is_bool.restype = ctypes.c_bool
 #bool  DLL_SPEC token_obj_is_active(const struct token_obj *);
 DLL.token_obj_is_active.argtypes = [ ctypes.POINTER(Token) ]
 DLL.token_obj_is_active.restype = ctypes.c_int
-DLL.token_obj_is_active.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulationFailure(_table_strerror(a[0])))
+DLL.token_obj_is_active.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulationFailure(_obj_strerror(a[0])))
 
 #int  DLL_SPEC token_obj_activate(const struct token_obj *);
 DLL.token_obj_activate.argtypes = [ ctypes.POINTER(Token) ]
 DLL.token_obj_activate.restype = ctypes.c_int
-DLL.token_obj_activate.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulationFailure(_table_strerror(a[0])))
+DLL.token_obj_activate.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulationFailure(_obj_strerror(a[0])))
 
 #bool  DLL_SPEC token_obj_is_string(const struct token_obj *);
 DLL.token_obj_is_string.argtypes = [ ctypes.POINTER(Token) ]
@@ -225,7 +225,7 @@ def customFree(result, func, args):
         pystr = result[0:size]
         DLL.token_string_free(result)
     else:
-        raise TokenManipulationFailure(_table_strerror(a[0]))
+        raise TokenManipulationFailure(_obj_strerror(a[0]))
     return pystr
 
 #char*  DLL_SPEC token_obj_get_string(const struct token_obj *, size_t *len);
@@ -239,7 +239,7 @@ DLL.token_string_free.restype = None
 #int  DLL_SPEC token_obj_set_string(const struct token_obj *, const char *, size_t size);
 DLL.token_obj_set_string.argtypes = [ ctypes.POINTER(Token), ctypes.c_char_p, ctypes.c_size_t ]
 DLL.token_obj_set_string.restype = ctypes.c_int
-DLL.token_obj_set_string.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulationFailure(_table_strerror(a[0])))
+DLL.token_obj_set_string.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulationFailure(_obj_strerror(a[0])))
 
 #const struct smbios_struct * DLL_SPEC token_obj_get_smbios_struct(const struct token_obj *);
 #DLL.token_obj_get_smbios_struct.argtypes = [ ctypes.POINTER(Token), ]
@@ -252,7 +252,7 @@ DLL.token_obj_try_password.restype = ctypes.c_int
 #const void * DLL_SPEC token_obj_get_ptr(const struct token_obj *t);
 DLL.token_obj_get_ptr.argtypes = [ ctypes.POINTER(Token), ]
 DLL.token_obj_get_ptr.restype = ctypes.POINTER(TokenPtr)
-DLL.token_obj_get_ptr.errcheck = errorOnNullPtrFN(lambda r,f,a: TokenManipulationFailure(_table_strerror(r)))
+DLL.token_obj_get_ptr.errcheck = errorOnNullPtrFN(lambda r,f,a: TokenManipulationFailure(_obj_strerror(r)))
 
 
 

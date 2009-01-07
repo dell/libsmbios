@@ -1,7 +1,7 @@
 # English translations for libsmbios package.
-# Copyright (C) 2008 Dell, Inc
+# Copyright (C) 2009 Dell, Inc
 # This file is distributed under the same license as the libsmbios package.
-# Automatically generated, 2008.
+# Automatically generated, 2009.
 #
 # All this catalog "translates" are quotation characters.
 # The msgids must be ASCII and therefore cannot contain real quotation
@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios unconfigured version\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2008-12-15 09:49-0600\n"
-"PO-Revision-Date: 2008-12-15 09:49-0600\n"
+"POT-Creation-Date: 2009-01-06 13:53-0600\n"
+"PO-Revision-Date: 2009-01-06 13:53-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -1091,7 +1091,7 @@ msgstr "The mmap() call returned mapping of -1 (failure). File: "
 
 #: src/libsmbios_c/memory/memory_linux.c:196
 #: src/libsmbios_c/memory/memory_linux.c:292
-#: src/libsmbios_c/smi/smi_linux.c:304
+#: src/libsmbios_c/smi/smi_linux.c:305
 msgid ""
 "\n"
 "The OS Error string was: "
@@ -1159,7 +1159,7 @@ msgstr "Failed to find appropriate SMBIOS 0xD4 structure.\n"
 msgid "Failed to allocate memory for error string.\n"
 msgstr "Failed to allocate memory for error string.\n"
 
-#: src/libsmbios_c/smi/smi_linux.c:303
+#: src/libsmbios_c/smi/smi_linux.c:304
 msgid ""
 "There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' "
 "kernel module loaded?"
@@ -1187,19 +1187,19 @@ msgstr "Error while trying to write cmos. Lowlevel error was:\n"
 msgid "Error trying to set up CMOS checksum routines.\n"
 msgstr "Error trying to set up CMOS checksum routines.\n"
 
-#: src/libsmbios_c/token/token_d4.c:336
+#: src/libsmbios_c/token/token_d4.c:342
 msgid "Allocation failure while trying to create token object."
 msgstr "Allocation failure while trying to create token object."
 
-#: src/libsmbios_c/token/token_obj.c:264
+#: src/libsmbios_c/token/token_obj.c:268
 msgid "Failed to obtain smbios table.\n"
 msgstr "Failed to obtain smbios table.\n"
 
-#: src/libsmbios_c/token/token_obj.c:274
+#: src/libsmbios_c/token/token_obj.c:278
 msgid "Memory allocation failure allocating error string.\n"
 msgstr "Memory allocation failure allocating error string.\n"
 
-#: src/libsmbios_c/token/token_obj.c:279
+#: src/libsmbios_c/token/token_obj.c:283
 msgid "Error while trying to add 0xD4 tokens.\n"
 msgstr "Error while trying to add 0xD4 tokens.\n"
 

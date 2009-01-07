@@ -5,9 +5,8 @@
 %define minor @RELEASE_MINOR@
 %define micro @RELEASE_MICRO@
 %define extra @RELEASE_RPM_EXTRA@
+%define lang_dom  @GETTEXT_PACKAGE@
 %define release_version %{major}.%{minor}.%{micro}%{extra}
-
-%define package_name  libsmbios2
 
 # required by suse build system
 # norootforbuild
@@ -55,7 +54,7 @@
 # fedora: use the !? code below to define when it isnt already
 %{!?py_sitedir: %define py_sitedir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Name: %{package_name}
+Name: libsmbios2
 Version: %{release_version}
 Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
@@ -89,22 +88,44 @@ should use the libsmbios C interface.
 %package -n python-smbios
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
-Requires: %{package_name} = %{version}-%{release}
+Requires: libsmbios2 = %{version}-%{release}
 Requires: python %{ctypes_BR}
 
 %description -n python-smbios
 This package provides a Python interface to libsmbios
 
-
 %package -n smbios-utils
-Summary: Utilities that use libsmbios
+Summary: meta-package that pulls in all smbios utilities (binary executables and python scripts)
 Group: Applications/System
-Requires: python-smbios = %{version}-%{release}
-Requires: %{package_name} = %{version}-%{release}
+Requires: smbios-utils-bin smbios-utils-python
 Obsoletes: libsmbios-bin < 0:2.0.0
 Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
 Provides: libsmbios-unsupported-bin = %{version}-%{release}
+
+%description -n smbios-utils
+This is a meta-package that pulls in the binary libsmbios executables as well
+as the python executables.
+
+%package -n smbios-utils-bin
+Summary: Binary utilities that use libsmbios
+Group: Applications/System
+Requires: libsmbios2 = %{version}-%{release}
+
+%description -n smbios-utils-bin
+Get BIOS information, such as System product name, product id, service tag and
+asset tag. 
+
+%package -n smbios-utils-python
+Summary: Python executables that use libsmbios
+Group: Applications/System
+Requires: python-smbios = %{version}-%{release}
+
+%description -n smbios-utils-python
+Get BIOS information, such as System product name, product id, service tag and
+asset tag. Set service and asset tags on Dell machines. Manipulate wireless
+cards/bluetooth on Dell laptops. Set BIOS password on select Dell systems.
+Update BIOS on select Dell systems. Set LCD brightness on select Dell laptops.
 
 %package -n libsmbios2-devel
 Summary: Development headers and archives
@@ -120,12 +141,6 @@ information from standard BIOS tables, such as the SMBIOS table.
 This package contains the headers and .a files necessary to compile new client
 programs against libsmbios.
 
-
-%description -n smbios-utils
-Libsmbios is a library and utilities that can be used by client programs
-to get information from standard BIOS tables, such as the SMBIOS table.
-
-This package contains some sample binaries that use libsmbios.
 
 %prep
 %setup -q -n libsmbios-%{version}
@@ -198,7 +213,7 @@ ln -s smbios-wireless-ctl %{buildroot}%{_sbindir}/dellWirelessCtl
 ln -s smbios-lcd-brightness %{buildroot}%{_sbindir}/dellLcdBrightness
 ln -s smbios-rbu-bios-update %{buildroot}%{_sbindir}/dellBiosUpdate
 
-%find_lang libsmbios
+%find_lang %{lang_dom}
 
 # hardlink files to save some space.
 %fdupes $RPM_BUILD_ROOT
@@ -206,10 +221,10 @@ ln -s smbios-rbu-bios-update %{buildroot}%{_sbindir}/dellBiosUpdate
 %clean
 rm -rf %{buildroot}
 
-%post   -n %{package_name}   -p /sbin/ldconfig
-%postun -n %{package_name}   -p /sbin/ldconfig
+%post   -n libsmbios2   -p /sbin/ldconfig
+%postun -n libsmbios2   -p /sbin/ldconfig
 
-%files -n %{package_name} -f _build/libsmbios.lang
+%files -n libsmbios2 -f _build/%{lang_dom}.lang
 %defattr(-,root,root,-)
 %{_libdir}/libsmbios_c.so.*
 %{_libdir}/libsmbios.so.*
@@ -232,24 +247,16 @@ rm -rf %{buildroot}
 %doc _build/out/libsmbios_c
 
 %files -n smbios-utils
+# opensuse 11.1 enforces non-empty file list :(
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
+# no other files. 
+
+%files -n smbios-utils-bin
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 %doc doc/pkgheader.sh
-
-%dir %{_sysconfdir}/libsmbios
-%config(noreplace) %{_sysconfdir}/libsmbios/*
-
-# YUM Plugin
-%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
-%{_exec_prefix}/lib/yum-plugins/*
-# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
-# be installed at buildtime.
-%if 0%{?suse_version} >= 1100
-%dir %{_sysconfdir}/yum
-%dir %{_sysconfdir}/yum/pluginconf.d/
-%dir %{_exec_prefix}/lib/yum-plugins/
-%endif
 
 # legacy C++
 %{_sbindir}/dellBiosUpdate-compat
@@ -263,6 +270,26 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-get-ut-data
 %{_sbindir}/smbios-upflag-ctl
 %{_sbindir}/smbios-sys-info-lite
+
+
+%files -n smbios-utils-python
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
+%doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+%doc doc/pkgheader.sh
+%dir %{_sysconfdir}/libsmbios
+%config(noreplace) %{_sysconfdir}/libsmbios/*
+
+# YUM Plugin
+%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
+%{_exec_prefix}/lib/yum-plugins/*
+# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
+# be installed at buildtime.
+%if 0%{?suse_version} >= 1100
+%dir %{_sysconfdir}/yum
+%dir %{_sysconfdir}/yum/pluginconf.d/
+%dir %{_exec_prefix}/lib/yum-plugins/
+%endif
 
 # python utilities
 %{_sbindir}/smbios-sys-info

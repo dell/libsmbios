@@ -54,9 +54,10 @@ int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
     dell_smi_obj_set_arg(smi, cbARG3, args[cbARG3]);
     dell_smi_obj_set_arg(smi, cbARG4, args[cbARG4]);
 
+    fnprintf("about to _execute\n");
     retval = dell_smi_obj_execute(smi);
     if(retval) // error
-        goto out;
+        goto err_out;
 
     fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
     fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
@@ -67,17 +68,21 @@ int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
     res[cbRES2] = dell_smi_obj_get_res(smi, cbRES2);
     res[cbRES3] = dell_smi_obj_get_res(smi, cbRES3);
     res[cbRES4] = dell_smi_obj_get_res(smi, cbRES4);
+    goto out;
 
-    dell_smi_obj_free(smi);
+err_out:
+    fnprintf("err_out!\n");
 
 out:
+    dell_smi_obj_free(smi);
+    fnprintf("return retval: %d\n", retval);
     return retval;
 }
 
 static int read_setting(u16 select, u32 location, u32 *curValue, u32 *minValue, u32 *maxValue)
 {
     u32 args[4] = {location, 0,}, res[4] = {0,};
-    fnprintf("\n");
+    fnprintf(" select %d, location %x \n", select, location);
     int retval = dell_simple_ci_smi(0, select, args, res); // 0 == class code for setting/batter/ac/systemstatus
     if(curValue)
         *curValue = res[cbARG2];
@@ -85,6 +90,7 @@ static int read_setting(u16 select, u32 location, u32 *curValue, u32 *minValue, 
         *minValue = res[cbARG3];
     if(maxValue)
         *maxValue = res[cbARG4];
+    fnprintf("retval %d\n", retval);
     return retval;
 }
 

@@ -176,7 +176,7 @@ static int _da_try_password(const struct token_obj *t, const char *pass_ascii, c
     return ret;
 }
 
-void __internal init_da_token(struct token_obj *t)
+void __internal init_da_token(struct token_table *table, struct token_obj *t)
 {
     fnprintf("\n");
     t->get_type = _da_get_type;
@@ -189,19 +189,26 @@ void __internal init_da_token(struct token_obj *t)
     t->set_string = _da_set_string;
     t->try_password = _da_try_password;
     t->private_data = 0;
+    t->errstring = table->errstring;
 }
 
-int __internal add_da_tokens(struct token_table *t)
+int __internal add_da_tokens(struct token_table *table)
 {
     char *error=0;
     int retval = 0;
     fnprintf("\n");
-    smbios_table_for_each_struct_type(t->smbios_table, s, 0xDA) {
+    smbios_table_for_each_struct_type(table->smbios_table, s, 0xDA) {
         struct calling_interface_structure *da_struct = (struct calling_interface_structure*)s;
         struct calling_interface_token *token = da_struct->tokens;
 
 
         while (token->tokenId != TokenTypeEOT) {
+            if (token->tokenId == TokenTypeUnused)
+            {
+                token++;
+                continue;
+            }
+
             if ( (void* )(token + sizeof(*token) ) > (void *)(da_struct + da_struct->length ))
             {
                 fnprintf("\n");
@@ -226,14 +233,14 @@ int __internal add_da_tokens(struct token_table *t)
 
             n->token_ptr = token;
             n->smbios_structure = s;
-            init_da_token(n);
-            add_token(t, n);
+            init_da_token(table, n);
+            add_token(table, n);
             token++;
         }
     }
     goto out;
 out_err:
-    strlcat(t->errstring, error, ERROR_BUFSIZE);
+    strlcat(table->errstring, error, ERROR_BUFSIZE);
     retval = -1;
 out:
     return retval;

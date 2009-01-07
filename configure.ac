@@ -10,7 +10,7 @@ AC_INIT([libsmbios],[unconfigured version])
 # allow configurer to override version #
 test -n "$RELEASE_MAJOR"      || RELEASE_MAJOR=2
 test -n "$RELEASE_MINOR"      || RELEASE_MINOR=2
-test -n "$RELEASE_MICRO"      || RELEASE_MICRO=6
+test -n "$RELEASE_MICRO"      || RELEASE_MICRO=7
 test -n "$RELEASE_EXTRA"      || RELEASE_EXTRA=
 
 #NOTE: libtool version, below, is different and distinct from 'marketing' version, above.
@@ -107,7 +107,7 @@ AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
 AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" != mingw32])
 AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
 
-GETTEXT_PACKAGE=libsmbios
+GETTEXT_PACKAGE=libsmbios2-$RELEASE_MAJOR.$RELEASE_MINOR
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
 

@@ -59,7 +59,7 @@ __internal bool get_up_offset_and_flag(struct up_info *up)
     if (offset!=0 && offset!=-1)
         memory_read(up, (u64)offset, sizeof(*up));
 
-    fnprintf("offset 0x%lx" % offset);
+    fnprintf("offset 0x%lx", offset);
     return (offset!=0 && offset!=-1);
 }
 

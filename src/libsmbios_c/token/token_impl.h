@@ -42,6 +42,7 @@ enum  // Smbios Structure types
 
 enum // Token types
 {
+    TokenTypeUnused = 0x0000,
     TokenTypeEOT = 0xffff,
 };
 

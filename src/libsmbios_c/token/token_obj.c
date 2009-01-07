@@ -228,6 +228,10 @@ static void _token_table_free_tokens(struct token_table *this)
         if (ptr->next)
             next = ptr->next;
 
+        // token_obj errstring generally points to token_table
+        // errstring. dont free if this is the case
+        if (ptr->errstring != this->errstring)
+            free(ptr->errstring);
         free(ptr);
         ptr = next;
     }
