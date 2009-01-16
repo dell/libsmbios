@@ -252,9 +252,7 @@ rm -rf %{buildroot}
 %doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 /usr/include/smbios
 /usr/include/smbios_c
-%{_libdir}/libsmbios.a
 %{_libdir}/libsmbios.so
-%{_libdir}/libsmbios_c.a
 %{_libdir}/libsmbios_c.so
 %doc _build/out/libsmbios_c++
 %doc _build/out/libsmbios_c
