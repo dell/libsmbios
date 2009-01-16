@@ -8,6 +8,15 @@
 %define lang_dom  @GETTEXT_PACKAGE@
 %define release_version %{major}.%{minor}.%{micro}%{extra}
 
+%define release_name libsmbios
+%define other_name   libsmbios2
+
+# suse naming conventions
+%if 0%{?suse_version}
+%define release_name libsmbios2
+%define other_name   libsmbios
+%endif
+
 # required by suse build system
 # norootforbuild
 
@@ -54,7 +63,7 @@
 # fedora: use the !? code below to define when it isnt already
 %{!?py_sitedir: %define py_sitedir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
-Name: libsmbios2
+Name: %{release_name}
 Version: %{release_version}
 Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
@@ -64,11 +73,11 @@ Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR}
-Provides: libsmbios-libs = 0:%{version}-%{release}
 # uncomment for official fedora
-#Obsoletes: libsmbios-libs < 2.0.0
-Obsoletes: libsmbios < 0:%{version}-%{release}
-Provides: libsmbios = 0:%{version}-%{release}
+Obsoletes: libsmbios-libs < 2.0.0
+Provides: libsmbios-libs = 0:%{version}-%{release}
+Obsoletes: %{other_name} <= 0:%{version}-%{release}
+Provides: %{other_name}  0:%{version}-%{release}
 
 # libsmbios only ever makes sense on intel compatible arches
 # no DMI tables on ppc, s390, etc.
@@ -88,7 +97,7 @@ should use the libsmbios C interface.
 %package -n python-smbios
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
-Requires: libsmbios2 = %{version}-%{release}
+Requires: %{release_name} = 0:%{version}-%{release}
 Requires: python %{ctypes_BR}
 
 %description -n python-smbios
@@ -110,7 +119,7 @@ as the python executables.
 %package -n smbios-utils-bin
 Summary: Binary utilities that use libsmbios
 Group: Applications/System
-Requires: libsmbios2 = %{version}-%{release}
+Requires: %{release_name} = 0:%{version}-%{release}
 
 %description -n smbios-utils-bin
 Get BIOS information, such as System product name, product id, service tag and
@@ -127,14 +136,15 @@ asset tag. Set service and asset tags on Dell machines. Manipulate wireless
 cards/bluetooth on Dell laptops. Set BIOS password on select Dell systems.
 Update BIOS on select Dell systems. Set LCD brightness on select Dell laptops.
 
-%package -n libsmbios2-devel
+# name the devel package libsmbios-devel regardless of package name, per suse/fedora convention
+%package -n libsmbios-devel
 Summary: Development headers and archives
 Group: Development/Libraries
-Requires: libsmbios = %{version}-%{release}
-Provides: libsmbios-devel = %{version}-%{release}
-Obsoletes: libsmbios-devel < %{version}-%{release}
+Requires: %{release_name} = 0:%{version}-%{release}
+Provides: libsmbios2-devel = %{version}-%{release}
+Obsoletes: libsmbios2-devel < %{version}-%{release}
 
-%description -n libsmbios2-devel
+%description -n libsmbios-devel
 Libsmbios is a library and utilities that can be used by client programs to get
 information from standard BIOS tables, such as the SMBIOS table.
 
@@ -204,7 +214,7 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a $TOPDIR/src/include/*  %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
-find %{buildroot}/usr/include -exec touch -r $TOPDIR/configure.ac {} \;
+find %{buildroot}/usr/include _build/out/libsmbios_c++ _build/out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
 # backwards compatible:
 ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
@@ -221,10 +231,10 @@ ln -s smbios-rbu-bios-update %{buildroot}%{_sbindir}/dellBiosUpdate
 %clean
 rm -rf %{buildroot}
 
-%post   -n libsmbios2   -p /sbin/ldconfig
-%postun -n libsmbios2   -p /sbin/ldconfig
+%post   -n %{release_name}   -p /sbin/ldconfig
+%postun -n %{release_name}   -p /sbin/ldconfig
 
-%files -n libsmbios2 -f _build/%{lang_dom}.lang
+%files -n %{release_name} -f _build/%{lang_dom}.lang
 %defattr(-,root,root,-)
 %{_libdir}/libsmbios_c.so.*
 %{_libdir}/libsmbios.so.*
@@ -234,7 +244,7 @@ rm -rf %{buildroot}
 %doc COPYING-GPL COPYING-OSL README
 %{py_sitedir}/*
 
-%files -n libsmbios2-devel -f _build/buildlogs.txt
+%files -n libsmbios-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 /usr/include/smbios
