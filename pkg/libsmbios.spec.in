@@ -167,7 +167,10 @@ cd _build
 echo '../configure "$@"' > configure
 chmod +x ./configure
 
-%configure RELEASE_MAJOR=%{major} RELEASE_MINOR=%{minor} RELEASE_MICRO=%{micro} RELEASE_EXTRA=%{extra} CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
+%configure \
+    --disable-static    \
+    RELEASE_MAJOR=%{major} RELEASE_MINOR=%{minor} RELEASE_MICRO=%{micro} RELEASE_EXTRA=%{extra} \
+    CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
 make -e %{?_smp_mflags} 2>&1 | tee build.log
@@ -214,7 +217,7 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a $TOPDIR/src/include/*  %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
-find %{buildroot}/usr/include _build/out/libsmbios_c++ _build/out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
+find %{buildroot}/usr/include out/libsmbios_c++ out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
 # backwards compatible:
 ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
