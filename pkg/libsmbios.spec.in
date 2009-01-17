@@ -69,7 +69,7 @@ Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
 Summary: Libsmbios C/C++ shared libraries
 Group: System Environment/Libraries
-Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.gz
+Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.bz2
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR}
