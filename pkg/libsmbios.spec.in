@@ -169,7 +169,6 @@ chmod +x ./configure
 
 %configure \
     --disable-static    \
-    RELEASE_MAJOR=%{major} RELEASE_MINOR=%{minor} RELEASE_MICRO=%{micro} RELEASE_EXTRA=%{extra} \
     CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++

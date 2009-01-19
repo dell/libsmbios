@@ -2,32 +2,71 @@
 # vim:tw=0:et:ts=4:sw=4
 # Process this file with autoconf to produce a configure script.
 
+##############################################################################
+#  RELEASE VARIABLES
+##############################################################################
+# The following variables define the libsmbios release version.
 m4_define([libsmbios_major_version], [2])
 m4_define([libsmbios_minor_version], [2])
 m4_define([libsmbios_micro_version], [9])
 m4_define([libsmbios_extra_version], [])
 
 #NOTE: libtool version, below, is different and distinct from 'marketing' version, above.
-# non-interface changes/bugfixes:            revision++;
+# non-interface changes/bugfixes: current++; revision++; age++;
 # interface add:                  current++; revision=0; age++;
 # interface remove/change:        current++; revision=0; age=0;
-m4_define([libsmbios_lt_current], [3])
-m4_define([libsmbios_lt_revision], [0])
-m4_define([libsmbios_lt_age], [1])
+
+m4_define([libsmbios_c_lt_current], [3])
+m4_define([libsmbios_c_lt_revision], [0])
+m4_define([libsmbios_c_lt_age], [1])
+
+m4_define([libsmbios_cplusplus_lt_current], [3])
+m4_define([libsmbios_cplusplus_lt_revision], [0])
+m4_define([libsmbios_cplusplus_lt_age], [1])
+##############################################################################
+# END RELEASE VARIABLES
+##############################################################################
+
 
 m4_define([libsmbios_version],
-          [libsmbios_major_version.libsmbios_minor_version.libsmbios_micro_version.libsmbios_extra_version])
+          [libsmbios_major_version().libsmbios_minor_version().libsmbios_micro_version()libsmbios_extra_version()])
 
 AC_INIT([libsmbios],[libsmbios_version])
 
 RELEASE_MAJOR=libsmbios_major_version
-RELEASE_MINOR=libsmbios_minor_version
-RELEASE_MICRO=libsmbios_micro_version
-RELEASE_EXTRA=libsmbios_extra_version
+AC_SUBST(RELEASE_MAJOR)
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 
-LIBTOOL_CURRENT=libsmbios_lt_current
-LIBTOOL_REVISION=libsmbios_lt_revision
-LIBTOOL_AGE=libsmbios_lt_age
+RELEASE_MINOR=libsmbios_minor_version
+AC_SUBST(RELEASE_MINOR)
+AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
+
+RELEASE_MICRO=libsmbios_micro_version
+AC_SUBST(RELEASE_MICRO)
+
+RELEASE_EXTRA=libsmbios_extra_version
+AC_SUBST(RELEASE_EXTRA)
+
+if test -z "$RELEASE_EXTRA"; then
+    RELEASE_RPM_EXTRA=%{nil}
+else
+    RELEASE_RPM_EXTRA=$RELEASE_EXTRA
+fi
+AC_SUBST(RELEASE_RPM_EXTRA)
+
+LIBSMBIOS_C_LIBTOOL_CURRENT=libsmbios_c_lt_current
+LIBSMBIOS_C_LIBTOOL_REVISION=libsmbios_c_lt_revision
+LIBSMBIOS_C_LIBTOOL_AGE=libsmbios_c_lt_age
+AC_SUBST(LIBSMBIOS_C_LIBTOOL_CURRENT)
+AC_SUBST(LIBSMBIOS_C_LIBTOOL_REVISION)
+AC_SUBST(LIBSMBIOS_C_LIBTOOL_AGE)
+
+LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT=libsmbios_cplusplus_lt_current
+LIBSMBIOS_CPLUSPLUS_LIBTOOL_REVISION=libsmbios_cplusplus_lt_revision
+LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE=libsmbios_cplusplus_lt_age
+AC_SUBST(LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT)
+AC_SUBST(LIBSMBIOS_CPLUSPLUS_LIBTOOL_REVISION)
+AC_SUBST(LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE)
 
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
@@ -116,23 +155,6 @@ AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
 GETTEXT_PACKAGE=libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
-
-if test -z "$RELEASE_EXTRA"; then
-    RELEASE_RPM_EXTRA=%{nil}
-else
-    RELEASE_RPM_EXTRA=$RELEASE_EXTRA
-fi
-
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
-AC_SUBST(RELEASE_MAJOR)
-AC_SUBST(RELEASE_MINOR)
-AC_SUBST(RELEASE_MICRO)
-AC_SUBST(RELEASE_EXTRA)
-AC_SUBST(RELEASE_RPM_EXTRA)
-AC_SUBST(LIBTOOL_CURRENT)
-AC_SUBST(LIBTOOL_REVISION)
-AC_SUBST(LIBTOOL_AGE)
 
 LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)

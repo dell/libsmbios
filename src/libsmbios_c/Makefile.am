@@ -1,7 +1,7 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
 lib_LTLIBRARIES += out/libsmbios_c.la
-out_libsmbios_c_la_LDFLAGS := -version-info $(LIBTOOL_CURRENT):$(LIBTOOL_REVISION):$(LIBTOOL_AGE) $(AM_LDFLAGS)
+out_libsmbios_c_la_LDFLAGS := -version-info $(LIBSMBIOS_C_LIBTOOL_CURRENT):$(LIBSMBIOS_C_LIBTOOL_REVISION):$(LIBSMBIOS_C_LIBTOOL_AGE) $(AM_LDFLAGS)
 out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
 
 EXTRA_DIST += src/include/smbios_c
