@@ -4,7 +4,10 @@ import os
 
 __all__ = ["__VERSION__", "GETTEXT_PACKAGE",
     "localedir", "pkgdatadir", "pythondir", "pkgconfdir", "libdir",
+    "LIBSMBIOS_C_SONAME"
     ]
+
+LIBSMBIOS_C_SONAME =   "libsmbios.so.2"   # replaced at install time
 
 import libsmbios_c
 _modpath = os.path.realpath(libsmbios_c.__path__[0])
@@ -17,5 +20,6 @@ pythondir =os.path.join(_modpath, "..")
 localedir =os.path.join(_modpath, "..", "..", "..", "po")
 pkgdatadir=os.path.join(_modpath, "..", "..", "..", "doc")
 pkgconfdir=os.path.join(_modpath, "..", "..", "..", "etc")
+
 # end vars
 

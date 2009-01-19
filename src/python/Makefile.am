@@ -23,6 +23,8 @@ pkgpython_PYTHON = \
 EXTRA_DIST += src/python/libsmbios_c/_vars.py
 pkgpython_PYTHON += src/python/_vars.py
 DISTCLEANFILES +=   src/python/_vars.py
+REPLACE_VARS += LIBSMBIOS_C_SONAME
+all: src/python/_vars.py
 src/python/_vars.py: src/python/libsmbios_c/_vars.py  configure Makefile config.status
 	mkdir -p $$(dirname $@) ||:
 	cp $< $@

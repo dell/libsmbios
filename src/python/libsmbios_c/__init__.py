@@ -12,10 +12,10 @@ try:
     # this lets us run cleanly from build tree
     # or if user uses wierd --prefix for configure
     # doesnt work from build tree if top_builddir != top_srcdir
-    libsmbios_c_DLL = ctypes.cdll.LoadLibrary(os.path.join(libdir, "libsmbios_c.so.2"))
+    libsmbios_c_DLL = ctypes.cdll.LoadLibrary(os.path.join(libdir, LIBSMBIOS_C_SONAME))
 except OSError, e:
     # then let it search
-    libsmbios_c_DLL = ctypes.cdll.LoadLibrary("libsmbios_c.so.2")
+    libsmbios_c_DLL = ctypes.cdll.LoadLibrary(LIBSMBIOS_C_SONAME)
 
 # check ctypes bool support. If it doesnt exist, fake it.
 if not getattr(ctypes, "c_bool", None):
