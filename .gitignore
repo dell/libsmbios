@@ -5,10 +5,6 @@
 *.la
 .libs
 .deps
-#.*.swp
-
-# UNIT TEST
-testResults.xml
 
 # python compiled
 *.pyc
@@ -21,6 +17,7 @@ configure
 aclocal.m4
 Makefile.in
 ABOUT-NLS
+INSTALL
 autom4te.cache/
 m4/
 pkg/compile
