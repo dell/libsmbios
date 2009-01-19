@@ -1,0 +1,15 @@
+# This is a comment
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libsmbios_c
+Description: C libraries for accessing dmi data
+Version: @VERSION@
+URL: http://linux.dell.com/libsmbios/main/
+Requires:
+Conflicts:
+Libs: -lsmbios_c
+Libs.private:
+Cflags:

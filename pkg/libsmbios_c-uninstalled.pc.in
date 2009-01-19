@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+abs_top_srcdir=@abs_top_srcdir@
+abs_top_builddir=@abs_top_builddir@
+
+Name: libsmbios_c (uninstalled copy)
+Description: C lib for accessing system dmi information
+Version: @VERSION@
+Requires: pkg-config >= 0.21
+Requires.private:
+Libs: ${abs_top_builddir}/out/libsmbios_c.la
+Cflags: -I${abs_top_srcdir}/src

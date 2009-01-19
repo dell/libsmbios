@@ -49,6 +49,9 @@ include src/cppunit/Makefile.am
 pkgconfdir=$(sysconfdir)/$(PACKAGE)
 dist_pkgconf_DATA=etc/logging.conf
 
+pcdir = ${libdir}/pkgconfig
+pc_DATA = libsmbios_c.pc
+
 CLEANFILES+=_buildtemp smbios-utils*.rpm out
 ACLOCAL_AMFLAGS = -I m4
 

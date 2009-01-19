@@ -254,6 +254,7 @@ rm -rf %{buildroot}
 /usr/include/smbios_c
 %{_libdir}/libsmbios.so
 %{_libdir}/libsmbios_c.so
+%{_libdir}/pkgconfig/*.pc
 %doc _build/out/libsmbios_c++
 %doc _build/out/libsmbios_c
 
