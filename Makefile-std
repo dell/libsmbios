@@ -12,6 +12,12 @@ CLEANFILES += $(EXTRA_PROGRAMS)
 CLEANFILES += *.pyc */*.pyc */*/*.pyc */*/*/*.pyc
 DISTCLEANFILES += pkg/$(PACKAGE).spec
 
+clean-local:
+	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
+
+distclean-local:
+	-test -z "$(DISTCLEANFILES)" || rm -rf $(DISTCLEANFILES)
+
 .PHONY: git-tag
 git-tag:
 	git tag -u libsmbios -m "tag for official release: libsmbios $(PACKAGE_STRING)" v$(PACKAGE_VERSION)

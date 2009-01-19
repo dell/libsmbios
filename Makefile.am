@@ -46,16 +46,14 @@ pcdir = ${libdir}/pkgconfig
 pc_DATA = pkg/libsmbios_c.pc
 DISTCLEANFILES += pkg/libsmbios_c.pc libsmbios_c-uninstalled.pc
 
-CLEANFILES+=_buildtemp smbios-utils*.rpm out
+CLEANFILES+=_buildtemp smbios-utils*.rpm out/libsmbios_c out/libsmbios_c++
+DISTCLEANFILES += out
 ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES += $(EXTRA_PROGRAMS)
 
 # bug in po/Makefile or something...
 DISTCLEANFILES += ./po/stamp-po
-
-clean-local:
-	-test -z "$(CLEANFILES)" || rm -rf $(CLEANFILES)
 
 .PHONY: valgrind
 valgrind: $(check_PROGRAMS)
