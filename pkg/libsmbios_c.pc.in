@@ -10,6 +10,6 @@ Version: @VERSION@
 URL: http://linux.dell.com/libsmbios/main/
 Requires:
 Conflicts:
-Libs: -lsmbios_c
+Libs: -L${libdir} -lsmbios_c
 Libs.private:
 Cflags:

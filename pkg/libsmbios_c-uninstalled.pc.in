@@ -9,4 +9,4 @@ Version: @VERSION@
 Requires: pkg-config >= 0.21
 Requires.private:
 Libs: ${abs_top_builddir}/out/libsmbios_c.la
-Cflags: -I${abs_top_srcdir}/src/include -I${abs_top_builddir}/public-include/
+Cflags: -I${abs_top_srcdir}/src/include -I${abs_top_builddir}/out/public-include/
