@@ -16,18 +16,13 @@
  */
 
 
+// Use this header if you are using dlopen to ensure that you get the same ABI
+// version as what you are compiling against
+
 #ifndef DLOPEN_H
 #define DLOPEN_H
 
-// include smbios_c/compat.h first
-#include "smbios_c/compat.h"
-
-EXTERN_C_BEGIN;
-
-// Use this header if you are using dlopen to ensure that you get the same ABI
-// version as what you are compiling against
-#define LIBSMBIOS_LIBNAME "libsmbios.so.2"
-
-EXTERN_C_END;
+#define LIBSMBIOS_LIBNAME "@LIBSMBIOS_CPLUSPLUS_SONAME@"
+#define LIBSMBIOS_C_LIBNAME "@LIBSMBIOS_C_SONAME@"
 
 #endif  /* DLOPEN_H */

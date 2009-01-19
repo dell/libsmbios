@@ -215,6 +215,7 @@ TOPDIR=..
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a $TOPDIR/src/include/*  %{buildroot}/usr/include/
+cp -a $out/public-include/*  %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include out/libsmbios_c++ out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
