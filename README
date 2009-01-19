@@ -1,10 +1,29 @@
-To build, run "make all", or "make minimal". The 'all' target builds all 
-libs and docs. The 'minimal' target only builds things with no external
-dependencies (cppunit/xerces/doxygen).
+To Build:
 
-Documentation is in doxygen format. To view the docs, run "make doxygen", then 
-look in the docs/full/html/index.html, or the docs/interface/html/index.html.
-Docs are also built as part of "make all".
+Standard autotools package:
+  $ ./configure
+  $ make
+
+To build from a git checkout:
+  $ ./autogen.sh     # autogen.sh internally runs configure automatically
+  $ make
+
+[RECOMMENDED] Out of tree build. To build in a separate dir, leaving a clean
+source tree:
+  $ mkdir _build
+  $ ../configure
+  $ make 
+
+
+To Install:
+
+Standard autotools package:
+  $ make install
+
+
+Documentation is in doxygen format. To view the docs, run "make doxygen", then
+look in the out/libsmbios_c/html/index.html.  Docs are also built as part of
+"make all".
 
 These docs are posted on the web at http://.../.. (need permanent address here)
 
