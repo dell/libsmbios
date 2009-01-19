@@ -24,9 +24,9 @@ git-tag:
 
 .PHONY: get-version
 get-version:
-	@echo PACKAGE_STRING=$(PACKAGE_STRING)
-	@echo PACKAGE_VERSION=$(PACKAGE_VERSION)
-	@echo PACKAGE=$(PACKAGE)
+	@echo 'PACKAGE_STRING="$(PACKAGE_STRING)"'
+	@echo 'PACKAGE_VERSION="$(PACKAGE_VERSION)"'
+	@echo 'PACKAGE="$(PACKAGE)"'
 
 ChangeLog:
 	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
