@@ -1,12 +1,5 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-LIBTOOL_CURRENT=@LIBTOOL_CURRENT@
-LIBTOOL_REVISION=@LIBTOOL_REVISION@
-LIBTOOL_AGE=@LIBTOOL_AGE@
-
-LIBXML2_LIBS =  @LIBXML2_LIBS@
-LIBXML2_CFLAGS = @LIBXML2_CFLAGS@
-
 bin_PROGRAMS=
 sbin_PROGRAMS=
 dist_sbin_SCRIPTS=
@@ -50,7 +43,8 @@ pkgconfdir=$(sysconfdir)/$(PACKAGE)
 dist_pkgconf_DATA=etc/logging.conf
 
 pcdir = ${libdir}/pkgconfig
-pc_DATA = libsmbios_c.pc
+pc_DATA = pkg/libsmbios_c.pc
+DISTCLEANFILES += pkg/libsmbios_c.pc libsmbios_c-uninstalled.pc
 
 CLEANFILES+=_buildtemp smbios-utils*.rpm out
 ACLOCAL_AMFLAGS = -I m4

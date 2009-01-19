@@ -32,7 +32,7 @@ static char *module_error_buf; // auto-init to 0
 const char *smbios_get_library_version_string()
 {
     sysinfo_clearerr();
-    return LIBSMBIOS_RELEASE_VERSION;
+    return PACKAGE_VERSION;
 }
 
 int smbios_get_library_version_major()

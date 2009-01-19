@@ -2,19 +2,6 @@
 #  This is a template of all of the 'Standard' stuff that we use in all our
 #  projects.
 
-
-RELEASE_MAJOR=@RELEASE_MAJOR@
-RELEASE_MINOR=@RELEASE_MINOR@
-RELEASE_MICRO=@RELEASE_MICRO@
-RELEASE_EXTRA=@RELEASE_EXTRA@
-
-# override built-in defs which end up wrong
-VERSION = $(RELEASE_MAJOR).$(RELEASE_MINOR).$(RELEASE_MICRO)$(RELEASE_EXTRA)
-# note that we add a "-" here. normal package_string has a space.
-PACKAGE_STRING = $(PACKAGE)-$(VERSION)
-PACKAGE_VERSION = $(VERSION)
-PACKAGE = $(PACKAGE_NAME)
-
 CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.bz2 $(PACKAGE_NAME)-*.rpm _buildtemp version
 DISTCLEANFILES=*~
 

@@ -201,8 +201,7 @@ static void dell_encode_service_tag( char *tag, size_t len )
 
 const char *SMBIOSGetLibraryVersionString()
 {
-    // LIBSMBIOS_RELEASE_VERSION is a macro defined by the build system
-    return LIBSMBIOS_RELEASE_VERSION;
+    return PACKAGE_VERSION;
 }
 
 void SMBIOSFreeMemory( const char *ptr )

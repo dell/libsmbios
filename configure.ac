@@ -2,26 +2,32 @@
 # vim:tw=0:et:ts=4:sw=4
 # Process this file with autoconf to produce a configure script.
 
-####################################
-####################################
-# change "unconfigure version" here.
-AC_INIT([libsmbios],[unconfigured version])
-
-# allow configurer to override version #
-test -n "$RELEASE_MAJOR"      || RELEASE_MAJOR=2
-test -n "$RELEASE_MINOR"      || RELEASE_MINOR=2
-test -n "$RELEASE_MICRO"      || RELEASE_MICRO=8
-test -n "$RELEASE_EXTRA"      || RELEASE_EXTRA=
+m4_define([libsmbios_major_version], [2])
+m4_define([libsmbios_minor_version], [2])
+m4_define([libsmbios_micro_version], [9])
+m4_define([libsmbios_extra_version], [])
 
 #NOTE: libtool version, below, is different and distinct from 'marketing' version, above.
 # non-interface changes/bugfixes:            revision++;
 # interface add:                  current++; revision=0; age++;
 # interface remove/change:        current++; revision=0; age=0;
-LIBTOOL_CURRENT=3
-LIBTOOL_REVISION=0
-LIBTOOL_AGE=1
-####################################
-####################################
+m4_define([libsmbios_lt_current], [3])
+m4_define([libsmbios_lt_revision], [0])
+m4_define([libsmbios_lt_age], [1])
+
+m4_define([libsmbios_version],
+          [libsmbios_major_version.libsmbios_minor_version.libsmbios_micro_version.libsmbios_extra_version])
+
+AC_INIT([libsmbios],[libsmbios_version])
+
+RELEASE_MAJOR=libsmbios_major_version
+RELEASE_MINOR=libsmbios_minor_version
+RELEASE_MICRO=libsmbios_micro_version
+RELEASE_EXTRA=libsmbios_extra_version
+
+LIBTOOL_CURRENT=libsmbios_lt_current
+LIBTOOL_REVISION=libsmbios_lt_revision
+LIBTOOL_AGE=libsmbios_lt_age
 
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
@@ -117,9 +123,6 @@ else
     RELEASE_RPM_EXTRA=$RELEASE_EXTRA
 fi
 
-AC_DEFINE_UNQUOTED(PACKAGE_STRING, ["$PACKAGE_NAME $RELEASE_MAJOR.$RELEASE_MINOR.$RELEASE_MICRO$RELEASE_EXTRA"], [package version])
-AC_DEFINE_UNQUOTED(PACKAGE_VERSION, ["$RELEASE_MAJOR.$RELEASE_MINOR.$RELEASE_MICRO$RELEASE_EXTRA"], [package version])
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_VERSION,"$RELEASE_MAJOR.$RELEASE_MINOR.$RELEASE_MICRO$RELEASE_EXTRA","Full package version string")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 AC_SUBST(RELEASE_MAJOR)
@@ -135,12 +138,6 @@ LIBXML2_LIBS=$(xml2-config --libs)
 LIBXML2_CFLAGS=$(xml2-config --cflags)
 AC_SUBST(LIBXML2_LIBS)
 AC_SUBST(LIBXML2_CFLAGS)
-
-VERSION=[`echo ${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_MICRO}${RELEASE_EXTRA}`]
-PACKAGE_VERSION=$VERSION
-PACKAGE_STRING=[`echo ${RELEASE_NAME}-${RELEASE_MAJOR}.${RELEASE_MINOR}.${RELEASE_MICRO}${RELEASE_EXTRA}`]
-sed -i "s|(^#define PACKAGE_VERSION).*|\$1 \"$PACKAGE_VERSION\"|" confdefs.h
-sed -i "s|(^#define PACKAGE_STRING).*|\$1 \"$PACKAGE_STRING\"|" confdefs.h
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
