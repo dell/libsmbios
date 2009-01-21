@@ -5,17 +5,24 @@
 ##############################################################################
 #  RELEASE VARIABLES
 ##############################################################################
+#
 # The following variables define the libsmbios release version.
+#   This is the "marketing" version, or overall version of the project.
+#   This doesnt have anything in relation to the ABI versions of individual
+#   libraries, which are defined further below.
 m4_define([libsmbios_major_version], [2])
 m4_define([libsmbios_minor_version], [2])
 m4_define([libsmbios_micro_version], [9])
+# if you define any "extra" version info, include a leading dot (".")
 m4_define([libsmbios_extra_version], [])
 
+##########################################################
+# ABI Version Variables
+##########################################################
 #NOTE: libtool version, below, is different and distinct from 'marketing' version, above.
 # non-interface changes/bugfixes: current++; revision++; age++;
 # interface add:                  current++; revision=0; age++;
 # interface remove/change:        current++; revision=0; age=0;
-
 m4_define([libsmbios_c_lt_current], [3])
 m4_define([libsmbios_c_lt_revision], [0])
 m4_define([libsmbios_c_lt_age], [1])
@@ -23,28 +30,43 @@ m4_define([libsmbios_c_lt_age], [1])
 m4_define([libsmbios_cplusplus_lt_current], [3])
 m4_define([libsmbios_cplusplus_lt_revision], [0])
 m4_define([libsmbios_cplusplus_lt_age], [1])
+##########################################################
+# END ABI Version Variables
+##########################################################
 ##############################################################################
 # END RELEASE VARIABLES
 ##############################################################################
 
-
+# put the versioning stuff together now.
 m4_define([libsmbios_version],
           [libsmbios_major_version().libsmbios_minor_version().libsmbios_micro_version()libsmbios_extra_version()])
 
-AC_INIT([libsmbios],[libsmbios_version])
+AC_INIT([libsmbios],[libsmbios_version()])
+AC_PREREQ(2.59)
+AC_CONFIG_AUX_DIR([pkg])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CANONICAL_HOST
+AM_INIT_AUTOMAKE([subdir-objects tar-ustar dist-bzip2 dist-lzma no-define ])
+AM_MAINTAINER_MODE
+AM_PATH_CPPUNIT(1.9.6)
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.14])
+AC_GNU_SOURCE
+AC_CONFIG_SRCDIR([src/])
+AC_CONFIG_HEADER([out/include/config.h:pkg/config.h.in])
 
-RELEASE_MAJOR=libsmbios_major_version
+RELEASE_MAJOR=libsmbios_major_version()
 AC_SUBST(RELEASE_MAJOR)
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 
-RELEASE_MINOR=libsmbios_minor_version
+RELEASE_MINOR=libsmbios_minor_version()
 AC_SUBST(RELEASE_MINOR)
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 
-RELEASE_MICRO=libsmbios_micro_version
+RELEASE_MICRO=libsmbios_micro_version()
 AC_SUBST(RELEASE_MICRO)
 
-RELEASE_EXTRA=libsmbios_extra_version
+RELEASE_EXTRA=libsmbios_extra_version()
 AC_SUBST(RELEASE_EXTRA)
 
 if test -z "$RELEASE_EXTRA"; then
@@ -53,6 +75,10 @@ else
     RELEASE_RPM_EXTRA=$RELEASE_EXTRA
 fi
 AC_SUBST(RELEASE_RPM_EXTRA)
+
+GETTEXT_PACKAGE=libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
 
 LIBSMBIOS_C_LIBTOOL_CURRENT=libsmbios_c_lt_current
 LIBSMBIOS_C_LIBTOOL_REVISION=libsmbios_c_lt_revision
@@ -75,19 +101,6 @@ AC_SUBST(LIBSMBIOS_CPLUSPLUS_LIBTOOL_REVISION)
 AC_SUBST(LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE)
 AC_SUBST(LIBSMBIOS_CPLUSPLUS_SO_MAJOR)
 AC_SUBST(LIBSMBIOS_CPLUSPLUS_SONAME)
-
-AC_PREREQ(2.59)
-AC_CONFIG_AUX_DIR([pkg])
-AC_CONFIG_MACRO_DIR([m4])
-AC_CANONICAL_HOST
-AM_INIT_AUTOMAKE([subdir-objects tar-ustar dist-bzip2 dist-lzma no-define ])
-AM_MAINTAINER_MODE
-AM_PATH_CPPUNIT(1.9.6)
-AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.14])
-AC_GNU_SOURCE
-AC_CONFIG_SRCDIR([src/])
-AC_CONFIG_HEADER([out/include/config.h:pkg/config.h.in])
 
 dnl Help line for doxygen
 AC_ARG_ENABLE(doxygen,
@@ -160,14 +173,7 @@ AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
 AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" != mingw32])
 AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
 
-GETTEXT_PACKAGE=libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
-
-LIBXML2_LIBS=$(xml2-config --libs)
-LIBXML2_CFLAGS=$(xml2-config --cflags)
-AC_SUBST(LIBXML2_LIBS)
-AC_SUBST(LIBXML2_CFLAGS)
+PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
