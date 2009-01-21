@@ -20,7 +20,7 @@ distclean-local:
 
 .PHONY: git-tag
 git-tag:
-	git tag -u libsmbios -m "tag for official release: libsmbios $(PACKAGE_STRING)" v$(PACKAGE_VERSION)
+	git tag -u libsmbios -m "tag for official release: $(PACKAGE_STRING)" v$(PACKAGE_VERSION)
 
 .PHONY: get-version
 get-version:
@@ -29,10 +29,10 @@ get-version:
 	@echo 'PACKAGE="$(PACKAGE)"'
 
 ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git-log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
+	(GIT_DIR=$(top_srcdir)/.git git log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
 
 AUTHORS:
-	(GIT_DIR=$(top_srcdir)/.git git-log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
+	(GIT_DIR=$(top_srcdir)/.git git log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
 
 REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
 export $(REPLACE_VARS)
