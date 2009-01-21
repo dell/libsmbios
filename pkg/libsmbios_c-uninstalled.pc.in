@@ -3,6 +3,8 @@ exec_prefix=
 abs_top_srcdir=@abs_top_srcdir@
 abs_top_builddir=@abs_top_builddir@
 
+python_path_add=@abs_top_srcdir@/src/python/
+
 Name: libsmbios_c (uninstalled copy)
 Description: C lib for accessing system dmi information
 Version: @VERSION@
