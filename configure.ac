@@ -12,7 +12,7 @@
 #   libraries, which are defined further below.
 m4_define([libsmbios_major_version], [2])
 m4_define([libsmbios_minor_version], [2])
-m4_define([libsmbios_micro_version], [9])
+m4_define([libsmbios_micro_version], [10])
 # if you define any "extra" version info, include a leading dot (".")
 m4_define([libsmbios_extra_version], [])
 
@@ -23,9 +23,9 @@ m4_define([libsmbios_extra_version], [])
 # non-interface changes/bugfixes: current++; revision++; age++;
 # interface add:                  current++; revision=0; age++;
 # interface remove/change:        current++; revision=0; age=0;
-m4_define([libsmbios_c_lt_current], [3])
-m4_define([libsmbios_c_lt_revision], [0])
-m4_define([libsmbios_c_lt_age], [1])
+m4_define([libsmbios_c_lt_current], [4])
+m4_define([libsmbios_c_lt_revision], [1])
+m4_define([libsmbios_c_lt_age], [2])
 
 m4_define([libsmbios_cplusplus_lt_current], [3])
 m4_define([libsmbios_cplusplus_lt_revision], [0])

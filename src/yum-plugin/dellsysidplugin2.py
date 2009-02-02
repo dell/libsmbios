@@ -22,7 +22,7 @@ def postconfig_hook(conduit):
         conf.yumvar["dellsysidpluginver"] = version
         conf.yumvar["sys_dev_id"] = "0x%04x" % sysinfo.get_dell_system_id()
         conf.yumvar["sys_ven_id"] = "0x1028"  # hex
-        conf.yumvar["service_tag"] = sysinfo.get_service_tag()
+        #conf.yumvar["service_tag"] = sysinfo.get_service_tag()
         conf.yumvar["repo_config"] = conduit.confString("main", "repo_config", default="latest")
     except:
         pass
@@ -50,7 +50,7 @@ def init_hook(conduit):
     try:
         import libsmbios_c.system_info as sysinfo
         sysid = sysinfo.get_dell_system_id()
-        tag = sysinfo.get_service_tag()
+        #tag = sysinfo.get_service_tag()
     except:
         pass
 
@@ -59,7 +59,7 @@ def init_hook(conduit):
     if sysid:
         conf.yumvar["sys_ven_id"] = "0x1028"  # hex
         conf.yumvar["sys_dev_id"] = "0x%04x" % sysid
-        conf.yumvar["service_tag"] = tag
+        #conf.yumvar["service_tag"] = tag
         conf.yumvar["repo_config"] = conduit.confString("main", "repo_config", default="latest")
 
     repos = conduit.getRepos()
