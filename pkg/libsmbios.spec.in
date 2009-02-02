@@ -27,6 +27,7 @@
 # some distros already have fdupes macro. If not, we just set it to something innocuous
 %{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
 
+%define pkgconfig_BR pkgconfig
 %define ctypes_BR python-ctypes
 %define cppunit_BR cppunit-devel
 %define fdupes_BR hardlink
@@ -72,7 +73,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.bz2
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR}
+BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR} %{pkgconfig_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
