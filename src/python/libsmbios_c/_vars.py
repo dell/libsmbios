@@ -7,7 +7,7 @@ __all__ = ["__VERSION__", "GETTEXT_PACKAGE",
     "LIBSMBIOS_C_SONAME"
     ]
 
-LIBSMBIOS_C_SONAME =   "libsmbios.so.2"   # replaced at install time
+LIBSMBIOS_C_SONAME =   "libsmbios_c.so.2"   # replaced at install time
 
 import libsmbios_c
 _modpath = os.path.realpath(libsmbios_c.__path__[0])
