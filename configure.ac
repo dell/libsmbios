@@ -12,7 +12,7 @@
 #   libraries, which are defined further below.
 m4_define([libsmbios_major_version], [2])
 m4_define([libsmbios_minor_version], [2])
-m4_define([libsmbios_micro_version], [11])
+m4_define([libsmbios_micro_version], [12])
 # if you define any "extra" version info, include a leading dot (".")
 m4_define([libsmbios_extra_version], [])
 
