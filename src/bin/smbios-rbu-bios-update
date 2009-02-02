@@ -55,7 +55,7 @@ verboseLog = getLog(prefix="verbose.")
 
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
-    parser.add_option('--hdr', metavar="HDR_FILE", action="store", default=None, help= _("The BIOS update file (.HDR file)"))
+    parser.add_option('--hdr', '-f', metavar="HDR_FILE", action="store", default=None, help= _("The BIOS update file (.HDR file)"))
     parser.add_option('--hdr-info', metavar="HDR_FILE", action="append", default=[], help= _("Show information about a given BIOS HDR file"))
     parser.add_option('--system-info', action="store_const", const="system_info", dest="action", default=None, help= _("Show system information and RBU completion codes"))
     parser.add_option('--cancel', action="store_const", const="cancel", dest="action", help= _("Cancel pending BIOS update"))
