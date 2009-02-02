@@ -180,7 +180,7 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([pkg/libsmbios.spec])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([libsmbios_c-uninstalled.pc:pkg/libsmbios_c-uninstalled.pc.in])
-AC_CONFIG_FILES([pkg/libsmbios_c.pc:pkg/libsmbios_c.pc.in])
+AC_CONFIG_FILES([pkg/libsmbios_c.pc])
 AC_CONFIG_FILES([out/public-include/smbios/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([out/public-include/smbios_c/dlopen.h:pkg/dlopen.h.in])
 AC_OUTPUT
