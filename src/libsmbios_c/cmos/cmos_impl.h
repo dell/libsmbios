@@ -24,11 +24,8 @@
 
 EXTERN_C_BEGIN;
 
-#if defined(DEBUG_CMOS_C)
-#   include <stdio.h>
-#   undef dbg_printf
-#   define dbg_printf _dbg_printf
-#endif
+#undef DEBUG_MODULE_NAME
+#define DEBUG_MODULE_NAME "DEBUG_CMOS_C"
 
 #define ERROR_BUFSIZE 1024
 

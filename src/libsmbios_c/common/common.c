@@ -1,4 +1,5 @@
 #define LIBSMBIOS_C_SOURCE
+#define DEBUG_MODULE_NAME "DEBUG_CONSTRUCTOR_C"
 
 #include "smbios_c/compat.h"
 
@@ -6,12 +7,6 @@
 
 #include "common_internal.h"
 #include "libsmbios_c_intlize.h"
-
-#if defined(DEBUG_CONSTRUCTOR_C)
-#   include <stdio.h>
-#   undef dbg_printf
-#   define dbg_printf _dbg_printf
-#endif
 
 // constructor to set up locale stuff
 __attribute__((constructor)) static void lib_initialize (void)

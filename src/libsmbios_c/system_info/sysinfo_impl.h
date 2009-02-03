@@ -18,11 +18,8 @@
 #ifndef C_SYSINFO_H
 #define C_SYSINFO_H
 
-#if defined(DEBUG_SYSINFO_C)
-#   include <stdio.h>
-#   undef dbg_printf
-#   define dbg_printf _dbg_printf
-#endif
+#undef DEBUG_MODULE_NAME
+#define DEBUG_MODULE_NAME "DEBUG_SYSINFO_C"
 
 #define MAX_SMI_TAG_SIZE 12
 #define ERROR_BUFSIZE 1024

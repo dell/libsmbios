@@ -26,11 +26,8 @@
 
 EXTERN_C_BEGIN;
 
-#if defined(DEBUG_SMI_C)
-#   include <stdio.h>
-#   undef dbg_printf
-#   define dbg_printf _dbg_printf
-#endif
+#undef DEBUG_MODULE_NAME
+#define DEBUG_MODULE_NAME "DEBUG_SMI_C"
 
 #define KERNEL_SMI_MAGIC_NUMBER (0x534D4931)   /* "SMI1" */
 #define DELL_CALLINTF_SMI_MAGIC_NUMBER   (0x42534931)  /* "BSI1" */
