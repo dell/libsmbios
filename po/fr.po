@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2009-01-16 05:00-0600\n"
+"POT-Creation-Date: 2009-02-03 13:02-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: French\n"
@@ -1031,7 +1031,7 @@ msgstr ""
 msgid "The OS Error string was: "
 msgstr ""
 
-#: src/libsmbios_c/common/common.c:22
+#: src/libsmbios_c/common/common.c:17
 msgid ""
 "This message should be localized if setlocale() has been called and gettext "
 "compiled in.\n"

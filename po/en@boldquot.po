@@ -30,9 +30,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libsmbios 2.2.9\n"
+"Project-Id-Version: libsmbios 2.2.13\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2009-01-16 05:00-0600\n"
+"POT-Creation-Date: 2009-02-03 13:02-0600\n"
 "PO-Revision-Date: 2009-01-16 05:00-0600\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -1073,7 +1073,7 @@ msgstr "Error trying to raise IO Privilege level.\n"
 msgid "The OS Error string was: "
 msgstr "The OS Error string was: "
 
-#: src/libsmbios_c/common/common.c:22
+#: src/libsmbios_c/common/common.c:17
 msgid ""
 "This message should be localized if setlocale() has been called and gettext "
 "compiled in.\n"
