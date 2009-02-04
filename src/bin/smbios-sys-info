@@ -43,7 +43,10 @@ def notSettable(*args):
     raise exceptions.Exception("this property is read-only")
 
 def getEsc():
-    return int(sysinfo.get_service_tag(), 36)
+    try:
+        return int(sysinfo.get_service_tag(), 36)
+    except (ValueError,), e:
+        return 0
 
 def get_system_id():
     return "0x%04X" % sysinfo.get_dell_system_id()
