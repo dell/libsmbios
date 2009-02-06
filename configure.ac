@@ -10,11 +10,19 @@
 #   This is the "marketing" version, or overall version of the project.
 #   This doesnt have anything in relation to the ABI versions of individual
 #   libraries, which are defined further below.
-m4_define([libsmbios_major_version], [2])
-m4_define([libsmbios_minor_version], [2])
-m4_define([libsmbios_micro_version], [13])
+#
+# To change the version, change the last "echo" statement at the end of each line.
+# The version defined in this file can be overridden at compile time by setting the appropriate
+# environment variable before running autogen.sh. For example:
+#   RELEASE_MAJOR=9 RELEASE_MINOR=8 RELEASE_MICRO=7 ./autogen.sh
+m4_define([release_major_version], [m4_esyscmd(test -n "$RELEASE_MAJOR" && echo -n $RELEASE_MAJOR || echo -n 2)])
+m4_define([release_minor_version], [m4_esyscmd(test -n "$RELEASE_MINOR" && echo -n $RELEASE_MINOR || echo -n 2)])
+m4_define([release_micro_version], [m4_esyscmd(test -n "$RELEASE_MICRO" && echo -n $RELEASE_MICRO || echo -n 13)])
 # if you define any "extra" version info, include a leading dot (".")
-m4_define([libsmbios_extra_version], [])
+m4_define([release_extra_version], [m4_esyscmd(test -n "$RELEASE_EXTRA" && echo -n $RELEASE_EXTRA || echo -n "")])
+
+AC_INIT([libsmbios],
+          [release_major_version().release_minor_version().release_micro_version()release_extra_version()])
 
 ##########################################################
 # ABI Version Variables
@@ -23,13 +31,13 @@ m4_define([libsmbios_extra_version], [])
 # non-interface changes/bugfixes: current++; revision++; age++;
 # interface add:                  current++; revision=0; age++;
 # interface remove/change:        current++; revision=0; age=0;
-m4_define([libsmbios_c_lt_current], [4])
-m4_define([libsmbios_c_lt_revision], [1])
-m4_define([libsmbios_c_lt_age], [2])
+LIBSMBIOS_C_LIBTOOL_CURRENT=4
+LIBSMBIOS_C_LIBTOOL_REVISION=1
+LIBSMBIOS_C_LIBTOOL_AGE=2
 
-m4_define([libsmbios_cplusplus_lt_current], [3])
-m4_define([libsmbios_cplusplus_lt_revision], [0])
-m4_define([libsmbios_cplusplus_lt_age], [1])
+LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT=3
+LIBSMBIOS_CPLUSPLUS_LIBTOOL_REVISION=0
+LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE=1
 ##########################################################
 # END ABI Version Variables
 ##########################################################
@@ -37,11 +45,6 @@ m4_define([libsmbios_cplusplus_lt_age], [1])
 # END RELEASE VARIABLES
 ##############################################################################
 
-# put the versioning stuff together now.
-m4_define([libsmbios_version],
-          [libsmbios_major_version().libsmbios_minor_version().libsmbios_micro_version()libsmbios_extra_version()])
-
-AC_INIT([libsmbios],[libsmbios_version()])
 AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
 AC_CONFIG_MACRO_DIR([m4])
@@ -55,18 +58,16 @@ AC_GNU_SOURCE
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_HEADER([out/include/config.h:pkg/config.h.in])
 
-RELEASE_MAJOR=libsmbios_major_version()
+# Version variables
+RELEASE_MAJOR=release_major_version()
+RELEASE_MINOR=release_minor_version()
+RELEASE_MICRO=release_micro_version()
+RELEASE_EXTRA=release_extra_version()
+AC_DEFINE_UNQUOTED(RELEASE_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
+AC_DEFINE_UNQUOTED(RELEASE_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 AC_SUBST(RELEASE_MAJOR)
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
-
-RELEASE_MINOR=libsmbios_minor_version()
 AC_SUBST(RELEASE_MINOR)
-AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
-
-RELEASE_MICRO=libsmbios_micro_version()
 AC_SUBST(RELEASE_MICRO)
-
-RELEASE_EXTRA=libsmbios_extra_version()
 AC_SUBST(RELEASE_EXTRA)
 
 if test -z "$RELEASE_EXTRA"; then
@@ -76,13 +77,12 @@ else
 fi
 AC_SUBST(RELEASE_RPM_EXTRA)
 
+# gettext domain name
 GETTEXT_PACKAGE=libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
 
-LIBSMBIOS_C_LIBTOOL_CURRENT=libsmbios_c_lt_current
-LIBSMBIOS_C_LIBTOOL_REVISION=libsmbios_c_lt_revision
-LIBSMBIOS_C_LIBTOOL_AGE=libsmbios_c_lt_age
+# Library ABI versions
 LIBSMBIOS_C_SO_MAJOR=$(($LIBSMBIOS_C_LIBTOOL_CURRENT - $LIBSMBIOS_C_LIBTOOL_AGE))
 LIBSMBIOS_C_SONAME=libsmbios_c.so.$LIBSMBIOS_C_SO_MAJOR
 AC_SUBST(LIBSMBIOS_C_LIBTOOL_CURRENT)
@@ -91,9 +91,7 @@ AC_SUBST(LIBSMBIOS_C_LIBTOOL_AGE)
 AC_SUBST(LIBSMBIOS_C_SO_MAJOR)
 AC_SUBST(LIBSMBIOS_C_SONAME)
 
-LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT=libsmbios_cplusplus_lt_current
-LIBSMBIOS_CPLUSPLUS_LIBTOOL_REVISION=libsmbios_cplusplus_lt_revision
-LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE=libsmbios_cplusplus_lt_age
+# Library ABI versions
 LIBSMBIOS_CPLUSPLUS_SO_MAJOR=$(($LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT - $LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE))
 LIBSMBIOS_CPLUSPLUS_SONAME=libsmbios.so.$LIBSMBIOS_CPLUSPLUS_SO_MAJOR
 AC_SUBST(LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT)
