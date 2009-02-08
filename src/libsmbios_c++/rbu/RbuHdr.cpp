@@ -24,6 +24,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <cstdio>
 
 #include "RbuImpl.h"
 #include "smbios/IToken.h"

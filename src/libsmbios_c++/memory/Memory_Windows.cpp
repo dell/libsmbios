@@ -20,6 +20,8 @@
 #include "MemoryImpl.h"
 #include "miniddk.h"
 
+#include <cstdio>
+
 // include this last
 #include "smbios/message.h"
 
