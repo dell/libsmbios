@@ -31,6 +31,7 @@
 %define ctypes_BR python-ctypes
 %define cppunit_BR cppunit-devel
 %define fdupes_BR hardlink
+%define valgrind_BR valgrind
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
 # Fedora: fedora dist fc8 fc9
@@ -57,6 +58,10 @@
     # dont yet have rhel4 cppunit
     %define cppunit_BR %{nil}
 %endif
+%if 0%{?rhel_version} < 400
+    # dont yet have rhel3 valgrind
+    %define valgrind_BR %{nil}
+%endif
 %endif
 
 # per fedora and suse python packaging guidelines
@@ -73,7 +78,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.bz2
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext valgrind doxygen %{cppunit_BR} %{fdupes_BR} %{pkgconfig_BR}
+BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{fdupes_BR} %{pkgconfig_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
