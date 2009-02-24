@@ -73,7 +73,7 @@
 %define python_devel_BR %{nil}
 %define cond_disable_python --disable-python
 %if %{build_python}
-    %define cond_disable_python
+    %define cond_disable_python %{nil}
     %define python_devel_BR python-devel
     # per fedora and suse python packaging guidelines
     # suse: will define py_sitedir for us
