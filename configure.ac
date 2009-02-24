@@ -110,6 +110,11 @@ AC_ARG_ENABLE(graphviz,
     AS_HELP_STRING(--disable-graphviz,Enhance API docs with pretty graphs and pictures. default: enabled if graphviz present),
     [wantgraphviz=$enableval], [wantgraphviz=yes])
 
+dnl Help line for graphviz
+AC_ARG_ENABLE(python,
+    AS_HELP_STRING(--disable-python,Build and install python utilities. default: enabled if python present),
+    [wantpython=$enableval], [wantpython=yes])
+
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_CC_C99
@@ -117,7 +122,13 @@ AM_PROG_CC_C_O
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_INSTALL
-AM_PATH_PYTHON
+
+dnl Check for doxygen support
+AM_CONDITIONAL([HAVE_PYTHON], [false])
+if test x$wantpython == xyes ; then
+    AM_PATH_PYTHON([2.3],,[:])
+    AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
+fi
 
 # windows dll support
 # newer libtool uses this:
