@@ -20,6 +20,10 @@
 # required by suse build system
 # norootforbuild
 
+%define build_python 1
+%{?_with_python:    %define build_python 1}
+%{?_without_python: %define build_python 0}
+
 %define run_unit_tests 1
 %{?_without_unit_tests: %define run_unit_tests 0}
 %{?_with_unit_tests:    %define run_unit_tests 1}
@@ -61,13 +65,19 @@
 %if 0%{?rhel_version} < 400
     # dont yet have rhel3 valgrind
     %define valgrind_BR %{nil}
+    # no python-ctypes for python <= 2.2
+    %define build_python 0
 %endif
 %endif
 
-# per fedora and suse python packaging guidelines
-# suse: will define py_sitedir for us
-# fedora: use the !? code below to define when it isnt already
-%{!?py_sitedir: %define py_sitedir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%define python_devel_BR %{nil}
+%if %{build_python}
+    %define python_devel_BR python-devel
+    # per fedora and suse python packaging guidelines
+    # suse: will define py_sitedir for us
+    # fedora: use the !? code below to define when it isnt already
+    %{!?py_sitedir: %define py_sitedir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%endif
 
 Name: %{release_name}
 Version: %{release_version}
@@ -78,7 +88,7 @@ Group: System Environment/Libraries
 Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.bz2
 URL: http://linux.dell.com/libsmbios/main
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel python-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{fdupes_BR} %{pkgconfig_BR}
+BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{fdupes_BR} %{pkgconfig_BR} %{python_devel_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
@@ -112,7 +122,10 @@ This package provides a Python interface to libsmbios
 %package -n smbios-utils
 Summary: meta-package that pulls in all smbios utilities (binary executables and python scripts)
 Group: Applications/System
-Requires: smbios-utils-bin smbios-utils-python
+Requires: smbios-utils-bin
+%if %{build_python}
+Requires: smbios-utils-python
+%endif
 Obsoletes: libsmbios-bin < 0:2.0.0
 Provides: libsmbios-bin = %{version}-%{release}
 Obsoletes: libsmbios-unsupported-bin < 0:2.0.0
@@ -129,7 +142,7 @@ Requires: %{release_name} = 0:%{version}-%{release}
 
 %description -n smbios-utils-bin
 Get BIOS information, such as System product name, product id, service tag and
-asset tag. 
+asset tag.
 
 %package -n smbios-utils-python
 Summary: Python executables that use libsmbios
@@ -254,10 +267,12 @@ rm -rf %{buildroot}
 %{_libdir}/libsmbios_c.so.*
 %{_libdir}/libsmbios.so.*
 
+%if %{build_python}
 %files -n python-smbios
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 %{py_sitedir}/*
+%endif
 
 %files -n libsmbios-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
@@ -274,7 +289,7 @@ rm -rf %{buildroot}
 # opensuse 11.1 enforces non-empty file list :(
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
-# no other files. 
+# no other files.
 
 %files -n smbios-utils-bin
 %defattr(-,root,root,-)
@@ -296,6 +311,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-sys-info-lite
 
 
+%if %{build_python}
 %files -n smbios-utils-python
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
@@ -334,6 +350,7 @@ rm -rf %{buildroot}
 
 # data files
 %{_datadir}/smbios-utils
+%endif
 
 %changelog
 * Tue Oct 28 2008 Michael E Brown <michael_e_brown at dell.com> - 2.2.0-1
