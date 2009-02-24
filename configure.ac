@@ -17,7 +17,7 @@
 #   RELEASE_MAJOR=9 RELEASE_MINOR=8 RELEASE_MICRO=7 ./autogen.sh
 m4_define([release_major_version], [m4_esyscmd(test -n "$RELEASE_MAJOR" && echo -n $RELEASE_MAJOR || echo -n 2)])
 m4_define([release_minor_version], [m4_esyscmd(test -n "$RELEASE_MINOR" && echo -n $RELEASE_MINOR || echo -n 2)])
-m4_define([release_micro_version], [m4_esyscmd(test -n "$RELEASE_MICRO" && echo -n $RELEASE_MICRO || echo -n 13)])
+m4_define([release_micro_version], [m4_esyscmd(test -n "$RELEASE_MICRO" && echo -n $RELEASE_MICRO || echo -n 14)])
 # if you define any "extra" version info, include a leading dot (".")
 m4_define([release_extra_version], [m4_esyscmd(test -n "$RELEASE_EXTRA" && echo -n $RELEASE_EXTRA || echo -n "")])
 
