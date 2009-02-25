@@ -183,7 +183,7 @@ void _callSmi(smiRegs *r, u8 port)
 {
     iopl(3);
 
-    asm volatile (
+    __asm__ __volatile__ (
            //   magic    port
         "outb   %%al,    %%dx     \n\t"
 
@@ -200,7 +200,7 @@ void _callSmi(smiRegs *r, u8 port)
           "3" (r->esi),
           "4" (r->edi),
           "d" (port)
-        : /* clobber */
+        /* no clobber */
     );
 }
 
