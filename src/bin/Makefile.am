@@ -17,6 +17,7 @@ REPLACE_VARS += __VERSION__
 #
 # Python executables
 #
+if HAVE_PYTHON
 dist_sbin_SCRIPTS += src/bin/smbios-token-ctl
 DATA_HOOK_REPLACE += $(sbindir)/smbios-token-ctl
 nodist_pkgdata_DATA = doc/token_list.csv doc/token_blacklist.csv
@@ -38,6 +39,7 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-rbu-bios-update
 
 dist_sbin_SCRIPTS += src/bin/smbios-lcd-brightness
 DATA_HOOK_REPLACE += $(sbindir)/smbios-lcd-brightness
+endif
 
 #
 # C

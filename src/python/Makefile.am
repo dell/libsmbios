@@ -4,6 +4,8 @@
 #check_SCRIPTS = src/pyunit/testAll.py
 
 pkgpythondir=$(pythondir)/libsmbios_c
+
+if HAVE_PYTHON
 pkgpython_PYTHON = \
 	src/python/libsmbios_c/cmos.py		\
 	src/python/libsmbios_c/rbu_hdr.py		\
@@ -18,12 +20,15 @@ pkgpython_PYTHON = \
 	src/python/libsmbios_c/_peak_util_decorators.py		\
 	src/python/libsmbios_c/system_info.py
 
+pkgpython_PYTHON += src/python/_vars.py
+endif
+
 # src/python/libsmbios_c/_vars.py is only for in-tree use
 # it is used to generate src/python/_vars.py which is installed
 EXTRA_DIST += src/python/libsmbios_c/_vars.py
-pkgpython_PYTHON += src/python/_vars.py
 DISTCLEANFILES +=   src/python/_vars.py
 REPLACE_VARS += LIBSMBIOS_C_SONAME
+
 all: src/python/_vars.py
 src/python/_vars.py: src/python/libsmbios_c/_vars.py  configure Makefile config.status
 	mkdir -p $$(dirname $@) ||:

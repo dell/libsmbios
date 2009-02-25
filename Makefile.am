@@ -40,7 +40,9 @@ include src/bin/Makefile.am
 include src/cppunit/Makefile.am
 
 pkgconfdir=$(sysconfdir)/$(PACKAGE)
+if HAVE_PYTHON
 dist_pkgconf_DATA=etc/logging.conf
+endif
 
 pcdir = ${libdir}/pkgconfig
 pc_DATA = pkg/libsmbios_c.pc

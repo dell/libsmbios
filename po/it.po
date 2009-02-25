@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2009-02-03 13:02-0600\n"
+"POT-Creation-Date: 2009-02-24 12:20-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Italian\n"
@@ -40,81 +40,81 @@ msgstr ""
 msgid "Owner password"
 msgstr ""
 
-#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:113
+#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:116
 #: src/bin/smbios-token-ctl:298 src/bin/smbios-wakeup-ctl:120
 #: src/bin/smbios-wireless-ctl:353 src/bin/smbios-lcd-brightness:120
 #: src/bin/smbios-rbu-bios-update:169
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
-#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:114
+#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:117
 #: src/bin/smbios-token-ctl:299 src/bin/smbios-wakeup-ctl:121
 #: src/bin/smbios-wireless-ctl:354 src/bin/smbios-lcd-brightness:121
 #: src/bin/smbios-rbu-bios-update:170
 msgid "The smbios library returned this error:"
 msgstr ""
 
-#: src/bin/smbios-sys-info:52
+#: src/bin/smbios-sys-info:55
 msgid "Libsmbios version"
 msgstr ""
 
-#: src/bin/smbios-sys-info:53
+#: src/bin/smbios-sys-info:56
 msgid "Product Name"
 msgstr ""
 
-#: src/bin/smbios-sys-info:54
+#: src/bin/smbios-sys-info:57
 msgid "Vendor"
 msgstr ""
 
-#: src/bin/smbios-sys-info:55
+#: src/bin/smbios-sys-info:58
 msgid "BIOS Version"
 msgstr ""
 
-#: src/bin/smbios-sys-info:56
+#: src/bin/smbios-sys-info:59
 msgid "System ID"
 msgstr ""
 
-#: src/bin/smbios-sys-info:57
+#: src/bin/smbios-sys-info:60
 msgid "Service Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:58
+#: src/bin/smbios-sys-info:61
 msgid "Express Service Code"
 msgstr ""
 
-#: src/bin/smbios-sys-info:59
+#: src/bin/smbios-sys-info:62
 msgid "Asset Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:60
+#: src/bin/smbios-sys-info:63
 msgid "Property Ownership Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:72
+#: src/bin/smbios-sys-info:75
 msgid "Show or set service tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:73
+#: src/bin/smbios-sys-info:76
 msgid "Show or set asset tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:74
+#: src/bin/smbios-sys-info:77
 msgid "Show or set property tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:75
+#: src/bin/smbios-sys-info:78
 msgid "Set specified tag to new value"
 msgstr ""
 
-#: src/bin/smbios-sys-info:90
+#: src/bin/smbios-sys-info:93
 msgid "Specify which tag to set."
 msgstr ""
 
-#: src/bin/smbios-sys-info:92
+#: src/bin/smbios-sys-info:95
 msgid "Current tag value:"
 msgstr ""
 
-#: src/bin/smbios-sys-info:107
+#: src/bin/smbios-sys-info:110
 #, c-format
 msgid "Setting new tag value: %s"
 msgstr ""

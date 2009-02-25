@@ -8,7 +8,6 @@
 #define __hidden __attribute__((visibility("hidden")))
 #endif
 
-
 #ifndef DEBUG_MODULE_NAME
 #  define DEBUG_MODULE_NAME "DEBUG_OUTPUT_ALL"
 #endif
