@@ -36,6 +36,8 @@ AUTHORS:
 
 REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
 export $(REPLACE_VARS)
+# compat for RHEL3, dont ask
+export GETTEXT_PACKAGE
 
 DATA_HOOK_REPLACE=
 install-data-hook:
