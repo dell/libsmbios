@@ -42,6 +42,9 @@
 
 # suse/sles
 %if 0%{?suse_version}
+%if 0%{?suse_version} < 1000
+    %define valgrind_BR %{nil}
+%endif
 %if 0%{?suse_version} >= 1020
     # suse never added python-ctypes provides to python 2.5 :(
     %define ctypes_BR %{nil}

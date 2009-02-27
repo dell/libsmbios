@@ -1,0 +1,25 @@
+[general]
+
+# Downloaded packages are cached here. Must be writable by you.
+#packagecachedir = /var/tmp/osbuild-packagecache
+
+# Wrapper to call build as root (sudo, su -, ...)
+#su-wrapper = su -c
+
+# rootdir to setup the chroot environment
+# can contain %(repo)s and/or %(arch)s for replacement
+#build-root = /var/tmp/build-root
+
+# use this API server
+# (it needs a section [api.opensuse.org] with the credentials)
+#apisrv = https://api.opensuse.org
+
+# our local build service api:
+apisrv = http://10.35.11.46:8082
+
+# local default admin account
+[http://10.35.11.46:8082]
+user = Admin
+pass = opensuse
+
+
