@@ -22,6 +22,7 @@
 
 #include <sys/file.h>
 #include <string.h>
+#include <cstdio>
 
 #include "SmiImpl.h"
 

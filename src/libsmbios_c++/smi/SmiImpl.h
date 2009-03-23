@@ -21,6 +21,7 @@
 #include "smbios/ISmi.h"
 #include "SmiLowLevel.h"
 #include "ExceptionImpl.h"
+#include <cstdio>
 
 namespace smi
 {

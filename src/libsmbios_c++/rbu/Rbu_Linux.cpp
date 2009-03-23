@@ -30,6 +30,7 @@
 
 #include <sys/types.h>
 #include <unistd.h>
+#include <cstdio>
 
 #include "RbuImpl.h"
 

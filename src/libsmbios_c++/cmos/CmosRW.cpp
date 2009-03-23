@@ -21,6 +21,7 @@
 #include "smbios/compat.h"
 #include <errno.h>
 #include <string.h>
+#include <cstdio>
 #include "CmosRWImpl.h"
 
 using namespace std;
