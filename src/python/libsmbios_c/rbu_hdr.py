@@ -14,6 +14,7 @@ token:
 # imports (alphabetical)
 import ctypes
 import exceptions
+import struct
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN, freeLibStringFN
