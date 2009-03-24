@@ -23,8 +23,7 @@
 #  error "GCC versions < 2.90 not supported"
 #endif
 //
-// last known and checked version is 3.4:
-#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 4))
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 5))
 #  if defined(LIBSMBIOS_C_ASSERT_CONFIG)
 #     error "Unknown compiler version - please run the configure tests and report the results"
 #  else
