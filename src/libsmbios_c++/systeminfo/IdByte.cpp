@@ -53,9 +53,6 @@ static u16 getIdByteFromMem ()
     memory::IMemory *mem = 0;
 
     struct two_byte_structure tbs;
-    struct two_byte_structure *ptbs = &tbs;
-    struct one_byte_structure *pobs =
-                    reinterpret_cast<one_byte_structure*>(&(tbs.bios_version));
 
     mem = memory::MemoryFactory::getFactory()->getSingleton();
 
@@ -69,13 +66,13 @@ static u16 getIdByteFromMem ()
         goto out;
 
     // Step 2: fill the id structs
-    mem->fillBuffer( reinterpret_cast<u8 *>(ptbs), TWO_BYTE_STRUCT_LOC, sizeof(two_byte_structure) );
+    mem->fillBuffer( reinterpret_cast<u8 *>(&tbs), TWO_BYTE_STRUCT_LOC, sizeof(two_byte_structure) );
 
     // Step 3: check the checksum of one-byte struct
     //    update: checksum is not reliable, so don't use it...
 
     // Step 4: Check one byte ID
-    tempWord = pobs->system_id;
+    tempWord = tbs.system_id;
 
     // Step 5: if 0xFE, then it is a double byte (word) ID.
     // *  -- byte at 0xFE845 is 0xFE
@@ -86,7 +83,7 @@ static u16 getIdByteFromMem ()
         //*  -- extension checksum is 0
 
         // Step 7: get ID.
-        tempWord = ptbs->two_byte_id;
+        tempWord = tbs.two_byte_id;
     }
 
     idWord = tempWord;

@@ -42,6 +42,9 @@
 
 # suse/sles
 %if 0%{?suse_version}
+%if 0%{?suse_version} < 1000
+    %define valgrind_BR %{nil}
+%endif
 %if 0%{?suse_version} >= 1020
     # suse never added python-ctypes provides to python 2.5 :(
     %define ctypes_BR %{nil}
@@ -363,5 +366,118 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Mar 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.16-1
+- add gcc 4.4 support
+
+* Mon Mar 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.15-1
+- update to lastest upstream.
+- fixes bug in bios update on systems with versions like x.y.z.
+
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Tue Feb 3 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.12-1
+- Add feature to turn on debugging printf()'s without recompiling by setting
+  certain environment variables:
+    LIBSMBIOS_C_DEBUG_OUTPUT_ALL    -- all debugging output
+        or, per module:
+    LIBSMBIOS_C_DEBUG_CONSTRUCTOR_C
+    LIBSMBIOS_C_DEBUG_SYSINFO_C
+    LIBSMBIOS_C_DEBUG_SMBIOS_C
+    LIBSMBIOS_C_DEBUG_TOKEN_C
+    LIBSMBIOS_C_DEBUG_MEMORY_C
+    LIBSMBIOS_C_DEBUG_CMOS_C
+    LIBSMBIOS_C_DEBUG_SMI_C
+
+* Mon Feb 2 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.12-1
+- Add pkgconfig files to -devel
+- fixup yum plugin to not parse certain data that causes a crash on some machines (Optiplex 755, others may be affected)
+
+* Thu Jan 15 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.8-1
+- revert change in upstream renaming rpm to libsmbios2
+
+* Thu Jan 15 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.7-1
+- change source to bz2 format
+- Update to latest upstream release. Many changes in the new release:
+  - python interface
+  - libsmbios_c interface almost fully implemented
+  - libsmbios c++ interface deprecated
+
 * Tue Oct 28 2008 Michael E Brown <michael_e_brown at dell.com> - 2.2.0-1
 - Spec updates
+
+* Mon Apr 21 2008 Michael E Brown <michael_e_brown at dell.com> - 2.0.1-2.1
+- obsolete libsmbios-libs as well
+
+* Mon Mar 3 2008 Michael E Brown <michael_e_brown at dell.com> - 2.0.1-2
+- properly obsolete older versions
+
+* Wed Feb 13 2008 Michael E Brown <michael_e_brown at dell.com> - 2.0.1
+- Fixup GCC 4.3 compile issues.
+
+* Wed Jan 9 2008 Michael E Brown <michael_e_brown at dell.com> - 2.0.0
+- ABI incompatible, minor API changes
+- sync up libsmbios soname with version #
+- move binaries to /usr/sbin as they are only runnable by root
+- drop libsmbiosxml lib as it was mostly unused.
+- drop autotools generated files out of git and add autogen.sh
+- drop tokenCtl binary-- pysmbios has a *much* improved version
+
+* Wed Aug 22 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.9
+- Fix a couple of failure-to-check-return on fopen. most were unit-test code
+  only, but two or three were in regular code.
+- Add hinting to the memory class, so that it can intelligently close /dev/mem
+  file handle when it is not needed (which is most of the time). it only
+  leaves it open when it is scanning, so speed is not impacted.
+
+* Tue Aug 6 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.8
+- new upstream
+
+* Tue Apr 3 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.6
+- critical bugfix for dellBiosUpdate utility for packet mode
+- autoconf/automake support for automatically building docs
+- more readable 'make' lines by splitting out env vars
+- remove run_cppunit option... always run unit tests.
+- update autoconf/automake utilities to latest version
+- fix LDFLAGS to not overwrite user entered LDFLAGS
+- add automatic doxygen build of docs
+- fix urls of public repos
+- remove yum repo page in favor of official page from docs
+- split dmi table entry point from smbios table entry point
+- support legacy _DMI_ tables
+- fix support for EFI-based imacs without proper _SM_ anchor
+
+* Tue Mar 20 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.5
+- rpmlint cleanups
+- Add dellLEDCtl binary
+- update AUTHORS file to add credit for dellLEDCtl
+- update doc/DellToken.txt to add a few more useful tokens.
+- updated build system to create documentation
+- skip cppunit dep on .elX builds (not in EPEL yet)
+
+* Mon Mar 12 2007 Michael E Brown <michael_e_brown at dell.com> - 0.13.4-1
+- Added dellWirelessCtl binary
+- Added 'static' makefile target to build static binaries and clean them as well
+- fix for signed/unsigned bug in probes binary. CPU temp misreported
+- simplify interface for DELL_CALLING_INTERFACE_SMI, autodetect Port/Magic
+- document all of the tokens for controlling wireless on dell notebooks
+- enums for SMI args/res to make code match docs better (cbRES1 = res[0], which
+  was confusing.
+- helper functions isTokenActive() and activateToken() to simplify token API.
+- Added missing windows .cpp files to the dist tarball for those who compile
+  windows from dist tarball vs source control
+- Add support for EFI based machines without backwards compatible smbios table
+  entry point in 0xF0000 block.
+- Added wirelessSwitchControl() and wirelessRadioControl() API for newer
+  laptops.
+- fixed bug in TokenDA activate() code where it wasnt properly using SMI
+  (never worked, but apparently wasnt used until now.)
+
+* Tue Oct 3 2006 Michael E Brown <Michael_E_Brown@Dell.com> - 0.13.0-1
+- autotools conversion
+- add Changelog
+
+* Tue Sep 26 2006 Michael E Brown <michael_e_brown at dell.com> - 0.12.4-1
+- Changes per Fedora Packaging Guidelines to prepare to submit to Extras.
+- Add in a changelog entry per Fedora Packaging Guidelines...
+
