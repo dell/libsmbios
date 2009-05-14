@@ -56,7 +56,7 @@ int getopts_usage(char *progName, struct options opts[])
   printf("  --help,\t-h\t\t\tDisplays this information\n");
   for (count = 0; opts[count].description; count++)
     {
-      char *cmd = 0;
+      char *cmd = NULL;
       if (opts[count].name && opts[count].shortName)
         {
           cmd = calloc(1, strlen(opts[count].name) + strlen(opts[count].shortName) + 15);
