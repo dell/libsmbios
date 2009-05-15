@@ -1,4 +1,6 @@
 # @configure_input@
+# required by suse build system
+# norootforbuild
 
 # these are all substituted by autoconf
 %define major @RELEASE_MAJOR@
@@ -10,15 +12,10 @@
 
 %define release_name libsmbios
 %define other_name   libsmbios2
-
-# suse naming conventions
 %if 0%{?suse_version}
 %define release_name libsmbios2
 %define other_name   libsmbios
 %endif
-
-# required by suse build system
-# norootforbuild
 
 %{!?build_python:   %define build_python 1}
 %{?_with_python:    %define build_python 1}
@@ -75,7 +72,7 @@
 
 %define python_devel_BR %{nil}
 %define cond_disable_python --disable-python
-%if %{build_python}
+%if 0%{?build_python}
     %define cond_disable_python %{nil}
     %define python_devel_BR python-devel
     # per fedora and suse python packaging guidelines
@@ -133,7 +130,7 @@ This package provides a Python interface to libsmbios
 Summary: meta-package that pulls in all smbios utilities (binary executables and python scripts)
 Group: Applications/System
 Requires: smbios-utils-bin
-%if %{build_python}
+%if 0%{?build_python}
 Requires: smbios-utils-python
 %endif
 Obsoletes: libsmbios-bin < 0:2.0.0
@@ -182,6 +179,16 @@ programs against libsmbios.
 
 
 %prep
+: '########################################'
+: '########################################'
+: '#'
+: '# build_python: %{build_python}'
+: '# run_unit_tests: %{run_unit_tests}'
+: '# rhel_version: %{rhel_version}'
+: '# suse_version: %{suse_version}'
+: '#'
+: '########################################'
+: '########################################'
 %setup -q -n libsmbios-%{version}
 find . -type d -exec chmod -f 755 {} \;
 find doc src -type f -exec chmod -f 644 {} \;
@@ -256,7 +263,7 @@ rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include out/libsmbios_c++ out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
 # backwards compatible:
-%if %{build_python}
+%if 0%{?build_python}
 ln -s ../sbin/dellWirelessCtl %{buildroot}/usr/bin/dellWirelessCtl
 ln -s smbios-sys-info %{buildroot}%{_sbindir}/getSystemId
 ln -s smbios-wireless-ctl %{buildroot}%{_sbindir}/dellWirelessCtl
@@ -275,12 +282,12 @@ rm -rf %{buildroot}
 %post   -n %{release_name}   -p /sbin/ldconfig
 %postun -n %{release_name}   -p /sbin/ldconfig
 
-%files -n %{release_name} -f _build/%{lang_dom}.lang
+%files -f _build/%{lang_dom}.lang
 %defattr(-,root,root,-)
 %{_libdir}/libsmbios_c.so.*
 %{_libdir}/libsmbios.so.*
 
-%if %{build_python}
+%if 0%{?build_python}
 %files -n python-smbios
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
@@ -324,7 +331,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-sys-info-lite
 
 
-%if %{build_python}
+%if 0%{?build_python}
 %files -n smbios-utils-python
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
