@@ -54,15 +54,15 @@
 %endif
 %endif
 
-# rhel
-%if 0%{?rhel_version}
-%if 0%{?rhel_version} < 500
+# rhel (should work on OBS and EPEL)
+%if 0%{?rhel}
+%if 0%{?rhel} < 5
     %define fdupes echo fdupes disabled
     %define fdupes_BR %{nil}
     # dont yet have rhel4 cppunit
     %define cppunit_BR %{nil}
 %endif
-%if 0%{?rhel_version} < 400
+%if 0%{?rhel} < 4
     # dont yet have rhel3 valgrind
     %define valgrind_BR %{nil}
     # no python-ctypes for python <= 2.2
