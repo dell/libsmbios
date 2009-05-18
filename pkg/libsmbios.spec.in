@@ -88,7 +88,7 @@
 
 Name: %{release_name}
 Version: %{release_version}
-Release: 1%{?dist}
+Release: 3%{?dist}
 License: GPLv2+ or OSL 2.1
 Summary: Libsmbios C/C++ shared libraries
 Group: System Environment/Libraries
@@ -176,6 +176,18 @@ information from standard BIOS tables, such as the SMBIOS table.
 
 This package contains the headers and .a files necessary to compile new client
 programs against libsmbios.
+
+%package -n yum-dellsysid
+Summary: YUM plugin to retrieve the Dell System ID
+Group: Development/Tools
+Requires: smbios-utils-python = 0:%{version}-%{release}
+
+%description -n yum-dellsysid
+Libsmbios is a library and utilities that can be used by client programs to get
+information from standard BIOS tables, such as the SMBIOS table.
+
+This package contains a YUM plugin which allows the use of certain
+substitutions in yum repository configuration files on Dell systems.
 
 
 %prep
@@ -340,17 +352,6 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/libsmbios
 %config(noreplace) %{_sysconfdir}/libsmbios/*
 
-# YUM Plugin
-%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
-%{_exec_prefix}/lib/yum-plugins/*
-# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
-# be installed at buildtime.
-%if 0%{?suse_version} >= 1100
-%dir %{_sysconfdir}/yum
-%dir %{_sysconfdir}/yum/pluginconf.d/
-%dir %{_exec_prefix}/lib/yum-plugins/
-%endif
-
 # python utilities
 %{_sbindir}/smbios-sys-info
 %{_sbindir}/smbios-token-ctl
@@ -370,9 +371,27 @@ rm -rf %{buildroot}
 
 # data files
 %{_datadir}/smbios-utils
+
+%files -n yum-dellsysid
+%defattr(-,root,root,-)
+%doc COPYING-GPL COPYING-OSL README
+# YUM Plugin
+%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
+%{_exec_prefix}/lib/yum-plugins/*
+# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
+# be installed at buildtime.
+%if 0%{?suse_version} >= 1100
+%dir %{_sysconfdir}/yum
+%dir %{_sysconfdir}/yum/pluginconf.d/
+%dir %{_exec_prefix}/lib/yum-plugins/
+%endif
+
 %endif
 
 %changelog
+* Mon May 18 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.2.16-3
+- split yum plugin into yum-dellsysid package
+
 * Mon Mar 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.16-1
 - add gcc 4.4 support
 
