@@ -127,7 +127,7 @@ Requires: python %{ctypes_BR}
 This package provides a Python interface to libsmbios
 
 %package -n smbios-utils
-Summary: meta-package that pulls in all smbios utilities (binary executables and python scripts)
+Summary: Meta-package that pulls in all smbios binaries and python scripts
 Group: Applications/System
 Requires: smbios-utils-bin
 %if 0%{?build_python}
