@@ -376,7 +376,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL README
 # YUM Plugin
-%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/dellsysidplugin2.conf
+%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/*
 %{_exec_prefix}/lib/yum-plugins/*
 # SUSE build has anal directory ownership check. RPM which owns all dirs *must*
 # be installed at buildtime.
