@@ -227,9 +227,9 @@ chmod +x ./configure
     CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
-make %{?_smp_mflags} 2>&1 | tee build.log
+make %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
 
-echo \%doc _build/build.log > buildlogs.txt
+echo \%doc _build/build-%{_arch}.log > buildlogs.txt
 
 %check
 runtest() {
@@ -238,10 +238,10 @@ runtest() {
     pushd _$1$2
     ../configure
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
-    touch -r ../configure.ac $1$2.log
+    touch -r ../configure.ac $1$2-%{_arch}.log
     #make -e $1 2>&1 | tee $1$2.log
     popd
-    echo \%doc _$1$2/$1$2.log >> _build/buildlogs.txt
+    echo \%doc _$1$2/$1$2-%{_arch}.log >> _build/buildlogs.txt
 %endif
 }
 
@@ -274,6 +274,9 @@ cp -a $TOPDIR/src/include/*  %{buildroot}/usr/include/
 cp -a out/public-include/*  %{buildroot}/usr/include/
 rm -f %{buildroot}/%{_libdir}/lib*.la
 find %{buildroot}/usr/include out/libsmbios_c++ out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
+
+mv out/libsmbios_c++  out/libsmbios_c++-%{_arch}
+mv out/libsmbios_c    out/libsmbios_c-%{_arch}
 
 # backwards compatible:
 %if 0%{?build_python}
@@ -315,8 +318,8 @@ rm -rf %{buildroot}
 %{_libdir}/libsmbios.so
 %{_libdir}/libsmbios_c.so
 %{_libdir}/pkgconfig/*.pc
-%doc _build/out/libsmbios_c++
-%doc _build/out/libsmbios_c
+%doc _build/out/libsmbios_c++-%{_arch}
+%doc _build/out/libsmbios_c-%{_arch}
 
 %files -n smbios-utils
 # opensuse 11.1 enforces non-empty file list :(

@@ -66,8 +66,7 @@ PROJECT=home:$(USER)
 upload_buildservice: dist
 	[ -n "$(PROJECT)" ] || (echo "Must specify PROJECT"; exit 1)
 	osc co $(PROJECT) $(PACKAGE)
-	rm -f $(PROJECT)/$(PACKAGE)/*.tar.bz2
-	rm -f $(PROJECT)/$(PACKAGE)/*.spec
+	rm -f $(PROJECT)/$(PACKAGE)/*
 	cp ${PACKAGE}*.tar.bz2 $(PROJECT)/$(PACKAGE)
 	cp */${PACKAGE}.spec $(PROJECT)/$(PACKAGE)
 	cd $(PROJECT)/$(PACKAGE); osc addremove
@@ -91,12 +90,12 @@ AM_RPM_DEFINES = --define "_topdir $(TOPDIR)" \
 		$(RPM_DEFINES)
 
 .PHONY: rpm srpm
-rpm: dist
+rpm: pkg/$(PACKAGE_NAME).spec dist
 	mkdir -p $(BUILDDIR)
 	rpmbuild $(AM_RPM_DEFINES) -ba --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
 
-srpm: dist
+srpm: pkg/$(PACKAGE_NAME).spec dist
 	mkdir -p $(BUILDDIR)
 	rpmbuild $(AM_RPM_DEFINES) -bs --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
