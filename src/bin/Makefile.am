@@ -47,6 +47,7 @@ endif
 sbin_PROGRAMS += out/smbios-sys-info-lite
 out_smbios_sys_info_lite_SOURCES = src/bin/smbios-sys-info-lite.c
 out_smbios_sys_info_lite_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
+out_smbios_sys_info_lite_LDFLAGS = -static
 
 sbin_PROGRAMS += out/smbios-get-ut-data
 out_smbios_get_ut_data_SOURCES = src/bin/smbios-get-ut-data.c
