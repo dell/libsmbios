@@ -11,15 +11,11 @@
 #   This doesnt have anything in relation to the ABI versions of individual
 #   libraries, which are defined further below.
 #
-# To change the version, change the last "echo" statement at the end of each line.
-# The version defined in this file can be overridden at compile time by setting the appropriate
-# environment variable before running autogen.sh. For example:
-#   RELEASE_MAJOR=9 RELEASE_MINOR=8 RELEASE_MICRO=7 ./autogen.sh
-m4_define([release_major_version], [m4_esyscmd(test -n "$RELEASE_MAJOR" && echo -n $RELEASE_MAJOR || echo -n 2)])
-m4_define([release_minor_version], [m4_esyscmd(test -n "$RELEASE_MINOR" && echo -n $RELEASE_MINOR || echo -n 2)])
-m4_define([release_micro_version], [m4_esyscmd(test -n "$RELEASE_MICRO" && echo -n $RELEASE_MICRO || echo -n 16)])
+m4_define([release_major_version], [2])
+m4_define([release_minor_version], [2])
+m4_define([release_micro_version], [17])
 # if you define any "extra" version info, include a leading dot (".")
-m4_define([release_extra_version], [m4_esyscmd(test -n "$RELEASE_EXTRA" && echo -n $RELEASE_EXTRA || echo -n "")])
+m4_define([release_extra_version], [])
 
 AC_INIT([libsmbios],
           [release_major_version().release_minor_version().release_micro_version()release_extra_version()])

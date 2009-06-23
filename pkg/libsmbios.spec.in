@@ -8,7 +8,7 @@
 %define micro @RELEASE_MICRO@
 %define extra @RELEASE_RPM_EXTRA@
 %define lang_dom  @GETTEXT_PACKAGE@
-%define release_version %{major}.%{minor}.%{micro}%{extra}
+%define release_version @PACKAGE_VERSION@
 
 %define release_name libsmbios
 %define other_name   libsmbios2
@@ -209,12 +209,7 @@ chmod 755 src/cppunit/*.sh
 %build
 # this line lets us build an RPM directly from a git tarball
 # and retains any customized version information we might have
-[ -e ./configure ] || \
-    RELEASE_MAJOR=%{major}  \
-    RELEASE_MINOR=%{minor}  \
-    RELEASE_MICRO=%{micro}  \
-    RELEASE_EXTRA=%{extra}  \
-    ./autogen.sh --no-configure
+[ -e ./configure ] || ./autogen.sh --no-configure
 
 mkdir _build
 cd _build
