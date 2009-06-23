@@ -5,8 +5,7 @@ EXTRA_DIST += src/bin/getopts_LICENSE.txt
 # convenience lib for getopt
 noinst_LTLIBRARIES += out/libgetopt.la
 out_libgetopt_la_SOURCES = src/bin/getopts.c src/bin/getopts.h
-out_libgetopt_la_CXXFLAGS = $(AM_CXXFLAGS)
-out_libgetopt_la_LDFLAGS = -static
+out_libgetopt_la_LDFLAGS = $(AM_LDFLAGS) -static
 
 pkgdatadir = $(datadir)/smbios-utils
 
@@ -47,7 +46,7 @@ endif
 sbin_PROGRAMS += out/smbios-sys-info-lite
 out_smbios_sys_info_lite_SOURCES = src/bin/smbios-sys-info-lite.c
 out_smbios_sys_info_lite_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
-out_smbios_sys_info_lite_LDFLAGS = -static
+out_smbios_sys_info_lite_LDFLAGS = $(AM_LDFLAGS) -static
 
 sbin_PROGRAMS += out/smbios-get-ut-data
 out_smbios_get_ut_data_SOURCES = src/bin/smbios-get-ut-data.c
@@ -79,6 +78,6 @@ endif
 sbin_PROGRAMS += out/dellBiosUpdate-compat
 out_dellBiosUpdate_compat_SOURCES = src/bin/dellBiosUpdate.cpp
 out_dellBiosUpdate_compat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-out_dellBiosUpdate_compat_CXXFLAGS = $(AM_CXXFLAGS) -Isrc/libsmbios_c++/common
+out_dellBiosUpdate_compat_CPPFLAGS = $(AM_CPPFLAGS) -Isrc/libsmbios_c++/common
 endif
 

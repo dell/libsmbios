@@ -2,7 +2,7 @@
 
 lib_LTLIBRARIES += out/libsmbios.la
 out_libsmbios_la_LDFLAGS := -version-info $(LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT):$(LIBSMBIOS_CPLUSPLUS_LIBTOOL_REVISION):$(LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE) $(AM_LDFLAGS)
-out_libsmbios_la_CXXFLAGS := $(AM_CXXFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
+out_libsmbios_la_CPPFLAGS := $(AM_CPPFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
 
 EXTRA_DIST += src/include/smbios
 

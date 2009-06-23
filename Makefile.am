@@ -1,5 +1,8 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
+ACLOCAL_AMFLAGS = -I m4
+SUBDIRS = po
+
 bin_PROGRAMS=
 sbin_PROGRAMS=
 dist_sbin_SCRIPTS=
@@ -11,24 +14,15 @@ check_PROGRAMS =
 noinst_LTLIBRARIES =
 lib_LTLIBRARIES=
 
-AM_LDFLAGS = -L$(top_builddir)/out/ -Wl,--no-undefined
-#if BINUTILS > 2.17
-#AM_LDFLAGS += -Wl,--as-needed
-#endif
+AM_CPPFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
+AM_CFLAGS = -Werror -Wall
+AM_CXXFLAGS = -Werror -Wall
+AM_LDADD = $(LIBINTL)
+AM_LDFLAGS = -L$(top_builddir)/out/ -Wl,--no-undefined @LDFLAG_AS_NEEDED@
 
 if BUILD_WINDOWS
 AM_LDFLAGS += -Wl,--avoid-version -Wl,--enable-auto-import
 endif
-
-#-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4
-AM_CFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
-
-#-Wp,-D_FORTIFY_SOURCE=2 -fstack-protector --param=ssp-buffer-size=4 -fexceptions
-AM_CXXFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -Werror -Wall -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
-
-AM_LDADD = $(LIBINTL)
-
-SUBDIRS = po
 
 include Makefile-std
 include src/libsmbios_c++/Makefile.am
@@ -37,7 +31,10 @@ include src/python/Makefile.am
 include src/py-cli/Makefile.am
 include src/yum-plugin/Makefile.am
 include src/bin/Makefile.am
+
+if CPPUNIT_PRESENT
 include src/cppunit/Makefile.am
+endif
 
 pkgconfdir=$(sysconfdir)/$(PACKAGE)
 if HAVE_PYTHON
@@ -45,12 +42,11 @@ dist_pkgconf_DATA=etc/logging.conf
 endif
 
 pcdir = ${libdir}/pkgconfig
-pc_DATA = pkg/libsmbios_c.pc
-DISTCLEANFILES += pkg/libsmbios_c.pc libsmbios_c-uninstalled.pc
+pc_DATA = pkg/libsmbios_c.pc pkg/libsmbios_c++.pc
+DISTCLEANFILES += pkg/*.pc *-uninstalled.pc
 
 CLEANFILES+=_buildtemp smbios-utils*.rpm out/libsmbios_c out/libsmbios_c++
 DISTCLEANFILES += out
-ACLOCAL_AMFLAGS = -I m4
 
 CLEANFILES += $(EXTRA_PROGRAMS)
 

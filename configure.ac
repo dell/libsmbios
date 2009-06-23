@@ -47,7 +47,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([subdir-objects tar-ustar dist-bzip2 dist-lzma no-define ])
 #AM_MAINTAINER_MODE
-AM_PATH_CPPUNIT(1.9.6)
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.14])
 AC_GNU_SOURCE
@@ -93,6 +92,16 @@ dnl Help line for graphviz
 AC_ARG_ENABLE(python,
     AS_HELP_STRING(--disable-python,Build and install python utilities. default: enabled if python present),
     [wantpython=$enableval], [wantpython=yes])
+
+AC_ARG_ENABLE(as-needed,
+    AS_HELP_STRING([--disable-as-needed],[Pass in -Wl,-as-needed as LDFLAG default: enabled]),
+    [wantasneeded=$enableval], [wantasneeded=yes])
+AC_SUBST([LDFLAG_AS_NEEDED],[])
+AC_SUBST([LDFLAG_NO_AS_NEEDED],[])
+if test "$wantasneeded" = "yes"; then
+    LDFLAG_AS_NEEDED="-Wl,-as-needed"
+    LDFLAG_NO_AS_NEEDED="-Wl,-no-as-needed"
+fi
 
 # Checks for programs.
 AC_PROG_CC
@@ -162,6 +171,8 @@ AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" != mingw32])
 AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
 
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
+PKG_CHECK_MODULES([CPPUNIT],[cppunit],[],[echo "CPPUNIT not found, disabling CPPUNIT dependent modules"])
+AM_CONDITIONAL(CPPUNIT_PRESENT, [test -n "$CPPUNIT_LIBS"])
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
@@ -169,6 +180,8 @@ AC_CONFIG_FILES([pkg/libsmbios.spec])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([libsmbios_c-uninstalled.pc:pkg/libsmbios_c-uninstalled.pc.in])
 AC_CONFIG_FILES([pkg/libsmbios_c.pc])
+AC_CONFIG_FILES([libsmbios_c++-uninstalled.pc:pkg/libsmbios_c++-uninstalled.pc.in])
+AC_CONFIG_FILES([pkg/libsmbios_c++.pc])
 AC_CONFIG_FILES([out/public-include/smbios/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([out/public-include/smbios_c/dlopen.h:pkg/dlopen.h.in])
 AC_OUTPUT

@@ -1,0 +1,12 @@
+prefix=
+exec_prefix=
+abs_top_srcdir=@abs_top_srcdir@
+abs_top_builddir=@abs_top_builddir@
+
+python_path_add=@abs_top_srcdir@/src/python/
+
+Name: libsmbios (uninstalled copy)
+Description: C++ lib for accessing system dmi information
+Version: @VERSION@
+Libs: ${abs_top_builddir}/out/libsmbios.la
+Cflags: -I${abs_top_srcdir}/src/include -I${abs_top_builddir}/out/public-include/

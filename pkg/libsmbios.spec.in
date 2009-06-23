@@ -28,6 +28,8 @@
 # some distros already have fdupes macro. If not, we just set it to something innocuous
 %{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
 
+%define disable_as_needed %{nil}
+
 %define pkgconfig_BR pkgconfig
 %define ctypes_BR python-ctypes
 %define cppunit_BR cppunit-devel
@@ -60,13 +62,15 @@
     %define fdupes echo fdupes disabled
     %define fdupes_BR %{nil}
     # dont yet have rhel4 cppunit
-    %define cppunit_BR %{nil}
+    %define run_unit_tests 0
 %endif
 %if 0%{?rhel} < 4
     # dont yet have rhel3 valgrind
     %define valgrind_BR %{nil}
     # no python-ctypes for python <= 2.2
     %define build_python 0
+    # rhel3 doesnt have -as-needed
+    %define disable_as_needed --disable-as-needed
 %endif
 %endif
 
@@ -217,9 +221,9 @@ echo '../configure "$@"' > configure
 chmod +x ./configure
 
 %configure \
-    --disable-static    \
-    %{cond_disable_python} \
+    %{disable_as_needed} %{cond_disable_python} \
     CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
+
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
 make %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
@@ -267,7 +271,7 @@ make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/usr/include
 cp -a $TOPDIR/src/include/*  %{buildroot}/usr/include/
 cp -a out/public-include/*  %{buildroot}/usr/include/
-rm -f %{buildroot}/%{_libdir}/lib*.la
+rm -f %{buildroot}/%{_libdir}/lib*.{la,a}
 find %{buildroot}/usr/include out/libsmbios_c++ out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
 mv out/libsmbios_c++  out/libsmbios_c++-%{_arch}
