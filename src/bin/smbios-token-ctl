@@ -116,7 +116,7 @@ class translatedToken(object):
     description = _("unknown")
     spec = _("unknown")
     def __init__(self, tokenObj):
-        self.id = "0x%04x" % tokenObj.getId()
+        self.id = tokenObj.getId()
 
 class TokenTranslator(object):
     def __init__(self, *args, **kargs):
@@ -148,16 +148,16 @@ class TokenTranslator(object):
     def addToList(self, csvdict, whichlist):
         for line in csvdict:
             try:
-                val =  "0x%04x" % int(line["Token Value"],16)
-                line["Token Value"] = val
+                val = int(line["Token Value"],16)
+                line["Token Value"] = "0x%04x" % val
                 whichlist[val] = line
 #                if whichlist == self.blacklist_tokens:
 #                    print "add blacklist: (%s) = %s" % (val, line)
             except Exception, e:
-                print "="*79
-                print _("Ignoring parsing error in CSV file:")
+                sys.stderr.write("="*79 + "\n")
+                sys.stderr.write(_("Ignoring parsing error in CSV file:") )
                 traceback.print_exc()
-                print "="*79
+                sys.stderr.write("="*79 + "\n")
 
 class TokenTranslatorCsv(TokenTranslator):
     def __init__(self, *args, **kargs):
@@ -192,6 +192,26 @@ def tokenInfo(tokenObj, action):
 
     return (exit_code, type, value)
 
+def shouldSkipToken(token, options):
+    skip = 0
+
+    if options.token_id is not None:
+        skip = 1
+        if token.id == options.token_id:
+            skip=0
+
+    if options.token_name is not None:
+        skip = 1
+        if fnmatch.fnmatch(token.name.lower(), options.token_name.lower()):
+            skip=0
+
+    if options.token_setting is not None:
+        skip = 1
+        if token.setting == options.token_setting:
+            skip=0
+
+    return skip
+
 def dumpTokens(tokenTable, tokenXlator, options):
      for token in tokenTable:
         try:
@@ -200,19 +220,12 @@ def dumpTokens(tokenTable, tokenXlator, options):
             #sys.stdout.write( "="*80 + "\n" )
             #print "Not dumping blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
             continue
-        if options.token_id is not None:
-            if translatedToken.id != options.token_id:
-                continue
 
-        if options.token_name is not None:
-            if not fnmatch.fnmatch(translatedToken.name.lower(), options.token_name.lower()):
-                continue
-            if options.token_setting is not None:
-                if translatedToken.setting != options.token_setting:
-                    continue
+        if shouldSkipToken(translatedToken, options):
+            continue
 
         sys.stdout.write( "="*80 + "\n" )
-        print _("  Token: %s - %s (%s)") % (translatedToken.id, translatedToken.name, translatedToken.setting)
+        print _("  Token: 0x%04x - %s (%s)") % (translatedToken.id, translatedToken.name, translatedToken.setting)
 
         try:
             (e, type, value) = tokenInfo(token, "dump-tokens")
@@ -226,8 +239,8 @@ def dumpTokens(tokenTable, tokenXlator, options):
         print
 
 def getTokenObj(tokenTable, tokenXlator, options):
+    # optimization
     if options.token_id:
-        options.token_id = int(options.token_id, 0)
         return tokenTable[options.token_id]
 
     if options.token_name is None or options.token_setting is None:
@@ -236,14 +249,11 @@ def getTokenObj(tokenTable, tokenXlator, options):
     for token in tokenTable:
         try:
             translatedToken = tokenXlator(token)
+            if shouldSkipToken(translatedToken, options):
+                continue
+            return token
         except BlacklistedToken, e:
             pass
-        if not fnmatch.fnmatch(translatedToken.name.lower(), options.token_name.lower()):
-            continue
-        if translatedToken.setting != options.token_setting:
-            continue
-
-        return token
 
     raise CmdlineError, _("token not found. Name(%s) Setting(%s).") % (
             options.token_name, options.token_setting)
@@ -252,6 +262,8 @@ def main():
     exit_code = 0
     (options, args) = command_parse()
     cli.setup_std_options(options)
+    if options.token_id:
+        options.token_id = int(options.token_id, 0)
 
     try:
         tokenXlator = TokenTranslatorCsv(csvlist=options.token_csv, csvblacklist=options.token_blacklist_csv)
@@ -265,30 +277,26 @@ def main():
         tokenObj = getTokenObj(tokenTable, tokenXlator, options)
         tokenObj.tryPassword(options.password_ascii, options.password_scancode)
 
-        if options.action == "set-string":
-            (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-            print _("Original Values")
+        if options.action in ("set-string", "activate"):
+            (exit_code, type, value) = tokenInfo(tokenObj, options.action)
+            print _("Original Value")
+            print _("       token: 0x%04x") % tokenObj.getId()
             print _("        type: %s") % type
             print _("       value: %s") % cli.makePrintable(value)
-            print
+
+        if options.action == "set-string":
+            (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
             print _("Setting string value ...")
             tokenObj.setString(args[0])
-            (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-            options.action="dump-tokens"
-            print "New values"
+            print _("New value")
 
         if options.action == "activate":
             (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-            print _("Original Values")
-            print _("        type: %s") % type
-            print _("       value: %s") % cli.makePrintable(value)
-            print
             print _("Activating token...")
             tokenObj.activate()
-            options.action="dump-tokens"
-            print _("New values")
+            print _("New value")
 
-        if options.action in ("is-bool", "is-string", "is-active", "get-string", "dump-tokens"):
+        if options.action in ("set-string", "activate", "is-bool", "is-string", "is-active", "get-string"):
             (exit_code, type, value) = tokenInfo(tokenObj, options.action)
             print _("        type: %s") % type
             print _("       value: %s") % cli.makePrintable(value)
