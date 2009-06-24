@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2009-02-24 12:20-0600\n"
+"POT-Creation-Date: 2009-06-24 17:10-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Korean\n"
@@ -41,14 +41,14 @@ msgid "Owner password"
 msgstr ""
 
 #: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:116
-#: src/bin/smbios-token-ctl:298 src/bin/smbios-wakeup-ctl:120
+#: src/bin/smbios-token-ctl:306 src/bin/smbios-wakeup-ctl:120
 #: src/bin/smbios-wireless-ctl:353 src/bin/smbios-lcd-brightness:120
 #: src/bin/smbios-rbu-bios-update:169
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
 #: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:117
-#: src/bin/smbios-token-ctl:299 src/bin/smbios-wakeup-ctl:121
+#: src/bin/smbios-token-ctl:307 src/bin/smbios-wakeup-ctl:121
 #: src/bin/smbios-wireless-ctl:354 src/bin/smbios-lcd-brightness:121
 #: src/bin/smbios-rbu-bios-update:170
 msgid "The smbios library returned this error:"
@@ -194,64 +194,67 @@ msgstr ""
 msgid "<unknown value>"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:215
+#: src/bin/smbios-token-ctl:228
 #, c-format
-msgid "  Token: %s - %s (%s)"
+msgid "  Token: 0x%04x - %s (%s)"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:219
+#: src/bin/smbios-token-ctl:232
 #, c-format
 msgid "  value: %s = %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:223
+#: src/bin/smbios-token-ctl:236
 msgid "   Desc: "
 msgstr ""
 
-#: src/bin/smbios-token-ctl:234
+#: src/bin/smbios-token-ctl:247
 msgid "require token-id or token name/setting pair."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:248
+#: src/bin/smbios-token-ctl:258
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:270 src/bin/smbios-token-ctl:282
-msgid "Original Values"
+#: src/bin/smbios-token-ctl:282
+msgid "Original Value"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:271 src/bin/smbios-token-ctl:283
-#: src/bin/smbios-token-ctl:293
+#: src/bin/smbios-token-ctl:283
+#, c-format
+msgid "       token: 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:284 src/bin/smbios-token-ctl:301
 #, c-format
 msgid "        type: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:272 src/bin/smbios-token-ctl:284
-#: src/bin/smbios-token-ctl:294
+#: src/bin/smbios-token-ctl:285 src/bin/smbios-token-ctl:302
 #, c-format
 msgid "       value: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:274
+#: src/bin/smbios-token-ctl:289
 msgid "Setting string value ..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:286
+#: src/bin/smbios-token-ctl:291 src/bin/smbios-token-ctl:297
+msgid "New value"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:295
 msgid "Activating token..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:289
-msgid "New values"
-msgstr ""
-
-#: src/bin/smbios-token-ctl:304 src/bin/smbios-wakeup-ctl:127
+#: src/bin/smbios-token-ctl:312 src/bin/smbios-wakeup-ctl:127
 #: src/bin/smbios-wireless-ctl:360 src/bin/smbios-lcd-brightness:127
 #: src/bin/smbios-rbu-bios-update:175
 msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:305 src/bin/smbios-wakeup-ctl:128
+#: src/bin/smbios-token-ctl:313 src/bin/smbios-wakeup-ctl:128
 #: src/bin/smbios-wireless-ctl:361 src/bin/smbios-lcd-brightness:128
 #: src/bin/smbios-rbu-bios-update:176
 msgid "The token library returned this error:"
