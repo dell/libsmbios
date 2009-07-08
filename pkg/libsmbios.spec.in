@@ -221,8 +221,7 @@ echo '../configure "$@"' > configure
 chmod +x ./configure
 
 %configure \
-    %{?!as_needed:--disable-as-needed} %{?!build_python:--disable-python} \
-    CFLAGS="%{optflags}" CXXFLAGS="%{optflags}"
+    %{?!as_needed:--disable-as-needed} %{?!build_python:--disable-python}
 
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
