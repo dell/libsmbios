@@ -1,20 +1,20 @@
-# Japanese translations for libsmbios package.
-# Copyright (C) 2008 Dell, Inc
-# This file is distributed under the same license as the libsmbios package.
-# Michael Brown <Michael_E_Brown@dell.com>, 2008.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Dell, Inc
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libsmbios 2.2.0\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
 "POT-Creation-Date: 2009-07-24 22:43-0500\n"
-"PO-Revision-Date: 2008-10-26 00:19-0500\n"
-"Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
-"Language-Team: Japanese\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/bin/smbios-passwd:46
 msgid "Show password information"
