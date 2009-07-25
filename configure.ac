@@ -67,7 +67,7 @@ if test -z "$RELEASE_EXTRA"; then
 fi
 
 # gettext domain name
-AC_SUBST([GETTEXT_PACKAGE], [libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR])
+AC_SUBST([GETTEXT_PACKAGE], [libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR-$host_cpu])
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
 
 # Library ABI versions
