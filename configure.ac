@@ -69,6 +69,7 @@ fi
 # gettext domain name
 AC_SUBST([GETTEXT_PACKAGE], [libsmbios-$RELEASE_MAJOR.$RELEASE_MINOR-$host_cpu])
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Name of the gettext message domain])
+AC_SUBST([GETTEXT_POT_FILE_BASENAME], [libsmbios])
 
 # Library ABI versions
 AC_SUBST([LIBSMBIOS_C_SO_MAJOR], [$(($LIBSMBIOS_C_LIBTOOL_CURRENT - $LIBSMBIOS_C_LIBTOOL_AGE))])

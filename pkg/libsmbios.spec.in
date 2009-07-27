@@ -7,6 +7,7 @@
 %define minor @RELEASE_MINOR@
 %define micro @RELEASE_MICRO@
 %define extra @RELEASE_RPM_EXTRA@
+%define pot_file  @GETTEXT_POT_FILE_BASENAME@
 %define lang_dom  @GETTEXT_PACKAGE@
 %define release_version @PACKAGE_VERSION@
 
@@ -276,6 +277,7 @@ find %{buildroot}/%{_includedir} out/libsmbios_c++ out/libsmbios_c -exec touch -
 mv out/libsmbios_c++  out/libsmbios_c++-%{_arch}
 mv out/libsmbios_c    out/libsmbios_c-%{_arch}
 
+rename %{pot_file}.mo %{lang_dom}.mo $(find %{buildroot}/%{_datadir} -name %{pot_file}.mo)
 %find_lang %{lang_dom}
 
 touch files-yum-dellsysid
