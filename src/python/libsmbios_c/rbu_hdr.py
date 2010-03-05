@@ -28,6 +28,7 @@ try:
 except ImportError:
     from libsmbios_c._peak_util_decorators import decorate_class
 
+class InvalidRbuHdr(Exception): pass
 
 decorate(traceLog())
 def dumpHdrFileInfo(hdr):
@@ -58,6 +59,9 @@ class HdrFile(object):
         buf = self.fd.read(ctypes.sizeof(self.hdr))
         self.fd.seek(0,0)
         ctypes.memmove(ctypes.byref(self.hdr), ctypes.byref(ctypes.create_string_buffer(buf)), ctypes.sizeof(self.hdr))
+
+        if self.hdr.headerId != "$RBU":
+            raise InvalidRbuHdr("Not a valid RBU HDR File. Header doesnt have '$RBU' header.")
 
         self.sysidlist = []
         for i in range(min(NUM_SYS_ID_IN_HDR, self.hdr.numSystems)):
