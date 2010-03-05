@@ -13,7 +13,7 @@
 #
 m4_define([release_major_version], [2])
 m4_define([release_minor_version], [2])
-m4_define([release_micro_version], [19])
+m4_define([release_micro_version], [20])
 # if you define any "extra" version info, include a leading dot (".")
 m4_define([release_extra_version], [])
 
@@ -46,7 +46,6 @@ AC_CONFIG_AUX_DIR([pkg])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([subdir-objects tar-ustar dist-bzip2 dist-lzma no-define ])
-#AM_MAINTAINER_MODE
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.14])
 AC_GNU_SOURCE
