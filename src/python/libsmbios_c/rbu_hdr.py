@@ -41,6 +41,7 @@ def dumpHdrFileInfo(hdr):
     print _("Header minor version: %s") % hdr.hdr.headerMinorVer
     print _("Number of supported systems: %s") % hdr.hdr.numSystems
     print _("Quick check field: %s") % hdr.hdr.quickCheck
+    print _("BIOS Version (RAW): %s") % hdr.hdr.biosVersion
     print _("BIOS Version: %s") % hdr.biosVersion()
     print _("Misc flags: %s") % hdr.hdr.miscFlags
     #print "biosInternalOnly: %s" % hdr.hdr.biosInternalOnly
@@ -58,7 +59,7 @@ class HdrFile(object):
         self.hdr = HdrFileStructure()
         buf = self.fd.read(ctypes.sizeof(self.hdr))
         self.fd.seek(0,0)
-        ctypes.memmove(ctypes.byref(self.hdr), ctypes.byref(ctypes.create_string_buffer(buf)), ctypes.sizeof(self.hdr))
+        ctypes.memmove(ctypes.addressof(self.hdr), buf, min(len(buf), ctypes.sizeof(self.hdr)))
 
         if self.hdr.headerId != "$RBU":
             raise InvalidRbuHdr("Not a valid RBU HDR File. Header doesnt have '$RBU' header.")
@@ -83,10 +84,7 @@ class HdrFile(object):
     def biosVersion(self):
         ver = ""
         if self.hdr.headerMajorVer < 2:
-            for i in range(3):
-                if self.hdr.biosVersion[i].isalnum():
-                    ver = ver + self.hdr.biosVersion[i];
-
+            ver = "".join([ c for c in self.hdr.biosVersion if c.isalnum() ])
         else:
             ver = "%d.%d.%d" % struct.unpack("BBB", self.hdr.biosVersion)
         return ver
