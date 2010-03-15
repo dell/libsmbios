@@ -33,3 +33,29 @@
 #   - TPM os enable/disable (0xa0002, 0xa003)
 0xa002,"Manufacturing use."
 0xa003,"Manufacturing use."
+0xA004,"Manufacturing use."
+
+#  Factory Stuff
+0x01DC,"Factory Use."
+0x01DD,"Factory Use."
+
+# Reserved
+0x0100,"Reserved."
+0xC001,"Reserved."
+0xC002,"Reserved."
+0xC004,"Reserved."
+0xC005,"Reserved."
+0xC007,"Reserved."
+0xC008,"Reserved."
+0xC009,"Reserved."
+0xC00A,"Reserved."
+0xC00B,"Reserved."
+0xC00C,"Reserved."
+0xC00D,"Reserved."
+0xC00F,"Reserved."
+0xC010,"Reserved."
+0xC011,"Reserved."
+0xC012,"Reserved."
+0xC013,"Reserved."
+0xC014,"Reserved."
+0xC015,"Reserved."
