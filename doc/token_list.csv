@@ -758,26 +758,16 @@
 401F,"Second Built-in IDE Controller",Off,"Disables the second embedded IDE controller in the system.",,
 4020,"Memory Interleaving",Enabled,"(Read-only) Memory interleaving is enabled in the current configuration.",,
 4021,"Memory Interleaving",Disabled,"(Read-only) Memory interleaving is disabled in the current configuration.",,
-
 4022,"Force PXE as First Boot Device",Enabled,"Whenever the BIOS boots the system, the first PXE-capable device is inserted as the first device in the boot sequence. Enabling this feature causes the BIOS operation to occur on the next and all subsequent boots and causes a change in the system's defined boot sequence (unlike tokens 93h and 94h). The BIOS chooses the first PXE-capable device as the system's onboard network controller, if present and enabled, or the first bootable network device found in the system's standard PCI search order — whichever comes first.",,
-
 4023,"Force PXE as First Boot Device",Disabled,"The PXE boot override is disabled and the system boot sequence is in effect.",,
-
 4024,"Embedded NIC1 and NIC2",Enabled,"The BIOS enables the primary and secondary NIC during setup. The hardware has a single control line for both NICs.",,
 4025,"Embedded NIC1 and NIC2",Disabled,"The BIOS disables the primary and secondary NIC during setup. The hardware has a single control line for both NICs.",,
-
 4026,"Manufacturing Mode",Enabled,"Enable the manufacturing mode to bypass POST tasks/memory tests and F1/F2 prompts on specific error messages. Used by Manufacturing; not for general customer use.",,
 4027,"Manufacturing Mode",Disabled,"Disable the manufacturing mode to bypass POST tasks/memory tests and F1/F2 prompts on specific error messages. Used by Manufacturing; not for general customer use.",,
-
 4028,"Remote Configuration Interface Request","Present (or Pending)","Request for BIOS to process the RCI (Remote Configuration Interface) structure information on the next reboot. BIOS will clear this bit after servicing this request on next reboot.",,
-
 4029,"Remote Configuration Interface Request","Absent (or Cleared)","No request for BIOS to process the RCI (Remote Configuration Interface) structure information on the next reboot. This is the default setting by BIOS at IPL.",,
-
-
 402A,"CPU Sequential Memory Access",Enabled,"Enable CPU Sequential Memory Access on “Prestonia and Gallatin Technology” CPUs. Enabled is default. This token is available when the system has: Prestonia CPU - 2 processors with C1 stepping and above with 2.6 GHz speed and above Gallatin CPU - 2 processors with B1 stepping and above with all speeds",,
-
 402B,"CPU Sequential Memory Access",Disabled,"Disable CPU Sequential Memory Access on “Prestonia and Gallatin Technology” CPUs. Enabled is default. This token is available when the system has: Prestonia CPU - 2 processors with C1 stepping and above with 2.6 GHz speed and above Gallatin CPU - 2 processors with B1 stepping and above with all speeds",,
-
 402C,"Serial ATA Controller Card",Enabled,"Enable PCI Serial ATA controller (PCI daughter card).",,
 402D,"Serial ATA Controller Card",Disabled,"Disable PCI Serial ATA controller (PCI daughter card).",,
 402E,"Serial Port 1","BMC Serial","Configure the system’s first/only built-in serial port to respond as COM1. The Base Management Controller (BMC) controls traffic between the OS and BMC.",,
@@ -795,51 +785,31 @@
 403A,"Console Redirection",MMB,"Console Redirection On, output to the Modular Management Board (MMB). Also see tokens BFh, 401Ah, 401Bh, 401Ch, 401Dh, 4033h, 4034h, 4035h, 4036h, and 4039h.",1.5i,
 403B,"Serial Port 1",COM1/BMC,"Serial Port1 option in 8g controls the mode of the serial communication between UART, the serial connector and BMC. As per customer request a new mode is added in 8G. This mode will be called ‘COM1/BMC” and if set BMC will snoop the serial traffic between the COM1 and the serial DB9 connector.",2.001,
 403C,"Hard-Disk Failover",Off,"This field specifies which devices in the Hard-Disk Drive Sequence menu are attempted in the boot sequence. When set to OFF (default), only the first device in the list is attempted. This field only has effect if there is more than one hard-disk drive in the system.",2.001,
-
 403D,"Hard-Disk Failover",On,"This field specifies which devices in the Hard-Disk Drive Sequence menu are attempted in the boot sequence.When set to ON, all devices are attempted in order, as listed in the Hard-Disk Drive Sequence.This field only has effect if there is more than one hard-disk drive in the system.",2.001,
-
 403E,"Clear System Event Log",No,"‘No’ prevents the system event log from being cleared on the next boot.",2.001,
 403F,"Clear System Event Log",Yes,"‘Yes’ causes the system event log to be cleared on the next boot (at which time this field’s setting will be changed to ‘No’).",2.001,
-
 4040,"Snoop Filter",Disabled,"Allow user the ability to disable the Greencreek Snoop Filter chipset option from BIOS setup. There are some applications that may have lower performance with the chipset feature enabled.",2.001,
-
 4041,"Snoop Filter",Enabled,"Allow user the ability to enable the Greencreek Snoop Filter chipset option from BIOS setup. There are some applications that may have lower performance with the chipset feature enabled.",2.001,
-
 4042,"Boot Sequence Retry",Disabled,"Enables/Disables the Boot Sequence Retry feature. When set to Enabled, the system will re-attempt the Boot Sequence after a 30 seconds timeout if the last boot attempt has failed.",2.002,
-
 4043,"Boot Sequence Retry",Enabled,"Enables/Disables the Boot Sequence Retry feature. When set to Enabled, the system will re-attempt the Boot Sequence after a 30 seconds timeout if the last boot attempt has failed.",2.002,
-
 4044,"System Interrupts Assignment",Standard,"This field controls the interrupt assignment of PCI devices in the system. When set to distributed, the interrupt routing will be swizzled to minimize IRQ sharing.",2.002,
-
 4045,"System Interrupts Assignment",Distributed,"This field controls the interrupt assignment of PCI devices in the system. When set to distributed, the interrupt routing will be swizzled to minimize IRQ sharing.",2.002,
 8000,"Chassis Intrusion",Tripped,"Read-only The intrusion sensor detected that the chassis door was opened since the last time the sensor-detection logic was reset. This status is reset via the Trip Reset token. If the token’s read returns the token-table defined value, the intrusion sensor has been tripped; otherwise, the sensor has not been tripped.",,
 8001,"Chassis Intrusion","Not Tripped","Read-only The intrusion sensor has not detected a chassis door open since the last time the sensor-detection logic was reset.",,
 8002,"Chassis Intrusion","Door Open","Read-only The chassis door is currently open.",,
 8003,"Chassis Intrusion","Door Closed","Read-only The chassis door is currently closed.",,
-
 8004,Power-off,Requested,"Read/Write (exception) A system power-off has been requested by the hardware (i.e. a user has pressed the system power-off button) or the management software. If the system-management instrumentation has set the Management Driver|Present attribute (without legacy masking), the management code polls this attribute periodically to provide an orderly system shutdown when a system power-off is requested. System-management software writes this token prior to resetting the system to cause the system BIOS to force a system power-down. This feature is used in Windows NT 4.0 to cause the system to power-off (since an NT shutdown simply returns the system to the logon window). Note: This token is an exception to the token numbering scheme, due to legacy implementations.",,
-
 8005,"System Check",OK,"Read-only. Identifies whether any of the system’s management hardware sensors have reported a system problem since the last read of this token. If the token’s read does not return the token-table defined value, management software must enumerate each of the system-specific management hardware elements to determine the warning or failure cause."
-
-
 8006,"Error Log Updated by BIOS",Yes,"Read-only. If this token reads “true”, the BIOS has updated the error log.",,
 8007,"Single-bit Error Logging Stopped",Yes,"Read-only. If this token reads “true”, the BIOS has stopped logging single-bit (correctable) memory errors.",,
 8008,"Error Logging Stopped",Yes,"Read-only. If this token reads “true”, the BIOS has stopped logging errors.",,
-
 8009,"FBD Memory Test State","Normal Memory Configuration","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
-
 800A,"FBD Memory Test State","Memory Configuration 0","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
-
 800B,"FBD Memory Test State","Memory Configuration 1","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
-
+800C,"Trusted Platform Module",Deactivated,"Token for reporting the current activation state of the TPM.",2.005,192
 9000,"CMOS Location for 1st F1/F2 Error Code",N/A,"Server BIOS has a feature to log the first two F1/F2 error codes to CMOS. This can be used by the factory to determine the cause of an F1/F2 prompt if the error message scrolls off the screen. Used by Manufacturing; not for general customer use.Error Code definitions :See section 3.7.2.15 F1/F2 error code Descriptions on page 1 for more information.",,
-
 9001,"CMOS Location for 2nd F1/F2 Error Code",N/A,"See 9000h information. Used by Manufacturing; not for general customer use.",,
-
 A000,"Chassis Intrusion","Trip Reset","Write-only Resets the sensor-detection logic to detect the next closed-to-open transition on the chassis door."
-
 A001,"Chassis Intrusion","Sequence Complete","Write-only The system-management instrumentation writes this attribute once the operating-system shutdown has been initiated to instruct the BIOS to complete the previously-requested system power-off sequence."
-
 A002,"Trusted Platform Module",Enable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the enable state will expose the TPM to the system. Used by Manufacturing; not for general customer use."
-
 A003,"Trusted Platform Module",Disable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the disable state will cause the BIOS to hardware disable the TPM at the next boot, and the TPM will NOT appear as installed hardware. Used by Manufacturing; not for general customer use."
