@@ -51,6 +51,7 @@ __all__.append("get_library_version_minor")
 #    const char *sysinfo_get_dell_system_id(); 
 DLL.sysinfo_get_dell_system_id.argtypes = []
 DLL.sysinfo_get_dell_system_id.restype = ctypes.c_int
+DLL.sysinfo_get_dell_system_id.errcheck=errorOnZeroFN(lambda r,f,a: Exception(_("Could not determine System ID.")))
 get_dell_system_id = DLL.sysinfo_get_dell_system_id
 __all__.append("get_dell_system_id")
 
