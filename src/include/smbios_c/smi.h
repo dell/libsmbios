@@ -39,6 +39,9 @@ DLL_SPEC const char *dell_smi_strerror();
 
 DLL_SPEC int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4]);
 
+// not yet implemented
+DLL_SPEC int dell_adv_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4], const u8 *buffer[4], const size_t buffer_size[4]);
+
 DLL_SPEC int dell_smi_read_nv_storage         (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
 DLL_SPEC int dell_smi_read_battery_mode_setting(u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
 DLL_SPEC int dell_smi_read_ac_mode_setting     (u32 location, u32 *curValue, u32 *minValue, u32 *maxValue);
