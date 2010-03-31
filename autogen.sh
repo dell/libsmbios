@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # run this script to create all the autotools fluff. It will also run configure
 # unless told not to
