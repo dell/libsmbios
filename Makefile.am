@@ -25,7 +25,11 @@ AM_LDFLAGS += -Wl,--avoid-version -Wl,--enable-auto-import
 endif
 
 include Makefile-std
+
+if BUILD_LIBSMBIOS_CXX
 include src/libsmbios_c++/Makefile.am
+endif
+
 include src/libsmbios_c/Makefile.am
 include src/python/Makefile.am
 include src/py-cli/Makefile.am

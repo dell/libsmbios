@@ -79,6 +79,12 @@ AC_SUBST([LIBSMBIOS_CPLUSPLUS_SO_MAJOR], [$(($LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURREN
 AC_SUBST([LIBSMBIOS_CPLUSPLUS_SONAME], [libsmbios.so.$LIBSMBIOS_CPLUSPLUS_SO_MAJOR])
 
 dnl Help line for doxygen
+AC_ARG_ENABLE([libsmbios_cxx],
+    AS_HELP_STRING([--disable-libsmbios_cxx],[Disable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: enabled]),
+    [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=yes])
+AM_CONDITIONAL(BUILD_LIBSMBIOS_CXX, [test x$want_libsmbios_cxx == xyes])
+
+dnl Help line for doxygen
 AC_ARG_ENABLE(doxygen,
     AS_HELP_STRING(--disable-doxygen,Disable API docs build via Doxygen. default: enabled if doxygen present),
     [wantdoxygen=$enableval], [wantdoxygen=yes])
