@@ -167,8 +167,22 @@ fi
 # relies on more registers than available on ia64; there's no ia64 system with
 # media direct, so it's disabled on ia64
 AM_CONDITIONAL(BUILD_MEDIA_DIRECT, [test "$host_cpu" != ia64])
-AM_CONDITIONAL(BUILD_LINUX, [test "$host_os" != mingw32])
-AM_CONDITIONAL(BUILD_WINDOWS, [test "$host_os" = mingw32])
+
+case $host_os in
+	linux*)
+		linux_os=1
+		;;
+	solaris*)
+		solaris_os=1
+		;;
+	mingw32*)
+		windows_os=1
+		;;
+esac
+
+AM_CONDITIONAL(BUILD_LINUX,   [test -n "$linux_os"])
+AM_CONDITIONAL(BUILD_SOLARIS, [test -n "$solaris_os"])
+AM_CONDITIONAL(BUILD_WINDOWS, [test -n "$windows_os"])
 
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
 PKG_CHECK_MODULES([CPPUNIT],[cppunit],[],[echo "CPPUNIT not found, disabling CPPUNIT dependent modules"])
