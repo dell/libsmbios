@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2009-07-24 22:43-0500\n"
+"POT-Creation-Date: 2010-03-30 16:22-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Japanese\n"
@@ -1211,6 +1211,10 @@ msgstr ""
 
 #: src/python/libsmbios_c/smi.py:125
 msgid "The output buffer the BIOS requires is too small"
+msgstr ""
+
+#: src/python/libsmbios_c/system_info.py:54
+msgid "Could not determine System ID."
 msgstr ""
 
 #: src/python/libsmbios_c/token.py:149
