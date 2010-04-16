@@ -84,11 +84,10 @@ class HdrFile(object):
     def biosVersion(self):
         ver = ""
         if self.hdr.headerMajorVer < 2:
-            ver = "".join([ c for c in self.hdr.biosVersion if c.isalnum() ])
+            ver = "".join([ chr(c) for c in self.hdr.biosVersion if chr(c).isalnum() ])
         else:
-            ver = "%d.%d.%d" % struct.unpack("BBB", self.hdr.biosVersion)
+            ver = "%d.%d.%d" % (self.hdr.biosVersion[0], self.hdr.biosVersion[1], self.hdr.biosVersion[2])
         return ver
-
 
 # current HDR def leaves room for 12 system ids
 NUM_SYS_ID_IN_HDR = 12
@@ -109,7 +108,7 @@ class HdrFileStructure(ctypes.Structure):
         #char quickCheck[40];
         ("quickCheck", ctypes.c_char * 40),
         #char biosVersion[3];
-        ("biosVersion", ctypes.c_char * 3),
+        ("biosVersion", ctypes.c_uint8 * 3),
         #u8  miscFlags;
         ("miscFlags", ctypes.c_uint8),
         #u8  biosInternalUse;
