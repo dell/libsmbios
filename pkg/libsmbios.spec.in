@@ -84,7 +84,13 @@
     # per fedora and suse python packaging guidelines
     # suse: will define py_sitedir for us
     # fedora: use the !? code below to define when it isnt already
-    %{!?py_sitedir: %define py_sitedir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+
+    # pure python stuff goes here
+    %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
+
+    # arch-dep python stuff goes here
+    %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
+
 %endif
 
 # if unit tests are disabled, get rid of a few BuildRequires
@@ -295,7 +301,7 @@ ln -s smbios-rbu-bios-update %{buildroot}/%{_sbindir}/dellBiosUpdate
 
 cat > files-python-smbios <<-EOF
 	%doc COPYING-GPL COPYING-OSL README
-	%{py_sitedir}/*
+	%{python_sitelib}/*
 EOF
 
 cat > files-smbios-utils-python <<-EOF
