@@ -27,7 +27,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libsmbios 2.2.20\n"
+"Project-Id-Version: libsmbios 2.2.21\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
 "POT-Creation-Date: 2010-03-30 16:22-0500\n"
 "PO-Revision-Date: 2010-03-30 16:22-0500\n"
