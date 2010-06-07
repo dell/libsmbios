@@ -175,7 +175,7 @@ class TokenTranslatorCsv(TokenTranslator):
 def tokenInfo(tokenObj, action):
     exit_code=1
 
-    type = _("<wierd unknown type>")
+    type = _("<weird unknown type>")
     value = _("<unknown value>")
     if tokenObj.isBool():
         if action == "is-bool": exit_code = 0
