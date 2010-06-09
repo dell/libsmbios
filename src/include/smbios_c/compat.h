@@ -34,14 +34,14 @@
 
 #if defined(LIBSMBIOS_C_HAS_DECLSPEC) && defined(LIBSMBIOS_C_ALL_DYN_LINK)
 #       if defined(LIBSMBIOS_C_SOURCE)
-#           define DLL_SPEC  __declspec(dllexport)
+#           define LIBSMBIOS_C_DLL_SPEC  __declspec(dllexport)
 #       else
-#           define DLL_SPEC  __declspec(dllimport)
+#           define LIBSMBIOS_C_DLL_SPEC  __declspec(dllimport)
 #       endif  /* SMBIOS_EXPORTS */
 #endif
 
-#ifndef DLL_SPEC
-#   define DLL_SPEC
+#ifndef LIBSMBIOS_C_DLL_SPEC
+#   define LIBSMBIOS_C_DLL_SPEC
 #endif
 
 #ifdef __cplusplus

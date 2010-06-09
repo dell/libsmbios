@@ -33,26 +33,26 @@ EXTERN_C_BEGIN;
 struct memory_access_obj;
 
 // construct
-DLL_SPEC struct memory_access_obj *memory_obj_factory(int flags, ...);
+LIBSMBIOS_C_DLL_SPEC struct memory_access_obj *memory_obj_factory(int flags, ...);
 
 // destruct
-DLL_SPEC void memory_obj_free(struct memory_access_obj *);
+LIBSMBIOS_C_DLL_SPEC void memory_obj_free(struct memory_access_obj *);
 
-DLL_SPEC int  memory_obj_read(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
-DLL_SPEC int  memory_obj_write(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
+LIBSMBIOS_C_DLL_SPEC int  memory_obj_read(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
+LIBSMBIOS_C_DLL_SPEC int  memory_obj_write(const struct memory_access_obj *, void *buffer, u64 offset, size_t length);
 
 // format error string
-DLL_SPEC const char *memory_obj_strerror(const struct memory_access_obj *m);
+LIBSMBIOS_C_DLL_SPEC const char *memory_obj_strerror(const struct memory_access_obj *m);
 
 // helper
-DLL_SPEC s64  memory_obj_search(const struct memory_access_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
+LIBSMBIOS_C_DLL_SPEC s64  memory_obj_search(const struct memory_access_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
 
 // Following calls must be properly nested in equal pairs
-DLL_SPEC void  memory_obj_suggest_leave_open(struct memory_access_obj *);
-DLL_SPEC void  memory_obj_suggest_close(struct memory_access_obj *);
+LIBSMBIOS_C_DLL_SPEC void  memory_obj_suggest_leave_open(struct memory_access_obj *);
+LIBSMBIOS_C_DLL_SPEC void  memory_obj_suggest_close(struct memory_access_obj *);
 
 // ask if close flag is set
-DLL_SPEC bool  memory_obj_should_close(const struct memory_access_obj *);
+LIBSMBIOS_C_DLL_SPEC bool  memory_obj_should_close(const struct memory_access_obj *);
 
 EXTERN_C_END;
 

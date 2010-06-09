@@ -39,21 +39,21 @@ struct smbios_table;
 struct smbios_struct;
 
 // construct
-DLL_SPEC struct smbios_table *smbios_table_factory(int flags, ...);
+LIBSMBIOS_C_DLL_SPEC struct smbios_table *smbios_table_factory(int flags, ...);
 
 // destruct
-DLL_SPEC void smbios_table_free(struct smbios_table *);
+LIBSMBIOS_C_DLL_SPEC void smbios_table_free(struct smbios_table *);
 
 //// format error string
-DLL_SPEC const char * DLL_SPEC smbios_table_strerror(const struct smbios_table *);
+LIBSMBIOS_C_DLL_SPEC const char *smbios_table_strerror(const struct smbios_table *);
 
 // visitor pattern
-DLL_SPEC void smbios_table_walk(struct smbios_table *, void (*smbios_table_walk_fn)(const struct smbios_struct *, void *userdata), void *userdata);
+LIBSMBIOS_C_DLL_SPEC void smbios_table_walk(struct smbios_table *, void (*smbios_table_walk_fn)(const struct smbios_struct *, void *userdata), void *userdata);
 
 // for looping/searching
-DLL_SPEC struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
-DLL_SPEC struct smbios_struct *smbios_table_get_next_struct_by_type(const struct smbios_table *, const struct smbios_struct *cur, u8 type);
-DLL_SPEC struct smbios_struct *smbios_table_get_next_struct_by_handle(const struct smbios_table *, const struct smbios_struct *cur, u16 handle);
+LIBSMBIOS_C_DLL_SPEC struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *, const struct smbios_struct *cur);
+LIBSMBIOS_C_DLL_SPEC struct smbios_struct *smbios_table_get_next_struct_by_type(const struct smbios_table *, const struct smbios_struct *cur, u8 type);
+LIBSMBIOS_C_DLL_SPEC struct smbios_struct *smbios_table_get_next_struct_by_handle(const struct smbios_table *, const struct smbios_struct *cur, u16 handle);
 
 #define smbios_table_for_each_struct(table_name, struct_name)  \
         for(    \

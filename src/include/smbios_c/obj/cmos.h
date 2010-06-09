@@ -34,19 +34,19 @@ EXTERN_C_BEGIN;
 
 struct cmos_access_obj;
 
-DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...);
-DLL_SPEC void   cmos_obj_free(struct cmos_access_obj *);
+LIBSMBIOS_C_DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...);
+LIBSMBIOS_C_DLL_SPEC void   cmos_obj_free(struct cmos_access_obj *);
 
-DLL_SPEC int     cmos_obj_read_byte(const struct cmos_access_obj *, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
-DLL_SPEC int    cmos_obj_write_byte(const struct cmos_access_obj *, u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
+LIBSMBIOS_C_DLL_SPEC int     cmos_obj_read_byte(const struct cmos_access_obj *, u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
+LIBSMBIOS_C_DLL_SPEC int    cmos_obj_write_byte(const struct cmos_access_obj *, u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
 
 // format error string
-DLL_SPEC const char *cmos_obj_strerror(const struct cmos_access_obj *m);
+LIBSMBIOS_C_DLL_SPEC const char *cmos_obj_strerror(const struct cmos_access_obj *m);
 
 // useful for checksums, etc
 typedef int (*cmos_write_callback)(const struct cmos_access_obj *, bool, void *);
-DLL_SPEC void cmos_obj_register_write_callback(struct cmos_access_obj *, cmos_write_callback, void *, void (*destruct)(void *));
-DLL_SPEC int cmos_obj_run_callbacks(const struct cmos_access_obj *m, bool do_update);
+LIBSMBIOS_C_DLL_SPEC void cmos_obj_register_write_callback(struct cmos_access_obj *, cmos_write_callback, void *, void (*destruct)(void *));
+LIBSMBIOS_C_DLL_SPEC int cmos_obj_run_callbacks(const struct cmos_access_obj *m, bool do_update);
 
 EXTERN_C_END;
 

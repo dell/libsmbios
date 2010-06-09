@@ -29,11 +29,11 @@ EXTERN_C_BEGIN;
  * This string is statically allocated in the library, so there is no need to
  * free it when done.
  */
-const char * DLL_SPEC smbios_get_library_version_string();
+const char * LIBSMBIOS_C_DLL_SPEC smbios_get_library_version_string();
 //! Return a number representing the major version of the libsmbios library.
-int DLL_SPEC  smbios_get_library_version_major();
+int LIBSMBIOS_C_DLL_SPEC  smbios_get_library_version_major();
 //! Return a number representing the minor version of the libsmbios library.
-int DLL_SPEC smbios_get_library_version_minor();
+int LIBSMBIOS_C_DLL_SPEC smbios_get_library_version_minor();
 
 
 //! Return the Dell System ID Byte or Word
@@ -41,7 +41,7 @@ int DLL_SPEC smbios_get_library_version_minor();
  * (server, desktop, workstation, or laptop) that uniquely identifies that
  * system within Dell's product line.
  */
-int  DLL_SPEC  sysinfo_get_dell_system_id();
+int  LIBSMBIOS_C_DLL_SPEC  sysinfo_get_dell_system_id();
 
 /** Return a buffer containing the system vendor name.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
@@ -49,7 +49,7 @@ int  DLL_SPEC  sysinfo_get_dell_system_id();
  * @return pointer to buffer containing vendor name. Deallocate with
  * sysinfo_string_free() when done.
  */
-char * DLL_SPEC sysinfo_get_vendor_name();
+char * LIBSMBIOS_C_DLL_SPEC sysinfo_get_vendor_name();
 
 /** Return a buffer containing the system name.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
@@ -57,7 +57,7 @@ char * DLL_SPEC sysinfo_get_vendor_name();
  * @return pointer to buffer containing system name. Deallocate with
  * sysinfo_string_free() when done.
  */
-char * DLL_SPEC sysinfo_get_system_name();
+char * LIBSMBIOS_C_DLL_SPEC sysinfo_get_system_name();
 
 /** Return a buffer containing the system bios version string.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
@@ -65,7 +65,7 @@ char * DLL_SPEC sysinfo_get_system_name();
  * @return pointer to buffer containing system bios version string. Deallocate
  * with sysinfo_string_free() when done.
  */
-char * DLL_SPEC sysinfo_get_bios_version();
+char * LIBSMBIOS_C_DLL_SPEC sysinfo_get_bios_version();
 
 /** Return a buffer containing the system asset tag string.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
@@ -73,7 +73,7 @@ char * DLL_SPEC sysinfo_get_bios_version();
  * @return pointer to buffer containing system asset tag string. Deallocate
  * with sysinfo_string_free() when done.
  */
-char * DLL_SPEC sysinfo_get_asset_tag();
+char * LIBSMBIOS_C_DLL_SPEC sysinfo_get_asset_tag();
 
 /** Return a buffer containing the system service tag string.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
@@ -81,7 +81,7 @@ char * DLL_SPEC sysinfo_get_asset_tag();
  * @return pointer to buffer containing system service tag string. Deallocate
  * with sysinfo_string_free() when done.
  */
-char * DLL_SPEC sysinfo_get_service_tag();
+char * LIBSMBIOS_C_DLL_SPEC sysinfo_get_service_tag();
 
 /** copy property ownership tag into user-supplied buffer.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
@@ -89,7 +89,7 @@ char * DLL_SPEC sysinfo_get_service_tag();
  * @return pointer to buffer containing system property ownership tag string.
  * Deallocate with sysinfo_string_free() when done.
  */
-char * DLL_SPEC sysinfo_get_property_ownership_tag();
+char * LIBSMBIOS_C_DLL_SPEC sysinfo_get_property_ownership_tag();
 
 /** Set system property ownership tag
  * @param newTag buffer holding new tag
@@ -97,7 +97,7 @@ char * DLL_SPEC sysinfo_get_property_ownership_tag();
  * @param pass_scancode password as keyboard scancodes
  * @return  0 on success, -1 general failure, -2 bad password
  */
-int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode);
+int LIBSMBIOS_C_DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode);
 
 /** set the system asset tag.
  * Note some systems store password in ascii and some store keyboard scancodes. Thus you must pass both.
@@ -109,28 +109,28 @@ int DLL_SPEC sysinfo_set_property_ownership_tag(const char *newTag, const char *
  *  -1 == general failure
  *  -2 == password incorrect
  */
-int DLL_SPEC sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode);
+int LIBSMBIOS_C_DLL_SPEC sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode);
 
 /** Returns string describing the last error condition.
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any sysinfo_* function. Copy the contents if you need it longer.
  */
-const char * DLL_SPEC sysinfo_strerror();
+const char * LIBSMBIOS_C_DLL_SPEC sysinfo_strerror();
 
 /** Free string.
  * Use this function to deallocate the strings returned by other functions in
  * this header.
  */
-void DLL_SPEC  sysinfo_string_free(void *);
+void LIBSMBIOS_C_DLL_SPEC  sysinfo_string_free(void *);
 
 // experimental functions
-int DLL_SPEC sysinfo_has_nvram_state_bytes();
-int DLL_SPEC sysinfo_get_nvram_state_bytes( int user );
-void DLL_SPEC sysinfo_set_nvram_state_bytes(int value, int user);
+int LIBSMBIOS_C_DLL_SPEC sysinfo_has_nvram_state_bytes();
+int LIBSMBIOS_C_DLL_SPEC sysinfo_get_nvram_state_bytes( int user );
+void LIBSMBIOS_C_DLL_SPEC sysinfo_set_nvram_state_bytes(int value, int user);
 
-int DLL_SPEC sysinfo_has_up_boot_flag();
-int DLL_SPEC sysinfo_set_up_boot_flag(int state);
-int DLL_SPEC sysinfo_get_up_boot_flag();
+int LIBSMBIOS_C_DLL_SPEC sysinfo_has_up_boot_flag();
+int LIBSMBIOS_C_DLL_SPEC sysinfo_set_up_boot_flag(int state);
+int LIBSMBIOS_C_DLL_SPEC sysinfo_get_up_boot_flag();
 
 EXTERN_C_END;
 
