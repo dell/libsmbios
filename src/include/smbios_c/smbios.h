@@ -34,7 +34,7 @@ struct smbios_struct;
  *  @param cur  pointer to current structure, or 0 to begin at the start of the table.
  *  @return  Pointer to next smbios structure. returns 0 on end of table.
  */
-struct smbios_struct * LIBSMBIOS_C_DLL_SPEC smbios_get_next_struct(const struct smbios_struct *cur);
+LIBSMBIOS_C_DLL_SPEC struct smbios_struct * smbios_get_next_struct(const struct smbios_struct *cur);
 
 
 /** Function for looping over smbios table structures by type.
@@ -46,7 +46,7 @@ struct smbios_struct * LIBSMBIOS_C_DLL_SPEC smbios_get_next_struct(const struct 
  *  @param type  only return smbios structures matching type
  *  @return  Pointer to next smbios structure. returns 0 on end of table.
  */
-struct smbios_struct * LIBSMBIOS_C_DLL_SPEC smbios_get_next_struct_by_type(const struct smbios_struct *cur, u8 type);
+LIBSMBIOS_C_DLL_SPEC struct smbios_struct * smbios_get_next_struct_by_type(const struct smbios_struct *cur, u8 type);
 
 /** Function for looping over smbios table structures by handle.
  * Returns a pointer to the next smbios structure with a given handle. You can
@@ -57,7 +57,7 @@ struct smbios_struct * LIBSMBIOS_C_DLL_SPEC smbios_get_next_struct_by_type(const
  *  @param handle  only return smbios structures matching handle
  *  @return  Pointer to next smbios structure. returns 0 on end of table.
  */
-struct smbios_struct * LIBSMBIOS_C_DLL_SPEC smbios_get_next_struct_by_handle(const struct smbios_struct *cur, u16 handle);
+LIBSMBIOS_C_DLL_SPEC struct smbios_struct * smbios_get_next_struct_by_handle(const struct smbios_struct *cur, u16 handle);
 
 /** Call a named function for each smbios structure.
  * Calls the given function for each smbios table structure. Passes a pointer
@@ -65,7 +65,7 @@ struct smbios_struct * LIBSMBIOS_C_DLL_SPEC smbios_get_next_struct_by_handle(con
  * @param fn  pointer to the function to call
  * @param userdata  opaque pointer that will be passed to the funciton
  */
-void LIBSMBIOS_C_DLL_SPEC smbios_walk(void (*fn)(const struct smbios_struct *, void *userdata), void *userdata);
+LIBSMBIOS_C_DLL_SPEC void smbios_walk(void (*fn)(const struct smbios_struct *, void *userdata), void *userdata);
 
 /** looping helper macro.
  * This macro makes it easy to loop over each structure in the smbios table
@@ -89,13 +89,13 @@ void LIBSMBIOS_C_DLL_SPEC smbios_walk(void (*fn)(const struct smbios_struct *, v
            )
 
 /** Returns the structure type of a given smbios structure. */
-u8 LIBSMBIOS_C_DLL_SPEC smbios_struct_get_type(const struct smbios_struct *);
+LIBSMBIOS_C_DLL_SPEC u8 smbios_struct_get_type(const struct smbios_struct *);
 
 /** Returns the structure length of a given smbios structure. */
-u8 LIBSMBIOS_C_DLL_SPEC smbios_struct_get_length(const struct smbios_struct *);
+LIBSMBIOS_C_DLL_SPEC u8 smbios_struct_get_length(const struct smbios_struct *);
 
 /** Returns the structure handle of a given smbios structure. */
-u16 LIBSMBIOS_C_DLL_SPEC smbios_struct_get_handle(const struct smbios_struct *);
+LIBSMBIOS_C_DLL_SPEC u16 smbios_struct_get_handle(const struct smbios_struct *);
 
 /** Copy data out of the smbios structure.
  * Does bounds-checking to ensure that structure overflows do not happen.
@@ -105,7 +105,7 @@ u16 LIBSMBIOS_C_DLL_SPEC smbios_struct_get_handle(const struct smbios_struct *);
  * @param len  length of data to copy into buffer
  * @return returns 0 on success, <0 on failure.
  */
-int LIBSMBIOS_C_DLL_SPEC smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
+LIBSMBIOS_C_DLL_SPEC int smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
 
 /** get string from smbios structure.
  * Most smbios structures have specific offsets that contain a string number.
@@ -114,20 +114,20 @@ int LIBSMBIOS_C_DLL_SPEC smbios_struct_get_data(const struct smbios_struct *s, v
  * @param offset  offset containing string pointer
  * @return returns a pointer to the string, or 0 on failure.
  */
-const char * LIBSMBIOS_C_DLL_SPEC smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
+LIBSMBIOS_C_DLL_SPEC const char * smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
 
 /** get string from smbios structure.
  * Retrieves string N from the end of a smbios structure.
  * @param s pointer to smbios structure
  * @param which string number to return
  */
-const char * LIBSMBIOS_C_DLL_SPEC smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
+LIBSMBIOS_C_DLL_SPEC const char * smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 
 /** Returns string describing the last error condition.
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any smbios_* function. Copy the contents if you need it longer.
  */
-const char * LIBSMBIOS_C_DLL_SPEC smbios_strerror();
+LIBSMBIOS_C_DLL_SPEC const char * smbios_strerror();
 
 EXTERN_C_END;
 

@@ -101,20 +101,18 @@ out:
 
 
 
-char *getAssetTagFromSMI()
+static char *getAssetTagFromSMI()
 {
     fnprintf("\n");
     return getTagFromSMI( 0 ); /* Read asset tag select code */
 }
 
 // Code for getting the asset tag from one of many locations
-struct DellAssetTagFunctions
+/* try dynamic functions first to make sure we get current data. */
+static struct DellAssetTagFunctions
 {
     char *(*f_ptr)();
-}
-
-/* try dynamic functions first to make sure we get current data. */
-DellAssetTagFunctions[] = {
+} DellAssetTagFunctions[] = {
                               {&getAssetTagFromSMI,},     // SMI
                               {&getAssetTagFromToken,},   // SMBIOS Token
                               {&getAssetTagFromSysEncl,}, // SMBIOS System Information Item
@@ -153,7 +151,7 @@ char *sysinfo_get_asset_tag()
 // SET FUNCTIONS
 //
 
-__internal int setAssetTagUsingCMOSToken(const char *newTag, const char *pass_ascii, const char *pass_scancode)
+static int setAssetTagUsingCMOSToken(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
     const struct smbios_struct *s;
     u16 indexPort, dataPort;
@@ -200,7 +198,7 @@ out:
 }
 
 
-int setAssetTagUsingSMI(const char *newTag, const char *pass_ascii, const char *pass_scancode)
+static int setAssetTagUsingSMI(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
     int retval = 0, ret;
     u16 security_key = 0;
@@ -224,7 +222,7 @@ out:
 }
 
 // Code for getting the service tag from one of many locations
-struct DellSetAssetTagFunctions
+static struct DellSetAssetTagFunctions
 {
     int (*f_ptr)(const char *, const char *, const char *);
 } DellSetAssetTagFunctions[] = {

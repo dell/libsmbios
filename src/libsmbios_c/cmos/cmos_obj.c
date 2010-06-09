@@ -61,7 +61,7 @@ static void clear_err(const struct cmos_access_obj *this)
         memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
-struct cmos_access_obj *cmos_obj_factory(int flags, ...)
+LIBSMBIOS_C_DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...)
 {
     va_list ap;
     struct cmos_access_obj *toReturn = 0;

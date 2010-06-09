@@ -32,6 +32,7 @@ EXTERN_C_BEGIN;
 #define CMOS_UNIT_TEST_MODE 0x0004
 #define CMOS_NO_ERR_CLEAR   0x0008
 
+// forward declaration to reduce header file deps
 struct cmos_access_obj;
 
 LIBSMBIOS_C_DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...);

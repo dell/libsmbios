@@ -32,7 +32,7 @@ EXTERN_C_BEGIN;
  *  @param offset  the offset into cmos (usually cmos is 256 byte banks)
  *  @return  0 on success, < 0 on failure
  */
-int LIBSMBIOS_C_DLL_SPEC cmos_read_byte (u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
+LIBSMBIOS_C_DLL_SPEC int cmos_read_byte (u8 *byte, u32 indexPort, u32 dataPort, u32 offset);
 
 /** Write byte to CMOS.
  *  @param byte  byte to write
@@ -41,7 +41,7 @@ int LIBSMBIOS_C_DLL_SPEC cmos_read_byte (u8 *byte, u32 indexPort, u32 dataPort, 
  *  @param offset  the offset into cmos (usually cmos is 256 byte banks)
  *  @return  0 on success, < 0 on failure
  */
-int LIBSMBIOS_C_DLL_SPEC cmos_write_byte(u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
+LIBSMBIOS_C_DLL_SPEC int cmos_write_byte(u8 byte,  u32 indexPort, u32 dataPort, u32 offset);
 
 /** Run all registered CMOS callbacks.
  * Higher layers can register callbacks that are run when any byte in CMOS is
@@ -53,13 +53,13 @@ int LIBSMBIOS_C_DLL_SPEC cmos_write_byte(u8 byte,  u32 indexPort, u32 dataPort, 
  * callbacks return 0 if checksum is good and do_update is false. (otherwise
  * they just write the correct checksum)
  */
-int LIBSMBIOS_C_DLL_SPEC cmos_run_callbacks(bool do_update);
+LIBSMBIOS_C_DLL_SPEC int cmos_run_callbacks(bool do_update);
 
 /** Returns string describing the last error condition.
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any cmos_* function. Copy the contents if you need it longer.
  */
-const char * LIBSMBIOS_C_DLL_SPEC cmos_strerror();
+LIBSMBIOS_C_DLL_SPEC const char *cmos_strerror();
 
 
 

@@ -16,6 +16,7 @@
 #define LIBSMBIOS_C_PACKED_ATTR      __attribute__ ((packed))
 #define LIBSMBIOS_C_COMPILER "GNU C++ version " __VERSION__
 #define LIBSMBIOS_C_HAS_LONG_LONG
+#define LIBSMBIOS_C_HAS_VISIBILITY_ATTR
 
 // versions check:
 // we don't know gcc prior to version 2.90:

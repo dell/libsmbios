@@ -60,6 +60,11 @@ AC_SUBST([RELEASE_EXTRA], [release_extra_version()])
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 
+if test "$enable_shared" != "no"; then
+    AC_DEFINE([LIBSMBIOS_C_ALL_DYN_LINK],[1],[Enable dynamic libraries to build])
+    CFLAGS="$CFLAGS -DLIBSMBIOS_C_ALL_DYN_LINK"
+fi
+
 AC_SUBST([RELEASE_RPM_EXTRA], [$RELEASE_EXTRA])
 if test -z "$RELEASE_EXTRA"; then
     RELEASE_RPM_EXTRA=%{nil}

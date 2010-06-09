@@ -40,6 +40,10 @@
 #       endif  /* SMBIOS_EXPORTS */
 #endif
 
+#if defined(LIBSMBIOS_C_HAS_VISIBILITY_ATTR) && defined(LIBSMBIOS_C_ALL_DYN_LINK)
+#           define LIBSMBIOS_C_DLL_SPEC  __attribute__ ((visibility ("default")))
+#endif
+
 #ifndef LIBSMBIOS_C_DLL_SPEC
 #   define LIBSMBIOS_C_DLL_SPEC
 #endif

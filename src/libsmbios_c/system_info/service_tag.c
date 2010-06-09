@@ -77,7 +77,7 @@ static void dell_decode_service_tag( char *new_tag, char *tag, int len )
     }
 }
 
-__internal unsigned char dell_encode_digit( char ch )
+static unsigned char dell_encode_digit( char ch )
 {
     // input == ascii
     // output == value from 0 - 0x1E
@@ -101,7 +101,8 @@ __internal unsigned char dell_encode_digit( char ch )
     return retval;
 }
 
-__internal void dell_encode_service_tag( char *tag, size_t len )
+// SHOULD BE STATIC
+ void dell_encode_service_tag( char *tag, size_t len )
 {
     char tagToSet[SVC_TAG_LEN_MAX] = {0,};
     char newTagBuf[SVC_TAG_CMOS_LEN_MAX] = {0,};
@@ -151,7 +152,7 @@ __internal void dell_encode_service_tag( char *tag, size_t len )
 }
 
 
-__internal char *getServiceTagFromCMOSToken()
+static char *getServiceTagFromCMOSToken()
 {
     const struct smbios_struct *s;
     char *tempval = 0;
@@ -222,13 +223,13 @@ out:
     return tag;
 }
 
-__internal char *getServiceTagFromSysInfo()
+static char *getServiceTagFromSysInfo()
 {
     fnprintf("\n");
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Serial_Number_Offset);
 }
 
-__internal char *getServiceTagFromSysEncl()
+static char *getServiceTagFromSysEncl()
 {
     fnprintf("\n");
     return smbios_struct_get_string_from_table(System_Enclosure_or_Chassis_Structure, System_Enclosure_or_Chassis_Service_Offset);
@@ -257,7 +258,7 @@ out:
 }
 
 
-__internal char *getServiceTagFromSMI()
+static char *getServiceTagFromSMI()
 {
     fnprintf("\n");
     return getTagFromSMI( 2 ); /* Read service tag select code */
@@ -266,13 +267,11 @@ __internal char *getServiceTagFromSMI()
 
 
 // Code for getting the service tag from one of many locations
-struct DellGetServiceTagFunctions
+/* try dynamic functions first to make sure we get current data. */
+static struct DellGetServiceTagFunctions
 {
     char *(*f_ptr)();
-}
-
-/* try dynamic functions first to make sure we get current data. */
-DellGetServiceTagFunctions[] = {
+} DellGetServiceTagFunctions[] = {
                                    {&getServiceTagFromSMI,},       // SMI Token
                                    {&getServiceTagFromCMOSToken,}, // CMOS Token
                                    {&getServiceTagFromSysInfo,},   // SMBIOS System Information Item
