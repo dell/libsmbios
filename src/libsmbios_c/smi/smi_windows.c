@@ -32,7 +32,7 @@
 // private
 #include "smi_impl.h"
 
-int __internal init_dell_smi_obj(struct dell_smi_obj *this)
+int __hidden init_dell_smi_obj(struct dell_smi_obj *this)
 {
     printf("WINDOWS SMI NOT IMPLEMENTED YET!!!! \n");
     return -1;

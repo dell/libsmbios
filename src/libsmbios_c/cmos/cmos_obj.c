@@ -155,13 +155,13 @@ out:
     return retval;
 }
 
-void __internal _cmos_obj_cleanup(struct cmos_access_obj *m)
+void __hidden _cmos_obj_cleanup(struct cmos_access_obj *m)
 {
     if(m->cleanup)
         m->cleanup(m);
 }
 
-void __internal _cmos_obj_free(struct cmos_access_obj *m)
+void __hidden _cmos_obj_free(struct cmos_access_obj *m)
 {
     struct callback *ptr = 0;
     struct callback *next = 0;
@@ -266,7 +266,7 @@ out:
     return retval;
 }
 
-int __internal _init_cmos_std_stuff(struct cmos_access_obj *m)
+int __hidden _init_cmos_std_stuff(struct cmos_access_obj *m)
 {
     int retval = 0;
     m->initialized = 1;

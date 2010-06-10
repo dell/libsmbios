@@ -231,7 +231,7 @@ out:
     return retval;
 }
 
-void __internal init_d4_token(struct token_table *table, struct token_obj *t)
+void __hidden init_d4_token(struct token_table *table, struct token_obj *t)
 {
     t->get_type = _d4_get_type;
     t->get_id = _d4_get_id;
@@ -298,7 +298,7 @@ out:
     return retval;
 }
 
-int __internal add_d4_tokens(struct token_table *table)
+int __hidden add_d4_tokens(struct token_table *table)
 {
     int retval = 0, ret;
     const char *error;

@@ -53,7 +53,7 @@ void set_basedir(const char *newdir)
     sysfs_basedir = newdir;
 }
 
-u32 __internal get_phys_buf_addr()
+u32 __hidden get_phys_buf_addr()
 {
     char fn[bufsize] = {0,};
     FILE *fd = 0;
@@ -84,7 +84,7 @@ out:
 }
 
 // returns physaddr
-u32 __internal set_phys_buf_size(u32 newsize)
+u32 __hidden set_phys_buf_size(u32 newsize)
 {
     char fn[bufsize] = {0,};
     FILE *fd = 0;
@@ -115,7 +115,7 @@ out:
     return phys_buf_addr;
 }
 
-void __internal write_smi_data(u8 *buffer, size_t size)
+void __hidden write_smi_data(u8 *buffer, size_t size)
 {
     char fn[bufsize] = {0,};
     FILE *fd = 0;
@@ -142,7 +142,7 @@ out:
     return;
 }
 
-void __internal trigger_smi(FILE *fd)
+void __hidden trigger_smi(FILE *fd)
 {
     fnprintf("\n");
 
@@ -157,7 +157,7 @@ out:
     return;
 }
 
-void __internal get_smi_results(u8 *buffer, size_t size)
+void __hidden get_smi_results(u8 *buffer, size_t size)
 {
     char fn[bufsize] = {0,};
     FILE *fd = 0;
@@ -233,7 +233,7 @@ void copy_phys_bufs(struct dell_smi_obj *this, struct callintf_cmd *kernel_buf, 
 }
 
 
-int __internal LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
+int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 {
     struct callintf_cmd *kernel_buf;
     size_t alloc_size = sizeof(struct callintf_cmd) + sizeof(this->smi_buf);
@@ -313,7 +313,7 @@ out:
     return retval;
 }
 
-int __internal init_dell_smi_obj(struct dell_smi_obj *this)
+int __hidden init_dell_smi_obj(struct dell_smi_obj *this)
 {
     this->execute = LINUX_dell_smi_obj_execute;
     return init_dell_smi_obj_std(this);

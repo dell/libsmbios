@@ -246,7 +246,7 @@ static void linux_free(struct memory_access_obj *this)
     this->initialized=0;
 }
 
-__internal int init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
+__hidden int init_mem_struct_filename(struct memory_access_obj *m, const char *fn)
 {
     char *errbuf=0;
     int retval = 0;
@@ -301,7 +301,7 @@ out:
     return retval;
 }
 
-__internal int init_mem_struct(struct memory_access_obj *m)
+__hidden int init_mem_struct(struct memory_access_obj *m)
 {
    return init_mem_struct_filename(m, "/dev/mem");
 }

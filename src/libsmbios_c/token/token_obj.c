@@ -51,7 +51,7 @@ __attribute__((destructor)) static void return_mem(void)
     module_error_buf = 0;
 }
 
-__internal char *token_get_module_error_buf()
+__hidden char *token_get_module_error_buf()
 {
     fnprintf("\n");
     if (!module_error_buf)
@@ -249,7 +249,7 @@ static void _token_table_free(struct token_table *this)
     free(this);
 }
 
-void __internal add_token(struct token_table *t, struct token_obj *o)
+void __hidden add_token(struct token_table *t, struct token_obj *o)
 {
     struct token_obj *ptr = t->list_head;
 

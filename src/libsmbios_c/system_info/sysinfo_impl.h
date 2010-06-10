@@ -24,11 +24,11 @@
 #define MAX_SMI_TAG_SIZE 12
 #define ERROR_BUFSIZE 1024
 
-__internal void sysinfo_clearerr();
-__internal char *sysinfo_get_module_error_buf();
-__internal char * smbios_struct_get_string_from_table(u8 type, u8 offset);
-__internal void strip_trailing_whitespace( char *str );
-__internal char *getTagFromSMI(u16 select);
-__internal u32 setTagUsingSMI(u16 select, const char *, u16);
+__hidden void sysinfo_clearerr();
+__hidden char *sysinfo_get_module_error_buf();
+__hidden char * smbios_struct_get_string_from_table(u8 type, u8 offset);
+__hidden void strip_trailing_whitespace( char *str );
+__hidden char *getTagFromSMI(u16 select);
+__hidden u32 setTagUsingSMI(u16 select, const char *, u16);
 
 #endif

@@ -34,12 +34,12 @@ struct smi_password_properties {
     u8 installed, minlen, maxlen, characteristics, minalpha, minnumeric, minspecial, maxrepeat;
 };
 
-__internal int password_installed(int which);
-__internal int verify_password(int which, const char *pass_scancode, u16 *security_key);
-__internal int change_password(int which, const char *oldpw, const char *newpw);
-__internal int get_password_properties_2(int which, struct smi_password_properties *p);
-__internal int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *security_key);
-__internal int change_password_2(int which, const char *oldpw, const char *newpw, size_t maxpwlen);
+__hidden int password_installed(int which);
+__hidden int verify_password(int which, const char *pass_scancode, u16 *security_key);
+__hidden int change_password(int which, const char *oldpw, const char *newpw);
+__hidden int get_password_properties_2(int which, struct smi_password_properties *p);
+__hidden int verify_password_2(int which, const char *password, size_t maxpwlen, u16 *security_key);
+__hidden int change_password_2(int which, const char *oldpw, const char *newpw, size_t maxpwlen);
 
 #define SMI_PASSWORD_INSTALLED 0
 #define SMI_PASSWORD_NOT_INSTALLED 1

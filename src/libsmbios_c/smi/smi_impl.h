@@ -99,8 +99,8 @@ struct dell_smi_obj
     char *errstring;
 };
 
-int __internal init_dell_smi_obj(struct dell_smi_obj *);
-int __internal init_dell_smi_obj_std(struct dell_smi_obj *);
+int __hidden init_dell_smi_obj(struct dell_smi_obj *);
+int __hidden init_dell_smi_obj_std(struct dell_smi_obj *);
 
 
 

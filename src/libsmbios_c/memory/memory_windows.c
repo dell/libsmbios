@@ -287,7 +287,7 @@ out:
 }
 
 
-__internal int init_mem_struct(struct memory_access_obj *m)
+__hidden int init_mem_struct(struct memory_access_obj *m)
 {
     int retval = -1;
     printf("BEGIN: WINDOWS MEMORY ACCESS NOT IMPLEMENTED YET!!!! \n");

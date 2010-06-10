@@ -68,7 +68,7 @@ out:
 }
 
 
-int __internal init_cmos_struct(struct cmos_access_obj *m)
+int __hidden init_cmos_struct(struct cmos_access_obj *m)
 {
     printf("Loaded Windows CMOS STUFF. not yet ready.\n");
 

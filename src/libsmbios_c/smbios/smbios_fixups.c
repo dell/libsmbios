@@ -56,7 +56,7 @@ static bool system_affected(u16 *id_list, int num, u16 sysid)
 }
 
 // define
-__internal u16 get_id_byte_from_mem();
+__hidden u16 get_id_byte_from_mem();
 
 #define DELL_CHECK_FIXUP_BAD_HANDLE 0xd402
 static void do_dell_check_type_fixup(struct smbios_table *table)
@@ -89,7 +89,7 @@ out:
     return;
 }
 
-__internal void do_smbios_fixups(struct smbios_table *table)
+__hidden void do_smbios_fixups(struct smbios_table *table)
 {
     dbg_printf ("%s\n", __PRETTY_FUNCTION__);
     do_dell_check_type_fixup(table);

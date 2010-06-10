@@ -34,7 +34,7 @@
 // ID Byte functions
 //
 //
-__internal u16 get_id_byte_from_mem ()
+__hidden u16 get_id_byte_from_mem ()
 {
     u16 tempWord = 0;
     u16 idWord = 0;
@@ -79,7 +79,7 @@ out:
 }
 
 
-__internal u16 get_id_byte_from_mem_diamond()
+__hidden u16 get_id_byte_from_mem_diamond()
 {
     u16 idWord = 0;
     char strBuf[DELL_SYSTEM_STRING_LEN] = { 0, };
@@ -116,7 +116,7 @@ out:
 }
 
 
-__internal u16 getIdByteFromOEMItem ()
+__hidden u16 getIdByteFromOEMItem ()
 {
     u16 idWord = 0;
     // search through 0x0B (OEM_Strings_Structure) items
@@ -140,7 +140,7 @@ __internal u16 getIdByteFromOEMItem ()
 }
 
 
-__internal u16 get_id_byte_from_rev_and_id_structure ()
+__hidden u16 get_id_byte_from_rev_and_id_structure ()
 {
     u16 idWord = 0;
     // search through 0x0B (Revisions_and_IDs_Structure)

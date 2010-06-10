@@ -33,7 +33,7 @@
 // private
 #include "token_impl.h"
 
-__internal int update_checksum(const struct cmos_access_obj *c, bool do_update, void *userdata)
+__hidden int update_checksum(const struct cmos_access_obj *c, bool do_update, void *userdata)
 {
     int retval = -1;
     struct checksum_details *data = (struct checksum_details *)userdata;
@@ -91,7 +91,7 @@ out:
     return retval;
 }
 
-__internal u16 byteChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort )
+__hidden u16 byteChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort )
 {
     u8 running_checksum=0;
     u8 byte;
@@ -104,7 +104,7 @@ out:
     return running_checksum;
 }
 
-__internal u16 wordChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort)
+__hidden u16 wordChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
     u16 running_checksum=0;
     u8 byte;
@@ -117,12 +117,12 @@ out:
     return running_checksum;
 }
 
-__internal u16 wordChecksum_n(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort)
+__hidden u16 wordChecksum_n(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort)
 {
     return (~wordChecksum(c, start, end, indexPort, dataPort)) + 1;
 }
 
-__internal u16 wordCrc(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort )
+__hidden u16 wordCrc(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort )
 {
     u16 running_crc=0;
     u8 byte;

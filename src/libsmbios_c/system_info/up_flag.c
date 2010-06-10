@@ -50,7 +50,7 @@ LIBSMBIOS_C_PACKED_ATTR;
 #pragma pack(pop)
 #endif
 
-__internal bool get_up_offset_and_flag(struct up_info *up)
+__hidden bool get_up_offset_and_flag(struct up_info *up)
 {
     s64 offset = memory_search( UP_ANCHOR, UP_ANCHOR_LEN,  0xF0000UL, 0xFFFFFUL, 16);
     if (!offset)
@@ -63,7 +63,7 @@ __internal bool get_up_offset_and_flag(struct up_info *up)
     return (offset!=0 && offset!=-1);
 }
 
-__internal int up_boot_helper(int flag)
+__hidden int up_boot_helper(int flag)
 {
     // flag:0 == get
     // flag:1 == set true

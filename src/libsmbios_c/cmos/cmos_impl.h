@@ -51,14 +51,14 @@ struct cmos_access_obj
 };
 
 // regular one
-__internal int init_cmos_struct(struct cmos_access_obj *m);
-__internal int _init_cmos_std_stuff(struct cmos_access_obj *m);  // base class constructor
+__hidden int init_cmos_struct(struct cmos_access_obj *m);
+__hidden int _init_cmos_std_stuff(struct cmos_access_obj *m);  // base class constructor
 
 // unit test one
-__internal int init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn);
+__hidden int init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn);
 
 // other funcs
-__internal char *cmos_get_module_error_buf();
+__hidden char *cmos_get_module_error_buf();
 
 EXTERN_C_END;
 

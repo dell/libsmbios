@@ -82,15 +82,15 @@ struct smbios_table
     char *errstring;
 };
 
-int __internal init_smbios_struct(struct smbios_table *m);
-void __internal _smbios_table_free(struct smbios_table *this);
-void __internal do_smbios_fixups(struct smbios_table *);
-int __internal smbios_get_table_memory(struct smbios_table *m);
+int __hidden init_smbios_struct(struct smbios_table *m);
+void __hidden _smbios_table_free(struct smbios_table *this);
+void __hidden do_smbios_fixups(struct smbios_table *);
+int __hidden smbios_get_table_memory(struct smbios_table *m);
 
 #if 0
-int __internal smbios_get_table_efi(struct smbios_table *m);
-int __internal smbios_get_table_wmi(struct smbios_table *m);
-int __internal smbios_get_table_firm_tables(struct smbios_table *m);
+int __hidden smbios_get_table_efi(struct smbios_table *m);
+int __hidden smbios_get_table_wmi(struct smbios_table *m);
+int __hidden smbios_get_table_firm_tables(struct smbios_table *m);
 #else
 #define smbios_get_table_efi(m)         (-1)
 #define smbios_get_table_wmi(m)         (-1)

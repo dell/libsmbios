@@ -315,7 +315,7 @@ void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbio
  *
  **************************************************/
 
-void __internal _smbios_table_free(struct smbios_table *this)
+void __hidden _smbios_table_free(struct smbios_table *this)
 {
     memset(&this->tep, 0, sizeof(this->tep));
 
@@ -331,7 +331,7 @@ void __internal _smbios_table_free(struct smbios_table *this)
     free(this);
 }
 
-int __internal init_smbios_struct(struct smbios_table *m)
+int __hidden init_smbios_struct(struct smbios_table *m)
 {
     char *errbuf;
     char *error = _("Allocation error trying to allocate memory for error string. (ironic, yes?) \n");
@@ -375,7 +375,7 @@ out_fail:
 
 
 // validate the smbios table entry point
-bool __internal validate_dmi_tep( const struct dmi_table_entry_point *dmiTEP, bool strict )
+bool __hidden validate_dmi_tep( const struct dmi_table_entry_point *dmiTEP, bool strict )
 {
     // This code checks for the following:
     //       entry point structure checksum : As per the specs
@@ -403,7 +403,7 @@ bool __internal validate_dmi_tep( const struct dmi_table_entry_point *dmiTEP, bo
 
 
 // validate the smbios table entry point
-bool __internal validate_smbios_tep( const struct smbios_table_entry_point *tempTEP, bool strict)
+bool __hidden validate_smbios_tep( const struct smbios_table_entry_point *tempTEP, bool strict)
 {
     // This code checks for the following:
     //       entry point structure checksum : As per the specs
@@ -452,7 +452,7 @@ bool __internal validate_smbios_tep( const struct smbios_table_entry_point *temp
 }
 
 
-int __internal smbios_get_tep_memory(struct smbios_table *table, bool strict)
+int __hidden smbios_get_tep_memory(struct smbios_table *table, bool strict)
 {
     int retval = 0;
     unsigned long fp = E_BLOCK_START;
@@ -532,7 +532,7 @@ out:
 }
 
 
-int __internal smbios_get_table_memory(struct smbios_table *m)
+int __hidden smbios_get_table_memory(struct smbios_table *m)
 {
     int retval = -1; //fail
     const char *error = _("Could not find Table Entry Point.");

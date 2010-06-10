@@ -176,7 +176,7 @@ static int _da_try_password(const struct token_obj *t, const char *pass_ascii, c
     return ret;
 }
 
-void __internal init_da_token(struct token_table *table, struct token_obj *t)
+void __hidden init_da_token(struct token_table *table, struct token_obj *t)
 {
     fnprintf("\n");
     t->get_type = _da_get_type;
@@ -192,7 +192,7 @@ void __internal init_da_token(struct token_table *table, struct token_obj *t)
     t->errstring = table->errstring;
 }
 
-int __internal add_da_tokens(struct token_table *table)
+int __hidden add_da_tokens(struct token_table *table)
 {
     char *error=0;
     int retval = 0;

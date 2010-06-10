@@ -237,7 +237,7 @@ static char *getServiceTagFromSysEncl()
 
 
 /* only for service/asset tags. */
-__internal char *getTagFromSMI(u16 select)
+__hidden char *getTagFromSMI(u16 select)
 {
     u32 args[4] = {0,0,0,0}, res[4] = {0,0,0,0};
     char *retval = 0;
@@ -309,7 +309,7 @@ char *sysinfo_get_service_tag()
 
 
 /* only for service/asset tags. */
-__internal u32 setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
+__hidden u32 setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
 {
     u32 args[4] = {0,}, res[4] = {0,};
     strncpy((char *)args, newTag, MAX_SMI_TAG_SIZE);

@@ -75,9 +75,9 @@ struct token_table
     char *errstring;
 };
 
-__internal void add_token(struct token_table *t, struct token_obj *o);
-__internal int add_d4_tokens(struct token_table *t);
-__internal int add_da_tokens(struct token_table *t);
+__hidden void add_token(struct token_table *t, struct token_obj *o);
+__hidden int add_d4_tokens(struct token_table *t);
+__hidden int add_da_tokens(struct token_table *t);
 
 
 #if defined(_MSC_VER)
@@ -120,11 +120,11 @@ enum  // protected value format types
 
 struct cmos_access_obj; // forward declare so we dont have to include cmos.h
 
-__internal u16 byteChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
-__internal u16 wordChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort);
-__internal u16 wordChecksum_n(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort);
-__internal u16 wordCrc(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
-__internal int update_checksum(const struct cmos_access_obj *c, bool do_update, void *userdata);
+__hidden u16 byteChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
+__hidden u16 wordChecksum(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort);
+__hidden u16 wordChecksum_n(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort);
+__hidden u16 wordCrc(const struct cmos_access_obj *c, u32 start, u32 end, u32 indexPort, u32 dataPort );
+__hidden int update_checksum(const struct cmos_access_obj *c, bool do_update, void *userdata);
 
 struct checksum_details
 {

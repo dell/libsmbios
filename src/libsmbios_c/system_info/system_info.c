@@ -54,7 +54,7 @@ __attribute__((destructor)) static void return_mem(void)
     module_error_buf = 0;
 }
 
-__internal char *sysinfo_get_module_error_buf()
+__hidden char *sysinfo_get_module_error_buf()
 {
     fnprintf("\n");
     if (!module_error_buf)
@@ -67,13 +67,13 @@ const char * sysinfo_strerror()
     return module_error_buf;
 }
 
-__internal void sysinfo_clearerr()
+__hidden void sysinfo_clearerr()
 {
     if (module_error_buf)
         memset(module_error_buf, 0, ERROR_BUFSIZE);
 }
 
-void __internal strip_trailing_whitespace( char *str )
+void __hidden strip_trailing_whitespace( char *str )
 {
     if(!str)
         return;
@@ -93,7 +93,7 @@ void __internal strip_trailing_whitespace( char *str )
     } while(ch);
 }
 
-__internal char * smbios_struct_get_string_from_table(u8 type, u8 offset)
+__hidden char * smbios_struct_get_string_from_table(u8 type, u8 offset)
 {
     const struct smbios_struct *s;
     const char *r;

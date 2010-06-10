@@ -262,7 +262,7 @@ out:
  *
  **************************************************/
 
-void __internal _smi_free(struct dell_smi_obj *this)
+void __hidden _smi_free(struct dell_smi_obj *this)
 {
     fnprintf("\n");
     this->initialized=0;
@@ -277,7 +277,7 @@ void __internal _smi_free(struct dell_smi_obj *this)
     free(this);
 }
 
-int __internal init_dell_smi_obj_std(struct dell_smi_obj *this)
+int __hidden init_dell_smi_obj_std(struct dell_smi_obj *this)
 {
     int retval = 0;
     char *errbuf = 0;

@@ -51,7 +51,7 @@ static int linux_write_fn(const struct cmos_access_obj *this, u8 byte, u32 index
     return 0;
 }
 
-int __internal init_cmos_struct(struct cmos_access_obj *m)
+int __hidden init_cmos_struct(struct cmos_access_obj *m)
 {
     char * errbuf;
     int retval = 0;
