@@ -76,9 +76,9 @@ _mk_simple_sysinfo_str_fn("get_property_ownership_tag")
 
 decorate(traceLog())
 def set_service_tag(newtag, pass_ascii=None, pass_scancode=None):
-    raise Exception("set service tag not yet supported.")
+    return DLL.sysinfo_set_service_tag(newtag, pass_ascii, pass_scancode)
+__all__.append("set_service_tag")
 
-#_mk_simple_sysinfo_str_fn("set_asset_tag")
 DLL.sysinfo_set_asset_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 DLL.sysinfo_set_asset_tag.restype = ctypes.c_int
 DLL.sysinfo_set_asset_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())
@@ -87,7 +87,6 @@ def set_asset_tag(newtag, pass_ascii=None, pass_scancode=None):
     return DLL.sysinfo_set_asset_tag(newtag, pass_ascii, pass_scancode)
 __all__.append("set_asset_tag")
 
-#int set_property_ownership_tag(u32 security_key, const char *newTag, size_t size);
 DLL.sysinfo_set_property_ownership_tag.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
 DLL.sysinfo_set_property_ownership_tag.restype = ctypes.c_int
 DLL.sysinfo_set_property_ownership_tag.errcheck=errorOnNegativeFN(lambda r,f,a: _strerror())

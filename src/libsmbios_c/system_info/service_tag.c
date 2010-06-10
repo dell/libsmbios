@@ -101,8 +101,7 @@ static unsigned char dell_encode_digit( char ch )
     return retval;
 }
 
-// SHOULD BE STATIC
- void dell_encode_service_tag( char *tag, size_t len )
+static void dell_encode_service_tag( char *tag, size_t len )
 {
     char tagToSet[SVC_TAG_LEN_MAX] = {0,};
     char newTagBuf[SVC_TAG_CMOS_LEN_MAX] = {0,};
@@ -316,4 +315,113 @@ __hidden u32 setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
     args[3] = security_key;
     dell_simple_ci_smi(11, select, args, res);
     return res[0];
+}
+
+int setServiceTagUsingCMOSToken(const char *newTag, const char *pass_ascii, const char *pass_scancode)
+{
+    const struct smbios_struct *s;
+    u16 indexPort, dataPort;
+    u8  location, csum = 0, byte;
+    int retval = -1, ret;
+
+    UNREFERENCED_PARAMETER(pass_ascii);
+    UNREFERENCED_PARAMETER(pass_scancode);
+
+    // don't want to modify user-supplied buffer, so copy new tag
+    // to our own buffer.
+    char codedTag[SVC_TAG_LEN_MAX + 1] = {0,}; // null padded
+    // copy (possibly oversize) user input to our buffer.
+    strncpy(codedTag, newTag, strlen(newTag) < SVC_TAG_LEN_MAX ? strlen(newTag) : SVC_TAG_LEN_MAX);
+    // encode in place, if necessary
+    dell_encode_service_tag(codedTag, SVC_TAG_LEN_MAX);
+
+    // Step 1: set string: safe to use whole codedTag as it is guaranteed zero-padded
+    fnprintf("- set string\n");
+    ret = token_set_string(Cmos_Service_Token, newTag, strlen(newTag));
+    if (ret)
+        goto out;
+
+    // Step 2: reset checksum
+    fnprintf("- csum\n");
+    s = token_get_smbios_struct(Cmos_Service_Token);
+    indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
+    dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
+    location = ((struct indexed_io_token *)token_get_ptr(Cmos_Service_Token))->location;
+
+    // calc checksum
+    for( u32 i = 0; i < SVC_TAG_CMOS_LEN_MAX; i++)
+    {
+        ret = cmos_read_byte(&byte, indexPort, dataPort, location + i);
+        if (ret)
+            goto out;
+
+        csum += byte;
+    }
+
+    // write checksum byte
+    ret = cmos_write_byte(~csum + 1, indexPort, dataPort, SVC_TAG_CMOS_LEN_MAX + 1);
+    if (ret<0)
+        goto out;
+
+    retval = 0;
+
+out:
+    fnprintf("- out\n");
+    return retval;
+}
+
+
+// Important note from the docs:
+/*  Only the manufacturing software that’s loading the service tag into the system should use this interface.
+    Some systems may return an error when the service tag has already been set (i.e. they prevent this function from changing the service tag once it has been set).
+    */
+int setServiceTagUsingSMI(const char *newTag, const char *pass_ascii, const char *pass_scancode)
+{
+    int retval = 0, ret;
+    u16 security_key = 0;
+    const char *whichpw = pass_scancode;
+    if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
+        whichpw=pass_ascii;
+    ret = dell_smi_get_security_key(whichpw, &security_key);
+    retval = -2;
+    if (ret)  // bad password
+        goto out;
+
+    ret = setTagUsingSMI( 3, newTag, security_key); /* Write service tag select code */
+    retval = -1;
+    if (ret)
+        goto out;
+
+    retval = 0;
+
+out:
+    return retval;
+}
+
+// Code for getting the service tag from one of many locations
+struct DellSetServiceTagFunctions
+{
+    int (*f_ptr)(const char *, const char *, const char *);
+}
+
+DellSetServiceTagFunctions[] = {
+                                   {&setServiceTagUsingSMI,},   // SMBIOS System Information Item
+                                   {&setServiceTagUsingCMOSToken,},   // SMBIOS System Information Item
+                               };
+
+int sysinfo_set_service_tag(const char *serviceTag, const char *pass_ascii, const char *pass_scancode)
+{
+    int ret = -1;
+    int numEntries =
+        sizeof (DellSetServiceTagFunctions) / sizeof (DellSetServiceTagFunctions[0]);
+
+    sysinfo_clearerr();
+    fnprintf("\n");
+    for (int i = 0; (i < numEntries) && (ret != 0); ++i)
+    {
+        fnprintf("Call fn pointer %p\n", DellSetServiceTagFunctions[i].f_ptr);
+        // first function to return non-zero id with strlen()>0 wins.
+        ret = DellSetServiceTagFunctions[i].f_ptr (serviceTag, pass_ascii, pass_scancode);
+    }
+    return ret;
 }
