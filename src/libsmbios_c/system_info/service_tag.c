@@ -200,6 +200,7 @@ static char *getServiceTagFromCMOSToken()
         csum += (u8)byte;
         dbg_printf(" 0x%02x|0x%02x", (unsigned char)byte, (unsigned char)csum);
     }
+    csum = ~csum + 1;
     dbg_printf("\n");
 
     // get checksum byte
@@ -207,8 +208,8 @@ static char *getServiceTagFromCMOSToken()
     if (ret<0)
         goto out_err;
 
-    fnprintf("- got: %x  calc: %x\n", byte, csum);
-    if ((u8)(csum + byte)) // bad (should be zero)
+    fnprintf("- read from cmos: %x  calculated: %x\n", byte, csum);
+    if (csum != byte) // bad (should be zero)
         goto out_err;
 
     fnprintf("GOT CMOS TAG: %s\n", tempval);
@@ -381,20 +382,22 @@ int setServiceTagUsingCMOSToken(const char *newTag, const char *pass_ascii, cons
         csum += (u8)byte;
         dbg_printf(" 0x%02x|0x%02x", (unsigned char)byte, (unsigned char)csum);
     }
+    csum = ~csum+1;
     dbg_printf("\n");
-    fnprintf(" csum = 0x%02x\n",(unsigned char)(~csum+1));
+    fnprintf(" csum = 0x%02x\n",(unsigned char)csum);
 
+    //debug only
     ret = cmos_read_byte(&byte, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
-    fnprintf(" current csum = 0x%02x\n",(unsigned int)byte);
+    fnprintf(" read current csum = 0x%02x\n",(unsigned int)byte);
 
     // write checksum byte
-    ret = cmos_write_byte(~csum + 1, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
+    ret = cmos_write_byte(csum, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
     if (ret<0)
         goto out;
 
-    //debug
+    //debug only
     ret = cmos_read_byte(&byte, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
-    fnprintf(" current csum = 0x%02x\n",(unsigned int)byte);
+    fnprintf(" reread current csum = 0x%02x\n",(unsigned int)byte);
 
     retval = 0;
 
@@ -434,12 +437,13 @@ out:
 // Code for getting the service tag from one of many locations
 struct DellSetServiceTagFunctions
 {
+    const char *name;
     int (*f_ptr)(const char *, const char *, const char *);
 }
 
 DellSetServiceTagFunctions[] = {
-                                   {&setServiceTagUsingSMI,},   // SMBIOS System Information Item
-                                   {&setServiceTagUsingCMOSToken,},   // SMBIOS System Information Item
+                                   {"setServiceTagUsingSMI", &setServiceTagUsingSMI,},   // SMBIOS System Information Item
+                                   {"setServiceTagUsingCMOSToken", &setServiceTagUsingCMOSToken,},   // SMBIOS System Information Item
                                };
 
 LIBSMBIOS_C_DLL_SPEC int sysinfo_set_service_tag(const char *serviceTag, const char *pass_ascii, const char *pass_scancode)
@@ -452,7 +456,7 @@ LIBSMBIOS_C_DLL_SPEC int sysinfo_set_service_tag(const char *serviceTag, const c
     fnprintf("\n");
     for (int i = 0; (i < numEntries) && (ret != 0); ++i)
     {
-        fnprintf("Call fn pointer %p\n", DellSetServiceTagFunctions[i].f_ptr);
+        fnprintf("Call fn pointer to %s\n", DellSetServiceTagFunctions[i].name);
         // first function to return non-zero id with strlen()>0 wins.
         ret = DellSetServiceTagFunctions[i].f_ptr (serviceTag, pass_ascii, pass_scancode);
     }
