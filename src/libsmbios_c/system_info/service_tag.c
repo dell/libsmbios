@@ -184,7 +184,7 @@ static char *getServiceTagFromCMOSToken()
     fnprintf("- GOT: '%s'\n", tag);
 
     // Step 3: Make sure checksum is good before returning value
-    fnprintf("- csum\n");
+    fnprintf("- csum: ");
     s = token_get_smbios_struct(Cmos_Service_Token);
     indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
     dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
@@ -197,16 +197,18 @@ static char *getServiceTagFromCMOSToken()
         if (ret<0)
             goto out_err;
 
-        csum += byte;
+        csum += (u8)byte;
+        dbg_printf(" 0x%02x|0x%02x", (unsigned char)byte, (unsigned char)csum);
     }
+    dbg_printf("\n");
 
     // get checksum byte
-    ret = cmos_read_byte(&byte, indexPort, dataPort, SVC_TAG_CMOS_LEN_MAX + 1);
+    ret = cmos_read_byte(&byte, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
     if (ret<0)
         goto out_err;
 
-    fnprintf("- got: %x  calc: %x\n", csum, byte);
-    if (csum - byte) // bad (should be zero)
+    fnprintf("- got: %x  calc: %x\n", byte, csum);
+    if ((u8)(csum + byte)) // bad (should be zero)
         goto out_err;
 
     fnprintf("GOT CMOS TAG: %s\n", tempval);
@@ -240,17 +242,29 @@ __hidden char *getTagFromSMI(u16 select)
 {
     u32 args[4] = {0,0,0,0}, res[4] = {0,0,0,0};
     char *retval = 0;
+    fnprintf("\n");
     dell_simple_ci_smi(11, select, args, res);
 
+    fnprintf("res[0] = %d\n", (unsigned int)res[0]);
     if (res[0] != 0)
         goto out;
 
     retval = calloc(1, MAX_SMI_TAG_SIZE + 1); // smi function can hold at most 12 bytes, add one for '\0'
     memcpy(retval, (u8 *)(&(res[1])), MAX_SMI_TAG_SIZE);
 
-    for(size_t i=strlen(retval); i; --i)
-        if ((unsigned char)(retval[i])==0xFF)
+    fnprintf("raw = ");
+    for(int i=0; i<MAX_SMI_TAG_SIZE; i++)
+        dbg_printf("0x%02x ", retval[i]);
+    dbg_printf("\n");
+
+    for(size_t i=0; i<MAX_SMI_TAG_SIZE; ++i)
+        if ((unsigned char)(retval[i])==(unsigned char)0xFF)
             retval[i] = '\0';
+
+    fnprintf("cooked = ");
+    for(int i=0; i<MAX_SMI_TAG_SIZE; i++)
+        dbg_printf("0x%02x ", retval[i]);
+    dbg_printf("\n");
 
 out:
     return retval;
@@ -323,26 +337,35 @@ int setServiceTagUsingCMOSToken(const char *newTag, const char *pass_ascii, cons
     u16 indexPort, dataPort;
     u8  location, csum = 0, byte;
     int retval = -1, ret;
+    char codedTag[SVC_TAG_LEN_MAX + 1] = {0,}; // null padded
 
     UNREFERENCED_PARAMETER(pass_ascii);
     UNREFERENCED_PARAMETER(pass_scancode);
 
     // don't want to modify user-supplied buffer, so copy new tag
     // to our own buffer.
-    char codedTag[SVC_TAG_LEN_MAX + 1] = {0,}; // null padded
     // copy (possibly oversize) user input to our buffer.
-    strncpy(codedTag, newTag, strlen(newTag) < SVC_TAG_LEN_MAX ? strlen(newTag) : SVC_TAG_LEN_MAX);
-    // encode in place, if necessary
-    dell_encode_service_tag(codedTag, SVC_TAG_LEN_MAX);
+    strncpy(codedTag, newTag, SVC_TAG_LEN_MAX);
+
+    // CMOS has 5 bytes of space, but up to 7 chars can be coded into those 5 bytes if needed
+    if(strnlen(codedTag, SVC_TAG_LEN_MAX) > SVC_TAG_CMOS_LEN_MAX )
+        dell_encode_service_tag(codedTag, SVC_TAG_LEN_MAX);
 
     // Step 1: set string: safe to use whole codedTag as it is guaranteed zero-padded
-    fnprintf("- set string\n");
-    ret = token_set_string(Cmos_Service_Token, newTag, strlen(newTag));
+    fnprintf("- set string: ");
+    for(int i=0; i<SVC_TAG_LEN_MAX; i++)
+        dbg_printf("0x%02x ", (unsigned char)codedTag[i]);
+    dbg_printf("\n");
+
+    if(isalpha(codedTag[0]))
+        fnprintf("- is alpha string: %s\n", codedTag);
+
+    ret = token_set_string(Cmos_Service_Token, codedTag, SVC_TAG_CMOS_LEN_MAX);
     if (ret)
         goto out;
 
     // Step 2: reset checksum
-    fnprintf("- csum\n");
+    fnprintf("- csum ");
     s = token_get_smbios_struct(Cmos_Service_Token);
     indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
     dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
@@ -355,13 +378,23 @@ int setServiceTagUsingCMOSToken(const char *newTag, const char *pass_ascii, cons
         if (ret)
             goto out;
 
-        csum += byte;
+        csum += (u8)byte;
+        dbg_printf(" 0x%02x|0x%02x", (unsigned char)byte, (unsigned char)csum);
     }
+    dbg_printf("\n");
+    fnprintf(" csum = 0x%02x\n",(unsigned char)(~csum+1));
+
+    ret = cmos_read_byte(&byte, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
+    fnprintf(" current csum = 0x%02x\n",(unsigned int)byte);
 
     // write checksum byte
-    ret = cmos_write_byte(~csum + 1, indexPort, dataPort, SVC_TAG_CMOS_LEN_MAX + 1);
+    ret = cmos_write_byte(~csum + 1, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
     if (ret<0)
         goto out;
+
+    //debug
+    ret = cmos_read_byte(&byte, indexPort, dataPort, location + SVC_TAG_CMOS_LEN_MAX);
+    fnprintf(" current csum = 0x%02x\n",(unsigned int)byte);
 
     retval = 0;
 

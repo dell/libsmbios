@@ -77,12 +77,12 @@ char *getAssetTagFromToken()
     }
 
     // get checksum byte
-    ret = cmos_read_byte(&byte, indexPort, dataPort, ASSET_TAG_CMOS_LEN_MAX + 1);
+    ret = cmos_read_byte(&byte, indexPort, dataPort, location + ASSET_TAG_CMOS_LEN_MAX);
     if (ret<0)
         goto out_err;
 
     fnprintf("- got: %x  calc: %x\n", csum, byte);
-    if (csum - byte) // bad (should be zero)
+    if ((u8)(csum + byte)) // bad (should be zero)
         goto out_err;
 
     fnprintf("GOT CMOS TAG: %s\n", tag);
@@ -186,7 +186,7 @@ static int setAssetTagUsingCMOSToken(const char *newTag, const char *pass_ascii,
     }
 
     // write checksum byte
-    ret = cmos_write_byte(~csum + 1, indexPort, dataPort, ASSET_TAG_CMOS_LEN_MAX + 1);
+    ret = cmos_write_byte(~csum + 1, indexPort, dataPort, location + ASSET_TAG_CMOS_LEN_MAX);
     if (ret<0)
         goto out;
 
