@@ -56,8 +56,6 @@ int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
 
     fnprintf("about to _execute\n");
     retval = dell_smi_obj_execute(smi);
-    if(retval) // error
-        goto err_out;
 
     fnprintf(" cbRES1: %d\n", dell_smi_obj_get_res(smi, cbRES1));
     fnprintf(" cbRES2: %d\n", dell_smi_obj_get_res(smi, cbRES2));
@@ -68,10 +66,6 @@ int dell_simple_ci_smi(u16 smiClass, u16 select, const u32 args[4], u32 res[4])
     res[cbRES2] = dell_smi_obj_get_res(smi, cbRES2);
     res[cbRES3] = dell_smi_obj_get_res(smi, cbRES3);
     res[cbRES4] = dell_smi_obj_get_res(smi, cbRES4);
-    goto out;
-
-err_out:
-    fnprintf("err_out!\n");
 
 out:
     dell_smi_obj_free(smi);
