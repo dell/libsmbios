@@ -3,6 +3,7 @@
 lib_LTLIBRARIES += out/libsmbios_c.la
 out_libsmbios_c_la_LDFLAGS := $(AM_LDFLAGS) -version-info $(LIBSMBIOS_C_LIBTOOL_CURRENT):$(LIBSMBIOS_C_LIBTOOL_REVISION):$(LIBSMBIOS_C_LIBTOOL_AGE)
 out_libsmbios_c_la_CPPFLAGS := $(AM_CPPFLAGS) -I$(top_srcdir)/src/libsmbios_c/common
+out_libsmbios_c_la_CFLAGS := $(AM_CFLAGS) -fvisibility=hidden
 
 EXTRA_DIST += src/include/smbios_c
 
