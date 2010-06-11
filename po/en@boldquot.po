@@ -30,10 +30,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libsmbios 2.2.21\n"
+"Project-Id-Version: libsmbios 2.2.22\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2010-03-30 16:22-0500\n"
-"PO-Revision-Date: 2010-03-30 16:22-0500\n"
+"POT-Creation-Date: 2010-06-11 11:07-0500\n"
+"PO-Revision-Date: 2010-06-11 11:07-0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -212,8 +212,8 @@ msgid "The error message was: %s"
 msgstr "The error message was: %s"
 
 #: src/bin/smbios-token-ctl:178
-msgid "<wierd unknown type>"
-msgstr "<wierd unknown type>"
+msgid "<weird unknown type>"
+msgstr "<weird unknown type>"
 
 #: src/bin/smbios-token-ctl:179
 msgid "<unknown value>"

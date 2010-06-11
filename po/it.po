@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2010-03-30 16:22-0500\n"
+"POT-Creation-Date: 2010-06-11 11:07-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Italian\n"
@@ -187,7 +187,7 @@ msgid "The error message was: %s"
 msgstr ""
 
 #: src/bin/smbios-token-ctl:178
-msgid "<wierd unknown type>"
+msgid "<weird unknown type>"
 msgstr ""
 
 #: src/bin/smbios-token-ctl:179
