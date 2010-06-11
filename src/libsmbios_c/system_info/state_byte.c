@@ -30,7 +30,7 @@
 #include "dell_magic.h"
 #include "sysinfo_impl.h"
 
-int sysinfo_has_nvram_state_bytes()
+LIBSMBIOS_C_DLL_SPEC int sysinfo_has_nvram_state_bytes()
 {
     int retval = 1;
     if ( 0xD4 != token_get_type( NvramByte1_Token )  )
@@ -51,7 +51,7 @@ int sysinfo_has_nvram_state_bytes()
 //      0xD000 = open
 //      0xE000 = open
 //      0xF000 = expand to whole byte
-int sysinfo_get_nvram_state_bytes( int user )
+LIBSMBIOS_C_DLL_SPEC int sysinfo_get_nvram_state_bytes( int user )
 {
     char *string;
     int retval = 0;
@@ -96,7 +96,7 @@ int sysinfo_get_nvram_state_bytes( int user )
     return retval;
 }
 
-void sysinfo_set_nvram_state_bytes(int user, int value)
+LIBSMBIOS_C_DLL_SPEC void sysinfo_set_nvram_state_bytes(int user, int value)
 {
     if ( user == 0x0000 ) // DSA
     {

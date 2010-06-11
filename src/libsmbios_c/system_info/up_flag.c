@@ -135,17 +135,17 @@ out:
     return retval;
 }
 
-int sysinfo_has_up_boot_flag()
+LIBSMBIOS_C_DLL_SPEC int sysinfo_has_up_boot_flag()
 {
     return up_boot_helper(0);
 }
 
-int sysinfo_get_up_boot_flag()
+LIBSMBIOS_C_DLL_SPEC int sysinfo_get_up_boot_flag()
 {
     return up_boot_helper(0) - 2;
 }
 
-int sysinfo_set_up_boot_flag(int state)
+LIBSMBIOS_C_DLL_SPEC int sysinfo_set_up_boot_flag(int state)
 {
     return up_boot_helper( state==1? 1:2 );
 }

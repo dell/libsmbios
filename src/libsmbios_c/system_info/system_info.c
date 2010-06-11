@@ -29,19 +29,19 @@
 
 static char *module_error_buf; // auto-init to 0
 
-const char *smbios_get_library_version_string()
+LIBSMBIOS_C_DLL_SPEC const char *smbios_get_library_version_string()
 {
     sysinfo_clearerr();
     return PACKAGE_VERSION;
 }
 
-int smbios_get_library_version_major()
+LIBSMBIOS_C_DLL_SPEC int smbios_get_library_version_major()
 {
     sysinfo_clearerr();
     return LIBSMBIOS_RELEASE_MAJOR;
 }
 
-int smbios_get_library_version_minor()
+LIBSMBIOS_C_DLL_SPEC int smbios_get_library_version_minor()
 {
     sysinfo_clearerr();
     return LIBSMBIOS_RELEASE_MINOR;
@@ -62,7 +62,7 @@ __hidden char *sysinfo_get_module_error_buf()
     return module_error_buf;
 }
 
-const char * sysinfo_strerror()
+LIBSMBIOS_C_DLL_SPEC const char * sysinfo_strerror()
 {
     return module_error_buf;
 }
@@ -119,22 +119,22 @@ out:
     return ret;
 }
 
-void sysinfo_string_free(void *f)
+LIBSMBIOS_C_DLL_SPEC void sysinfo_string_free(void *f)
 {
     free(f);
 }
 
-char *sysinfo_get_vendor_name()
+LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_vendor_name()
 {
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Manufacturer_Offset);
 }
 
-char *sysinfo_get_system_name()
+LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_system_name()
 {
     return smbios_struct_get_string_from_table(System_Information_Structure, System_Information_Product_Name_Offset);
 }
 
-char *sysinfo_get_bios_version()
+LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_bios_version()
 {
     return smbios_struct_get_string_from_table(BIOS_Information_Structure, BIOS_Information_Version_Offset);
 }
