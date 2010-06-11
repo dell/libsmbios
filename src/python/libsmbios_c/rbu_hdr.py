@@ -85,7 +85,7 @@ class HdrFile(object):
         ver = ""
         if self.hdr.headerMajorVer < 2:
             ver = "".join([ chr(c) for c in self.hdr.biosVersion if chr(c).isalnum() ])
-            if len(ver) = 0:
+            if len(ver) == 0:
                 ver = "unknown"
         else:
             ver = "%d.%d.%d" % (self.hdr.biosVersion[0], self.hdr.biosVersion[1], self.hdr.biosVersion[2])
