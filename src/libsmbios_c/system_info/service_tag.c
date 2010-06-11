@@ -212,7 +212,7 @@ static char *getServiceTagFromCMOSToken()
     if (csum != byte) // bad (should be zero)
         goto out_err;
 
-    fnprintf("GOT CMOS TAG: %s\n", tempval);
+    fnprintf("GOT CMOS TAG: %s\n", tag);
     goto out;
 
 out_err:
@@ -243,11 +243,12 @@ __hidden char *getTagFromSMI(u16 select)
 {
     u32 args[4] = {0,0,0,0}, res[4] = {0,0,0,0};
     char *retval = 0;
+    int ret = 0;
     fnprintf("\n");
-    dell_simple_ci_smi(11, select, args, res);
+    ret = dell_simple_ci_smi(11, select, args, res);
 
     fnprintf("res[0] = %d\n", (unsigned int)res[0]);
-    if (res[0] != 0)
+    if (ret || res[0])
         goto out;
 
     retval = calloc(1, MAX_SMI_TAG_SIZE + 1); // smi function can hold at most 12 bytes, add one for '\0'
@@ -323,13 +324,18 @@ LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_service_tag()
 
 
 /* only for service/asset tags. */
+// negative error, 0 on success
 __hidden u32 setTagUsingSMI(u16 select, const char *newTag, u16 security_key)
 {
     u32 args[4] = {0,}, res[4] = {0,};
+    int ret = 0;
     strncpy((char *)args, newTag, MAX_SMI_TAG_SIZE);
     args[3] = security_key;
-    dell_simple_ci_smi(11, select, args, res);
-    return res[0];
+    ret = dell_simple_ci_smi(11, select, args, res);
+    if (ret || res[0])
+        return -1;
+    else
+        return 0;
 }
 
 int setServiceTagUsingCMOSToken(const char *newTag, const char *pass_ascii, const char *pass_scancode)
@@ -413,19 +419,17 @@ out:
     */
 int setServiceTagUsingSMI(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
-    int retval = 0, ret;
+    int retval = 0;
     u16 security_key = 0;
     const char *whichpw = pass_scancode;
     if (dell_smi_password_format(DELL_SMI_PASSWORD_ADMIN) == DELL_SMI_PASSWORD_FMT_ASCII)
         whichpw=pass_ascii;
-    ret = dell_smi_get_security_key(whichpw, &security_key);
     retval = -2;
-    if (ret)  // bad password
+    if(dell_smi_get_security_key(whichpw, &security_key))
         goto out;
 
-    ret = setTagUsingSMI( 3, newTag, security_key); /* Write service tag select code */
     retval = -1;
-    if (ret)
+    if (setTagUsingSMI( 3, newTag, security_key)) /* Write service tag select code */
         goto out;
 
     retval = 0;
