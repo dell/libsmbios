@@ -118,7 +118,7 @@ static struct DellAssetTagFunctions
                               {&getAssetTagFromSysEncl,}, // SMBIOS System Information Item
                           };
 
-char *sysinfo_get_asset_tag()
+LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_asset_tag()
 {
     char *assetTag = 0;
     int numEntries =
@@ -230,7 +230,7 @@ static struct DellSetAssetTagFunctions
                                  {&setAssetTagUsingCMOSToken},   // SMBIOS System Information Item
                              };
 
-int sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode)
+LIBSMBIOS_C_DLL_SPEC int sysinfo_set_asset_tag(const char *assetTag, const char *pass_ascii, const char *pass_scancode)
 {
     int ret = -1;
     int numEntries = sizeof (DellSetAssetTagFunctions) / sizeof (DellSetAssetTagFunctions[0]);

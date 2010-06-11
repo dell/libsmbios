@@ -35,7 +35,7 @@
 
 // prepackaged smi functions
 #define PROPERTY_TAG_LEN 80
-const char *sysinfo_get_property_ownership_tag()
+LIBSMBIOS_C_DLL_SPEC const char *sysinfo_get_property_ownership_tag()
 {
     char *retval = 0;
     const char *error = 0;
@@ -88,7 +88,7 @@ out:
     return retval;
 }
 
-int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode)
+LIBSMBIOS_C_DLL_SPEC int sysinfo_set_property_ownership_tag(const char *newTag, const char *pass_ascii, const char *pass_scancode)
 {
     struct dell_smi_obj *smi;
     u16 security_key = 0;

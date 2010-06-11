@@ -291,7 +291,7 @@ static struct DellGetServiceTagFunctions
                                    {&getServiceTagFromSysEncl,},   // SMBIOS System Enclosure Item
                                };
 
-char *sysinfo_get_service_tag()
+LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_service_tag()
 {
     char *serviceTag = 0;
     int numEntries =
@@ -442,7 +442,7 @@ DellSetServiceTagFunctions[] = {
                                    {&setServiceTagUsingCMOSToken,},   // SMBIOS System Information Item
                                };
 
-int sysinfo_set_service_tag(const char *serviceTag, const char *pass_ascii, const char *pass_scancode)
+LIBSMBIOS_C_DLL_SPEC int sysinfo_set_service_tag(const char *serviceTag, const char *pass_ascii, const char *pass_scancode)
 {
     int ret = -1;
     int numEntries =
