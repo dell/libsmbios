@@ -407,6 +407,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Thu Jun 10 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.22-1
+- Fixup bug in reading asset and service tag where it A) read checksum from wrong location and B) used wrong comparison check to validate it
+- enable service tag SET for machines that still set service tag in CMOS
+- ABI/API - change to -fvisibility=hidden for libsmbios_c.so.*, mark public api's. This removes all non-public symbols that were not formerly part of the ABI from the dynamic link table.
+
 * Mon May 18 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.2.16-3
 - split yum plugin into yum-dellsysid package
 
