@@ -407,6 +407,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri Jun 11 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.23-1
+- Fixup ABI break where a couple functions that should have been exported were not marked.
+
 * Thu Jun 10 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.22-1
 - Fixup bug in reading asset and service tag where it A) read checksum from wrong location and B) used wrong comparison check to validate it
 - enable service tag SET for machines that still set service tag in CMOS
