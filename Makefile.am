@@ -10,9 +10,12 @@ dist_bin_SCRIPTS=
 include_HEADERS=
 noinst_PROGRAMS=
 check_PROGRAMS =
+check_SCRIPTS =
 
 noinst_LTLIBRARIES =
 lib_LTLIBRARIES=
+
+TESTS=
 
 AM_CPPFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
 AM_CFLAGS = -Werror -Wall
@@ -35,6 +38,7 @@ include src/python/Makefile.am
 include src/py-cli/Makefile.am
 include src/yum-plugin/Makefile.am
 include src/bin/Makefile.am
+include src/pyunit/Makefile.am
 
 if CPPUNIT_PRESENT
 include src/cppunit/Makefile.am

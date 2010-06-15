@@ -1,12 +1,12 @@
 #!/bin/sh
 
-#set -x
+set -x
 set -e
 
 DIR=$(cd $(dirname $0); pwd)
 
 TMPDIR=$PWD/out/test
-mkdir -p $TMPDIR
+mkdir -p $TMPDIR ||:
 
 [ -n "$TST" ] || TST=out
 
@@ -52,7 +52,7 @@ run_test() {
     test_binary=$1
     source_dir=$2
     echo -e $3
-    if [ ! -e $TST/${test_binary} -a -e $TST/${test_binary}.exe ]; then
+    if [ ! -e $DIR/${test_binary} -a -e $DIR/${test_binary}.exe ]; then
         test_binary=${test_binary}.exe
     fi
     rm -rf $TMPDIR/*
@@ -60,20 +60,14 @@ run_test() {
         cp $source_dir/* $target_dir/ ||:
         reconstruct_memdump $target_dir $target_dir
     fi
-    $VALGRIND $TST/$test_binary $TMPDIR $(basename "$source_dir")
+    $VALGRIND $DIR/$test_binary $TMPDIR $(basename "$source_dir")
 }
 
-
-[ ${RUN_C_TEST:=1} -ne 1 ] || run_test testC_memory_cmos ""                  "\n\nRunning CInterface tests."
-[ ${RUN_CPP_TEST:=1} -ne 1 ] || run_test testRbu           $DIR/test_data/rbu  "\n\nRunning test for RBU"
-[ ${RUN_CPP_TEST} -ne 1 ] || run_test testStandalone    $DIR/test_data/opti "\n\nRunning Standalone tests."
-[ ${RUN_C_TEST} -ne 1 ] || run_test testC_smi         $DIR/test_data/opti "\n\nRunning SMI tests."
+run_test testAll.py        $DIR/../cppunit/test_data/opti   "\n\nRunning PYTHON tests."
 
 if [ "$TEST_STANDALONE_ONLY" = "1" ]; then exit 0; fi
 
-for i in $DIR/test_data/opti $DIR/system_dumps/* ${UNIT_TEST_DATA_DIR}/platform/*; do
+for i in $DIR/../cppunit/test_data/opti $DIR/../cppunit/system_dumps/* ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i ] || continue
-[ ${RUN_C_TEST} -ne 1 ] || run_test testC_token  $i "\n\nRunning TOKEN test for $i"
-[ ${RUN_C_TEST} -ne 1 ] || run_test testC_smbios $i "\n\nRunning SMBIOS test for $i"
-[ ${RUN_CPP_TEST} -ne 1 ] || run_test testPlatform $i "\n\nRunning PLATFORM test for $i"
+    run_test testAll.py   $i "\n\nRunning PYTHON tests for $i."
 done

@@ -6,7 +6,7 @@ EXTRA_DIST += \
 	src/cppunit/test_data	\
 	src/cppunit/system_dumps
 
-TESTS = src/cppunit/runtests.sh
+TESTS += src/cppunit/runtests.sh
 
 UT_CFLAGS=
 if BUILD_LINUX
