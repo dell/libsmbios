@@ -54,10 +54,10 @@ def addStdOptions(parser, passwordOpts=True, securityKeyOpt=False):
 
 def setup_std_options(options):
     if options.memory_dat is not None:
-        memory.MemoryAccess( flags= memory.MEMORY_GET_SINGLETON | memory.MEMORY_UNIT_TEST_MODE, factory_args=(options.memory_dat,))
+        memory.MemoryAccess( flags= memory.MEMORY_GET_SINGLETON | memory.MEMORY_UNIT_TEST_MODE, options.memory_dat)
 
     if options.cmos_dat is not None:
-        cmos.CmosAccess( flags= cmos.CMOS_GET_SINGLETON | cmos.CMOS_UNIT_TEST_MODE, factory_args=(options.cmos_dat,))
+        cmos.CmosAccess( flags= cmos.CMOS_GET_SINGLETON | cmos.CMOS_UNIT_TEST_MODE, options.cmos_dat)
 
     options.password_scancode = None
     if options.password is not None:

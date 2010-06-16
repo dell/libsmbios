@@ -27,8 +27,7 @@ MEMORY_GET_NEW       =0x0002
 MEMORY_UNIT_TEST_MODE=0x0004
 
 decorate(traceLog())
-def MemoryAccess(flags=MEMORY_GET_SINGLETON, factory_args=None):
-    if factory_args is None: factory_args = []
+def MemoryAccess(flags=MEMORY_GET_SINGLETON, *factory_args):
     if _MemoryAccess._instance is None:
         _MemoryAccess._instance = _MemoryAccess( flags, *factory_args)
     return _MemoryAccess._instance
@@ -54,6 +53,20 @@ class _MemoryAccess(ctypes.Structure):
     decorate(traceLog())
     def write(self, buf, offset):
         DLL.memory_obj_write(self._memobj, buf, offset, len(buf))
+
+    decorate(traceLog())
+    def search(self, pattern, start, end, stride):
+        return DLL.memory_obj_search(self._memobj, pattern, len(pattern), start, end, stride)
+
+    decorate(traceLog())
+    def close_hint(self, hint=None):
+        if hint is not None:
+            if hint:
+                DLL.memory_obj_suggest_leave_open(self._memobj)
+            else:
+                DLL.memory_obj_suggest_close(self._memobj)
+
+        return DLL.memory_obj_should_close(self._memobj)
 
 
 # define strerror first so we can use it in error checking other functions.
@@ -84,7 +97,18 @@ DLL.memory_obj_write.restype = ctypes.c_int
 DLL.memory_obj_write.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
 
 #s64  memory_obj_search(const struct memory_access_obj *, const char *pat, size_t patlen, u64 start, u64 end, u64 stride);
-#void  memory_obj_suggest_leave_open(struct memory_access_obj *);
-#void  memory_obj_suggest_close(struct memory_access_obj *);
-#bool  memory_obj_should_close(const struct memory_access_obj *);
+DLL.memory_obj_search.argtypes = [ ctypes.POINTER(_MemoryAccess), ctypes.c_char_p, ctypes.c_size_t, ctypes.c_uint64, ctypes.c_uint64, ctypes.c_uint64 ]
+DLL.memory_obj_search.restype = ctypes.c_int64
+DLL.memory_obj_search.errcheck = errorOnNegativeFN(lambda r,f,a: _strerror(a[0]))
 
+#void  memory_obj_suggest_leave_open(struct memory_access_obj *);
+DLL.memory_obj_suggest_leave_open.argtypes = [ ctypes.POINTER(_MemoryAccess), ]
+DLL.memory_obj_suggest_leave_open.restype = None
+
+#void  memory_obj_suggest_close(struct memory_access_obj *);
+DLL.memory_obj_suggest_close.argtypes = [ ctypes.POINTER(_MemoryAccess), ]
+DLL.memory_obj_suggest_close.restype = None
+
+#bool  memory_obj_should_close(const struct memory_access_obj *);
+DLL.memory_obj_should_close.argtypes = [ ctypes.POINTER(_MemoryAccess), ]
+DLL.memory_obj_should_close.restype = ctypes.c_bool

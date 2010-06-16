@@ -27,8 +27,7 @@ CMOS_GET_NEW       =0x0002
 CMOS_UNIT_TEST_MODE=0x0004
 
 decorate(traceLog())
-def CmosAccess(flags=CMOS_GET_SINGLETON, factory_args=None):
-    if factory_args is None: factory_args = []
+def CmosAccess(flags=CMOS_GET_SINGLETON, *factory_args):
     if _CmosAccess._instance is None:
         _CmosAccess._instance = _CmosAccess( flags, *factory_args)
     return _CmosAccess._instance
