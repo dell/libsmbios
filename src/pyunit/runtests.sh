@@ -12,6 +12,9 @@ mkdir -p $TMPDIR ||:
 
 export MALLOC_PERTURB_=0xBABADABA
 
+export LD_LIBRARY_PATH=$PWD/out/.libs
+export PYTHONPATH=$PYTHONPATH:$top_srcdir/src/python
+
 reconstruct_memdump() {
     source_dir=$1
     target_dir=$2
