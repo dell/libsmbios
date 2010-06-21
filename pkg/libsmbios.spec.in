@@ -191,7 +191,8 @@ programs against libsmbios.
 %package -n yum-dellsysid
 Summary: YUM plugin to retrieve the Dell System ID
 Group: Development/Tools
-Requires: smbios-utils-python = 0:%{version}-%{release}
+# yum plugin and supporting functions first appeared in 2.2.0
+Requires: smbios-utils-python >= 2.2.0
 
 %description -n yum-dellsysid
 Libsmbios is a library and utilities that can be used by client programs to get
