@@ -1,8 +1,5 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-#TESTS = src/pyunit/testAll.py
-#check_SCRIPTS = src/pyunit/testAll.py
-
 pkgpythondir=$(pythondir)/libsmbios_c
 
 if HAVE_PYTHON

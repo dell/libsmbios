@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -x
+#set -x
 set -e
 
 DIR=$(cd $(dirname $0); pwd)
