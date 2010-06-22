@@ -41,11 +41,11 @@ class TestCase(unittest.TestCase):
         for i in xrange(3):
             self.memObj.write(chr(ord("0") + i) * pagesize, 26 + (pagesize * i))
 
-        # segfaults! WHY?
-        #self.memObj.close_hint(1)
+        self.memObj.close_hint(1)
 
     def tearDown(self):
-        pass
+        del(self.cmosObj)
+        del(self.memObj)
 
     def testForLeaks(self):
         # create/destroy lots of objects to see if we leak
