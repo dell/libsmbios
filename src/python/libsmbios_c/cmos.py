@@ -64,10 +64,13 @@ class _CmosAccess(ctypes.Structure):
         # append callback to array that has same lifetime as object so python
         # doesnt garbage collect it from under us
         self._callbacks.append(cb)
-        fcb = None
+
+        # special handling for possible NULL free callback
+        fcb = ctypes.cast(None, FREE_CALLBACK)
         if freecb is not None:
             fcb = FREE_CALLBACK(freecb)
             self._callbacks.append(fcb)
+
         DLL.cmos_obj_register_write_callback(self._cmosobj, cb, userdata, fcb)
 
 
@@ -103,15 +106,7 @@ DLL.cmos_obj_write_byte.errcheck = errorOnNegativeFN(_strerror)
 #// useful for checksums, etc
 #typedef int (*cmos_write_callback)(const struct cmos_access_obj *, bool, void *);
 WRITE_CALLBACK = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.POINTER(_CmosAccess), ctypes.c_bool, ctypes.c_void_p)
-
 FREE_CALLBACK = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
-# monkeypatch ctypes to allow NULL callback
-def from_param(cls,obj):
-    if obj is None:
-        return None
-    from ctypes import _CFuncPtr
-    return _CFuncPtr.from_param(obj)
-FREE_CALLBACK.from_param = classmethod(from_param)
 
 #void cmos_obj_register_write_callback(struct cmos_access_obj *, cmos_write_callback, void *, void (*destruct)(void *));
 DLL.cmos_obj_register_write_callback.argtypes = [ ctypes.POINTER(_CmosAccess), WRITE_CALLBACK, ctypes.c_void_p, FREE_CALLBACK ]
