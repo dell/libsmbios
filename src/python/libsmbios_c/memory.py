@@ -28,9 +28,12 @@ MEMORY_UNIT_TEST_MODE=0x0004
 
 decorate(traceLog())
 def MemoryAccess(flags=MEMORY_GET_SINGLETON, *factory_args):
-    if _MemoryAccess._instance is None:
-        _MemoryAccess._instance = _MemoryAccess( flags, *factory_args)
-    return _MemoryAccess._instance
+    if flags & MEMORY_GET_SINGLETON:
+        if _MemoryAccess._instance is None:
+            _MemoryAccess._instance = _MemoryAccess( flags, *factory_args)
+        return _MemoryAccess._instance
+    else:
+        return _MemoryAccess( flags, *factory_args)
 
 class _MemoryAccess(ctypes.Structure):
     _instance = None

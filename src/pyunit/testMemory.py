@@ -21,25 +21,28 @@ def getTestDir():
 class TestCase(unittest.TestCase):
     def setUp(self):
         # write some values to a test file that we will use for both cmos and mem tests
-        self.testfile = "%s/testmem.dat" % getTempDir()
+        self.testfile = "%s/%s-testmem.dat" % (getTempDir(), self._testMethodName)
         fd = open(self.testfile, "w+")
         for i in xrange(pagesize*4 + 1):
             fd.write("j")
+        fd.close()
 
         import libsmbios_c.memory as m
-        self.memObj = m.MemoryAccess(m.MEMORY_GET_SINGLETON | m.MEMORY_UNIT_TEST_MODE, self.testfile)
+        self.memObj = m.MemoryAccess(m.MEMORY_GET_NEW | m.MEMORY_UNIT_TEST_MODE, self.testfile)
 
         import libsmbios_c.cmos as c
-        self.cmosObj = c.CmosAccess(c.CMOS_GET_SINGLETON | c.CMOS_UNIT_TEST_MODE, self.testfile)
-
-        #self.memObj.close_hint(1)
+        self.cmosObj = c.CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, self.testfile)
 
         # replace first 26 bytes with alphabet
         for i in xrange(26):
             self.memObj.write(chr(ord("a") + i), i)
 
+        # write pages of '0', '1', and '2'
         for i in xrange(3):
             self.memObj.write(chr(ord("0") + i) * pagesize, 26 + (pagesize * i))
+
+        # segfaults! WHY?
+        #self.memObj.close_hint(1)
 
     def tearDown(self):
         pass
@@ -49,8 +52,8 @@ class TestCase(unittest.TestCase):
         import libsmbios_c.memory as m
         import libsmbios_c.cmos as c
         for i in xrange(1000):
-            mObj = m._MemoryAccess(m.MEMORY_GET_NEW | m.MEMORY_UNIT_TEST_MODE, "/dev/null")
-            cObj = c._CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, "/dev/null")
+            mObj = m.MemoryAccess(m.MEMORY_GET_NEW | m.MEMORY_UNIT_TEST_MODE, "/dev/null")
+            cObj = c.CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, "/dev/null")
             del(mObj)
             del(cObj)
 
@@ -110,6 +113,12 @@ class TestCase(unittest.TestCase):
             self.assertEquals( ord('A') + i, b )
 
         self.assertEquals(int.value, 26)
+
+        # index port 1 (offset 512 + i) should be '0'
+        for i in xrange(26):
+            c = cObj.readByte(1, 0, i)
+            self.assertEquals(c, ord('0'))
+
 
 
 
