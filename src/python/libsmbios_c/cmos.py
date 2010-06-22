@@ -39,21 +39,33 @@ class _CmosAccess(ctypes.Structure):
     def __init__(self, *args):
         self._cmosobj = None
         self._cmosobj = DLL.cmos_obj_factory(*args)
+        self._callbacks = []
 
     # dont decorate __del__
     def __del__(self):
         DLL.cmos_obj_free(self._cmosobj)
 
     decorate(traceLog())
-    def readByte(self, offset, indexPort, dataPort):
-        buf = ctypes.c_uint8
-        DLL.cmos_obj_read(self._cmosobj, buf, offset, length)
-        return buf
+    def readByte(self, indexPort, dataPort, offset):
+        buf = ctypes.c_uint8()
+        DLL.cmos_obj_read_byte(self._cmosobj, buf, indexPort, dataPort, offset)
+        return buf.value
 
     decorate(traceLog())
-    def writeByte(self, offset, indexPort, dataPort):
-        DLL.cmos_obj_write(self._cmosobj, buf, offset, len(buf))
+    def writeByte(self, buf, indexPort, dataPort, offset):
+        DLL.cmos_obj_write_byte(self._cmosobj, buf, indexPort, dataPort, offset)
 
+    decorate(traceLog())
+    def registerCallback(self, callback, userdata, freecb):
+        cb = WRITE_CALLBACK(callback)
+        # append callback to array that has same lifetime as object so python
+        # doesnt garbage collect it from under us
+        self._callbacks.append(cb)
+        fcb = None
+        if freecb is not None:
+            fcb = FREE_CALLBACK(freecb)
+            self._callbacks.append(fcb)
+        DLL.cmos_obj_register_write_callback(self._cmosobj, cb, userdata, fcb)
 
 
 #// format error string
@@ -85,10 +97,23 @@ DLL.cmos_obj_write_byte.argtypes = [ ctypes.POINTER(_CmosAccess), ctypes.c_uint8
 DLL.cmos_obj_write_byte.restype = ctypes.c_int
 DLL.cmos_obj_write_byte.errcheck = errorOnNegativeFN(_strerror)
 
-
 #// useful for checksums, etc
 #typedef int (*cmos_write_callback)(const struct cmos_access_obj *, bool, void *);
+WRITE_CALLBACK = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.POINTER(_CmosAccess), ctypes.c_bool, ctypes.c_void_p)
+
+FREE_CALLBACK = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
+# monkeypatch ctypes to allow NULL callback
+def from_param(cls,obj):
+    if obj is None:
+        return None
+    from ctypes import _CFuncPtr
+    return _CFuncPtr.from_param(obj)
+FREE_CALLBACK.from_param = classmethod(from_param)
+
 #void cmos_obj_register_write_callback(struct cmos_access_obj *, cmos_write_callback, void *, void (*destruct)(void *));
+DLL.cmos_obj_register_write_callback.argtypes = [ ctypes.POINTER(_CmosAccess), WRITE_CALLBACK, ctypes.c_void_p, FREE_CALLBACK ]
+DLL.cmos_obj_register_write_callback.restype = None
+
 #int cmos_obj_run_callbacks(const struct cmos_access_obj *m, bool do_update);
 
 

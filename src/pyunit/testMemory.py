@@ -21,16 +21,16 @@ def getTestDir():
 class TestCase(unittest.TestCase):
     def setUp(self):
         # write some values to a test file that we will use for both cmos and mem tests
-        testfile = "%s/testmem.dat" % getTempDir()
-        fd = open(testfile, "w+")
+        self.testfile = "%s/testmem.dat" % getTempDir()
+        fd = open(self.testfile, "w+")
         for i in xrange(pagesize*4 + 1):
             fd.write("j")
 
         import libsmbios_c.memory as m
-        self.memObj = m.MemoryAccess(m.MEMORY_GET_SINGLETON | m.MEMORY_UNIT_TEST_MODE, testfile)
+        self.memObj = m.MemoryAccess(m.MEMORY_GET_SINGLETON | m.MEMORY_UNIT_TEST_MODE, self.testfile)
 
         import libsmbios_c.cmos as c
-        self.cmosObj = c.CmosAccess(c.CMOS_GET_SINGLETON | c.CMOS_UNIT_TEST_MODE, testfile)
+        self.cmosObj = c.CmosAccess(c.CMOS_GET_SINGLETON | c.CMOS_UNIT_TEST_MODE, self.testfile)
 
         #self.memObj.close_hint(1)
 
@@ -81,6 +81,35 @@ class TestCase(unittest.TestCase):
 
         self.assertRaises(Exception, self.memObj.search, "nonexistent", 0, 4096, 1);
 
+    def testCmosRead(self):
+        for i in xrange(26):
+            # index/data ports to 0 for unit testing
+            b = self.cmosObj.readByte(0, 0, i)
+            self.assertEquals( ord('a') + i, b )
+
+    def testCmosWrite(self):
+        import libsmbios_c.cmos as c
+        import ctypes
+        cObj = c._CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, self.testfile)
+
+        # a test callback that increments a counter each time it is called
+        def _test_cb(cmosObj, do_update, userdata):
+            i = ctypes.cast(userdata, ctypes.POINTER(ctypes.c_uint16))
+            i[0] = i[0] + 1
+            return 1
+
+        int = ctypes.c_uint16(0)
+        cObj.registerCallback(_test_cb, ctypes.pointer(int), None)
+
+        for i in xrange(26):
+            # index/data ports to 0 for unit testing
+            b = cObj.readByte(0, 0, i)
+            self.assertEquals( ord('a') + i, b )
+            cObj.writeByte( b + ord('A') - ord('a'), 0, 0, i )
+            b = cObj.readByte(0, 0, i)
+            self.assertEquals( ord('A') + i, b )
+
+        self.assertEquals(int.value, 26)
 
 
 
