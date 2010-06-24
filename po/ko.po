@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2010-06-11 11:07-0500\n"
+"POT-Creation-Date: 2010-06-24 15:20-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Korean\n"
@@ -1164,32 +1164,32 @@ msgstr ""
 msgid "function returned negative error code"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:86 src/python/libsmbios_c/smbios.py:97
+#: src/python/libsmbios_c/smbios.py:88 src/python/libsmbios_c/smbios.py:99
 #: src/python/libsmbios_c/token.py:144
 msgid "hit end of table."
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:104
+#: src/python/libsmbios_c/smbios.py:106
 #, python-format
 msgid "No SMBIOS structure found with handle %s"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:112
+#: src/python/libsmbios_c/smbios.py:114
 #, python-format
 msgid "No SMBIOS structure found with type %s"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:163
+#: src/python/libsmbios_c/smbios.py:165
 #, python-format
 msgid "String from offset %d doesnt exist"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:168
+#: src/python/libsmbios_c/smbios.py:170
 #, python-format
 msgid "String number %d doesnt exist"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:173
+#: src/python/libsmbios_c/smbios.py:175
 msgid "Tried to get data past the end of the structure."
 msgstr ""
 
