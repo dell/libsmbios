@@ -37,6 +37,16 @@ def makePrintable(s):
             retstr = retstr + "0x%02x" % ord(ch)
         return retstr
 
+# function decorator that strips trailing whitespace from returned string
+def strip_trailing_whitespace():
+    def decorator(func):
+        def dostrip(*args, **kw):
+            result = func(*args, **kw)
+            while len(result) and result[-1] == " ": result=result[:-1]
+            return result
+        return rewrap(func, dostrip)
+    return decorator
+
 # defaults to module verbose log
 # does a late binding on log. Forwards all attributes to logger.
 # works around problem where reconfiguring the logging module means loggers
