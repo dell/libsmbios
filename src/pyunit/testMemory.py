@@ -123,5 +123,5 @@ class TestCase(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    import test.TestLib
-    sys.exit(not test.TestLib.runTests( [TestCase] ))
+    import TestLib
+    sys.exit(not TestLib.runTests( [TestCase] ))
