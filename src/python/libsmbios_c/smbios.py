@@ -17,7 +17,7 @@ import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN
-from trace_decorator import decorate, traceLog, getLog
+from trace_decorator import decorate, traceLog, getLog, strip_trailing_whitespace
 
 __all__ = ["SmbiosTable", "SMBIOS_DEFAULTS", "SMBIOS_GET_SINGLETON", "SMBIOS_GET_NEW", "SMBIOS_UNIT_TEST_MODE"]
 
@@ -29,11 +29,11 @@ SMBIOS_UNIT_TEST_MODE=0x0004
 class TableParseError(Exception): pass
 
 class SmbiosStructure(ctypes.Structure): 
-    decorate(traceLog())
+    decorate(traceLog(), strip_trailing_whitespace())
     def getString(self, off):
         return DLL.smbios_struct_get_string_from_offset(self, off)
 
-    decorate(traceLog())
+    decorate(traceLog(), strip_trailing_whitespace())
     def getStringNumber(self, num):
         return DLL.smbios_struct_get_string_number(self, num)
 
