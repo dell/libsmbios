@@ -17,7 +17,7 @@ from exceptions import *
 
 from libsmbios_c import libsmbios_c_DLL as DLL
 from _common import errorOnNullPtrFN, errorOnNegativeFN, errorOnZeroFN, freeLibStringFN
-from trace_decorator import decorate, traceLog, getLog
+from trace_decorator import decorate, traceLog, getLog, strip_trailing_whitespace
 
 __all__ = []
 
@@ -63,7 +63,7 @@ def _mk_simple_sysinfo_str_fn(name):
     import sys
     getattr(DLL,  "sysinfo_%s" % name).argtypes=[]
     getattr(DLL,  "sysinfo_%s" % name).restype=ctypes.POINTER(ctypes.c_char)
-    getattr(DLL,  "sysinfo_%s" % name).errcheck=freeLibStringFN( DLL.sysinfo_string_free, lambda r,f,a: Exception(_strerror() ))
+    getattr(DLL,  "sysinfo_%s" % name).errcheck=strip_trailing_whitespace()(freeLibStringFN( DLL.sysinfo_string_free, lambda r,f,a: Exception(_strerror() )))
     sys.modules[__name__].__dict__[name] = getattr(DLL,  "sysinfo_%s" % name)
     __all__.append(name)
 
