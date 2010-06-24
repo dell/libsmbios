@@ -6,6 +6,14 @@
 import os
 import unittest
 
+# backwards compat TestCase class that works on RHEL5
+# sets _testMethodName to be compat with newer unittest
+class TestCase(unittest.TestCase):
+    def __init__(self, *args, **kargs):
+        super(TestCase, self).__init__(*args, **kargs)
+        if not hasattr(self, "_testMethodName"):
+            self._testMethodName = getattr(self, "_TestCase__testMethodName", "")
+
 def usage():
     print "wrong command line options." #need better help eventually
 

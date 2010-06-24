@@ -6,7 +6,7 @@
 from __future__ import generators
 
 import sys
-import unittest
+import TestLib
 
 pagesize = (4096 * 16)
 
@@ -18,7 +18,7 @@ def getTestDir():
     import sys
     return sys.argv[2]
 
-class TestCase(unittest.TestCase):
+class TestCase(TestLib.TestCase):
     def setUp(self):
         # write some values to a test file that we will use for both cmos and mem tests
         self.testfile = "%s/%s-testmem.dat" % (getTempDir(), self._testMethodName)

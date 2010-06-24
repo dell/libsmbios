@@ -7,9 +7,9 @@ from __future__ import generators
 
 import os
 import sys
-import unittest
 import xml.dom.minidom
 import HelperXml
+import TestLib
 
 pagesize = (4096 * 16)
 
@@ -23,9 +23,8 @@ def getTestDir():
     import sys
     return sys.argv[2]
 
-class TestCase(unittest.TestCase):
+class TestCase(TestLib.TestCase):
     def checkSkip(self):
-        self._testMethodName
         for testElem in HelperXml.iterNodeElement(self.dom, "TESTINPUT", "testsToSkip"):
             if self._testMethodName == HelperXml.getNodeAttribute(testElem, "name"):
                 self.skip=1
@@ -98,5 +97,4 @@ class TestCase(unittest.TestCase):
             print "skip ",
 
 if __name__ == "__main__":
-    import TestLib
     sys.exit(not TestLib.runTests( [TestCase] ))
