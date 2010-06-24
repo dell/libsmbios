@@ -57,11 +57,13 @@ class SmbiosStructure(ctypes.Structure):
         return buf.raw
 
 decorate(traceLog())
-def SmbiosTable(flags=SMBIOS_GET_SINGLETON, factory_args=None):
-    if factory_args is None: factory_args = []
-    if _SmbiosTable._instance is None:
-        _SmbiosTable._instance = _SmbiosTable( flags, *factory_args)
-    return _SmbiosTable._instance
+def SmbiosTable(flags=SMBIOS_GET_SINGLETON, *factory_args):
+    if flags & SMBIOS_GET_SINGLETON:
+        if _SmbiosTable._instance is None:
+            _SmbiosTable._instance = _SmbiosTable( flags, *factory_args)
+        return _SmbiosTable._instance
+    else:
+        return _SmbiosTable( flags, *factory_args)
 
 class _SmbiosTable(ctypes.Structure):
     _instance = None
