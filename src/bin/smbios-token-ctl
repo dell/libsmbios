@@ -55,6 +55,11 @@ def command_parse():
 
     parser.add_option("-d", '--dump-tokens', action="store_const", dest="action",
                       help= _("Action: dump token table"), const="dump-tokens", default="dump-tokens")
+    parser.add_option('--dump-tokens-csv', action="store_const", dest="action",
+                      help= _("Action: dump token table in CSV format"), const="dump-tokens-csv")
+
+    #parser.add_option('--import-token-settings-csv', action="store_const", dest="action",
+                      #help= _("Action: Restore token settings from CSV table dump"), const="import-tokens-csv")
 
     parser.add_option('--is-string', action="store_const", dest="action",
                       help=_("Action: return true if specified token is a string."),
@@ -238,6 +243,27 @@ def dumpTokens(tokenTable, tokenXlator, options):
         cli.wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
         print
 
+
+def dumpTokensCsv(tokenTable, tokenXlator, options):
+    print "ID,Type,Value,Name,Setting"
+    for token in tokenTable:
+        try:
+            translatedToken = tokenXlator(token)
+        except BlacklistedToken, e:
+            #sys.stdout.write( "="*80 + "\n" )
+            #print "Not dumping blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
+            continue
+
+        if shouldSkipToken(translatedToken, options):
+            continue
+
+        (e, type, value) = tokenInfo(token, "dump-tokens")
+        print "0x%04x,%s,%s,%s,%s" % (translatedToken.id,type,cli.makePrintable(value),translatedToken.name, translatedToken.setting)
+
+def importTokensCsv(tokenTable, tokenXlator, options, args):
+    csvdict = csv.DictReader(CommentedFile(open(args[0], "rb")))
+
+
 def getTokenObj(tokenTable, tokenXlator, options):
     # optimization
     if options.token_id:
@@ -272,6 +298,14 @@ def main():
 
         if options.action == "dump-tokens":
             dumpTokens(tokenTable, tokenXlator, options)
+            return exit_code
+
+        if options.action == "dump-tokens-csv":
+            dumpTokensCsv(tokenTable, tokenXlator, options)
+            return exit_code
+
+        if options.action == "import-tokens-csv":
+            importTokensCsv(tokenTable, tokenXlator, options, args)
             return exit_code
 
         tokenObj = getTokenObj(tokenTable, tokenXlator, options)
