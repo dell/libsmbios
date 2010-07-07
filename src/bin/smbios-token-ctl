@@ -245,6 +245,7 @@ def dumpTokens(tokenTable, tokenXlator, options):
 
 
 def dumpTokensCsv(tokenTable, tokenXlator, options):
+    # make sure not to localize the string below:
     sys.stdout.write("ID,Type,Value,Name,Setting\n")
     w = csv.writer( sys.stdout )
     for token in tokenTable:
@@ -264,7 +265,7 @@ def dumpTokensCsv(tokenTable, tokenXlator, options):
 
 def importTokensCsv(tokenTable, tokenXlator, options, args):
     retval=True
-    print "importing..."
+    print _("Importing token values from '%s'") % args[0]
     csvdict = csv.DictReader(CommentedFile(open(args[0], "rb")))
     for line in csvdict:
         try:
@@ -272,8 +273,8 @@ def importTokensCsv(tokenTable, tokenXlator, options, args):
             type=line["Type"]
             value=line["Value"]
         except KeyError, e:
-            print "File format error. The first line should list the column names. Could not find the %s column" % str(e)
-            print "Cannot continue, exiting."
+            print _("File format error. The first line should list the column names. Could not find the %s column") % str(e)
+            print _("Cannot continue, exiting.")
             retval=False
             break
 
@@ -284,58 +285,58 @@ def importTokensCsv(tokenTable, tokenXlator, options, args):
                 continue
 
             if translatedToken.name == _("unknown") or translatedToken.setting == _("unknown"):
-                print "Not importing token that is unknown: 0x%04x" % id
+                print _("Not importing token that is unknown: 0x%04x") % id
                 retval=False
                 continue
 
             if translatedToken.name != line["Name"]:
-                print "INFO: token 0x%04x settings file name does not match my DB. Applying setting anyways." % id
-                print "\tsettings file: %s" % line["Name"]
-                print "\tDB name      : %s" % translatedToken.name
+                print _("INFO: token 0x%04x settings file name does not match my DB. Applying setting anyways.") % id
+                print _("\tsettings file: %s") % line["Name"]
+                print _("\tDB name      : %s") % translatedToken.name
 
             if translatedToken.setting != line["Setting"]:
-                print "INFO: token 0x%04x settings file setting-name does not match my DB. Applying setting anyways." % id
-                print "\tsettings file: %s" % line["Setting"]
-                print "\tDB name      : %s" % translatedToken.setting
+                print _("INFO: token 0x%04x settings file setting-name does not match my DB. Applying setting anyways.") % id
+                print _("\tsettings file: %s") % line["Setting"]
+                print _("\tDB name      : %s") % translatedToken.setting
 
             if type == "bool":
                 if not token.isBool():
-                    print "SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but it doesnt pass bool check." % (id)
+                    print _("SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but it doesnt pass bool check.") % (id)
                     retval=False
                     continue
                 elif value == "true":
                     if not token.isActive():
-                        print "Importing setting for token (active): 0x%04x" % id
+                        print _("Importing setting for token (active): 0x%04x") % id
                         token.activate()
                     else:
-                        print "Token already correct (bool, active): 0x%04x" % id
+                        print _("Token already correct (bool, active): 0x%04x") % id
                 elif value == "false":
                     if token.isActive():
-                        print "Info: Cannot de-activate tokens, can only activate the contrapositive. (0x%04x == false)" % id
+                        print _("Info: Cannot de-activate tokens, can only activate the contrapositive. (0x%04x == false)") % id
                     else:
-                        print "Token already correct (bool, inactive): 0x%04x" % id
+                        print _("Token already correct (bool, inactive): 0x%04x") % id
                 else:
-                    print "UNEXPECTED VALUE: Bool token should only ever have values of 'true' or 'false', but token 0x%04x tries to set value '%s'" % (id, value)
+                    print _("UNEXPECTED VALUE: Bool token should only ever have values of 'true' or 'false', but token 0x%04x tries to set value '%s'") % (id, value)
                     continue
 
             elif type == "string":
                 if not token.isString():
-                    print "SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, but it doesnt pass string check." % (id)
+                    print _("SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, but it doesnt pass string check.") % (id)
                     retval=False
                     continue
                 if token.getString() != value:
-                    print "Importing setting for token (string): 0x%04x" % id
+                    print _("Importing setting for token (string): 0x%04x") % id
                     token.setString(value)
                 else:
-                    print "Token already correct (string=='%s'): 0x%04x" % (value, id)
+                    print _("Token already correct (string=='%s'): 0x%04x") % (value, id)
 
         except IndexError, e:
-            print "Not importing token which is inapplicable to this system: 0x%04x" % (id)
+            print _("Not importing token which is inapplicable to this system: 0x%04x") % (id)
             retval=False
             continue
 
         except BlacklistedToken, e:
-            print "Not importing blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
+            print _("Not importing blacklisted token 0x%04x. Reason: %s") % (token.getId(), str(e))
             retval=False
             continue
 
