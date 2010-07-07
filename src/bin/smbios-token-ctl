@@ -271,7 +271,13 @@ def importTokensCsv(tokenTable, tokenXlator, options, args):
             id = int(line["ID"], 0)
             type=line["Type"]
             value=line["Value"]
+        except KeyError, e:
+            print "File format error. The first line should list the column names. Could not find the %s column" % str(e)
+            print "Cannot continue, exiting."
+            retval=False
+            break
 
+        try:
             token = tokenTable[id]
             translatedToken = tokenXlator(token)
             if shouldSkipToken(translatedToken, options):
