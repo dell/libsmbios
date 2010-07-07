@@ -58,8 +58,8 @@ def command_parse():
     parser.add_option('--dump-tokens-csv', action="store_const", dest="action",
                       help= _("Action: dump token table in CSV format"), const="dump-tokens-csv")
 
-    #parser.add_option('--import-token-settings-csv', action="store_const", dest="action",
-                      #help= _("Action: Restore token settings from CSV table dump"), const="import-tokens-csv")
+    parser.add_option('--import-token-settings-csv', action="store_const", dest="action",
+                      help= _("Action: Restore token settings from CSV table dump"), const="import-tokens-csv")
 
     parser.add_option('--is-string', action="store_const", dest="action",
                       help=_("Action: return true if specified token is a string."),
@@ -245,7 +245,8 @@ def dumpTokens(tokenTable, tokenXlator, options):
 
 
 def dumpTokensCsv(tokenTable, tokenXlator, options):
-    print "ID,Type,Value,Name,Setting"
+    sys.stdout.write("ID,Type,Value,Name,Setting\n")
+    w = csv.writer( sys.stdout )
     for token in tokenTable:
         try:
             translatedToken = tokenXlator(token)
@@ -258,11 +259,88 @@ def dumpTokensCsv(tokenTable, tokenXlator, options):
             continue
 
         (e, type, value) = tokenInfo(token, "dump-tokens")
-        print "0x%04x,%s,%s,%s,%s" % (translatedToken.id,type,cli.makePrintable(value),translatedToken.name, translatedToken.setting)
+        w.writerow(("0x%04x" % translatedToken.id,type,cli.makePrintable(value),translatedToken.name, translatedToken.setting))
+    sys.stdout.flush()
 
 def importTokensCsv(tokenTable, tokenXlator, options, args):
+    retval=True
+    print "importing..."
     csvdict = csv.DictReader(CommentedFile(open(args[0], "rb")))
+    for line in csvdict:
+        try:
+            id = int(line["ID"], 0)
+            type=line["Type"]
+            value=line["Value"]
 
+            token = tokenTable[id]
+            translatedToken = tokenXlator(token)
+            if shouldSkipToken(translatedToken, options):
+                continue
+
+            if translatedToken.name == _("unknown") or translatedToken.setting == _("unknown"):
+                print "Not importing token that is unknown: 0x%04x" % id
+                retval=False
+                continue
+
+            if translatedToken.name != line["Name"]:
+                print "INFO: token 0x%04x settings file name does not match my DB. Applying setting anyways." % id
+                print "\tsettings file: %s" % line["Name"]
+                print "\tDB name      : %s" % translatedToken.name
+
+            if translatedToken.setting != line["Setting"]:
+                print "INFO: token 0x%04x settings file setting-name does not match my DB. Applying setting anyways." % id
+                print "\tsettings file: %s" % line["Setting"]
+                print "\tDB name      : %s" % translatedToken.setting
+
+            if type == "bool":
+                if not token.isBool():
+                    print "SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but it doesnt pass bool check." % (id)
+                    retval=False
+                    continue
+                elif value == "true":
+                    if not token.isActive():
+                        print "Importing setting for token (active): 0x%04x" % id
+                        token.activate()
+                    else:
+                        print "Token already correct (bool, active): 0x%04x" % id
+                elif value == "false":
+                    if token.isActive():
+                        print "Info: Cannot de-activate tokens, can only activate the contrapositive. (0x%04x == false)" % id
+                    else:
+                        print "Token already correct (bool, inactive): 0x%04x" % id
+                else:
+                    print "UNEXPECTED VALUE: Bool token should only ever have values of 'true' or 'false', but token 0x%04x tries to set value '%s'" % (id, value)
+                    continue
+
+            elif type == "string":
+                if not token.isString():
+                    print "SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, but it doesnt pass string check." % (id)
+                    retval=False
+                    continue
+                if token.getString() != value:
+                    print "Importing setting for token (string): 0x%04x" % id
+                    token.setString(value)
+                else:
+                    print "Token already correct (string=='%s'): 0x%04x" % (value, id)
+
+        except IndexError, e:
+            print "Not importing token which is inapplicable to this system: 0x%04x" % (id)
+            retval=False
+            continue
+
+        except BlacklistedToken, e:
+            print "Not importing blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
+            retval=False
+            continue
+
+        except Exception, e:
+            sys.stderr.write("="*79 + "\n")
+            sys.stderr.write(_("Ignoring parsing error in CSV file:") )
+            traceback.print_exc()
+            sys.stderr.write("="*79 + "\n")
+            retval=False
+            continue
+    return retval
 
 def getTokenObj(tokenTable, tokenXlator, options):
     # optimization
@@ -305,7 +383,7 @@ def main():
             return exit_code
 
         if options.action == "import-tokens-csv":
-            importTokensCsv(tokenTable, tokenXlator, options, args)
+            exit_code = not importTokensCsv(tokenTable, tokenXlator, options, args)
             return exit_code
 
         tokenObj = getTokenObj(tokenTable, tokenXlator, options)
