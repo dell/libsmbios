@@ -30,10 +30,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libsmbios 2.2.24\n"
+"Project-Id-Version: libsmbios 2.2.25\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2010-06-24 15:20-0500\n"
-"PO-Revision-Date: 2010-06-24 15:20-0500\n"
+"POT-Creation-Date: 2010-07-06 15:47-0500\n"
+"PO-Revision-Date: 2010-07-06 15:47-0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -66,14 +66,14 @@ msgid "Owner password"
 msgstr "Owner password"
 
 #: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:116
-#: src/bin/smbios-token-ctl:306 src/bin/smbios-wakeup-ctl:120
+#: src/bin/smbios-token-ctl:339 src/bin/smbios-wakeup-ctl:120
 #: src/bin/smbios-wireless-ctl:353 src/bin/smbios-lcd-brightness:120
 #: src/bin/smbios-rbu-bios-update:169
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr "ERROR: Could not parse system SMBIOS table."
 
 #: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:117
-#: src/bin/smbios-token-ctl:307 src/bin/smbios-wakeup-ctl:121
+#: src/bin/smbios-token-ctl:340 src/bin/smbios-wakeup-ctl:121
 #: src/bin/smbios-wireless-ctl:354 src/bin/smbios-lcd-brightness:121
 #: src/bin/smbios-rbu-bios-update:170
 msgid "The smbios library returned this error:"
@@ -148,138 +148,146 @@ msgstr "Setting new tag value: %s"
 msgid "Action: dump token table"
 msgstr "Action: dump token table"
 
-#: src/bin/smbios-token-ctl:60
+#: src/bin/smbios-token-ctl:59
+msgid "Action: dump token table in CSV format"
+msgstr "Action: dump token table in CSV format"
+
+#: src/bin/smbios-token-ctl:62
+msgid "Action: Restore token settings from CSV table dump"
+msgstr "Action: Restore token settings from CSV table dump"
+
+#: src/bin/smbios-token-ctl:65
 msgid "Action: return true if specified token is a string."
 msgstr "Action: return true if specified token is a string."
 
-#: src/bin/smbios-token-ctl:64
+#: src/bin/smbios-token-ctl:69
 msgid "Action: return true if specified token is a bool."
 msgstr "Action: return true if specified token is a bool."
 
-#: src/bin/smbios-token-ctl:68
+#: src/bin/smbios-token-ctl:73
 msgid "Action: return true if specified bool token is active."
 msgstr "Action: return true if specified bool token is active."
 
-#: src/bin/smbios-token-ctl:72
+#: src/bin/smbios-token-ctl:77
 msgid "Action: get string token value."
 msgstr "Action: get string token value."
 
-#: src/bin/smbios-token-ctl:76
+#: src/bin/smbios-token-ctl:81
 msgid "Action: activate specified bool token."
 msgstr "Action: activate specified bool token."
 
-#: src/bin/smbios-token-ctl:80
+#: src/bin/smbios-token-ctl:85
 msgid "Action: set string token value."
 msgstr "Action: set string token value."
 
-#: src/bin/smbios-token-ctl:84
+#: src/bin/smbios-token-ctl:89
 msgid "Filter only token with ID."
 msgstr "Filter only token with ID."
 
-#: src/bin/smbios-token-ctl:86
+#: src/bin/smbios-token-ctl:91
 msgid "Filter only token with name."
 msgstr "Filter only token with name."
 
-#: src/bin/smbios-token-ctl:88
+#: src/bin/smbios-token-ctl:93
 msgid "Filter only token with setting."
 msgstr "Filter only token with setting."
 
-#: src/bin/smbios-token-ctl:91
+#: src/bin/smbios-token-ctl:96
 msgid "path to the token.csv file."
 msgstr "path to the token.csv file."
 
-#: src/bin/smbios-token-ctl:93
+#: src/bin/smbios-token-ctl:98
 msgid "Path to token blacklist file."
 msgstr "Path to token blacklist file."
 
-#: src/bin/smbios-token-ctl:114 src/bin/smbios-token-ctl:115
-#: src/bin/smbios-token-ctl:116 src/bin/smbios-token-ctl:117
+#: src/bin/smbios-token-ctl:119 src/bin/smbios-token-ctl:120
+#: src/bin/smbios-token-ctl:121 src/bin/smbios-token-ctl:122
 msgid "unknown"
 msgstr "unknown"
 
-#: src/bin/smbios-token-ctl:158
+#: src/bin/smbios-token-ctl:163
 msgid "Ignoring parsing error in CSV file:"
 msgstr "Ignoring parsing error in CSV file:"
 
-#: src/bin/smbios-token-ctl:170
+#: src/bin/smbios-token-ctl:175
 #, c-format
 msgid "Skipping '%s' due to IOError.\n"
 msgstr "Skipping ‘[1m%s[0m’ due to IOError.\n"
 
-#: src/bin/smbios-token-ctl:171
+#: src/bin/smbios-token-ctl:176
 #, c-format
 msgid "The error message was: %s"
 msgstr "The error message was: %s"
 
-#: src/bin/smbios-token-ctl:178
+#: src/bin/smbios-token-ctl:183
 msgid "<weird unknown type>"
 msgstr "<weird unknown type>"
 
-#: src/bin/smbios-token-ctl:179
+#: src/bin/smbios-token-ctl:184
 msgid "<unknown value>"
 msgstr "<unknown value>"
 
-#: src/bin/smbios-token-ctl:228
+#: src/bin/smbios-token-ctl:233
 #, c-format
 msgid "  Token: 0x%04x - %s (%s)"
 msgstr "  Token: 0x%04x - %s (%s)"
 
-#: src/bin/smbios-token-ctl:232
+#: src/bin/smbios-token-ctl:237
 #, c-format
 msgid "  value: %s = %s"
 msgstr "  value: %s = %s"
 
-#: src/bin/smbios-token-ctl:236
+#: src/bin/smbios-token-ctl:241
 msgid "   Desc: "
 msgstr "   Desc: "
 
-#: src/bin/smbios-token-ctl:247
+#: src/bin/smbios-token-ctl:272
 msgid "require token-id or token name/setting pair."
 msgstr "require token-id or token name/setting pair."
 
-#: src/bin/smbios-token-ctl:258
+#: src/bin/smbios-token-ctl:283
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr "token not found. Name(%s) Setting(%s)."
 
-#: src/bin/smbios-token-ctl:282
+#: src/bin/smbios-token-ctl:315
 msgid "Original Value"
 msgstr "Original Value"
 
-#: src/bin/smbios-token-ctl:283
+#: src/bin/smbios-token-ctl:316
 #, c-format
 msgid "       token: 0x%04x"
 msgstr "       token: 0x%04x"
 
-#: src/bin/smbios-token-ctl:284 src/bin/smbios-token-ctl:301
+#: src/bin/smbios-token-ctl:317 src/bin/smbios-token-ctl:334
 #, c-format
 msgid "        type: %s"
 msgstr "        type: %s"
 
-#: src/bin/smbios-token-ctl:285 src/bin/smbios-token-ctl:302
+#: src/bin/smbios-token-ctl:318 src/bin/smbios-token-ctl:335
 #, c-format
 msgid "       value: %s"
 msgstr "       value: %s"
 
-#: src/bin/smbios-token-ctl:289
+#: src/bin/smbios-token-ctl:322
 msgid "Setting string value ..."
 msgstr "Setting string value ..."
 
-#: src/bin/smbios-token-ctl:291 src/bin/smbios-token-ctl:297
+#: src/bin/smbios-token-ctl:324 src/bin/smbios-token-ctl:330
 msgid "New value"
 msgstr "New value"
 
-#: src/bin/smbios-token-ctl:295
+#: src/bin/smbios-token-ctl:328
 msgid "Activating token..."
 msgstr "Activating token..."
 
-#: src/bin/smbios-token-ctl:312 src/bin/smbios-wakeup-ctl:127
+#: src/bin/smbios-token-ctl:345 src/bin/smbios-wakeup-ctl:127
 #: src/bin/smbios-wireless-ctl:360 src/bin/smbios-lcd-brightness:127
 #: src/bin/smbios-rbu-bios-update:175
 msgid "ERROR: Could not manipulate system token."
 msgstr "ERROR: Could not manipulate system token."
 
-#: src/bin/smbios-token-ctl:313 src/bin/smbios-wakeup-ctl:128
+#: src/bin/smbios-token-ctl:346 src/bin/smbios-wakeup-ctl:128
 #: src/bin/smbios-wireless-ctl:361 src/bin/smbios-lcd-brightness:128
 #: src/bin/smbios-rbu-bios-update:176
 msgid "The token library returned this error:"
