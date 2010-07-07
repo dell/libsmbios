@@ -408,6 +408,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Fri Jul 06 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.26-1
+- implement CSV export of token settings from smbios-token-ctl
+
+* Fri Jul 06 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.25-1
+- Fix breakage resulting from improperly fixing up constructors for MemoryAccess/CmosAccess. Fixes CLI utilities.
+
 * Fri Jun 11 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.23-1
 - Fixup ABI break where a couple functions that should have been exported were not marked.
 
