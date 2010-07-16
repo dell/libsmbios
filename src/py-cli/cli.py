@@ -11,6 +11,10 @@ import gettext
 t = gettext.translation(GETTEXT_PACKAGE, localedir, fallback=True)
 _ = t.ugettext
 
+# make sure that sys.stdout.write() works ok with UTF-8 data for all translations
+import codecs, locale
+sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+
 standardFailMessage = _("\n\
 Common problems are:\n\
 \n\
