@@ -113,7 +113,9 @@ namespace smbios
         //table->itemList[current] = newitem;
         //  but are more efficient
         pair < const void *, ISmbiosItem * >myPair (ptr, &newitem);
+#ifndef __SUNPRO_CC
         itemList.insert (itemList.begin (), myPair);
+#endif
     }
 
     SmbiosTable::iterator SmbiosTable::begin ()

@@ -1,0 +1,12 @@
+i pkginfo
+d none /usr/bin 0755 root bin
+d none /usr/local/lib 0755 bin bin
+f none /usr/bin/smbios-sys-info=out/smbios-sys-info-lite 0755 root bin
+f none /usr/bin/dellBiosUpdate=out/.libs/dellBiosUpdate-compat 0755 root bin
+f none /usr/local/lib/libsmbios.so.2.1.0=out/.libs/libsmbios.so 0555 root bin
+f none /usr/share/man/man4/smbios-sys-info.4=smbios-sys-info.4 0644 root root
+f none /usr/share/man/man4/dellBiosUpdate.4=dellBiosUpdate.4 0644 root root
+s none /usr/local/lib/libsmbios.so.2=libsmbios.so.2.1.0
+s none /usr/local/lib/libsmbios.so=libsmbios.so.2.1.0
+
+

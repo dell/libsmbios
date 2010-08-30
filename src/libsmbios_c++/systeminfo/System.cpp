@@ -41,6 +41,9 @@
 #include "smbios/message.h"
 
 #if HAVE_CONFIG_H
+#ifdef sun
+#undef _FILE_OFFSET_BITS
+#endif
 #include "config.h"
 #endif
 

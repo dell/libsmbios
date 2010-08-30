@@ -50,6 +50,13 @@ out_libsmbios_la_SOURCES = \
     src/libsmbios_c++/common/miniddk.h			\
     src/libsmbios_c++/common/TokenImpl.h
 
+SOLARIS_SOURCES = \
+    src/libsmbios_c++/cmos/CmosRW_SolarisIO.cpp           \
+    src/libsmbios_c++/memory/Memory_Solaris.cpp           \
+    src/libsmbios_c++/rbu/Rbu_Solaris.cpp                 \
+    src/libsmbios_c++/smbios/SmbiosStrategy_Solaris.cpp   \
+    src/libsmbios_c++/smi/Smi_Solaris.cpp
+
 LINUX_SOURCES = \
     src/libsmbios_c++/cmos/CmosRW_LinuxIO.cpp           \
     src/libsmbios_c++/memory/Memory_Linux.cpp           \
@@ -65,12 +72,15 @@ WINDOWS_SOURCES = \
 
 if BUILD_WINDOWS
 out_libsmbios_la_SOURCES += $(WINDOWS_SOURCES)
-EXTRA_DIST += $(LINUX_SOURCES)
+EXTRA_DIST += $(LINUX_SOURCES) $(SOLARIS_SOURCES)
 endif
 
 if BUILD_LINUX
 out_libsmbios_la_SOURCES += $(LINUX_SOURCES)
-EXTRA_DIST += $(WINDOWS_SOURCES)
+EXTRA_DIST += $(WINDOWS_SOURCES) $(SOLARIS_SOURCES)
 endif
 
-
+if BUILD_SOLARIS
+out_libsmbios_la_SOURCES += $(SOLARIS_SOURCES)
+EXTRA_DIST += $(WINDOWS_SOURCES) $(LINUX_SOURCES)
+endif

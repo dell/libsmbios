@@ -32,7 +32,9 @@
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 // win32:
 #  define LIBSMBIOS_PLATFORM_CONFIG "smbios/config/platform/win32.hpp"
-
+#elif defined(sun)
+// solaris:
+#  define LIBSMBIOS_PLATFORM_CONFIG "smbios/config/platform/solaris.hpp"
 #else
 
 #  if defined (LIBSMBIOS_ASSERT_CONFIG)

@@ -233,7 +233,7 @@ chmod +x ./configure
 
 mkdir -p out/libsmbios_c
 mkdir -p out/libsmbios_c++
-make %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
+make CFLAGS="-Werror" %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
 
 echo \%doc _build/build-%{_arch}.log > buildlogs.txt
 

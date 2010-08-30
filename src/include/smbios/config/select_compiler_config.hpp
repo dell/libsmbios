@@ -30,6 +30,9 @@
 //  Must remain the last #elif since some other vendors (Metrowerks, for
 //  example) also #define _MSC_VER
 #   define LIBSMBIOS_COMPILER_CONFIG "smbios/config/compiler/visualc.hpp"
+#elif defined __SUNPRO_CC
+// Sun Studio Compiler
+#define LIBSMBIOS_COMPILER_CONFIG "smbios/config/compiler/sunpro_cc.hpp"
 
 #elif defined (LIBSMBIOS_ASSERT_CONFIG)
 // this must come last - generate an error if we don't

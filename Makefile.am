@@ -18,13 +18,18 @@ lib_LTLIBRARIES=
 TESTS=
 
 AM_CPPFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
-AM_CFLAGS = -Werror -Wall
-AM_CXXFLAGS = -Werror -Wall
+AM_CFLAGS = -Wall
+AM_CXXFLAGS = -Wall
 AM_LDADD = $(LIBINTL)
-AM_LDFLAGS = -L$(top_builddir)/out/ -Wl,--no-undefined @LDFLAG_AS_NEEDED@
+
+AM_LDFLAGS = -L$(top_builddir)/out/
+
+if BUILD_LINUX
+AM_LDFLAGS += -Wl,--no-undefined @LDFLAG_AS_NEEDED@
+endif
 
 if BUILD_WINDOWS
-AM_LDFLAGS += -Wl,--avoid-version -Wl,--enable-auto-import
+AM_LDFLAGS += --Wl,--no-undefined Wl,--avoid-version -Wl,--enable-auto-import
 endif
 
 include Makefile-std

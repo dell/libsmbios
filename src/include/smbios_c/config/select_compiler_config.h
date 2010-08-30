@@ -31,6 +31,10 @@
 //  example) also #define _MSC_VER
 #   define LIBSMBIOS_C_COMPILER_CONFIG "smbios_c/config/compiler/visualc.h"
 
+#elif defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+// Sun Studio Compiler
+#define LIBSMBIOS_C_COMPILER_CONFIG "smbios_c/config/compiler/sunpro_cc.h"
+
 #elif defined (LIBSMBIOS_C_ASSERT_CONFIG)
 // this must come last - generate an error if we don't
 // recognise the compiler:

@@ -24,7 +24,14 @@
 #include <iomanip>
 #include <string.h> // memset
 #include <stdlib.h>
-#include <sys/io.h>
+
+#ifdef sun
+#  include <sys/sysi86.h>
+#  include <sys/smbios.h>
+#  define iopl(x) sysi86(SI86V86, V86SC_IOPL, 0x3000)
+#else
+#  include <sys/io.h>
+#endif
 
 #include "smbios/ISmbios.h"
 #include "smbios/IMemory.h"  // only needed if you want to use fake input (memdump.dat)
@@ -42,6 +49,10 @@
 #endif
 
 using namespace std;
+
+#if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
+#define __asm__ asm
+#endif
 
 struct options opts[] =
     {

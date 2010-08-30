@@ -33,7 +33,7 @@
 using namespace std;
 
 // convenience function.
-#define _X( expr ) do{ try {  expr } catch( const std::exception & ){} }while(0)
+#define _XXX( expr ) do{ try {  expr } catch( const std::exception & ){} }while(0)
 
 namespace smbios
 {
@@ -61,15 +61,15 @@ namespace smbios
     {
         int systemId = 0;
 
-        _X( systemId = getU8_FromItem( *(*table)[ Dell_Revisions_and_IDs ], 0x06 ); );
+        _XXX( systemId = getU8_FromItem( *(*table)[ Dell_Revisions_and_IDs ], 0x06 ); );
         if( 0xFE == systemId )
-            _X(systemId = getU16_FromItem(*(*table)[ Dell_Revisions_and_IDs ], 0x08 ););
+            _XXX(systemId = getU16_FromItem(*(*table)[ Dell_Revisions_and_IDs ], 0x08 ););
 
         const char * chBiosVersion = 0;
 
         std::string biosVersion = "";
 
-        _X( chBiosVersion = getString_FromItem(*(*table)[ BIOS_Information ], 0x05 ); );
+        _XXX( chBiosVersion = getString_FromItem(*(*table)[ BIOS_Information ], 0x05 ); );
 
         if ( 0 != chBiosVersion )
             biosVersion = chBiosVersion;

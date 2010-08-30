@@ -64,6 +64,23 @@ out_smbios_upflag_ctl_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
 # C++
 #
 if BUILD_LIBSMBIOS_CXX
+if BUILD_SOLARIS
+sbin_PROGRAMS += out/dellLEDCtl
+out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
+out_dellLEDCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
+
+if BUILD_MEDIA_DIRECT
+sbin_PROGRAMS += out/dellMediaDirectCtl
+out_dellMediaDirectCtl_SOURCES = src/bin/dellMediaDirectCtl.cpp
+out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
+endif
+
+# dellBiosUpdate uses private headers... this is bad.
+sbin_PROGRAMS += out/dellBiosUpdate-compat
+out_dellBiosUpdate_compat_SOURCES = src/bin/dellBiosUpdate.cpp
+out_dellBiosUpdate_compat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
+out_dellBiosUpdate_compat_CPPFLAGS = $(AM_CPPFLAGS) -Isrc/libsmbios_c++/common
+endif
 if BUILD_LINUX
 sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
@@ -82,4 +99,3 @@ out_dellBiosUpdate_compat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 out_dellBiosUpdate_compat_CPPFLAGS = $(AM_CPPFLAGS) -Isrc/libsmbios_c++/common
 endif
 endif
-

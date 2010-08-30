@@ -46,7 +46,7 @@ namespace rbu
     // rbu_linux_v0: Linux 2.4
     // rbu_linux_v1: 2.6 dkms
     // rbu_linux_v2: 2.6.14+
-    typedef enum { rbu_unsupported, rbu_linux_v0, rbu_linux_v1, rbu_linux_v2 } driver_type;
+    typedef enum { rbu_unsupported, rbu_linux_v0, rbu_linux_v1, rbu_linux_v2, rbu_solaris } driver_type;
 
     const int SYSID_OVERRIDE = 1;
     const int BIOSVER_OVERRIDE = 2;
