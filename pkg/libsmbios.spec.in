@@ -111,7 +111,7 @@ BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cpp
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
 Obsoletes: %{other_name} <= 0:%{version}-%{release}
-Provides: %{other_name}  0:%{version}-%{release}
+Provides: %{other_name} = 0:%{version}-%{release}
 
 # libsmbios only ever makes sense on intel compatible arches
 # no DMI tables on ppc, s390, etc.
