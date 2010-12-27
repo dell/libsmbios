@@ -1,6 +1,32 @@
+Dependencies:
+
+To build a libsmbios tarball, you will need the following dependencies, in whichever -devel package convention in use by your distribution:
+  -- libxml
+
+When building from a git-checkout, you will need the following additional dependencies
+    -- autoconf
+    -- automake
+    -- gettext
+    -- libtool
+
+MANDRIVA NOTE: The following is the package list required for Mandriva, submitted by a user:
+
+    urpmi gcc-c++
+    urpmi git
+    urpmi autoconf
+    urpmi automake
+    urpmi autopoint
+    urpmi gettext
+    urpmi gettext-autopoint
+    urpmi gettext-tools
+    urpmi gettext-devel
+    urpmi libtool
+    urpmi libxml
+    urpmi libxml2-devel
+
 To Build:
 
-Standard autotools package:
+Libmsbios is a standard autotools package. Build it like any autotools package:
   $ ./configure
   $ make
 
