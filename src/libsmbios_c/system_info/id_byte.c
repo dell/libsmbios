@@ -122,7 +122,7 @@ __hidden u16 getIdByteFromOEMItem ()
     // search through 0x0B (OEM_Strings_Structure) items
     smbios_for_each_struct_type( s, OEM_Strings ) {
         const char *str = smbios_struct_get_string_number(s, OEM_String_Field_Number);
-        if ((!str) && (0 != strncmp (str, Bayonet_Detect_String, strlen(Bayonet_Detect_String))))
+        if ((!str) || (0 != strncmp (str, Bayonet_Detect_String, strlen(Bayonet_Detect_String))))
             continue;
 
         //  Id byte is in second string in table 0x0B
@@ -155,8 +155,6 @@ __hidden u16 get_id_byte_from_rev_and_id_structure ()
     return idWord;
 }
 
-//The code for detecting ID byte in case of Diamond is left out.
-//  need to write a function for it.
 static struct DellIdByteFunctions
 {
     u16 (*f_ptr)();
