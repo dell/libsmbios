@@ -27,6 +27,7 @@
 
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/system_info.h"
+#include "smbios_c/smbios.h"
 
 #include "getopts.h"
 
@@ -140,6 +141,19 @@ main (int argc, char **argv)
     sysinfo_string_free(str);
 
     printf(_("Is Dell:      %d\n"), (sysid!=0));
+
+    // Print out all the OEM strings
+    // 0x0B is the OEM Strings smbios structure
+    smbios_for_each_struct_type(s, 0x0B) {
+        const char *str = 0;
+        int i=1; // SMBIOS strings always start at index 1.
+        while(1) {
+            str = smbios_struct_get_string_number(s, i);
+            if(!str) break;
+            printf(_("OEM String %d: %s\n"), i, str);
+            i++;
+        }
+    }
 
     return retval;
 }
