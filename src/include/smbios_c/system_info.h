@@ -40,8 +40,30 @@ LIBSMBIOS_C_DLL_SPEC int smbios_get_library_version_minor();
 /** The Dell System ID is a unique number allocated to each Dell System
  * (server, desktop, workstation, or laptop) that uniquely identifies that
  * system within Dell's product line.
+ *
+ * This function always returns the Dell specific system ID for the system.
+ * To get the OEM sytem id, see the next function
  */
 LIBSMBIOS_C_DLL_SPEC  int  sysinfo_get_dell_system_id();
+
+
+//! Return the Dell OEM System ID Byte or Word
+/** The Dell System ID is a unique number allocated to each Dell System
+ * (server, desktop, workstation, or laptop) that uniquely identifies that
+ * system within Dell's product line.
+ *
+ * For systems manufactured by Dell and sold through other resellers as OEM
+ * systems, they may assign a different system ID from the Dell system ID.
+ * This function will always return the OEM ID, if present. If not present,
+ * it will fall back to the Dell manufacturer ID.
+ *
+ * To see if a system is OEM, check:
+ *      if (sysinfo_get_dell_oem_system_id() == sysinfo_get_dell_system_id())
+ *          system_is_dell=1;
+ *      else
+ *          system_is_dell_oem=1;
+ */
+LIBSMBIOS_C_DLL_SPEC  int  sysinfo_get_dell_oem_system_id();
 
 /** Return a buffer containing the system vendor name.
  * Return value *must* be de-allocated using sysinfo_string_free(), or memory
