@@ -46,7 +46,7 @@ int
 main (int argc, char **argv)
 {
     int retval = 0;
-    int sysid = 0;
+    int reseller_sysid = 0, sysid = 0;
     char *str;
 
     setlocale(LC_ALL, "");
@@ -77,7 +77,7 @@ main (int argc, char **argv)
 
     printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
 
-    //Error handline needs to be implemented for each of these functions
+    //Error handling needs to be implemented for each of these functions
     sysid     = sysinfo_get_dell_system_id();
     if(sysid)
         printf(_("System ID:    0x%04X\n"), sysid);
@@ -85,6 +85,18 @@ main (int argc, char **argv)
     {
         printf(_("Error getting the System ID:    unknown error.\n"));
         retval = 1;
+    }
+
+    reseller_sysid     = sysinfo_get_dell_oem_system_id();
+    if(reseller_sysid != sysid)
+    {
+        if(reseller_sysid)
+            printf(_("OEM System ID:    0x%04X\n"), reseller_sysid);
+        else
+        {
+            printf(_("Error getting the System ID:    unknown error.\n"));
+            retval = 1;
+        }
     }
 
     str    = sysinfo_get_service_tag();
@@ -142,6 +154,7 @@ main (int argc, char **argv)
 
     printf(_("Is Dell:      %d\n"), (sysid!=0));
 
+#if 0
     // Print out all the OEM strings
     // 0x0B is the OEM Strings smbios structure
     smbios_for_each_struct_type(s, 0x0B) {
@@ -154,6 +167,7 @@ main (int argc, char **argv)
             i++;
         }
     }
+#endif
 
     return retval;
 }
