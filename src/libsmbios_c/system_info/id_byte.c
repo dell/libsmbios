@@ -116,29 +116,59 @@ out:
 }
 
 
-__hidden u16 getIdByteFromOEMItem ()
+__hidden const char * get_dell_oem_string_by_tag (int tag)
 {
-    u16 idWord = 0;
     // search through 0x0B (OEM_Strings_Structure) items
     smbios_for_each_struct_type( s, OEM_Strings ) {
-        const char *str = smbios_struct_get_string_number(s, OEM_String_Field_Number);
-        if ((!str) || (0 != strncmp (str, Bayonet_Detect_String, strlen(Bayonet_Detect_String))))
+        // first string must be "Dell System" per spec
+        const char *str = smbios_struct_get_string_number(s, 1);
+        if ((!str) || (0 != strncmp (str, DELL_SYSTEM_STRING, strlen(DELL_SYSTEM_STRING)))) {
+            str = 0;
             continue;
+        }
 
-        //  Id byte is in second string in table 0x0B
-        //  the format is "1[NN]", where NN is the idbyte;
-        //  note the &str[2] below to skip the 'n['
-        str = smbios_struct_get_string_number(s, 2);
-        if(str && strlen(str) > 3 && str[0] == '1' && str[1] == '[')
-            idWord = strtol( &str[2], NULL, 16 );
-
-        if (idWord)
-            break;
+        int i=2; // start searching string table from second string (first was searched above)
+        while ( (str = smbios_struct_get_string_number(s, i++)) ){
+            char *endptr = 0;
+            long strtag = strtol(str, &endptr, 10);
+            if(strlen(str) > 3 && strtag == tag && endptr[0] == '[')
+                return str;
+        }
     }
+    return 0;
+}
+
+__hidden u16 get_dell_id_byte_from_oem_item ()
+{
+    u16 idWord = 0;
+    // Tag # for oem string table Dell ID tag is '1'
+    // see docs for dell oem strings table (0x0b)
+    const char *str = get_dell_oem_string_by_tag(1);
+
+    //  Id byte is in second string in table 0x0B
+    //  the format is "1[NN]", where NN is the idbyte;
+    //  note the &str[2] below to skip the 'n['
+    if(str && strlen(str) > 3 && str[0] == '1' && str[1] == '[')
+        idWord = strtol( &str[2], NULL, 16 );
 
     return idWord;
 }
 
+__hidden u16 get_oem_id_byte_from_oem_item ()
+{
+    u16 idWord = 0;
+    // Tag # for oem string table reseller ID tag is '7'
+    // see docs for dell oem strings table (0x0b)
+    const char *str = get_dell_oem_string_by_tag(7);
+
+    //  Id byte is in second string in table 0x0B
+    //  the format is "1[NN]", where NN is the idbyte;
+    //  note the &str[2] below to skip the 'n['
+    if(str && strlen(str) > 3 && str[0] == '7' && str[1] == '[')
+        idWord = strtol( &str[2], NULL, 16 );
+
+    return idWord;
+}
 
 __hidden u16 get_id_byte_from_rev_and_id_structure ()
 {
@@ -157,23 +187,51 @@ __hidden u16 get_id_byte_from_rev_and_id_structure ()
 
 static struct DellIdByteFunctions
 {
+    const char *const name;
     u16 (*f_ptr)();
 }
 DellIdByteFunctions[] = {
-                            {&get_id_byte_from_mem,},       // normal system -- try this last always.
+        {"get_id_byte_from_mem_diamond", &get_id_byte_from_mem_diamond,},
+        {"get_dell_id_byte_from_oem_item", &get_dell_id_byte_from_oem_item,},  // 0x0b structure, tag 1
+        {"get_id_byte_from_rev_and_id_structure", &get_id_byte_from_rev_and_id_structure,}, // 0xd0 structure
+        {"get_id_byte_from_mem", &get_id_byte_from_mem,},
+    };
+
+static struct DellIdByteFunctions
+DellOemIdByteFunctions[] = {
+        {"get_id_byte_from_mem_diamond", &get_id_byte_from_mem_diamond,}, // diamond is old and never oem, so this is safe
+        // try to get OEM ID first
+        {"get_oem_id_byte_from_oem_item", &get_oem_id_byte_from_oem_item,},  // 0x0b structure, tag 7
+        // on older systems, the id in the rev and id structure got replaced with OEM ID
+        {"get_id_byte_from_rev_and_id_structure", &get_id_byte_from_rev_and_id_structure,}, // 0xd0 structure
+        // on older systems, the id in mem structure got replaced with OEM ID
+        {"get_id_byte_from_mem", &get_id_byte_from_mem,},
+        // then fall back to Dell ID if OEM ID not present
+        // This will never hit, as one of the previous two functions will always
+        // return a value before we get to here. But better safe than sorry
+        {"get_dell_id_byte_from_oem_item", &get_oem_id_byte_from_oem_item,},  // 0x0b structure, tag 1
+    };
 
 
-                            {&getIdByteFromOEMItem,},   // bayonet
-                            {&get_id_byte_from_mem_diamond,}, // diamond
+LIBSMBIOS_C_DLL_SPEC int sysinfo_get_dell_oem_system_id()
+{
+    int systemId = 0;
+    int numEntries =
+        sizeof (DellOemIdByteFunctions) / sizeof (DellOemIdByteFunctions[0]);
 
-                            // do this last because this may contain an OEM id
-                            // do this as a last resort because it is
-                            // unreliable.
-                            {&get_id_byte_from_rev_and_id_structure,},   // Dell Smbios Revisions and ID's struct
-                        };
+    sysinfo_clearerr();
+    for (int i = 0; i < numEntries; ++i)
+    {
+        fnprintf("calling id_byte function: %s\n", DellIdByteFunctions[i].name);
+        // first function to return non-zero id wins.
+        systemId = DellOemIdByteFunctions[i].f_ptr ();
 
+        if (systemId)
+            break;
+    }
 
-
+    return systemId;
+}
 
 LIBSMBIOS_C_DLL_SPEC int sysinfo_get_dell_system_id()
 {
@@ -184,6 +242,7 @@ LIBSMBIOS_C_DLL_SPEC int sysinfo_get_dell_system_id()
     sysinfo_clearerr();
     for (int i = 0; i < numEntries; ++i)
     {
+        fnprintf("calling id_byte function: %s\n", DellIdByteFunctions[i].name);
         // first function to return non-zero id wins.
         systemId = DellIdByteFunctions[i].f_ptr ();
 

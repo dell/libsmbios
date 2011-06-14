@@ -40,8 +40,8 @@
 #define Cmos_Service_Token                          0xC003
 #define OEM_Strings                                 11
 #define Dell_Revisions_and_IDs                      0xD0
-#define OEM_String_Field_Number                     1
-#define Bayonet_Detect_String                       "Dell System"
+#define OEM_String_Dell_System_ID_Tag               1
+#define OEM_String_Reseller_System_ID_Tag           7
 #define DELL_SYSTEM_STRING_LOC                      0xFE076
 #define DELL_SYSTEM_STRING                          "Dell System"
 #define DELL_SYSTEM_STRING_LEN                      12
