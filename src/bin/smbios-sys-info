@@ -103,7 +103,11 @@ def main():
             label = info[0]
             sys.stdout.write( "%s:" % label)
             sys.stdout.write( " " * (maxlen-len(label)))
-            sys.stdout.write( "%s\n" % info[1]() )
+            try:
+                sys.stdout.write( "%s\n" % info[1]() )
+            except Exception, e:
+                sys.stdout.write( "%s\n" % e )
+
 
         if options.set:
             print
