@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
 "Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
-"POT-Creation-Date: 2010-07-06 15:47-0500\n"
+"POT-Creation-Date: 2011-06-14 22:08-0500\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Chinese (simplified)\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=GB2312\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,15 +41,15 @@ msgstr ""
 msgid "Owner password"
 msgstr ""
 
-#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:116
-#: src/bin/smbios-token-ctl:339 src/bin/smbios-wakeup-ctl:120
+#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:120
+#: src/bin/smbios-token-ctl:425 src/bin/smbios-wakeup-ctl:120
 #: src/bin/smbios-wireless-ctl:353 src/bin/smbios-lcd-brightness:120
 #: src/bin/smbios-rbu-bios-update:169
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
-#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:117
-#: src/bin/smbios-token-ctl:340 src/bin/smbios-wakeup-ctl:121
+#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:121
+#: src/bin/smbios-token-ctl:426 src/bin/smbios-wakeup-ctl:121
 #: src/bin/smbios-wireless-ctl:354 src/bin/smbios-lcd-brightness:121
 #: src/bin/smbios-rbu-bios-update:170
 msgid "The smbios library returned this error:"
@@ -114,7 +115,7 @@ msgstr ""
 msgid "Current tag value:"
 msgstr ""
 
-#: src/bin/smbios-sys-info:110
+#: src/bin/smbios-sys-info:114
 #, c-format
 msgid "Setting new tag value: %s"
 msgstr ""
@@ -177,10 +178,11 @@ msgstr ""
 
 #: src/bin/smbios-token-ctl:119 src/bin/smbios-token-ctl:120
 #: src/bin/smbios-token-ctl:121 src/bin/smbios-token-ctl:122
+#: src/bin/smbios-token-ctl:287
 msgid "unknown"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:163
+#: src/bin/smbios-token-ctl:163 src/bin/smbios-token-ctl:345
 msgid "Ignoring parsing error in CSV file:"
 msgstr ""
 
@@ -216,53 +218,161 @@ msgstr ""
 msgid "   Desc: "
 msgstr ""
 
-#: src/bin/smbios-token-ctl:272
+#: src/bin/smbios-token-ctl:268
+#, c-format
+msgid "Importing token values from '%s'"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:276
+#, c-format
+msgid ""
+"File format error. The first line should list the column names. Could not "
+"find the %s column"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:277
+msgid "Cannot continue, exiting."
+msgstr ""
+
+#: src/bin/smbios-token-ctl:288
+#, c-format
+msgid "Not importing token that is unknown: 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:293
+#, c-format
+msgid ""
+"INFO: token 0x%04x settings file name does not match my DB. Applying setting "
+"anyways."
+msgstr ""
+
+#: src/bin/smbios-token-ctl:294 src/bin/smbios-token-ctl:299
+#, c-format
+msgid "\tsettings file: %s"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:295 src/bin/smbios-token-ctl:300
+#, c-format
+msgid "\tDB name      : %s"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:298
+#, c-format
+msgid ""
+"INFO: token 0x%04x settings file setting-name does not match my DB. Applying "
+"setting anyways."
+msgstr ""
+
+#: src/bin/smbios-token-ctl:304
+#, c-format
+msgid ""
+"SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but "
+"it doesnt pass bool check."
+msgstr ""
+
+#: src/bin/smbios-token-ctl:309
+#, c-format
+msgid "Importing setting for token (active): 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:312
+#, c-format
+msgid "Token already correct (bool, active): 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:315
+#, c-format
+msgid ""
+"Info: Cannot de-activate tokens, can only activate the contrapositive. (0x"
+"%04x == false)"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:317
+#, c-format
+msgid "Token already correct (bool, inactive): 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:319
+#, c-format
+msgid ""
+"UNEXPECTED VALUE: Bool token should only ever have values of 'true' or "
+"'false', but token 0x%04x tries to set value '%s'"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:324
+#, c-format
+msgid ""
+"SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, "
+"but it doesnt pass string check."
+msgstr ""
+
+#: src/bin/smbios-token-ctl:328
+#, c-format
+msgid "Importing setting for token (string): 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:331
+#, c-format
+msgid "Token already correct (string=='%s'): 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:334
+#, c-format
+msgid "Not importing token which is inapplicable to this system: 0x%04x"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:339
+#, c-format
+msgid "Not importing blacklisted token 0x%04x. Reason: %s"
+msgstr ""
+
+#: src/bin/smbios-token-ctl:358
 msgid "require token-id or token name/setting pair."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:283
+#: src/bin/smbios-token-ctl:369
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:315
+#: src/bin/smbios-token-ctl:401
 msgid "Original Value"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:316
+#: src/bin/smbios-token-ctl:402
 #, c-format
 msgid "       token: 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:317 src/bin/smbios-token-ctl:334
+#: src/bin/smbios-token-ctl:403 src/bin/smbios-token-ctl:420
 #, c-format
 msgid "        type: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:318 src/bin/smbios-token-ctl:335
+#: src/bin/smbios-token-ctl:404 src/bin/smbios-token-ctl:421
 #, c-format
 msgid "       value: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:322
+#: src/bin/smbios-token-ctl:408
 msgid "Setting string value ..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:324 src/bin/smbios-token-ctl:330
+#: src/bin/smbios-token-ctl:410 src/bin/smbios-token-ctl:416
 msgid "New value"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:328
+#: src/bin/smbios-token-ctl:414
 msgid "Activating token..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:345 src/bin/smbios-wakeup-ctl:127
+#: src/bin/smbios-token-ctl:431 src/bin/smbios-wakeup-ctl:127
 #: src/bin/smbios-wireless-ctl:360 src/bin/smbios-lcd-brightness:127
 #: src/bin/smbios-rbu-bios-update:175
 msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:346 src/bin/smbios-wakeup-ctl:128
+#: src/bin/smbios-token-ctl:432 src/bin/smbios-wakeup-ctl:128
 #: src/bin/smbios-wireless-ctl:361 src/bin/smbios-lcd-brightness:128
 #: src/bin/smbios-rbu-bios-update:176
 msgid "The token library returned this error:"
@@ -868,7 +978,7 @@ msgid "RBU Bios Update not supported on this system."
 msgstr ""
 
 #: src/bin/smbios-upflag-ctl.c:49 src/bin/smbios-get-ut-data.c:55
-#: src/bin/smbios-sys-info-lite.c:39 src/bin/smbios-state-byte-ctl.c:47
+#: src/bin/smbios-sys-info-lite.c:40 src/bin/smbios-state-byte-ctl.c:47
 msgid "Debug: Memory dump file to use instead of physical memory"
 msgstr ""
 
@@ -886,11 +996,11 @@ msgid "Set Boot To UP Flag to false"
 msgstr ""
 
 #: src/bin/smbios-upflag-ctl.c:54 src/bin/smbios-get-ut-data.c:56
-#: src/bin/smbios-sys-info-lite.c:40
+#: src/bin/smbios-sys-info-lite.c:41
 msgid "Display libsmbios version information"
 msgstr ""
 
-#: src/bin/smbios-upflag-ctl.c:87 src/bin/smbios-sys-info-lite.c:68
+#: src/bin/smbios-upflag-ctl.c:87 src/bin/smbios-sys-info-lite.c:69
 #, c-format
 msgid "Libsmbios version:    %s\n"
 msgstr ""
@@ -906,7 +1016,7 @@ msgid "UP Boot Flag NOT SET\n"
 msgstr ""
 
 #: src/bin/smbios-get-ut-data.c:84 src/bin/smbios-get-ut-data.c:93
-#: src/bin/smbios-sys-info-lite.c:77
+#: src/bin/smbios-sys-info-lite.c:78
 #, c-format
 msgid "Libsmbios:    %s\n"
 msgstr ""
@@ -946,74 +1056,84 @@ msgstr ""
 msgid "error dumping table\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:82
+#: src/bin/smbios-sys-info-lite.c:83
 #, c-format
 msgid "System ID:    0x%04X\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:85
+#: src/bin/smbios-sys-info-lite.c:86 src/bin/smbios-sys-info-lite.c:97
 #, c-format
 msgid "Error getting the System ID:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:92
+#: src/bin/smbios-sys-info-lite.c:94
+#, c-format
+msgid "OEM System ID:    0x%04X\n"
+msgstr ""
+
+#: src/bin/smbios-sys-info-lite.c:105
 #, c-format
 msgid "Service Tag:  %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:93
+#: src/bin/smbios-sys-info-lite.c:106
 #, c-format
 msgid "Express Service Code: %lld\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:97
+#: src/bin/smbios-sys-info-lite.c:110
 #, c-format
 msgid "Error getting the Service Tag:  unknown error\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:104
+#: src/bin/smbios-sys-info-lite.c:117
 #, c-format
 msgid "Aset Tag:  %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:107
+#: src/bin/smbios-sys-info-lite.c:120
 #, c-format
 msgid "Error getting the Aset Tag:  unknown error\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:114
+#: src/bin/smbios-sys-info-lite.c:127
 #, c-format
 msgid "Product Name: %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:117
+#: src/bin/smbios-sys-info-lite.c:130
 #, c-format
 msgid "Error getting the System Name:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:124
+#: src/bin/smbios-sys-info-lite.c:137
 #, c-format
 msgid "BIOS Version: %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:127
+#: src/bin/smbios-sys-info-lite.c:140
 #, c-format
 msgid "Error getting the BIOS Version:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:134
+#: src/bin/smbios-sys-info-lite.c:147
 #, c-format
 msgid "Vendor:       %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:137
+#: src/bin/smbios-sys-info-lite.c:150
 #, c-format
 msgid "Error getting the Vendor:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:142
+#: src/bin/smbios-sys-info-lite.c:155
 #, c-format
 msgid "Is Dell:      %d\n"
+msgstr ""
+
+#: src/bin/smbios-sys-info-lite.c:166
+#, c-format
+msgid "OEM String %d: %s\n"
 msgstr ""
 
 #: src/bin/smbios-state-byte-ctl.c:49

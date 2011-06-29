@@ -1,0 +1,816 @@
+"Token Value","Attribute Name","Attribute Setting","Description","Spec","Request"
+"0000","Start of Table",,"Start-of-table indicator.",,
+"0001","ACPI Mode","Enable","Enable the system to operate in ACPI mode",,
+"0002","ACPI Mode","Disable","Disable the system???s ACPI mode. The system then operates in ???legacy??? mode.",,
+"0003","IDE","Auto","Enable the auto-configuration of the system???s built-in IDE controller.",,
+"0004","IDE","Off","Disable the system???s built-in IDE controller, making IRQ14 and IRQ15 resources available.",,
+"0005","Serial Port 1","COM2","Configure the system???s first/only built-in serial port to respond as COM2.",,
+"0006","Serial Port 1","COM4","Configure the system???s first/only built-in serial port to respond as COM4.",,
+"0007","Parallel Port","Disable","Disable the system???s built-in parallel port",,
+"0008","Parallel Port","LPT1","Enables the system???s built-in parallel port to operate in LPT1 mode, using I/O address 378.",,
+"0009","Parallel Port","LPT2","Enables the system???s built-in parallel port to operate in LPT2 mode, using I/O address 278.",,
+"000A","Parallel Port","LPT3","Enables the system???s built-in parallel port to operate in LPT3 mode, using I/O address 3BC.",,
+"000B","Parallel Port Mode","AT","Enables the system???s built-in parallel port to operate in AT mode (output-only).",,
+"000C","Parallel Port Mode","PS/2","Enables the system???s built-in parallel port to operate in PS/2 mode (bi-directional).",,
+"000D","Parallel Port Mode","ECP, No DMA","Enables the system???s built-in parallel port to operate in ECP mode, no DMA channel assigned (see 00A6h & 00A7h to assign DMA channels).",,
+"000E","Parallel Port Mode","EPP","Enables the system???s built-in parallel port to operate in EPP mode (not valid at address LPT3, 3BC).",,
+"000F","Serial Port 1","Disable","Disable the system???s first (or only) built-in serial port.",,
+"0010","Serial Port 1","Auto","Enable the auto-configuration of the system???s first/only built-in serial port.",,
+"0011","Serial Port 1","COM1","Configure the system???s first/only built-in serial port to respond as COM1",,
+"0012","Serial Port 1","COM3","Configure the system???s first/only built-in serial port to respond as COM3",,
+"0013","Serial Port 2","Disable","Disable the system???s second built-in serial port",,
+"0014","Serial Port 2","Auto","Enable the auto-configuration of the system???s second built-in serial port",,
+"0015","Serial Port 2","COM2","Configure the system???s second built-in serial port to respond as COM2",,
+"0016","Serial Port 2","COM4","Configure the system???s second built-in serial port to respond as COM4",,
+"0017","Floppy-A","Top","Sets the system???s ???first??? floppy drive to be the topmost one.",,
+"0018","Floppy-A","Bottom","Sets the system???s ???first??? floppy drive to be the bottom one.",,
+"0019","Built-in Floppy","Disable","Disables the system???s built-in floppy controller",,
+"001A","Built-in Floppy","Auto","Enables the auto-configuration of the system???s built-in floppy controller",,
+"001B","Built-in Floppy","Read-only","Cause the system???s floppy controller to become read-only, no write operations are permitted",,
+"001C","Built-in pointing device","Enable","Enable the built-in pointing device (a.k.a. mouse) port.",,
+"001D","Built-in pointing device","Disable","Disable the built-in pointing device port",,
+"001E","Speaker","Disable","Disable the built-in speaker.",,
+"001F","Speaker","Low","Enable the built-in speaker, at a low volume",,
+"0020","Speaker","Medium","Enable the built-in speaker, at a medium volume",,
+"0021","Speaker","High","Enable the built-in speaker, at a high volume",,
+"0022","Sound Device","Enable","Enable the system???s built-in sound device",,
+"0023","Sound Device","Disable","Disable the system???s built-in sound device",,
+"0024","Power Management","Disable","Disable the system???s power-management capabilities",,
+"0025","Power Management","Minimum","Enable the system???s minimum power-management capabilities",,
+"0026","Power Management","Regular","Enable the system???s regular power-management capabilities",,
+"0027","Power Management","Maximum","Enable the system???s maximum power-management capabilities",,
+"0028","Auto-on","Disable","Disable the system???s auto-on capabilities",,
+"0029","Auto-on","Every Day","Enable the system???s auto-on capabilities every day of the week",,
+"002A","Auto-on","Weekdays","Enable the system???s auto-on capabilities for the weekdays (Monday through Friday) only.",,
+"002B","Auto-on Hour","n/a","Sets the hour at which the system is to power on, if enabled. The value is specified in 24-hour BCD, i.e. if the system is to power on at 11:59pm this attribute is set to 23h",,
+"002C","Auto-on Minute","n/a","Sets the minute at which the system is to power on, if enabled. The value is specified in BCD, i.e. if the system is to power on at 11:59pm this attribute is set to 59h.",,
+"002D","Embedded NIC1","Enable with PXE","Enable the system???s primary embedded network interface controller (full-function), including its PXE boot-ROM.",,
+"002E","Embedded NIC1","Disable","Disable the system???s primary embedded network interface controller.",,
+"002F","Infrared Location","Front","The built-in IR device, if enabled, transmits out the front of the unit",,
+"0030","Infrared Location","Back","The built-in IR device, if enabled, transmits out the back of the unit",,
+"0031","Infrared Device","Disable","Disable the built-in IR device",,
+"0032","Infrared Device","COM1","Enable the built-in IR device, using COM1 resources",,
+"0033","Infrared Device","COM2","Enable the built-in IR device, using COM2 resources",,
+"0034","Infrared Device","COM3","Enable the built-in IR device, using COM3 resources",,
+"0035","Infrared Device","COM4","Enable the built-in IR device, using COM4 resources",,
+"0036","Replicator SCSI","Enable","Report the port replicator???s SCSI resources, regardless of whether the replicator is present.",,
+"0037","Replicator SCSI","Disable","Don???t include the port replicator???s SCSI resources if the replicator is not present.",,
+"0038","Replicator NIC","Enable","Report the port replicator???s NIC resources, regardless of whether the replicator is present",,
+"0039","Replicator NIC","Disable","Don???t include the port replicator???s NIC resources if the replicator is not present",,
+"003A","Monitor Toggling","Enable","Enable monitor toggling",,
+"003B","Monitor Toggling","Disable","Disable monitor toggling",,
+"003C","PC Card 1 Slot","Enable","Enable the upper PC Card slot",,
+"003D","PC Card 1 Slot","Disable","Disable the upper PC Card slot",,
+"003E","PC Card 2 Slot","Enable","Enable the lower PC Card slot",,
+"003F","PC Card 2 Slot","Disable","Disable the lower PC Card slot",,
+"0040","Keyboard Click","Enable","Enable the keyboard to ???click??? each time a key is pressed",,
+"0041","Keyboard Click","Disable","Disable the keyboard-click feature.",,
+"0042","Num Lock","Enable","Enables the Num Lock key to be active each time the system boots",,
+"0043","Num Lock","Disable","Disables the Num Lock key each time the system boots",,
+"0044","SCSI 1","Enable","Enables the first built-in SCSI controller",,
+"0045","SCSI 1","Disable","Disables the first built-in SCSI controller",,
+"0046","SCSI 2","Enable","Enables the second built-in SCSI controller",,
+"0047","SCSI 2","Disable","Disables the second built-in SCSI controller",,
+"0048","Memory Cache","Enable","Enables the memory cache for all installed processors",,
+"0049","Memory Cache","Disable","Disables the memory cache for all installed processors",,
+"004A","PCI Scan Order","Onboard First","Causes the BIOS to scan onboard devices first on each boot.",,
+"004B","PCI Scan Order","Slot First","Causes the BIOS to scan add-in devices first on each boot",,
+"004C","Backup Reminder","Enable","Enable the boot-time system backup reminder",,
+"004D","Backup Reminder","Disable","Disable the boot-time system backup reminder",,
+"004E","Virus Check at boot","Enable","Enable the boot-time virus checking",,
+"004F","Virus Check at boot","Disable","Disable the boot-time virus checking",,
+"0050","Speaker","Enable","Enable the built-in speaker. The speaker is enabled at the single system-supported volume.",,
+"0051","Boot Sequence","Diskette First","For the next system boot, set the IPL priority to: diskette, hard drive, IDE CD-ROM, option ROMs (if the devices are available)",,
+"0052","Boot Sequence","Hard Disk Only","For the next system boot, set the IPL priority to: hard drive then option ROMs (if the devices are available)",,
+"0053","Boot Sequence","Device List","For the next system boot, set the IPL priority to: diskette, IDE CD-ROM, hard drive, option ROMs (if the devices are available)",,
+"0054","Boot Sequence","CD-ROM First","For the next system boot, set the IPL priority to: IDE CD-ROM, diskette, hard drive, option ROMs (if the devices are available)",,
+"0055","Wake-on-LAN","Disabled","The system will not respond to magic packets or other means of wake-on-LAN. The NIC chip section that looks for packets will not be powered.",,
+"0056","Wake-on-LAN","Add-in-card","Any NIC plugged into an expansion slot will be enabled for Wake-on-LAN. There's only one small white NIC power connector per riser, so if the user has two or more add-in NICs, whichever one is plugged into the special power connector is the source of any Wake-on-LAN signal.",,
+"0057","Wake-on-LAN","On-board","The on-board NIC is enabled for Wake-on-LAN.",,
+"0058","Management Driver","Present","Internal use by system managment software"
+"0059","Management Driver","Absent","Internal use by system managment software."
+"005A","Reset Button","Enable","The system???s reset button, if pressed, is enabled to perform a hardware reset of the system.",,
+"005B","Reset Button","Disable","The system???s reset button, if pressed, will not perform a hardware reset of the system.",,
+"005C","Remote BIOS Update","Enable","Internal use by BIOS update utility."
+"005D","Remote BIOS Update","Disable","Internal use by BIOS update utility."
+"005E","Universal Connect","Enable","Prohibits Win95 from re-enumerating every time a new dock device is attached to the system.",,
+"005F","Universal Connect","Disable","Allows Win95 to re-enumerate every time a new dock device is attached to the system.",,
+"0060","Infrared Mode","Fast","The system IR port receives in Fast IR Mode.",,
+"0061","Infrared Mode","Slow","The system IR port receives in Slow IR Mode.",,
+"0062","Audio Mode","Disabled","Completely unassigns the onboard audio hardware resources.",,
+"0063","Audio Mode","Half Duplex","Enables the onboard audio to either record or playback sounds.",,
+"0064","Audio Mode","Full Duplex","Enables the onboard audio to record and playback sounds simultaneously.",,
+"0065","External Hotkey","Disabled","Disables the external keyboard hot-key feature.",,
+"0066","External Hotkey","Scroll Lock","Allows the Scroll Lock key on an external keyboard to act as the FN key on the internal keyboard.",,
+"0067","Diskette Reconfigure","Anytime","Allows the user to hot- or warm-plug a floppy drive into the system at anytime and have it functional.",,
+"0068","Diskette Reconfigure","At Boot Only","The system must be rebooted to make a warm- or hot-inserted floppy drive work properly.",,
+"0069","IntelliSpin","Variable","Allows the CD-ROM drive to slow down if it detects too much vibration (from an unbalanced CD-ROM)..",,
+"006A","IntelliSpin","High Performance","Forces the CD-ROM drive to spin at its maximum speed, regardless of the vibration induced.",,
+"006B","BIOS Power-off on Environmental Error","Enable","The system-management instrumentation sets this attribute to enable the BIOS???s assistance in environmental monitoring. If this attribute is active and the management driver is present (see above), the BIOS provides additional system protection for non-recoverable environmental failures and powers the system off some (possibly system-specific) amount of time after alerting the management software of an environmental error (e.g. processor temperature out-of-range). This provides a level of hardware protection in the case where the management software is not able to power the system off.",,
+"006C","BIOS Power-off on Environmental Error","Disable","When the management software sets this attribute, the system BIOS does not power the system down in the presence of any environmental failure.",,
+"006D","Wake-on-LAN","Enabled","The system wake-on-LAN feature is enabled; either an onboard or an add-in NIC can wake the system up.",,
+"006E","Embedded NIC1","Enable without Boot Support","Enable the system???s primary embedded network interface controller, but don???t enable the NIC???s associated PXE or RPL boot-ROM.",,
+"006F","Mobile Power Management","Enabled","Enables the mobile system???s power management. This attribute requires special handling.",,
+"0070","Mobile Power Management","Disabled","Disables the mobile system???s power management. This attribute requires special handling.",,
+"0071","Smart CPU","Enabled","Enables the system???s Smart CPU (i.e. clock throttling) during periods of low system activity. This attribute requires special handling.",,
+"0072","Smart CPU","Disabled","Disables the system???s Smart CPU (i.e. clock throttling) during periods of low system activity. This attribute requires special handling.",,
+"0073","Ring Resume","Enabled","Allows the system to resume from Suspend due to an incoming call to an attached modem.",,
+"0074","Ring Resume","Disabled","Prevents the system from resuming from Suspend due to an incoming call to an attached modem.",,
+"0075","Alarm Resume","Enabled","Allows the system to resume from Suspend due to a system alarm.",,
+"0076","Alarm Resume","Disabled","Prevents the system from resuming from Suspend due to a system alarm.",,
+"0077","Display Close State","Active","When the system???s lid is closed, the system will remain in the Active (???on???) state.",,
+"0078","Display Close State","Suspend","When the system???s lid is closed, it will be forced into Suspend.",,
+"0079","Display Time-out","Value","The encoded value of the Display Time-out timer, one of: 0 - Disabled 1 - 1 minute 2 - 2 minutes 3 - 3 minures 4 - 4 minutes 5 - 5 minutes 6 - 10 minutes 7 - 15 minutes 8 - 30 minutes 9 - 60 minutes This attribute requires special handling.",,
+"007A","Hard Disk Time-out","Value","The encoded value of the Hard Disk Time-out timer, one of: 0 - Disabled 1 - 15 seconds 2 - 1 minutes 3 - 2 minures 4 - 3 minutes 5 - 4 minutes 6 - 5 minutes 7 - 10 minutes 8 - 15 minutes 9 - 30 minutes 10 - 60 minutes This attribute requires special handling.",,
+"007B","Suspend Time-out","Value","The encoded value of the Suspend Time-out timer, one of:0 - Disabled 1 - 1 minute 2 - 2 minutes 3 - 3 minures 4 - 4 minutes 5 - 5 minutes 6 - 10 minutes 7 - 15 minutes 8 - 30 minutes 9 - 60 minutes This attribute requires special handling.",,
+"007C","Save to Disk Time-out","Value","The encoded value of the Save-to-Disk Time-out timer, one of: 0 - Disabled 1 - 30 minutes 2 - 1 hour 3 - 2 hours 4 - 3 hours 5 - 4 hours 6 - 6 hours 7 - 8 hours 8 - 12 hours This attribute requires special handling.",,
+"007D","LCD Brightness","Value","When Mobile Power Management is Enabled, the system will force the LCD brightness to the value specified in this field. This attribute requires special handling.",,
+"007E","SCSI 3","Enable","Enables the third built-in SCSI controller",,
+"007F","SCSI 3","Disable","Disables the third built-in SCSI controller",,
+"0080","Disable POST Intrusion Alert","Status","This token is used to enable or disable the system POST display of a previous chassis intrusion. When the token value read or written is the non-zero value defined in the token-table, the system will continue to detect intrusion events but POST will not display an alert-message to the end-user. Management software writes this token to 0 to enable the POST message display.",,
+"0081","Docking IRQ","Optimized","The notebook???s POST assigns a dedicated IRQ for use by the docking station; the IRQ assignment is dependent on current notebook resources at the time of the dock.",,
+"0082","Docking IRQ","IRQ11","The notebook???s POST reserves IRQ11 for sole use by the docking station.",,
+"0083","Bootable CD Data Byte 1","N/A","Identifies a 1-byte nonvolatile storage location used by the Dell-developed bootable CD-ROMs",,
+"0084","Bootable CD Data Byte 2","N/A","Identifies a 1-byte nonvolatile storage location used by the Dell-developed bootable CD-ROMs",,
+"0085","Hardware Event Reporting","Enable","Enables the system???s onboard NIC to issue Platform Event Traps (PETs) upon detecting various environmental and security conditions.",,
+"0086","Hardware Event Reporting","Disable","Disables the system???s onboard NIC to issue Platform Event Traps (PETs) upon detecting various environmental and security conditions.",,
+"0087","Boot-time Video","Onboard","The onboard video controller is used for boot-time messages.",,
+"0088","Boot-time Video","Add-in","The first add-in video controller is used for boot-time messages. Note that ???first??? is a system-specific adjective, depending on the BIOS search order and system slot layout.",,
+"0089","Intel Processor Serial Number","Disable","Disables the viewing and control of the number for all processors in the system.",,
+"008A","Limit System Memory (OS Install Mode)","Enable","Some operating systems will not install properly if there is more than 2GB of system memory enabled in the system. The Limit System Memory attribute, when set to Enable, causes the BIOS to report at most 256MB of system memory ??? allowing the OS install to proceed without error. The user/administrator must set this attribute back to the Disable setting to cause the system memory limit to be removed. In some systems, this is referred to as the ???OS Install Mode???.",,
+"008B","Limit System Memory","Disable","Disable the feature, allowing all installed system memory to be reported to the operating system.",,
+"008C","USB Controller","Enable","Causes the BIOS to enable the built-in USB controller at system startup",,
+"008D","USB Controller","Disable","Causes the BIOS to disable the built-in USB controller at system startup",,
+"008E","Wake-on-LAN Boot Override","Enabled","When the system powers on due to a Wake-on-LAN event, the NIC boot-ROM is automatically given the highest boot priority, pre-pending the PXE boot-ROM to the system???s current boot sequence. If the system powers on due to some other event, this selection does not influence the boot sequence.",,
+"008F","Wake-on-LAN Boot Override","Disabled","The boot override feature is disabled and the system boot sequence is in effect for all types of system power on.",,
+"0090","Chassis Intrusion Reporting","Enabled","Enables the system to detect and report Chassis Intrusion events to the system display on boot-up.",,
+"0091","Chassis Intrusion Reporting","Disabled","Disables the system???s detection and reporting of Chassis Intrusion events.",,
+"0092","Chassis Intrusion Reporting","Enabled, Silent","Enables the system to detect Chassis Intrusion events, but suppresses the reporting of these events on the system boot-up display.",,
+"0093","Force PXE on Next Boot","Enabled","The next time the BIOS boots the system, the first PXE-capable device is inserted as the first device in the boot sequence. Enabling this value causes this operation on the next boot only, and does not cause a change in the system's defined boot sequence. The BIOS chooses the first PXE-capable device as the system's onboard network controller, if present and enabled, or the first bootable network device found in the system's standard PCI search order ??? whichever comes first.",,
+"0094","Force PXE on Next Boot","Disabled","The boot override feature is disabled and the system boot sequence is in effect.",,
+"0095","On-board 1394","Enabled","Enables the On-board 1394 Controller on next boot.",,
+"0096","On-board 1394","Disabled","Disables the On-board 1394 Controller on next boot.",,
+"0097","PCI Slots","Enabled","Enables the On-board PCI slots.",,
+"0098","PCI Slots","Disabled","Disables the On-board PCI slots.",,
+"0099","AGP Slot","Enabled","Enables the On-board AGP slot.",,
+"009A","AGP Slot","Disabled","Disables the On-board AGP slot.",,
+"009B","USB Emulation, USB Boot Capable","Enabled","Enables BIOS emulation of all supported USB devices (currently keyboard, mouse, hub, floppy, and USB flash).",,
+"009C","USB Emulation","Disabled","Disables BIOS emulation of all USB devices after POST. USB emulation is on during POST to allow USB keyboards to be used to enter Setup.",,
+"009D","Keyboard Error Reporting","Enabled","Enables reporting of Keyboard errors by POST.",,
+"009E","Keyboard Error Reporting","Disabled","Disables reporting of Keyboard errors by POST.",,
+"009F","Password Status Lock","Locked","Locks the current state of the System password. If a system password has been set, it cannot be removed. If a system password has not been set, it cannot be set.",,
+"00A0","Password Status Lock","Unlocked","Allows normal operation of the system password.",,
+"00A1","AC Power Recovery Mode","Off","After an AC power loss, when AC power is restored, the system will stay off.",,
+"00A2","AC Power Recovery Mode","Last","After an AC power loss, when AC power is restored, the system will return to the state was in when power was lost.",,
+"00A3","AC Power Recovery Mode","On","After an AC power loss, when AC power is restored, the system will power on.",,
+"00A4","VGA DAC Snoop","Enabled","Enables DAC Snoop for the primary video device.",,
+"00A5","VGA DAC Snoop","Disabled","Disables DAC Snoop for the primary video device.",,
+"00A6","Parallel Port Mode","ECP, DMA 1","Enables the system???s built-in parallel port to operate in ECP mode, DMA channel 1.",,
+"00A7","Parallel Port Mode","ECP, DMA 3","Enables the system???s built-in parallel port to operate in ECP mode, DMA channel 3.",,
+"00A8","BIS","Accept","Set Boot Integrity Services to Accept BIS requests.",,
+"00A9","BIS","Deny","Set Boot Integrity Services to DENY BIS requests.",,
+"00AA","AGP Aperture Size","8M","Sets the AGP Aperture size to 8Meg of PCI address space. Note: The ESCD must be cleared after the AGP Aperture Size is changed, or improper system operation may occur.",,
+"00AB","AGP Aperture Size","16M","Sets the AGP Aperture size to 16Meg of PCI address space. Note: The ESCD must be cleared after the AGP Aperture Size is changed, or improper system operation may occur.",,
+"00AC","AGP Aperture Size","32M","Sets the AGP Aperture size to 32Meg of PCI address space. Note: The ESCD must be cleared after the AGP Aperture Size is changed, or improper system operation may occur.",,
+"00AD","AGP Aperture Size","64M","Sets the AGP Aperture size to 64Meg of PCI address space. Note: The ESCD must be cleared after the AGP Aperture Size is changed, or improper system operation may occur.",,
+"00AE","AGP Aperture Size","128M","Sets the AGP Aperture size to 64Meg of PCI address space. Note: The ESCD must be cleared after the AGP Aperture Size is changed, or improper system operation may occur.",,
+"00AF","AGP Aperture Size","256M","Sets the AGP Aperture size to 64Meg of PCI address space. Note: The ESCD must be cleared after the AGP Aperture Size is changed, or improper system operation may occur.",,
+"00B0","IOAPIC","Enabled","Enables the IOAPIC (if it can be disabled)",,
+"00B1","IOAPIC","Disabled","Disables the IOAPIC (if it can be disabled)",,
+"00B2","BIS","Reset","Set Boot Integrity Services to Reset on next boot.",,
+"00B3","Embedded RAID Controller","Off","The embedded RAID controller is disabled for the next boot cycle, and hidden from PCI space if the system permits.",,
+
+"00B4","Embedded RAID Controller","RAID","The embedded RAID controller is enabled for RAID mode for the next boot cycle; the controller's A and B channels can operate in either SCSI or RAID mode.",,
+
+"00B5","Embedded RAID Controller","SCSI","The embedded RAID controller is enabled for SCSI mode for the next boot cycle, and the controller's A and B channels will operate in SCSI mode only.",,
+
+"00B6","Embedded RAID Channel A Primary Copy","RAID","The embedded RAID controller's Channel A is set to operate in RAID mode on the current system boot (from a BIOS perspective) or on the next system boot (from an application perspective). Notes: 1.This setting has no meaning unless the embedded RAID controller is set to operate in RAID mode (see token B4h). 2.The BIOS compares this value to the shadow copy settings (see tokens CDh through D0h) and prompts the user if a change is detected. 3.After handling the primary/shadow compare action, the BIOS copies the primary copy tokens to the shadow copy tokens on each boot.",,
+
+"00B7","Embedded RAID Channel A Primary Copy","SCSI","The embedded RAID controller's Channel A is set to operate in SCSI mode on the next system boot. The notes for token B6h also apply to this token.",,
+"00B8","Embedded RAID Channel B Primary Copy","RAID","The embedded RAID controller's Channel B is set to operate in RAID mode on the next system boot. The notes for token B6h also apply to this token.",,
+"00B9","Embedded RAID Channel B Primary Copy","SCSI","The embedded RAID controller's Channel B is set to operate in SCSI mode on the next system boot. The notes for token B6h also apply to this token.",,
+"00BA","Embedded NIC2","Disabled","Disable the system's secondary embedded NIC.",,
+"00BB","Embedded NIC2","Enabled without PXE","Enable the system's secondary embedded NIC, but don't enable the NIC's PXE boot-ROM.",,
+"00BC","Embedded NIC2","Enabled with PXE","Enable the system's secondary embedded NIC, including the NIC's PXE boot-ROM.",,
+"00BD","System Fan Speed","Full Speed","Fan speed set to normal cooling.",,
+"00BE","System Fan Speed","Noise Reduced","Fan speed set to slow to reduce noise.",,
+"00BF","Console Redirection","Off","Serial Console Redirection Off.",,
+"00C0","Console Redirection","COM1","Serial Console Redirection On, output to COM1. See also token D7h.",,
+"00C1","Power Button","Enabled","System Power Button Enabled.",,
+"00C2","Power Button","Disabled","System Power Button Disabled.",,
+"00C3","NMI Button","Enabled","NMI Button Enabled.",,
+"00C4","NMI Button","Disabled","NMI Button Disabled.",,
+"00C5","Front Panel Error Display Mode","All Errors","All errors reported on Front panel LCD.",,
+"00C6","Front Panel Error Display Mode","First Error","Only First error reported on Front panel LCD.",,
+"00C7","Front Panel LCD Display Option","Default","Front panel LCD displays Default string.",,
+"00C8","Front Panel LCD Display Option","None","Front panel LCD displays No string.",,
+"00C9","Front Panel LCD Display Option","User Defined String","Front panel LCD displays User defined string.",,
+"00CA","Redundant Memory","Off","Redundant memory support is off. Any change takes effect on the next system boot. Note: The Attribute Name is generalized from ???Redundant Memory Support??? to ???Redundant Memory??? since DSIS v1.6.",,
+"00CB","Redundant Memory","Spare","Redundant memory support is set for the spare feature. Any change takes effect on the next system boot. This is a general Attribute Setting for systems that support only a single mode of spare memory; for example either Spare Bank or Spare Rank mode. Note: The Attribute Name is generalized from ???Redundant Memory Support??? to ???Redundant Memory??? since DSIS v1.6. The Attribute Setting is also generalized from ???Spare Bank??? to ???Spare??? since DSIS v1.6.",,
+"00CC","Redundant Memory","Mirror","Redundant memory support is set for the memory-mirroring feature. Any change takes effect on the next system boot. Note: The Attribute Name is generalized from ???Redundant Memory Support??? to ???Redundant Memory??? since DSIS v1.6. The Attribute Setting is also generalized from ???Mirroring Enabled??? to ???Mirror??? since DSIS v1.6.",,
+"00CD","Embedded RAID Channel A Shadow Copy","RAID","The embedded RAID controller's Channel A was set to operate in RAID mode on the previous system boot (from a BIOS perspective) or on the current system boot (from an application perspective). Notes: 1.This setting has no meaning unless the embedded RAID controller is set to operate in RAID mode (see token B4h). 2.The BIOS compares this value to the primary copy's settings (see tokens B6h through B9h) and prompts the user if a change is detected. 3.After handling the compare action, the BIOS copies the primary copy token value to the shadow copy token value on each boot. 4.Manufacturing diagnostics use the Shadow Copy tokens to synchronize the channel settings to remove the unwanted BIOS prompts.",,
+"00CE","Embedded RAID Channel A Shadow Copy","SCSI","The embedded RAID controller's Channel A was set to operate in SCSI mode on the previous system boot. The notes for token CDh also apply to this token.",,
+"00CF","Embedded RAID Channel B Shadow Copy","RAID","The embedded RAID controller's Channel B was set to operate in RAID mode on the previous system boot. The notes for token CDh also apply to this token.",,
+"00D0","Embedded RAID Channel B Shadow Copy","SCSI","The embedded RAID controller's Channel B was set to operate in SCSI mode on the previous system boot. The notes for token CDh also apply to this token.",,
+"00D1","CPU HyperThreading","Enabled","Enables Hyper Threading on all ???Jackson Technology??? CPU???s.",,
+"00D2","CPU HyperThreading","Disabled","Disables Hyper Threading on all ???Jackson Technology??? CPU???s.",,
+"00D3","Cpu1 Rated Speed","Value","Rated speed of CPU1 => 2 byte (LSB then MSB)",,
+"00D4","Cpu2 Rated Speed","Value","Rated speed of CPU2 => 2 byte (LSB then MSB)",,
+"00D5","Cpu3 Rated Speed","Value","Rated speed of CPU3 => 2 byte (LSB then MSB)",,
+"00D6","Cpu4 Rated Speed","Value","Rated speed of CPU4 => 2 byte (LSB then MSB)",,
+"00D7","Console Redirection","COM2","Serial Console redirection On ???, output to COM2. See also tokens BFh and C0h.",,
+"00D8","Default CMOS","Enabled","Request a default of CMOS values on the next boot. The BIOS returns this attribute to the Disabled setting after handling.",,
+"00D9","Default CMOS","Disabled","Don???t request a default of CMOS on the next boot",,
+"00DA","Redundant Memory Capabilities","Capable","(Read-only) The current memory configuration is valid for redundant memory support. See also tokens CAh through CCh, and 134h.",,
+"00DB","Redundant Memory Capabilities","Not Capable","(Read-only) The current memory configuration is not valid (incapable) for redundant memory support.",,
+"00DC","Redundant Memory Capabilities","Redundancy Available","(Read-only) Memory subsystem redundancy is still available, redundant memory is not currently in use. Note: This token is present in the SMBIOS token pool only if one of the redundant memory support features (tokens CBh, CCh, and 134h) is enabled when the system boots.",,
+"00DD","Redundant Memory Capabilities","Redundancy Lost","(Read-only) Memory subsystem redundancy has been lost, redundant memory is currently in use. Note: This token is present in the SMBIOS token pool only if one of the redundant memory support features (tokens CBh, CCh, and 134h) is enabled when the system boots.",,
+"00DE","Single Byte ECC Logging","Disabled","BIOS has disabled reporting/logging or Single Byte ECC errors in the chipset.",,
+"00DF","Unassigned,,,",
+"00E0","E-support","Selected","This token indicates that an E-support request has been made. This can be SET to force an E-support request.",,
+"00E1","E-support","Not Selected","This token indicates that an E-support request has not been made. This is also SET to turn off the E0h token.",,
+"00E2","F2 Post Display","Enabled","Enables F2=Setup on POST boot screen.",,
+"00E3","F2 Post Display","Disabled","Disables F2=Setup on POST boot screen.",,
+"00E4","F12 Post Display","Enabled","Enables F12=Boot Menu on POST boot screen.",,
+"00E5","F12 Post Display","Disabled","Disables F12=Boot Menu on POST Boot screen.",,
+"00E6","Boot Speed","Default","Sets CPU speed to Default",,
+"00E7","Boot Speed","Compatible","Sets CPU speed to Compatible (lots slower). This is implementation dependent. There is no ???set??? speed for Compatible, only that it is significantly slower than Default. Some platforms implement this by turning off Cache, some by STPCLK throttling.",,
+"00E8","MiniPCI Device","Enabled","Enables internal MiniPCI device.",,
+"00E9","MiniPCI Device","Disabled","Disables internal MiniPCI device.",,
+"00EA","POST Boot Testing","Minimal","Sets POST to perform minimal hardware testing.",,
+"00EB","POST Boot Testing","Thorough","Sets POST to perform complete HW and configuration testing.",,
+"00EC","POST Boot Testing","Automatic","Allows the BIOS to decide what level of POST test is used.",,
+"00ED","SpeedStep","Disabled","Disables SpeedStep dynamic clock changes.",,
+"00EE","SpeedStep","Maximum Performance","The system is placed in the maximum performance state available.",,
+"00EF","SpeedStep","Maximum Battery","The system is placed in the minimum performance state available",,
+"00F0","SpeedStep","Automatic","Allows the BIOS to set either Max Performance, or Max Battery, based on AC presence.",,
+"00F1","Pointing Device","External Serial Only","Use an external serial mouse and disable integrated touch pad.",,
+"00F2","Pointing Device","External PS2 Only","Disable the integrated touchpad when an external PS/2 mouse is present.",,
+"00F3","Pointing Device","Switch to Touchpad","Switch to touchpad, when both the touchpad and an external PS/2 mouse is present.",,
+"00F4","Pointing Device","Switch to external PS2","Switch to external PS2, when both the touchpad and an external PS/2 mouse is present.",,
+"00F5","Low Power Mode","Enabled","The system will go into lowest-Power Off mode in S4 and S5, turning off as much of the power-consuming circuitry as required, to attempt to meet 1W power limit. This may disable things like PME, USB power, etc.",,
+"00F6","Low Power Mode","Disabled","The system will be in a normal power-use mode when in S4 or S5.",,
+"00F7","Cpu5 Rated Speed","Value","Rated speed of CPU5 => 2 byte (LSB then MSB)",,
+"00F8","Cpu6 Rated Speed","Value","Rated speed of CPU6 => 2 byte (LSB then MSB)",,
+"00F9","Cpu7 Rated Speed","Value","Rated speed of CPU7 => 2 byte (LSB then MSB)",,
+"00FA","Cpu8 Rated Speed","Value","Rated speed of CPU8 => 2 byte (LSB then MSB)",,
+"00FB","ASF","Enable","Enables ASF Alerts through on-board NIC.",,
+"00FC","ASF","Disable","Disables ASF Alerts through on-board NIC.",,
+"00FD","Built-in USB Controller","Off","The BIOS disables the built-in USB controller at system startup.",,
+"00FE","Built-in USB Controller","Enabled, Without Legacy Support","The BIOS enables the built-in USB controller, but does not provide legacy USB support for operating systems that do not natively support USB keyboards and mice.",,
+"00FF","Built-in USB Controller","Enabled, With Legacy Support","The BIOS enables the built-in USB controller, and provides legacy USB support for operating systems that do not natively support USB keyboards and mice.",,
+"0100","Reserved, do not assign","N/A","Reserved, do not assign to future definitions.",,
+"0101","Hard Disk Acoustic Mode","Bypass","The BIOS does not modify the hard disks' currently set acoustic mode.",,
+"0102","Hard Disk Acoustic Mode","Quiet","The BIOS sets the hard disks' acoustic mode to the quietest operation.",,
+"0103","Hard Disk Acoustic Mode","Suggested","The BIOS sets the hard disks' acoustic mode to the manufacturer's suggested setting.",,
+"0104","Hard Disk Acoustic Mode","Performance","The BIOS sets the hard disks' acoustic mode for the highest disk performance.",,
+"0105","Standby State","S1","The system is placed into the ACPI S1 sleeping state when the system enters Standby.",,
+"0106","Standby State","S3","The system is placed into the ACPI S3 (save-to-RAM) sleeping state when the system enters Standby.",,
+"0107","Interrupt 13h DMA","Enabled","The BIOS enables interrupt 13h (disk, diskette) DMA on boot.",,
+"0108","Interrupt 13h DMA","Disabled","The BIOS disables interrupt 13h (disk, diskette) DMA on boot.",,
+"0109","USB Emulation On, No USB Boot","Enabled","Enables BIOS emulation of all supported USB devices except for bootable devices (floppy, USB flash, etc.). This is a security feature that will prevent users from inserting a USB boot device and booting an OS from it. Non-bootable devices (keyboard, mouse, hub) are still emulated.",,
+"010A","Onboard Modem","Enable","Enable onboard modem.",,
+"010B","Onboard Modem","Disable","Disable onboard modem.",,
+"010C","Radio Transmission","Enable","Enable radio transmission from MiniPCI Wireless or Bluetooth module.",,
+"010D","Radio Transmission","Disable","Disable radio transmission from MiniPCI Wireless or Bluetooth module.",,
+"010E","Power Warning","Enable","Enable messages about performance limitations based on power supply capacity.",,
+"010F","Power Warning","Disable","Disable messages about performance limitations based on power supply capacity.",,
+"0110","Keypad On Numlock","Enable","Activate internal keyboards??? embedded keypad when NumLock LED is on.",,
+"0111","Keypad Only by Fn Key","Enable","Activate internal keyboards??? embedded keypad when Fn Key is pressed.",,
+"0112","Video Expansion","Enable","Stretch lower resolutions modes to fill the LCD.",,
+"0113","Video Expansion","Disable","Preserve the LCD aspect ratio of the image and surround it with a large black border.",,
+"0114","Wireless Device","Disable","Wireless devices are always disabled.",,
+"0115","Wireless Device Controlled by Application","Enable","Wireless devices can be controlled by an application such as QuickSet",,
+"0116","Wireless Device Controlled by Hotkey and Application","Enable","Wireless devices can be controlled by the <fn+f2> hotkey or by an application such as QuickSet.",,
+"0117","Serial ATA Drive 0","OFF","Sets the 1st Serial ATA drive controller to OFF.",,
+"0118","Serial ATA Drive 0","AUTO","Sets the 1st Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"0119","Serial ATA Drive 1","OFF","Sets the 2nd Serial ATA drive controller to OFF.",,
+"011A","Serial ATA Drive 1","AUTO","Sets the 2nd Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"011B","Serial ATA Drive 2","OFF","Sets the 3rd Serial ATA drive controller to OFF.",,
+"011C","Serial ATA Drive 2","AUTO","Sets the 3rd Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"011D","Serial ATA Drive 3","OFF","Sets the 4th Serial ATA drive controller to OFF.",,
+"011E","Serial ATA Drive 3","AUTO","Sets the 4th Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"011F","Serial ATA Drive 4","OFF","Sets the 5th Serial ATA drive cotroller to OFF.",,
+"0120","Serial ATA Drive 4","AUTO","Sets the 5th Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"0121","Serial ATA Drive 5","OFF","Sets the 6th Serial ATA drive controller to OFF.",,
+"0122","Serial ATA Drive 5","AUTO","Sets the 6th Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"0123","Serial ATA Drive 6","OFF","Sets the 7th Serial ATA drive controller to OFF.",,
+"0124","Serial ATA Drive 6","AUTO","Sets the 7th Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"0125","Serial ATA Drive 7","OFF","Sets the 8th Serial ATA drive controller to OFF.",,
+"0126","Serial ATA Drive 7","AUTO","Sets the 8th Serial ATA drive controller to Auto (enabled if present, POST error if not present).",,
+"0127","Embedded NIC1","Enable with RPL Boot","Enable the system???s primary embedded network interface controller (full-function), including its RPL boot-ROM. Implementation note: See 3.7.2.12 Using the Network Interface Card Tokens on page 1 for more formation.",,
+"0128","USB Flash Drive Emulation","Auto","Specifies the BIOS emulation type for the USB flash drive. A USB flash drive is a portable USB mass storage device used for storage and transportation of data and applications. Currently Dell branded USB memory key is an example of an USB flash drive. If 'Auto' is selected, BIOS will auto-detect the current formatted media and decide the emulation type to use.","1.5h",
+"0129","USB Flash Drive Emulation","Floppy","If 'Floppy' is selected, BIOS will emulate the USB flash drive as a removable floppy media, and it will take drive letter A: or B:.","1.5h",
+"012A","USB Flash Drive Emulation","Hard Disk","If 'Hard disk' is selected, BIOS will emulate the USB flash drive as a hard disk, and it will take drive letter C: or above.","1.5h",
+"012B","SMART Errors","Enable","Display HD SMART errors at POST.","1.5h",
+"012C","SMART Errors","Disable","Do NOT display HD SMART errors at POST.","1.5h",
+"012D","Energy Star Logo","Enable","Display Energy Star logo on DELL screen at POST.","1.5h",
+"012E","Energy Star Logo","Disable","Do NOT display Energy Star logo on DELL screen at POST.","1.5h",
+"012F","Integrated Video Size","1MB","Set the Default Integrated Video memory frame buffer size to 1MB (Stolen from main memory). This only applies when integrated video is being used.","1.5h",
+"0130","Integrated Video Size","8MB","Set the Default Integrated Video memory frame buffer size to 8MB (Stolen from main memory). This only applies when integrated video is being used.","1.5h",
+"0131","Integrated Video Size","32MB","Set the Default Integrated Video memory frame buffer size to 32MB (Stolen from main memory). This only applies when integrated video is being used.","1.5h",
+"0132","On-board Serial ATA 2 Controller","Enable","Enable on-board Serial ATA 2 controller.","1.5h",
+"0133","On-board Serial ATA 2 Controller","Disable","Disable on-board Serial ATA 2 controller.","1.5h",
+"0134","Redundant Memory","RAID","Redundant memory support is set for RAID memory feature. Any change takes effect on the next system boot. Note: The Attribute Name is generalized from ???Redundant Memory Support??? to ???Redundant Memory??? since DSIS v1.6. The Attribute Setting is also generalized from ???RAID Enabled??? to ???RAID??? since DSIS v1.6.","1.5i",
+"0135","SATA Controller","OFF","Disable the SATA controller. The token applies to the first on-board SATA controller.","1.5i",
+"0136","SATA Controller","Combined","Enables the SATA controller to work in legacy mode with the IDE controller. Sets the device class code as IDE and uses IRQ 14 or 15. This token applies to the first on-board SATA controller.","1.5i",
+"0137","SATA Controller","ATA","Enables the SATA controller. Sets the device class code as IDE and uses PCI IRQ (referred as Native mode). This token applies to the first on-board SATA controller.","1.5i",
+"0138","SATA Controller","AHCI","Enables the SATA controller. Sets the device class code as SATA and sets up the AHCI BARs and registers. This token applies to the first on-board SATA controller.","1.5i",
+"0139","SATA Controller","RAID","Enables the SATA controller. Sets the device class code as RAID and executes the RAID Option ROM. This token applies to the first on-board SATA controller.","1.5i",
+"013A","SATA Controller Shadow Copy","Combined","The SATA controller is set to Combined mode on the previous system boot (from a BIOS perspective) or on the current system boot (from an application perspective). Notes: 1.This setting has no meaning unless the SATA controller is set to operate in Combined mode (see 0136h token). 2.The BIOS compares this value to the primary copy???s settings (see 0135h ??? 0139h) and prompts the user if a change is detected. 3.After handling the compare action, the BIOS copies the primary copy token value to the shadow copy token value on each boot. Manufacturing diagnostics and Toolkit use the Shadow Copy tokens to synchronize the controller settings to remove the unwanted BIOS prompts. This token applies to the first on-board SATA controller.","1.5i",
+"013B","SATA Controller Shadow Copy","ATA","The SATA controller is set to ATA mode on the previous system boot (from a BIOS perspective) or on the current system boot (from an application perspective). This token applies to the first on-board SATA controller. Notes: The notes for token ???SATA Controller Shadow Copy - Combined??? also apply to this token. This token applies to the first on-board SATA controller.","1.5i",
+"013C","SATA Controller Shadow Copy","AHCI","The SATA controller is set to AHCI mode on the previous system boot (from a BIOS perspective) or on the current system boot (from an application perspective). Notes: The notes for token ???SATA Controller Shadow Copy - Combined??? also apply to this token. This token applies to the first on-board SATA controller.","1.5i",
+"013D","SATA Controller Shadow Copy","RAID","The SATA controller is set to RAID mode on the previous system boot (from a BIOS perspective) or on the current system boot (from an application perspective). Notes: The notes for token ???SATA Controller Shadow Copy - Combined??? also apply to this token. This token applies to the first on-board SATA controller.","1.5i",
+"013E","Memory Remapping","Off","Memory remapping relocates memory space behind PCI hole to the space above 4G. With this feature enabled, OS can use the relocated memory as main memory.","1.5j",
+"013F","Memory Remapping","Auto","Memory remapping relocates memory space behind PCI hole to the space above 4G. With this feature disabled, memory space behind PCI hole is not relocated.","1.5j",
+"0140","CPU XD Support","Off","When Off, Intel CPUs that support the eXecute Disable (XD) feature will not report the support to the operating system.","1.5j",
+"0141","CPU XD Support","Enabled","When Enabled, Intel CPUs that support the eXecute Disable (XD) feature will report the support to the operating system. If the operating system supports this extended paging mechanism, it will provide some protection against software viruses that exploit buffer overflows.","1.5j",
+"0142","Smartcard Reader","Off","Disable built-in smartcard reader on the following boot.","1.5j",
+"0143","Smartcard Reader","Enabled","Enable built-in smartcard reader on the following boot.","1.5j",
+"0144","TPM Enable","Off","Hide the Trusted Platform Module (TPM) from the operating system on the following boot. There is no change in the TPM or its contents when it is disabled. Disabling the TPM simply causes it to be invisible to the OS until it is made visible again.NOTE: These tokens are distinct from the TPM Enable and Disable tokens, A002 and A003 respectively, which are used to expose/hide the TPM hardware at the lowest level. That is, until the TPM is enabled using A002, there effectively is no TPM, so the OS enable and disable tokens would do nothing at all.","1.5j",
+"0145","TPM Enable","Enabled","Unhide Trusted Platform Module (TPM) from the operating system on the following boot.","1.5j",
+"0146","USB Wake Support","Off","Disable Wake On USB feature on the following boot.","1.5j",
+"0147","USB Wake Support","Enabled","Enabled Wake On USB feature on the following boot. Any USB input device can generate a wake event.","1.5j",
+"0148","Demand-Based Power Management","Disabled","This feature will allow the user to disable CPU P state tables reported to OS. The option is only available to the user if the CPU is capable of supporting this feature.","1.5j",
+"0149","Demand-Based Power Management","Enabled","This feature will allow the user to enable CPU P state tables reported to OS. The option is only available to the user if the CPU is capable of supporting this feature.","1.5j",
+"014A","CPU Virtualization","Disabled","This feature will allow the users to disable the VT technology in applicable CPUs. If disabled, the VT feature is unusable in any OS.","1.5k",
+"014B","CPU Virtualization","Enabled","This feature will allow the users to enable the VT technology in applicable CPUs.","1.5k",
+"014C","Multiple CPU cores","Disable","This feature will allow the users to disable Multiple CPU Cores if needed. If disabled, this would prevent the OS from seeing additional cores present on a single CPU package.","1.5k",
+"014D","Multiple CPU cores","Enable","This feature will allow the users to enable Multiple CPU Cores","1.5k",
+"014E","Front USB Ports","Disabled","This feature will allow the users to electrically enable or disable the Front USB ports. If disabled, they are unusable in any OS.","1.5k",
+"014F","Front USB Ports","Enabled","This feature will allow the users to electrically enable or disable the Front USB ports. If disabled, they are unusable in any OS.","1.5k",
+"0150","Hot Undocking","Disabled","This feature will allow the users to determine whether the notebook computer goes into the suspend state prior to undocking. When Hot Undocking is disabled, a request to undock the computer will result in the notebook transitioning to the S3 (suspend) state, where it can then be undocked.","1.5k",
+"0151","Hot Undocking","Enabled","This feature will allow the users to determine whether the notebook computer goes into the suspend state prior to undocking. When Hot Docking is enabled, the notebook will remain in the S0 state during a request to undock, and the operating system will display a message to the user when it is okay for the user to physically undock.","1.5k",
+"0152","Bluetooth Devices","Enabled","This feature will allow users to enable Bluetooth devices so that they will function within the operating system.","1.5k",
+"0153","Bluetooth Devices","Disabled","This feature will allow users to disable Bluetooth devices so that they will not function within the operating system.","1.5k",
+"0154","SERR DMI Message","Off","This token allows the user to disable the SERR on the DRAM controller and the PEG controller in the north bridge. This will disable the SERR DMI Messaging Mechanism.","1.5k",
+"0155","SERR DMI Message","On","This token allows the user to enable the SERR on the DRAM controller and the PEG controller in the north bridge. This will enable the SERR DMI Messaging Mechanism.","1.5k",
+"0156","Intel Quick Resume Technology","Disabled","Disable Energy Lake feature (Intel Quick Resume Technology)","2.000",
+"0157","Intel Quick Resume Technology","Enabled","Enable Energy Lake feature (Intel Quick Resume Technology)","2.000",
+"0158","SATA 0 Raid","Off","Disable SATA Drive 0 for on-board RAID enablement.","2.000",
+"0159","SATA 0 Raid","On","Enable SATA Drive 0 for on-board RAID enablement.","2.000",
+"015A","SATA 1 Raid","Off","Disable SATA Drive 1 for on-board RAID enablement.","2.000",
+"015B","SATA 1 Raid","On","Enable SATA Drive 1 for on-board RAID enablement.","2.000",
+"015C","SATA 2 Raid","Off","Disable SATA Drive 2 for on-board RAID enablement.","2.000",
+"015D","SATA 2 Raid","On","Enable SATA Drive 2 for on-board RAID enablement.","2.000",
+"015E","SATA 3 Raid","Off","Disable SATA Drive 3 for on-board RAID enablement.","2.000",
+"015F","SATA 3 Raid","On","Enable SATA Drive 3 for on-board RAID enablement.","2.000",
+"0160","SATA 4 Raid","Off","Disable SATA Drive 4 for on-board RAID enablement.","2.000",
+"0161","SATA 4 Raid","On","Enable SATA Drive 4 for on-board RAID enablement.","2.000",
+"0162","SATA 5 Raid","Off","Disable SATA Drive 5 for on-board RAID enablement.","2.000",
+"0163","SATA 5 Raid","On","Enable SATA Drive 5 for on-board RAID enablement.","2.000",
+"0164","SATA 6 Raid","Off","Disable SATA Drive 6 for on-board RAID enablement.","2.000",
+"0165","SATA 6 Raid","On","Enable SATA Drive 6 for on-board RAID enablement.","2.000",
+"0166","SATA 7 Raid","Off","Disable SATA Drive 7 for on-board RAID enablement.","2.000",
+"0167","SATA 7 Raid","On","Enable SATA Drive 7 for on-board RAID enablement.","2.000",
+"0168","Limit CPUID Value","Off","Some OS's (NT4) will fail if the value returned in EAX is > 3 when CPUID instruction is executed with EAX=0. This setting disables the 3 or less limit.","2.000",
+"0169","Limit CPUID Value","On","Some OS's (NT4) will fail if the value returned in EAX is > 3 when CPUID instruction is executed with EAX=0. This setting will limit CPUID function to 3.","2.000",
+"016A","User Accessible USB Ports","All Ports Off","Disables both front and back user accessible USB ports.","2.001",
+"016B","User Accessible USB Ports","Only Back Ports On","Disables the front user accessible USB ports.","2.001",
+"016C","User Accessible USB Ports","All Ports On","Enables all user accessible USB ports.","2.001",
+"016D","Integrated RAID Controller","Disabled","Disables the integrated RAID controller.","2.001",
+"016E","Integrated RAID Controller","Enabled","Enables the integrated RAID controller.","2.001",
+"016F","Integrated SAS Controller","Disabled","Disables the integrated SAS controller.","2.001",
+"0170","Integrated SAS Controller","Enabled","Enables the integrated SAS controller.","2.001",
+"0171","Adjacent Cache Line Prefetch","Disabled","The CPU will only fetch the cache line that contains the data currently required by the CPU.","2.001",
+"0172","Adjacent Cache Line Prefetch","Enabled","Enables the CPU to fetch the adjacent cache line in the other half of the sector.","2.001",
+"0173","Hardware Prefetcher","Disabled","Disables the CPU???s HW prefetcher.","2.001",
+"0174","Hardware Prefetcher","Enabled","Enables the CPU???s HW prefetcher.","2.001",
+"0175","Absolute Security ROM","Disabled","This feature will allow users to permanently disable or permanently enable Absolute Software???s Computrace security software BIOS ROM. Once either token is written, the state is permanently maintained (i.e. this is a write-once field). This token is for Factory use only. Application and Management software must ignore or not use this token. Write-once-permanent is different from write-once. Write-once is reset on a power cycle and/or chipset reset. Write-once permanent cannot be reset/change once it is set.","2.001",
+"0176","Absolute Security ROM","Enabled","This feature will allow users to permanently disable or permanently enable Absolute Software???s Computrace security software BIOS ROM. Once either token is written, the state is permanently maintained (i.e. this is a write-once field). This token is for Factory use only. Application and Management software must ignore or not use this token. Write-once-permanent is different from write-once. Write-once is reset on a power cycle and/or chipset reset. Write-once permanent cannot be reset/change once it is set.","2.001",
+"0177","Serial Communication","Off","COM1 and COM2 are both disabled and not available for use by the Operating System or applications. BIOS Console Redirection is disabled.","2.001",
+"0178","Serial Communication","On without Console Redirection","COM1 and COM2 are enabled and available for use by the Operating System or applications. Console Redirection is disabled.","2.001",
+"0179","Serial Communication","On with Console Redirection via COM1","COM1 and COM2 are enabled and available for use by the Operating System or applications. BIOS Console Redirection is via COM1.","2.001",
+"017A","Serial Communication","On with Console Redirection via COM2","COM1 and COM2 are enabled and available for use by the Operating System or applications. BIOS Console Redirection is via COM2.","2.001",
+"017B","Cellular Radio","Disable","Disable cellular radio (i.e. the WWAN module).","2.001",
+"017C","Cellular Radio","Enable","Enable cellular radio (i.e. the WWAN module).","2.001",
+"017D","WiFi Locator","Disable","Disable the WiFi locator feature.","2.001",
+"017E","WiFi Locator","Enable","Enable the WiFi locator feature. When enabled, the locator feature can be activated during S3 to indicate the presence and intensity of wireless network(s), without fully waking the system.","2.001",
+"017F","Wireless LAN","Disable","Disable wireless LAN module.","2.001",
+"0180","Wireless LAN","Enable","Enable wireless LAN module.","2.001",
+"0181","Wireless Switch Bluetooth Control","Disable","For systems that have a physical ???Wireless On/Off Switch???, switch will have no effect on the state of the Bluetooth radio.","2.001",
+"0182","Wireless Switch Bluetooth Control","Enable","For systems that have a physical ???Wireless On/Off Switch???, switch will turn the Bluetooth radio on and off.","2.001",
+"0183","Wireless Switch Cellular Control","Disable","For systems that have a physical ???Wireless On/Off Switch???, switch will have no effect on the state of the cellular radio.","2.001",
+"0184","Wireless Switch Cellular Control","Enable","For systems that have a physical ???Wireless On/Off Switch???, switch will turn the cellular (i.e. WWAN) radio on and off.","2.001",
+"0185","Wireless Switch Wireless LAN Control","Disable","For systems that have a physical ???Wireless On/Off Switch???, switch will have no effect on the state of the wireless LAN radio.","2.001",
+"0186","Wireless Switch Wireless LAN Control","Enable","For systems that have a physical ???Wireless On/Off Switch???, switch will turn the wireless LAN radio on and off.","2.001",
+"0187","ALS","Off","The panel brightness is controlled by the Fn+Up-arrow and Fn+Down-arrow keys and by the brightness fields in BIOS setup. Meant to be used by factory configuration utilities such as SMMFGCFG, although they can be manipulated by OS-level applications as well.","2.001",
+"0188","ALS","Enabled","Ambient Light Sensor (ALS) in certain notebook computers, controls the brightness of the notebook???s LCD panel according to the amount of light in the surrounding environment.","2.001",
+"0189","External USB Ports","Disabled","Will enable/disable all external USB ports. If the system supports a dock, all USB to the dock is also enabled/disabled, so that USB in the dock can be totally disabled???all ports on the dock as well as any USB devices inside the dock.","2.001",
+"018A","External USB Ports","Enabled","Will enable/disable all external USB ports. If the system supports a dock, all USB to the dock is also enabled/disabled, so that USB in the dock can be totally disabled???all ports on the dock as well as any USB devices inside the dock.","2.001",
+"018B","Media Card and 1394","Disabled","Will disable both the Media Card and 1394 devices.","2.001",
+"018C","Media Card and 1394","Enabled","Will enable both the Media Card and 1394 devices.","2.001",
+"018D","PC Card and 1394","Disabled","Will disable both the PC Card and 1394 devices.","2.001",
+"018E","PC Card and 1394","Enabled","Will enable both the PC Card and 1394 devices.","2.001",
+"018F","PC Card","Disabled","Will disable PC Card device.","2.001",
+"0190","PC Card","Enabled","Will enable PC Card device.","2.001",
+"0191","Wi-Fi Catcher Changes","Denied","Will deny changes to the Wi-Fi Catcher setting (in setup and via the token mechanism) when an administrator password is set. If the administrator password is not set, this token???s setting will have no effect.","2.001",
+"0192","Wi-Fi Catcher Changes","Permitted","Will permit changes to the Wi-Fi Catcher setting (in setup and via the token mechanism) when an administrator password is set. If the administrator password is not set, this token???s setting will have no effect.","2.001",
+"0193","Wireless Switch Changes","Denied","Will deny changes to the Wireless Switch setting (in setup and via the token mechanism) when an administrator password is set. If the administrator password is not set, this token???s setting will have no effect.","2.001",
+"0194","Wireless Switch Changes","Permitted","Will permit changes to the Wireless Switch setting (in setup and via the token mechanism) when an administrator password is set. If the administrator password is not set, this token???s setting will have no effect.","2.001",
+"0195","FBD Memory Test Request","Test Not Requested","The OS application can only request one memory configuration at one time. The requested memory configuration will be valid only on the following system reboot. The OS application can request another memory configuration once finished the test for the first memory configuration. The second requested memory configuration will be valid only on the following reboot. There is no restriction to the order of the memory configurations. The tokens will not exist if the system does not support FBD Memory IBIST and MBIST. The OS application can abort the test by setting the FBD Test Not Request token.","2.001",
+"0196","FBD Memory Test Request","Memory Configuration 0","The OS application can only request one memory configuration at one time. The requested memory configuration will be valid only on the following system reboot. The OS application can request another memory configuration once finished the test for the first memory configuration. The second requested memory configuration will be valid only on the following reboot. There is no restriction to the order of the memory configurations. The tokens will not exist if the system does not support FBD Memory IBIST and MBIST. The OS application can abort the test by setting the FBD Test Not Request token.","2.001",
+"0197","FBD Memory Test Request","Memory Configuration 1","The OS application can only request one memory configuration at one time. The requested memory configuration will be valid only on the following system reboot. The OS application can request another memory configuration once finished the test for the first memory configuration. The second requested memory configuration will be valid only on the following reboot. There is no restriction to the order of the memory configurations. The tokens will not exist if the system does not support FBD Memory IBIST and MBIST. The OS application can abort the test by setting the FBD Test Not Request token.","2.001",
+"0198","Wake on LAN","LAN or WLAN","On systems that have onboard LAN and wireless LAN hardware, we need a token to enable wake on either wired or wireless LAN. It is not possible to set up the system to only wake on wireless.","2.001",
+"0199","SATA DIPM","Disabled","This feature will allow users to disable the feature that allows SATA HDDs to initiate link power management transitions.","2.001",
+"019A","SATA DIPM","Enabled","This feature will allow users to enable the feature that allows SATA HDDs to initiate link power management transitions.","2.001",
+"019B","Password Bypass","Off","This feature will allow users to skip the entry of the System password, internal Hard Disk password, fingerprint scan or smartcard on either/both Reboot (warm boot) or S3 resume (resume from standby).","2.001",
+"019C","Password Bypass","Reboot Bypass","This feature will allow users to skip the entry of the System password, internal Hard Disk password, fingerprint scan or smartcard on either/both Reboot (warm boot) or S3 resume (resume from standby).","2.001",
+"019D","Password Bypass","Resume Bypass","This feature will allow users to skip the entry of the System password, internal Hard Disk password, fingerprint scan or smartcard on either/both Reboot (warm boot) or S3 resume (resume from standby).","2.001",
+"019E","Password Bypass","Reboot and Resume Bypass","This feature will allow users to skip the entry of the System password, internal Hard Disk password, fingerprint scan or smartcard on either/both Reboot (warm boot) or S3 resume (resume from standby).","2.001",
+"019F","Integrated USB Hub","Compatible","Compatible setting can be used to force the integrated USB 2.0 hub to operate as a USB 1.1 hub, which can dramatically improve battery life under some operating systems.","2.001",
+"01A0","Integrated USB Hub","High Speed","The High Speed setting allows the hub to function as a 2.0 hub.","2.001",
+"01A1","USB Port 00","Disabled","Disable USB Port 0","2.001",
+"01A2","USB Port 00","Enabled","Enable USB Port 0","2.001",
+"01A3","USB Port 01","Disabled","Disable USB Port 1","2.001",
+"01A4","USB Port 01","Enabled","Enable USB Port 1","2.001",
+"01A5","USB Port 02","Disabled","Disable USB Port 2","2.001",
+"01A6","USB Port 02","Enabled","Enable USB Port 2","2.001",
+"01A7","USB Port 03","Disabled","Disable USB Port 3","2.001",
+"01A8","USB Port 03","Enabled","Enable USB Port 3","2.001",
+"01A9","USB Port 04","Disabled","Disable USB Port 4","2.001",
+"01AA","USB Port 04","Enabled","Enable USB Port 4","2.001",
+"01AB","USB Port 05","Disabled","Disable USB Port 5","2.001",
+"01AC","USB Port 05","Enabled","Enable USB Port 5","2.001",
+"01AD","USB Port 06","Disabled","Disable USB Port 6","2.001",
+"01AE","USB Port 06","Enabled","Enable USB Port 6","2.001",
+"01AF","USB Port 07","Disabled","Disable USB Port 7","2.001",
+"01B0","USB Port 07","Enabled","Enable USB Port 7","2.001",
+"01B1","USB Port 08","Disabled","Disable USB Port 8","2.001",
+"01B2","USB Port 08","Enabled","Enable USB Port 8","2.001",
+"01B3","USB Port 09","Disabled","Disable USB Port 9","2.001",
+"01B4","USB Port 09","Enabled","Enable USB Port 9","2.001",
+"01B5","USB Port 10","Disabled","Disable USB Port 10","2.001",
+"01B6","USB Port 10","Enabled","Enable USB Port 10","2.001",
+"01B7","USB Port 11","Disabled","Disable USB Port 11","2.001",
+"01B8","USB Port 11","Enabled","Enable USB Port 11","2.001",
+"01B9","USB Port 12","Disabled","Disable USB Port 12","2.001",
+"01BA","USB Port 12","Enabled","Enable USB Port 12","2.001",
+"01BB","USB Port 13","Disabled","Disable USB Port 13","2.001",
+"01BC","USB Port 13","Enabled","Enable USB Port 13","2.001",
+"01BD","USB Port 14","Disabled","Disable USB Port 14","2.001",
+"01BE","USB Port 14","Enabled","Enable USB Port 14","2.001",
+"01BF","USB Port 15","Disabled","Disable USB Port 15","2.001",
+"01C0","USB Port 15","Enabled","Enable USB Port 15","2.001",
+"01C1","ASF","Off","No ASF support","2.001",
+"01C2","ASF","On","Full ASF support","2.001",
+"01C3","ASF","AlertOnly","Enable only error messages","2.001",
+"01C4","Node Interleave","Disabled","For BIOS Setup to allow user enable or disable the node interleave option. This is for NUMA systems that allow memory interleaving across all processor nodes.","2.002",
+"01C5","Node Interleave","Enabled","For BIOS Setup to allow user enable or disable the node interleave option. This is for NUMA systems that allow memory interleaving across all processor nodes.","2.002",
+"01C6","Video Memory Size","Off","These tokens are used to configure the amount of memory allocated to the onboard Nvidia video chipset.","2.002",
+"01C7","Video Memory Size","Auto","These tokens are used to configure the amount of memory allocated to the onboard Nvidia video chipset.","2.002",
+"01C8","Video Memory Size","16MB","These tokens are used to configure the amount of memory allocated to the onboard Nvidia video chipset.","2.002",
+"01C9","Video Memory Size","32MB","These tokens are used to configure the amount of memory allocated to the onboard Nvidia video chipset.","2.002",
+"01CA","Video Memory Size","64MB","These tokens are used to configure the amount of memory allocated to the onboard Nvidia video chipset.","2.002",
+"01CB","Video Memory Size","128MB","These tokens are used to configure the amount of memory allocated to the onboard Nvidia video chipset.","2.002",
+"01CC","Embedded SAS Controller","Disabled","Disables the embedded SAS controller.","2.002",
+"01CD","Embedded SAS Controller","Enabled","Enables the embedded SAS controller.","2.002",
+"01CE","Sound Device","Auto","Use the add-in Audio controller if detected and disable the Integrated Audio controller","2.002",
+"01CF","I/OAT DMA Engine","Enabled","Enables/Disables the I/O Acceleration Technology (I/OAT) DMA Engine option. This feature should be enabled only if the hardware and software support I/OAT.","2.002",
+"01D0","I/OAT DMA Engine","Disabled","Enables/Disables the I/O Acceleration Technology (I/OAT) DMA Engine option. This feature should be enabled only if the hardware and software support I/OAT.","2.002",
+"01D1","Built-in Floppy","USB","Built-in floppy controller is disabled but booting to a USB floppy is still allowed.","2.002",
+"01D2","Rear Quad USB","Off","Controls for each stack of USB ports on the rear of desktop machines.","2.002",
+"01D3","Rear Quad USB","On","Controls for each stack of USB ports on the rear of desktop machines.","2.002",
+"01D4","Rear Dual USB","Off","Controls for each stack of USB ports on the rear of desktop machines.","2.002",
+"01D5","Rear Dual USB","On","Controls for each stack of USB ports on the rear of desktop machines.","2.002",
+"01D6","Memory Low Power Mode","Disabled","Setting the option to ???Disabled??? will allow memory to run at full speed.","2.003","122"
+"01D7","Memory Low Power Mode","Enabled","Setting the option to ???Enabled??? will down-clock the memory to conserve power.","2.003","122"
+"01D8","Module Bay Device","Disabled","These tokens are used to enable/disable Dell notebook module bay device (except battery).","2.002",
+"01D9","Module Bay Device","Enabled","These tokens are used to enable/disable Dell notebook module bay device (except battery).","2.002",
+"01DA","Embedded NIC1","Enabled with ISCSI Boot","NIC 1 enabled with ISCSI Boot","2.002",
+"01DB","Embedded NIC2","Enabled with ISCSI Boot","NIC 2 enabled with ISCSI Boot","2.002",
+"01DC","OCCUR (OpenCable Unidirectional Receiver)","Disabled","A factory tools employs this token to permanently disable the OCUR (OpenCable Unidirectional Receiver) feature. This feature may become enabled/disabled just once; further attempts to enable/disable OCUR will fail.","2.002",
+"01DD","OCCUR (OpenCable Unidirectional Receiver)","Enabled","A factory tools employs this token to permanently enable the OCUR (OpenCable Unidirectional Receiver) feature. This feature may become enabled/disabled just once; further attempts to enable/disable OCUR will fail.","2.002",
+"01DE","Microphone","Disabled","These tokens are used to enable/disable Dell notebook internal/external microphone.","2.002",
+"01DF","Microphone","Enabled","These tokens are used to enable/disable Dell notebook internal/external microphone.","2.002",
+"01E0","Integrated NIC","Enabled with ImageServer boot","These tokens control how the integrated NIC is to be configured and which option ROM to load (if any). This token is for the ???Enabled with ImageServer boot??? as all of the other selections already have assigned token values. Enabled with ImageServer boot will be used in the deployment of Dell???s SmartClient products.","2.002",
+"01E1","Keyboard Illumination","Off","These tokens are used to change the Setup option for the keyboard illumination mode. The options are Auto (illumination set based on ambient light level), Off (illumination always off), and On (illumination always on).","2.002",
+"01E2","Keyboard Illumination","On","These tokens are used to change the Setup option for the keyboard illumination mode. The options are Auto (illumination set based on ambient light level), Off (illumination always off), and On (illumination always on).","2.002",
+"01E3","Keyboard Illumination","Auto","These tokens are used to change the Setup option for the keyboard illumination mode. The options are Auto (illumination set based on ambient light level), Off (illumination always off), and On (illumination always on).","2.002",
+"01E4","UART Power Down","Off","Allow OS to power down UART","2.002",
+"01E5","UART Power Down","On","Prohibit OS from powering down UART","2.002",
+"01E6","FSB Optimizations","Off","Turn on/off optimizations for high-bandwidth FSB applications","2.002",
+"01E7","FSB Optimizations","On","Turn on/off optimizations for high-bandwidth FSB applications","2.002",
+"01E8","MEBx Hotkey","Off","Controls the display of the MEBx hotkey (Ctrl-P) at POST on the sign-on screen.","2.002",
+"01E9","MEBx Hotkey","On","Controls the display of the MEBx hotkey (Ctrl-P) at POST on the sign-on screen.","2.002",
+"01EA","Core-Based Turbo Mode","Off","Allows one processor core to increase it???s frequency by one bin whenever the other core has gone into an idle state (C3). Only available on certain processors.","2.002",
+"01EB","Core-Based Turbo Mode","Enabled","Allows one processor core to increase it???s frequency by one bin whenever the other core has gone into an idle state (C3). Only available on certain processors.","2.002",
+
+"01EC","Flash Cache Module","Disabled","This is a flash-based disk cache technology that works with Vista (and possibly future OS???s) to provide ReadyBoost and ReadyCache functionality.","2.002",
+"01ED","Flash Cache Module","Enabled","This is a flash-based disk cache technology that works with Vista (and possibly future OS???s) to provide ReadyBoost and ReadyCache functionality.","2.002",
+"01EE","Resume On Pen","Disabled","Control whether a tablet PC will resume from the S3 state when the pen is removed from its retaining well.","2.002",
+
+"01EF","Resume On Pen","Enabled","Control whether a tablet PC will resume from the S3 state when the pen is removed from its retaining well.","2.002",
+"01F0","NIC3","Disabled","Disabled","2.002",
+"01F1","NIC3","Enabled","Enabled","2.002",
+"01F2","NIC3","Enabled with PXE","Enabled with PXE Boot","2.002",
+"01F3","NIC3","Enabled with iSCSI Boot","Enabled with iSCSI Boot","2.002",
+"01F4","NIC4","Disabled","Disabled","2.002",
+"01F5","NIC4","Enabled","Enabled","2.002",
+"01F6","NIC4","Enabled with PXE","Enabled with PXE Boot","2.002",
+"01F7","NIC4","Enabled with iSCSI Boot","Enabled with iSCSI Boot","2.002",
+"01F8","Missing Pen Indication","Disabled","These tokens will be used to control whether a Tablet PC will indicate pen removed out of its retaining well by blinking pen LED.","2.002",
+"01F9","Missing Pen Indication","Enabled","These tokens will be used to control whether a Tablet PC will indicate pen removed out of its retaining well by blinking pen LED.","2.002",
+"01FA","Tablet Buttons Functionality","Disabled","These tokens will be used to control whether the hardware buttons located on the LCD will be functional or not.","2.002",
+"01FB","Tablet Buttons Functionality","Enabled","These tokens will be used to control whether the hardware buttons located on the LCD will be functional or not.","2.002",
+"01FC","OS Watchdog Timer","Disabled","This Setup field controls whether an OS can configure a chipset-based timer to reset or shutdown the system","2.002",
+"01FD","OS Watchdog Timer","Enabled","This Setup field controls whether an OS can configure a chipset-based timer to reset or shutdown the system","2.002",
+"01FE","SATA Controller","QDMA","Enables the SATA controller. Sets the device class code as RAID. This token applies to the first on-board SATA controller.","2.002",
+"01FF","SATA Controller Shadow Copy","QDMA","The SATA controller is set to QDMA mode on the previous system boot (from a BIOS perspective) or on the current system boot (from an application perspective). Notes: The notes for token ???SATA Controller Shadow Copy - Combined??? also apply to this token. This token applies to the first on-board SATA controller.","2.002",
+"0200","ATG System","Clear","These tokens are used to set/clear the CMOS bit to indicate the system uses an All-Terrain-Gear (ATG) or non-ATG base. The ATG base has WWAN/GPS noise shielding.","2.002",
+"0201","ATG System","Set","These tokens are used to set/clear the CMOS bit to indicate the system uses an All-Terrain-Gear (ATG) or non-ATG base. The ATG base has WWAN/GPS noise shielding.","2.002",
+"0202","Trusted Execution","Off","Intel Trusted Execution Technology (TxT) ??? new processor execution mode and BIOS hooks to enable a protected execution environment and main memory protection.","2.002",
+"0203","Trusted Execution","On","Intel Trusted Execution Technology (TxT) ??? new processor execution mode and BIOS hooks to enable a protected execution environment and main memory protection.","2.002",
+"0204","VT for Direct I/O","Off","Intel Virtualization Technology for Direct I/O (VT-d) ??? new chipset feature that enhances I/O support (DMA) when running a Virtual Machine Monitor.","2.002",
+"0205","VT for Direct I/O","On","Intel Virtualization Technology for Direct I/O (VT-d) ??? new chipset feature that enhances I/O support (DMA) when running a Virtual Machine Monitor.","2.002",
+"0206","Virtual Appliance","Off","Intel Virtual Appliance 3.0 ??? hardened Virtual Appliance support for a system to take advantage of TPM and TxT using an LVMM and a User OS and Service OS.","2.002",
+"0207","Virtual Appliance","On","Intel Virtual Appliance 3.0 ??? hardened Virtual Appliance support for a system to take advantage of TPM and TxT using an LVMM and a User OS and Service OS.","2.002",
+"0208","VA Config Lock","Unlocked","Intel Virtual Appliance 3.0 Configuration Lock ??? Locks down the VA 3.0 ACPI configuration interface.","2.002",
+"0209","VA Config Lock","Locked","Intel Virtual Appliance 3.0 Configuration Lock ??? Locks down the VA 3.0 ACPI configuration interface.","2.002",
+"020A","Optional HDD fan","Installed","Optional HDD fan is installed. Enable monitroing and present fan data to Diags.","2.003","112"
+"020B","Optional HDD fan","Not Installed","Optional HDD fan is not installed. Disable monitoring and don't present fan date to Diags.","2.003","112"
+"020C","Optical Drive Controller","Enabled","This option allows the user to enable/disable a system???s optical drive controller. Currently, we use tokens 0x0003 and 0x0004 for ???IDE CD-ROM Controller??? which specify IDE controller. We have systems now that could have an IDE or a SATA optical drive so we are creating a new token. When these tokens are used, the system BIOS will disable either the IDE or SATA controller depending on which type of drive is present.","2.002",
+"020D","Optical Drive Controller","Disabled","This option allows the user to enable/disable a system???s optical drive controller. Currently, we use tokens 0x0003 and 0x0004 for ???IDE CD-ROM Controller??? which specify IDE controller. We have systems now that could have an IDE or a SATA optical drive so we are creating a new token. When these tokens are used, the system BIOS will disable either the IDE or SATA controller depending on which type of drive is present.","2.002",
+"020E","Video Memory Size","256MB","These tokens add additional video memory size options to the existing tokens for Video Memory Size (01C6h ??? 01CBh). M08 AMD portable systems offer the user the option of setting video memory size to 32MB, 64MB, 128MB and 256MB. There is currently no token for 256MB and this is needed now. Defining tokens for 512MB and 1GB provide for future flexibility, but are not needed for this generation.","2.002",
+"020F","Video Memory Size","512MB","These tokens add additional video memory size options to the existing tokens for Video Memory Size (01C6h ??? 01CBh). M08 AMD portable systems offer the user the option of setting video memory size to 32MB, 64MB, 128MB and 256MB. There is currently no token for 256MB and this is needed now. Defining tokens for 512MB and 1GB provide for future flexibility, but are not needed for this generation.","2.002",
+"0210","Video Memory Size","1GB","These tokens add additional video memory size options to the existing tokens for Video Memory Size (01C6h ??? 01CBh). M08 AMD portable systems offer the user the option of setting video memory size to 32MB, 64MB, 128MB and 256MB. There is currently no token for 256MB and this is needed now. Defining tokens for 512MB and 1GB provide for future flexibility, but are not needed for this generation.","2.002",
+"0211","Internal USB","Disabled","This field enables/disables the internal USB port being added to 10G servers. Note, this is intended for the nonhypervisor port.","2.002",
+"0212","Internal USB","Enabled","This field enables/disables the internal USB port being added to 10G servers. Note, this is intended for the nonhypervisor port.","2.002",
+"0213","SD Card","Disabled","This field enables/disables the embedded SD Card port.","2.004","151"
+"0214","SD Card","Enabled","This field enables/disables the embedded SD Card port.","2.004","151"
+"0215","Internal Floppy","Enabled","This will work in conjunction with tokens 19h, 1Bh, and 1D1h to map to all four settings for the diskette drive setting in desktop BIOS.","2.002",
+"0216","Wake on WLAN","Enabled","For M08 platforms, the hardware is changed to allow Wake on LAN and Wake on wireless LAN to be enabled separately. There are two CMOS bits used in M08 to indicate the setting: 0 ??? Off 1 ??? Wake on LAN (WOL) only 2 ??? Wake on WLAN (WOWL) only 3 ??? WOL & WOWL We already have tokens for WOL disable/enable (0x55/0x57), WOL & WOWL enable (0x0198). We need one more token to enable Wake on WLAN only.","2.002",
+"0217","VA Physical Presence Confirmation","Off","Turn VA Physical Presence Confirmation off. This will allow a VA install application to make VA configuration changes without rebooting.","2.003","108"
+"0218","VA Physical Presence Confirmation","On","Turn VA Physical Presence Confirmation on. This forces the VA install application to reboot the system and for the BIOS to confirm physical presence before making VA configuration changes.","2.003","108"
+"0219","AMD Memory Optimizer Technology","Enable","When set to Enabled, the two DRAM controllers operate independently in 64-bit mode and provide optimized performance without Advanced ECC.","2.003","115"
+"021A","AMD Memory Optimizer Technology","Disable","When set to Disabled (default), the two DRAM controllers are combined in 128-bit mode and provide optimized reliability with Advanced ECC.","2.003","115"
+"021B","Cool and Quiet","Enabled","This setting enables the AMD Cool and Quiet processor feature","2.003","124"
+"021C","Cool and Quiet","Disabled","This setting disables the AMD Cool and Quiet processor feature","2.003","124"
+"021D","High-Bandwidth Memory Mode","Enabled","Enabling this will defer some CPU to memory cycles, and may write them out-of-order, to enhance performance tuning. Some system configurations may use this to optimize for some applications high-memory bandwidth usage models","2.003","126 [125]"
+"021E","High-Bandwidth Memory Mode","Disabled","Disabling would not optimize the performance as memory cycles are not deferred.","2.003","126"
+"021F","Power/Performance Management","Static Max Performance","This will set the Max. Performance mode in the system.","2.004","146 [134] [136]"
+"0220","Power/Performance Management","Static Min Performance","Lowest system performance mode.","2.004","147 [134] [136]"
+"0221","Power/Performance Management","OS/Hypervisor DBPM","Allows OS to change the P state.","2.004","148 [134]"
+"0222","Power/Performance Management","Dell DBPM","BIOS based P state control.","2.004","149"
+"0223","Power/Performance Management","None","Allows user to fine tune the Power/Performance setting.","2.004","150"
+"0224","Embedded video controller","Enabled","The embedded video controller is enabled, and it is the primary video device.","2.004","161"
+"0225","Embedded video controller","Disabled","The embedded video controller is disabled.","2.004","161"
+"0226","SATA_CTRL_DISABLE","0","Disable all the SATA controllers. The token applies to all SATA controllers.","2.004","165 [164]"
+"0227","SATA_CTRL_ENABLE","1","Enable all the SATA controllers. The token applies to all SATA controllers.","2.004","166 [164]"
+"0228","Express_Charge","Enabled","Enables using the Express Charge battery charging algorithm.","2.004","169"
+"0229","Express_Charge","Disabled","Disables using the Express Charge battery charging algorithm","2.004","169"
+"022A","Express_Charge","Once","Enables the system to use the Express Charge algorithm for one charge cycle.","2.004","169"
+"022B","MINIMUM_CONFIG","Disabled","Disables the minimum configuration mode. This token is a one-shot deal and is dependent on asset tag equal to PASS:xx/. BIOS should disable this token as soon as the token is no longer needed.","2.004","170"
+"022C","MINIMUM_CONFIG","Enabled","Enables the minimum configuration mode. The minimum configuration mode takes effect only when this token is enabled and the asset tag is set to PASS:xx/. For an example minimum configuration implementation the system BIOS could: 1) enable only the first DIMM pair found in the system based on the DIMM population bitmap and automatically disable the minimum configuration mode if there is any DRAM DQS training error, 2) enable only core 0 of each node of a quad-core (or higher) processor.","2.004","170"
+"022D","Boot Mode","UEFI","Enables booting to Unified Extensible Firmware Interface (UEFI) capable operating systems","2.004","172"
+"022E","Boot Mode","BIOS","Ensures compatibility with operating systems that do not support UEFI","2.004","172"
+"022F","Charger","Enable","The default setting. Enable the battery charging system.","2.004","173"
+"0230","Charger","Disable","Disable the battery charging system.","2.004","173"
+"0231","NUMBER OF CORES PER PROCESSOR","4 Cores","All four cores of the processor are enabled. This is applicable for Quad-core processor only.","2.004","174"
+"0232","NUMBER OF CORES PER PROCESSOR","2 Cores","Two cores of the processor are enabled. This is applicable for Quad-core and Dual-core processors.","2.004","174"
+"0233","NUMBER OF CORES PER PROCESSOR","1 Core","Single core of the processor is enabled. This is applicable for Quad-core and Dual-Core processors.","2.004","174"
+"0234","ASF","DASH and ASF 2.0","If set enables LOM to have DASH and ASF 2.0 functionality.","2.004","177"
+"0235","USB PowerShare","Enabled","Enable the USB PowerShare feature.","2.004","179"
+"0236","USB PowerShare","Disabled","Disable the USB PowerShare feature.","2.004","179"
+"0237","USB PowerShare Battery Capacity Limit","Value","Index into the USB PowerShare remaining battery capacity percentage table. The table contains several pre-defined values representing the percent of total system battery capacity at which charging of an external device attached to the USB PowerShare port will be terminated.","2.004","179"
+"0238","Embedded NIC3 and NIC4","Enabled","The BIOS enables the 3rd and 4th NIC during setup. The hardware has a single control line for both NICs.","2.004","180"
+"0239","Embedded NIC3 and NIC4","Disabled","The BIOS disables the 3rd and 4th NIC during setup. The hardware has a single control line for both NICs.","2.004","181"
+"023A","Bus Ratio","Max","This is the normal/default bus ratio for the CPU.","2.004","186 [183]"
+"023B","Bus Ratio","6.0x","Bus ratio of 6.0","2.004","186"
+"023C","Bus Ratio","7.0x","Bus ratio of 7.0","2.004","186"
+"023D","Bus Ratio","7.5x","Bus ratio of 7.5","2.004","186"
+"023E","Bus Ratio","8.0x","Bus ratio of 8.0","2.004","186"
+"023F","Bus Ratio","8.5x","Bus ratio of 8.5","2.004","186"
+"0240","Bus Ratio","9.0x","Bus ratio of 9.0","2.004","186"
+"0241","Bus Ratio","9.5x","Bus ratio of 9.5","2.004","186"
+"0242","Bitsmart","Enable","Enable Bitsmart.","2.004","187"
+"0243","Bitsmart","Disable","Disable Bitsmart.","2.004","187"
+"0244","E-Sata Ports","Enable","Will enable all E-Sata ports. If the system supports a dock, all E-Sata ports to the dock are also enabled.","2.004","188"
+"0245","E-Sata Ports","Disable","Will disable all E-Sata ports. If the system supports a dock, all E-Sata ports to the dock are also disabled.","2.004","188"
+"0246","Selective USB","Enabled","Enable Selective USB feature to disable all USB ports, except for the 2 Selective USB ports. This option will allow only keyboard / mouse connected to the Selective USB ports for the boot process to continue.","2.005","210 [190]"
+"0247","Selective USB","Disabled","Disable Selective USB feature to resume normal USB status and normal boot procedure.","2.005","210 [190]"
+"0248","Help Desk","Enabled","If Help Desk is enabled in BIOS setup, 'Ctrl+H Help Desk' hotkey message will show on the post screen if ME is alive and CIRA will be supported.","2.005","191"
+"0249","Help Desk","Disabled","If Help Desk is disabled in BIOS setup, 'Ctrl+H Help Desk' hotkey message will not show on the post screen even if ME is alive and CIRA will not be supported.","2.005","191"
+"024A","Trusted Platform Module","Activate","Token for remotely activating the TPM dependent on meeting certain security criteria.","2.005","193"
+"024B","C States Control","Enabled","When set to Enabled, the processor can operate in all availabe Power C States","2.005","197"
+"024C","C States Control","Disabled","When set to Disabled, there are no C states available for the processor","2.005","197"
+"024D","Prompt on Error","Enabled","Enabled the BIOS from prompting for F1/F2 on error. BIOS pauses at F1/F2 prompt.","2.005","198"
+"024E","Prompt on Error","Disabled","Disables the BIOS from prompting for F1/F2 on error. BIOS continues to boot as if F1 had been pushed.","2.005","198"
+"024F","Splash Screen","Enabled","Enables the display of the splash or summary screen, rather than the detail of the POST flow.","2.005","199"
+"0250","Splash Screen","Disabled","Disabled the display of the splash or summary screen. The user is able to see the detail of the POST messages.","2.005","199"
+"0251","PXE NIC order","PXE NIC 1","The first NIC is used for PXE boot, followed by NIC2.","2.005","200"
+"0252","PXE NIC order","PXE NIC 2","The second NIC is used for PXE boot, followed by NIC1.","2.005","200"
+"0253","Serial Communication","On with Console Redirection","COM1 or COM2 is enabled and available for use by the Operating System or applications. Console Redirection is Enabled.","2.005","232 [201] [213]"
+"0254","Serial Port Address","Serial Device1=COM1,Serial Device2=COM2","By default,set Serial Device 1 port address as COM1=0x3F8 and Serial Device 2 port address as COM2=0x2F8 .","2.005","218 [201] [217]"
+"0255","FX100 BIOS Access","On","Allows Remote user to access BIOS Setup via FX100 Portal","2.005","202"
+"0256","FX100 BIOS Access","Off","Disables Remote user to access BIOS Setup via FX100 Portal","2.005","202"
+"0257","Serial Port Address","Serial Device1=COM2,Serial Device2=COM1","Set Serial Device 1 port address as COM2=0x2F8 and Serial Device 2 port address as COM1=0x3F8.","2.005","218 [203] [217]"
+"0258","Serial Port Address","COM1","By default,set Serial Device port address as COM1=0x3F8.","2.005","233 [203] [217]"
+"0259","Enable Latitude ON","Enable","Enable booting to Latitude ON","2.005","205 [204]"
+"025A","Enable Latitude ON","Disable","Disable booting to Latitude ON","2.005","205"
+"025B","Rear Dual USB (2nd stack)","Off","Controls for each stack of USB ports on the rear of Desktop machines.","2.005","206"
+"025C","Rear Dual USB (2nd stack)","On","Controls for each stack of USB ports on the rear of desktop machines.","2.005","206"
+"025D","Memory Operating Mode","Optimizer Mode","Memory Operating Mode set to support Optimizer","2.005","208"
+"025E","Memory Operating Mode","Spare Mode","Memory Operating Mode set to support Sparing","2.005","208"
+"025F","Memory Operating Mode","Mirror Mode","Memory Operating Mode set to support Memory mirroring","2.005","208"
+"0260","Memory Operating Mode","Advanced ECC Mode","Memory Operating Mode set to support Advanced ECC, i.e. Lockstep","2.005","208"
+"0261","Serial Port Address","COM2","Set Serial Device port address as COM2=0x2F8","2.005","233 [217]"
+"0262","HDD Protection","On","If setting On, the HDD Protection OPROM will be loaded.","2.005","234"
+"0263","HDD Protection","Off","If setting Off, the HDD Protection OPROM will be not loaded.","2.005","234"
+"0264","Password Length Restriction","ON","*Special token for Panasonic. 1.Restrict the number of characters in BIOS Password. ( 6 digits ??C 15 digits ) 2.Do not allow user to disable password via setup once it is set","2.005","235"
+"0265","Password Length Restriction","OFF","*Special token for Panasonic go back from the special restriction to normal","2.005","235"
+"0266","Boot Menu Restriction","ON","*Special token for Panasonic Do not allow user enter Boot menu if there is no Setup or System password","2.005","235"
+"0267","Boot Menu Restriction","OFF","*Special token for Panasonic go back from the special restriction to normal","2.005","235"
+"0268","Flash Restriction","ON","*Special token for Panasonic Ignore admin password prompt during BIOS flash update","2.005","235"
+"0269","Flash Restriction","OFF","*Special token for Panasonic go back from the special restriction to normal","2.005","235"
+"026A","HyperTransport Technology","HT 1","Set to support HyperTransport 1 specification.","2.005","236"
+"026B","HyperTransport Technology","HT 3","Set to support HyperTransport 3 specification.","2.005","236"
+"026C","Alt System Name","ON","Special token for BNPP(BNP Parisbas).BIOS will load an alternate system name to SMBIOS type1"Product Name" field.","2.005","237"
+"026D","Alt System Name","OFF","Special token for BNPP(BNP Parisbas).BIOS will not load any alternate system name.","2.005","237"
+"026E","Number of Cores per Processor","All","This field controls the number of enabled cores in each processor. By default, the maximum number of cores per processor will be enabled.","2.005","238"
+"026F","Number of Cores per Processor","6 Cores","This field controls the number of enabled cores in each processor. By default, the maximum number of cores per processor will be enabled.","2.005","238"
+"0270","Number of Cores per Processor","8 Cores","This field controls the number of enabled cores in each processor. By default, the maximum number of cores per processor will be enabled.","2.005","238"
+"0271","Number of Cores per Processor","10 Cores","This field controls the number of enabled cores in each processor. By default, the maximum number of cores per processor will be enabled.","2.005","238"
+"0272","Number of Cores per Processor","12 Cores","This field controls the number of enabled cores in each processor. By default, the maximum number of cores per processor will be enabled.","2.005","238"
+"0273","Internal USB Port 2","Disabled","This field disables the internal USB port 2","2.008","242 [241]"
+"0274","Internal USB Port 2","Enabled","This field enables the internal USB port 2",,"242 [241]"
+"0275","Internal USB Port 1","Disabled","This field disables the internal USB port 1",,"243 [241]"
+"0276","Internal USB Port 1","Enabled","This field Enables the internal USB port 1",,"243 [241]"
+"0277","Wireless UWB","Disable","For systems that have a physical ???Wireless On/Off Switch???, switch will have no effect on the state of the UWB radio.",,"244"
+"0278","Wireless UWB","Enable","For systems that have a physical ???Wireless On/Off Switch???, switch will turn the UWB radio on and off.",,"244"
+"0279","Enable Internal Wireless UWB","Disable","Disable UWB card",,"244"
+"027A","Enable Internal Wireless UWB","Enable","Enable UWB card",,"244"
+"027B","HT Assist","Disabled","Allow user the ability to disable the Probe Filter chipset option from BIOS setup. There are some applications that may have lower performance with the chipset feature enabled.",,"246"
+"027C","HT Assist","Enabled","Allow user the ability to enable the Probe Filter chipset option from BIOS setup. There are some applications that may have lower performance with the chipset feature disabled.",,"246"
+"027D","Extended Memory Test Request","Level 1","Request extended memory tests at Level 1 (or low) This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"027E","Extended Memory Test Request","Level 5","Request extended memory tests at Level 5 (or medium) This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"027F","Extended Memory Test Request","Level 10","Request extended memory tests at Level 10 (or high) This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"0280","Extended Memory Test Request","Off","Turn off extended memory tests (default) This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"0281","Extended Memory Test Requestor","MDiags","Indicates that the requestor of the extended memory tests is Manufacturing Diags This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"0282","Extended Memory Test Requestor","CDiags","Indicates that the requestor of the extended memory tests is Customer Diags This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"0283","Extended Memory Tests Executed","Yes","This token is set by the BIOS in POST to indicate that extended memory tests were executed during this boot This token should not be customer visible and is intended for use by diagnostic software",,"247"
+"0284","Extended Memory Tests Executed","No","This token indicates that extended memory tests were NOT executed during this boot. This token should not be customer visible and is intended for use by diagnostic software",,"248"
+"0285","Camera","Enable","To enable Camera",,"249"
+"0286","Camera","Disable","To disable Camera",,"249"
+"0287","WxAN Radio","Disable","Disable both WLAN and WWAN",,"250"
+"0288","WxAN Radio","WLAN Radio On","Toggle WLAN radio on and WWAN radio off",,"250"
+"0289","WxAN Radio","WWAN Radio On","Toggle WWAN radio on and WLAN radio off",,"250"
+"028A","Hotkey to toggle WxAN radio","Disable","Disable Hotkey to toggle WxAN radio",,"250"
+"028B","Hotkey to toggle WxAN radio","Enable","Enable Hotkey/App to toggle WxAN radio",,"250"
+"028C","On Reader","enabled","Enable Latitude/Precision/Optiplex On Reader feature.",,"251"
+"028D","On Reader","disabled","Disable Latitude/Precision/Optiplex On Reader feature.",,"251"
+"028E","Embedded NIC2","Enabled with RPL boot","Enable the system's secondary embedded network interface controller (full-function),including its RPL boot-ROM.",,"252"
+"028F","Embedded NIC2","Enabled with ImageServer boot","These tokens control how the secondary integrated NIC is to be configured and which option ROM to load (if any). This token is for the 'Enabled with ImageServer boot'.Enabled with ImageServer boot will be used in the deployment of Dell's SmartClient products.",,"252"
+"0290","Rear Single USB","Off","This feature will allow the users to electrically enable or disable the Rear Single USB ports. If disabled, they are unusable in any OS.",,"253"
+"0291","Rear Single USB","On","This feature will allow the users to electrically enable or disable the Rear Single USB ports. If disabled, they are unusable in any OS.",,"253"
+"0292","Enable Instant ON","Enable","Enable the Latitude on Instant ON feature.",,"254"
+"0293","Enable Instant ON","Disable","Disable the Latitude on Instant ON feature.",,"254"
+"0294","Enable Media Card","Enable","Setup is graphical and the represention of the field is a check box. When checked, the media card is enabled and this token is active.",,"256"
+"0295","Enable Media Card","Disable","Setup is graphical and the representation of this field is a check box. When un-checked, the media card is disabled and this token is active.",,"256"
+"0296","NAND Module","Enabled","Enable the NAND module.",,"265"
+"0297","NAND Module","Disabled","Disable the NAND module.",,"265"
+"0298","Memory Rank Margining","Enabled","Enables the memory rank margining tool in MRC and makes the data available in a reserved memory region at runtime.",,"260"
+"0299","Memory Rank Margining","Disabled","Disables the memory rank margining tool in MRC. No reserved memory region is created and the data is not available at runtime.",,"260"
+"029A","eSATA Port","Off","Sets the external Serial ATA port to Off.",,"261"
+"029B","eSATA Port","Auto","Sets the external Serial ATA port to Auto.",,"261"
+"029C","Wireless Adapter","Disable","Disable the Wireless Adapter.",,"262"
+"029D","Wireless Adapter","Enable","Enable the Wireless Adapter.",,"262"
+"029E","Log Max Errors during extended memory test","YES","When set to YES, MBIST engine will continue MBIST until the maximum number of errors that can be logged are found.",,"264"
+"029F","Log Max Errors during extended memory test","NO","When set to NO, MBIST engine will exit MBIST after the first error is found",,"264"
+"02A0","NAND Module","Destroy NAND Partitions","Erase and destroy all partitions on a NAND module.",,"265"
+"02A1","C1E","Enabled","The C1-E is enabled by default.",,"267"
+"02A2","C1E","Disabled","The C1-E is disabled by user in their own liability. There will be warning message in both the BIOS Setup help text and the pop up message when the option is changing.",,"267"
+"02A3","USB 3.0","Enabled","Enable USB 3.0.",,"268"
+"02A4","USB 3.0","Disabled","Disable USB 3.0.",,"268"
+"02A5","Hard drive free fall protection","Enable","Enable hard drive free fall protection.",,"269"
+"02A6","hard drive free fall protection","disable","Disable hard drive free fall protection.",,"269"
+"02A7","Strong Password","Enabled","Enforce Strong Password",,"270"
+"02A8","Strong Password","Disabled","Do not enforce Strong Password",,"270"
+"02A9","DRAM Prefetcher","Disabled","Prevents DRAM references from triggering DRAM prefetch requests",,"271"
+"02AA","DRAM Prefetcher","Enabled","Turns on the DRAM prefetch unit in the Northbridge",,"271"
+"02AB","Hardware Prefetch Training on Software Prefetch","Disabled","Prevents hardware prefetcher from considering software prefetches when detecting strides for prefetch requests.",,"271"
+"02AC","Hardware Prefetch Training on Software Prefetch","Enabled","Hardware prefetcher considers software prefetches when detecting strides for prefetch requests",,"271"
+"02AD","SR-IOV Global Enable","Enabled","Enables BIOS support for SRIOV devices.",,"272"
+"02AE","SR-IOV Global Enable","Disabled","Disables BIOS support for SRIOV devices.",,"272"
+"02AF","Redundant Memory","DIMM Spare","Redundant memory set for DIMM SPARE support",,"273"
+"02B0","Redundant Memory","Inter-Node Mirror","Redundant memory set to support Inter-Node Memory mirroring",,"273"
+"02B1","Enable Latitude ON Flash","Enable","Enable the ability to boot to the Latitude ON Flash module.",,"274"
+"02B2","Enable Latitude ON Flash","Disable","Disable the ability to boot to the Latitude ON Flash module.",,"274"
+"02B3","DMA Virtualization","Enabled","When the value of DMA Virtualization is Enabled, hardware capabilities provided for DMA Virtualization are available for use.",,"290 [275]"
+"02B4","Express Card","Enabled","This setting will enable the express card port, which allows the user to insert an express card into the slot and it will be configured.",,"278"
+"02B5","Express Card","Disabled","This setting will disables the express card port, which will not allow any express card inserted to be configured.",,"278"
+"02B6","Memory Operating Voltage","1.5V","Indicates all DIMMs in the system are operating at 1.5 volts",,"280"
+"02B7","Memory Operating Voltage","1.35V","Indicates all DIMMs in the system are operating at 1.35 volts",,"280"
+"02B8","Memory Operating Voltage","AUTO","This setting indicates the memory operating voltage will be set automatically by the Memory initialization code and depends upon the installed DIMM's capability and the memory configuration of the system. This is the default setting and will set the Memory Operating voltage to the POR voltage.",,"280"
+"02B9","Watchdog Timer","Enabled","The system will reboot/reset if the watchdog timer expires",,"282"
+"02BA","Watchdog Timer","Disabled","The system will not reboot/reset even if the watchdog timer expires",,"282"
+"02BB","MINICARD_SSD_ENABLE","Enabled","Enables the Minicard SSD Module.",,"284"
+"02BC","MINICARD_SSD_DISABLE","Disabled","Disables the Minicard SSD Module.",,"284"
+"02BD","Admin Setup Lockout","Enabled","When the value of Admin Setup Lockout is Enabled and the Admin Password is set, users will not be allowed to see any part of the Setup screens unless they enter the correct Admin Password. When the Admin password is NOT set and Admin Setup Lockout is Enabled, users will be able to access Setup normally.",,"285"
+"02BE","Admin Setup Lockout","Disabled","When the value of Admin Setup Lockout is Disabled and the Admin Password is or is not set, users will be allowed to enter Setup normally. However, many fields may still be inaccessible, depending on how other Setup security settings are configured.",,"285"
+"02BF","Activity LED","Enable ACPI OS Control","This selection will allow the Activity LED to be controlled by an ACPI OS and driver.",,"286"
+"02C0","Activity LED","Wireless LAN Indicator","This selection will logically connect the Activity LED to WLAN LED output.",,"286"
+"02C1","Activity LED","Off","This selection will force the Activity LED to be always OFF.",,"286"
+"02C2","SurroundView","Enable","This feature will allow user to enable SurroundView that allow user to use an additional AMD PCIE video card in conjunction with the onboard graphics card which would give you ability to use mutiple monitors at once. Notes: it's only for AMD platform.",,"288"
+"02C3","SurroundView","Disable","This feature will allow user to disable SurroundView that disable mutiple monitor support with additional AMD PCIE video card. Notes: it's only for AMD platform.",,"288"
+"02C4","DMA Virtualization","Disabled","When the value of DMA Virtualization is Disabled, hardware capabilities provided for DMA Virtualization are unavailable for use.",,"290"
+"02C5","DCU Streamer Prefetcher","Enabled","This field enables (Default) the DCU Streamer Prefetcher",,"292"
+"02C6","DCU Streamer Prefetcher","Disabled","This field disables the DCU Streamer Prefetcher",,"292"
+"02C7","Data Reuse","Enabled","Set it to Enabled (Default) for HPC applications.",,"292"
+"02C8","Data Reuse","Disabled","Set it to Disabled for energy efficiency.",,"292"
+"02C9","Intel(R) QPI Bandwidth Priority","Compute","Set it to Compute (Default) for computation-intensive applications",,"292"
+"02CA","Intel(R) QPI Bandwidth Priority","I/O","Set it to I/O for I/O-intensive applications.",,"292"
+"02CB","MSR 13C","Enable","Enable the MSR 13C feature and lock from future modification",,"315"
+"02CC","MSR 13C","Disable","Disable the MSR 13C feature and lock from future modification",,"315"
+"02CD","Clear GPE Ownership","Clear GPE Ownership","This token will signal to BIOS on the subsequent reboot to clear GPE card ownership.",,"317"
+"02D3","Intel(R) AES-NI","Enabled","This option enables Intel(R) AES new instructions.",,"316"
+"02D4","Intel(R) AES-NI","Disabled","This option disables Intel(R) AES new instructions.",,"316"
+"4000","Correctable Memory Event Base Rate","Value","Identifies the base rate that the BIOS uses to determine the frequency at which correctable memory"threshold exceeded" events are logged. The value applies to a 512MB memory module, and is specified is the maximum acceptable count, e.g. if the value is specified as 05h then a"threshold exceeded" event will be logged if a memory module receives 6 correctable events.Note: Any update to this value takes effect immediately. If the value is smaller than the system's default, the BIOS forces the value to the system default on the next system boot and uses the system default value for any logging activities during the current system boot.",,
+"4001","Memory Diagnostic","Present","The memory diagnostic sets this token when it starts its tests to instruct the BIOS to reduce its correctable memory event threshold to zero (i.e. every correctable event is logged as a threshold exceeded event). This value is not reset to the Absent status by the BIOS on each system boot; therefore, it is the utility???s responsibility to reset this value to ???Absent.??? Note: This token is provided separately from the Correctable Memory Event Base Rate, since the product support group might have set the rate for the system based on a customer call and the diagnostic's processing shouldn't overwrite that value. Note 2: This token is in a checksum area. A utility changing the value of this token must update the checksum of the CMOS region where this token is defined.",,
+"4002","Memory Diagnostic","Absent","The memory diagnostic sets this token when it completes its tests to instruct the BIOS to use the value specified by the Correctable Memory Event Base Rate token. Note: This token is in a checksum area. A utility changing the value of this token must update the checksum of the CMOS region where this token is defined.",,
+"4003","Correctable Memory Event","Reset","The memory diagnostic sets this write-only token at the start of a test sequence, to indicate that correctable memory event occurrence tracking is restarted. At the end of the test sequence, the diagnostic reads the"Correctable Memory Event|Occurred" token to see if any correctable memory events occurred during the test.",,
+"4004","Correctable Memory Event","Occurred","The BIOS sets this token to indicate that a correctable memory event (a single correction, not a threshold-exceeded event) has occurred since the last time the"Correctable Memory Event|Reset" token was set during this system boot. This token is read-only to non-BIOS software. The BIOS resets this value each time the system boots.",,
+"4005","Available for assignment by Server BIOS",,,,
+"4006","Front Bezel Intrusion Reporting","Enable","Enables the embedded system management (ESM) to monitor and log front bezel intrusion conditions.",,
+"4007","Front Bezel Intrusion Reporting","Disable","Disables the ESM's monitoring and logging of front bezel intrusion conditions.",,
+"4008","Primary IDE Controller, Master Device","Auto","Enable the auto-configuration of the master device on the system's primary IDE controller.",,
+"4009","Primary IDE Channel, Master Device","Off","Disable the master device on the system's primary IDE channel.",,
+"400A","Primary IDE Channel, Slave Device","Auto","Enable the auto-configuration of the slave device on the system's primary IDE channel.",,
+"400B","Primary IDE Channel, Slave Device","Off","Disable the slave device on the system's primary IDE channel.",,
+"400C","Secondary IDE Channel, Master Device","Auto","Enable the auto-configuration of the master device on the system's secondary IDE channel.",,
+"400D","Secondary IDE Channel, Master Device","Off","Disable the master device on the system's secondary IDE channel.",,
+"400E","Secondary IDE Channel, Slave Device","Auto","Enable the auto-configuration of the slave device on the system's secondary IDE channel.",,
+"400F","Secondary IDE Channel, Slave Device","Off","Disable the slave device on the system's secondary IDE channel.",,
+"4010","Tertiary IDE Channel, Master Device","Auto","Enable the auto-configuration of the master device on the system's tertiary IDE channel.",,
+"4011","Tertiary IDE Channel, Master Device","Off","Disable the master device on the system's tertiary IDE channel.",,
+"4012","Tertiary IDE Channel, Slave Device","Auto","Enable the auto-configuration of the slave device on the system's tertiary IDE channel.",,
+"4013","Tertiary IDE Channel, Slave Device","Off","Disable the slave device on the system's tertiary IDE channel.",,
+"4014","IDE RAID","On","Enables the embedded IDE RAID",,
+"4015","IDE RAID","Off","Disables the embedded IDE RAID",,
+"4016","Embedded Fibre Channel Controller","Enable","Enables the embedded Fibre Channel controller and its boot ROM, if present.",,
+"4017","Embedded Fibre Channel Controller","Disable","Disables the embedded Fibre Channel controller, freeing the hardware resources required for the device.",,
+"4018","Embedded InfiniBand Controller","Enable","Enables the embedded InfiniBand controller and its boot ROM, if present.",,
+"4019","Embedded InfiniBand Controller","Disable","Disables the embedded InfiniBand controller, freeing the hardware resources required for the device.",,
+"401A","Console Redirection Emulation Type","VT100","The BIOS console redirection, if enabled, operates in VT100 emulation model. See also tokens BFh, C0h, and D7h.",,
+"401B","Console Redirection Emulation Type","ANSI","The BIOS console redirection, if enabled, operates in ANSI emulation model. See also tokens BFh, C0h, and D7h.",,
+"401C","Console Redirection After Boot","Enabled","The BIOS console redirection, if enabled, continues to operate after the OS boot hand-off. See also tokens BFh, C0h, D7h, 401Ah and 401Bh.",,
+"401D","Console Redirection After Boot","Disabled","The BIOS console redirection, if enabled, operates during the BIOS boot only and is disabled prior to OS boot hand-off. See also tokens BFh, C0h, D7h, 401Ah and 401Bh.",,
+"401E","Second Built-in IDE Controller","On","Enables the second embedded IDE controller in the system. Note: This token is applicable only when the first IDE controller (tokens 03h, 04h) is also supported.",,
+"401F","Second Built-in IDE Controller","Off","Disables the second embedded IDE controller in the system.",,
+"4020","Memory Interleaving","Enabled","(Read-only) Memory interleaving is enabled in the current configuration.",,
+"4021","Memory Interleaving","Disabled","(Read-only) Memory interleaving is disabled in the current configuration.",,
+"4022","Force PXE as First Boot Device","Enabled","Whenever the BIOS boots the system, the first PXE-capable device is inserted as the first device in the boot sequence. Enabling this feature causes the BIOS operation to occur on the next and all subsequent boots and causes a change in the system's defined boot sequence (unlike tokens 93h and 94h). The BIOS chooses the first PXE-capable device as the system's onboard network controller, if present and enabled, or the first bootable network device found in the system's standard PCI search order ??? whichever comes first.",,
+"4023","Force PXE as First Boot Device","Disabled","The PXE boot override is disabled and the system boot sequence is in effect.",,
+"4024","Embedded NIC1 and NIC2","Enabled","The BIOS enables the primary and secondary NIC during setup. The hardware has a single control line for both NICs.",,
+"4025","Embedded NIC1 and NIC2","Disabled","The BIOS disables the primary and secondary NIC during setup. The hardware has a single control line for both NICs.",,
+"4026","Manufacturing Mode","Enabled","Enable the manufacturing mode to bypass POST tasks/memory tests and F1/F2 prompts on specific error messages. Used by Manufacturing; not for general customer use.",,
+"4027","Manufacturing Mode","Disabled","Disable the manufacturing mode to bypass POST tasks/memory tests and F1/F2 prompts on specific error messages. Used by Manufacturing; not for general customer use.",,
+"4028","Remote Configuration Interface Request","Present (or Pending)","Request for BIOS to process the RCI (Remote Configuration Interface) structure information on the next reboot. BIOS will clear this bit after servicing this request on next reboot.",,
+"4029","Remote Configuration Interface Request","Absent (or Cleared)","No request for BIOS to process the RCI (Remote Configuration Interface) structure information on the next reboot. This is the default setting by BIOS at IPL.",,
+"402A","CPU Sequential Memory Access","Enabled","Enable CPU Sequential Memory Access on ???Prestonia and Gallatin Technology??? CPUs. Enabled is default. This token is available when the system has: Prestonia CPU - 2 processors with C1 stepping and above with 2.6 GHz speed and above Gallatin CPU - 2 processors with B1 stepping and above with all speeds",,
+"402B","CPU Sequential Memory Access","Disabled","Disable CPU Sequential Memory Access on ???Prestonia and Gallatin Technology??? CPUs. Enabled is default. This token is available when the system has: Prestonia CPU - 2 processors with C1 stepping and above with 2.6 GHz speed and above Gallatin CPU - 2 processors with B1 stepping and above with all speeds",,
+"402C","Serial ATA Controller Card","Enabled","Enable PCI Serial ATA controller (PCI daughter card).",,
+"402D","Serial ATA Controller Card","Disabled","Disable PCI Serial ATA controller (PCI daughter card).",,
+"402E","Serial Port 1","BMC Serial","Configure the system???s first/only built-in serial port to respond as COM1. The Base Management Controller (BMC) controls traffic between the OS and BMC.",,
+"402F","Serial Port 1","BMC NIC","Configure the system???s first/only built-in serial port to respond as COM1. This built-in serial port is connected to the Base Management Controller (BMC).",,
+"4030","Serial Port 1","RAC","Configure the system???s first/only built-in serial port to respond as COM1. This built-in serial port is connected to the Remote Access Controller (RAC).",,
+"4031","POST Extended Memory Test","Enabled","Enables BIOS to test all of extended memory during POST.","1.5h",
+"4032","POST Extended Memory Test","Disabled","Disables BIOS from testing extended memory during POST.","1.5h",
+"4033","Console Redirection Failsafe BAUD Rate","115200","Console Redirection uses Autobaud to detect the baud rate. If the autobaud detect fails, the baud rate will be set to 115,200 bits per second.","1.5h",
+"4034","Console Redirection Failsafe BAUD Rate","57600","Console Redirection uses Autobaud to detect the baud rate. If the autobaud detect fails, the baud rate will be set to 57,600 bits per second.","1.5h",
+"4035","Console Redirection Failsafe BAUD Rate","19200","Console Redirection uses Autobaud to detect the baud rate. If the autobaud detect fails, the baud rate will be set to 19,200 bits per second.","1.5h",
+"4036","Console Redirection Failsafe BAUD Rate","9600","Console Redirection uses Autobaud to detect the baud rate. If the autobaud detect fails, the baud rate will be set to 9,600 bits per second.","1.5h",
+"4037","SCSI/RAID OPROM Initialization","Enabled","Enables SCSI/RAID option ROM initialization during POST. Used by Manufacturing; not for general customer use.","1.5i",
+"4038","SCSI/RAID OPROM Initialization","Disabled","Disables SCSI/RAID option ROM initialization during POST. Used by Manufacturing; not for general customer use.","1.5i",
+"4039","Console Redirection","BMC SOL","Console Redirection On, output to the Baseboard Management Controller (BMC) and allows the customer to route the console to the Serial Over LAN (SOL). Also see tokens BFh, 401Ah, 401Bh, 401Ch, 401Dh, 4033h, 4034h, 4035h, and 4036h.","1.5i",
+"403A","Console Redirection","MMB","Console Redirection On, output to the Modular Management Board (MMB). Also see tokens BFh, 401Ah, 401Bh, 401Ch, 401Dh, 4033h, 4034h, 4035h, 4036h, and 4039h.","1.5i",
+"403B","Serial Port 1","COM1/BMC","Serial Port1 option in 8g controls the mode of the serial communication between UART, the serial connector and BMC. As per customer request a new mode is added in 8G. This mode will be called ???COM1/BMC??? and if set BMC will snoop the serial traffic between the COM1 and the serial DB9 connector.","2.001",
+"403C","Hard-Disk Failover","Off","This field specifies which devices in the Hard-Disk Drive Sequence menu are attempted in the boot sequence. When set to OFF (default), only the first device in the list is attempted. This field only has effect if there is more than one hard-disk drive in the system.","2.001",
+"403D","Hard-Disk Failover","On","This field specifies which devices in the Hard-Disk Drive Sequence menu are attempted in the boot sequence.When set to ON, all devices are attempted in order, as listed in the Hard-Disk Drive Sequence.This field only has effect if there is more than one hard-disk drive in the system.","2.001",
+"403E","Clear System Event Log","No","???No??? prevents the system event log from being cleared on the next boot.","2.001",
+"403F","Clear System Event Log","Yes","???Yes??? causes the system event log to be cleared on the next boot (at which time this field???s setting will be changed to ???No???).","2.001",
+"4040","Snoop Filter","Disabled","Allow user the ability to disable the Greencreek Snoop Filter chipset option from BIOS setup. There are some applications that may have lower performance with the chipset feature enabled.","2.001",
+"4041","Snoop Filter","Enabled","Allow user the ability to enable the Greencreek Snoop Filter chipset option from BIOS setup. There are some applications that may have lower performance with the chipset feature enabled.","2.001",
+"4042","Boot Sequence Retry","Disabled","Enables/Disables the Boot Sequence Retry feature. When set to Enabled, the system will re-attempt the Boot Sequence after a 30 seconds timeout if the last boot attempt has failed.","2.002",
+"4043","Boot Sequence Retry","Enabled","Enables/Disables the Boot Sequence Retry feature. When set to Enabled, the system will re-attempt the Boot Sequence after a 30 seconds timeout if the last boot attempt has failed.","2.002",
+"4044","System Interrupts Assignment","Standard","This field controls the interrupt assignment of PCI devices in the system. When set to distributed, the interrupt routing will be swizzled to minimize IRQ sharing.","2.002",
+"4045","System Interrupts Assignment","Distributed","This field controls the interrupt assignment of PCI devices in the system. When set to distributed, the interrupt routing will be swizzled to minimize IRQ sharing.","2.002",
+"8000","Chassis Intrusion","Tripped","Read-only The intrusion sensor detected that the chassis door was opened since the last time the sensor-detection logic was reset. This status is reset via the Trip Reset token. If the token???s read returns the token-table defined value, the intrusion sensor has been tripped; otherwise, the sensor has not been tripped.",,
+"8001","Chassis Intrusion","Not Tripped","Read-only The intrusion sensor has not detected a chassis door open since the last time the sensor-detection logic was reset.",,
+"8002","Chassis Intrusion","Door Open","Read-only The chassis door is currently open.",,
+"8003","Chassis Intrusion","Door Closed","Read-only The chassis door is currently closed.",,
+"8004","Power-off","Requested","Read/Write (exception) A system power-off has been requested by the hardware (i.e. a user has pressed the system power-off button) or the management software. If the system-management instrumentation has set the Management Driver|Present attribute (without legacy masking), the management code polls this attribute periodically to provide an orderly system shutdown when a system power-off is requested. System-management software writes this token prior to resetting the system to cause the system BIOS to force a system power-down. This feature is used in Windows NT 4.0 to cause the system to power-off (since an NT shutdown simply returns the system to the logon window). Note: This token is an exception to the token numbering scheme, due to legacy implementations.",,
+"8005","System Check","OK","Read-only. Identifies whether any of the system???s management hardware sensors have reported a system problem since the last read of this token. If the token???s read does not return the token-table defined value, management software must enumerate each of the system-specific management hardware elements to determine the warning or failure cause.",,
+"8006","Error Log Updated by BIOS","Yes","Read-only. If this token reads ???true???, the BIOS has updated the error log.",,
+"8007","Single-bit Error Logging Stopped","Yes","Read-only. If this token reads ???true???, the BIOS has stopped logging single-bit (correctable) memory errors.",,
+"8008","Error Logging Stopped","Yes","Read-only. If this token reads ???true???, the BIOS has stopped logging errors.",,
+"8009","FBD Memory Test State","Normal Memory Configuration","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
+"800A","FBD Memory Test State","Memory Configuration 0","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
+"800B","FBD Memory Test State","Memory Configuration 1","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
+"800C","Trusted Platform Module","Deactivated","Token for reporting the current activation state of the TPM.","2.005","192"
+"9000","CMOS Location for 1st F1/F2 Error Code","N/A","Server BIOS has a feature to log the first two F1/F2 error codes to CMOS. This can be used by the factory to determine the cause of an F1/F2 prompt if the error message scrolls off the screen. Used by Manufacturing; not for general customer use.Error Code definitions :See section 3.7.2.15 F1/F2 error code Descriptions on page 1 for more information.",,
+"9001","CMOS Location for 2nd F1/F2 Error Code","N/A","See 9000h information. Used by Manufacturing; not for general customer use.",,
+"A000","Chassis Intrusion","Trip Reset","Write-only Resets the sensor-detection logic to detect the next closed-to-open transition on the chassis door.",,
+"A001","Chassis Intrusion","Sequence Complete","Write-only The system-management instrumentation writes this attribute once the operating-system shutdown has been initiated to instruct the BIOS to complete the previously-requested system power-off sequence.",,
+"A002","Trusted Platform Module","Enable","Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the enable state will expose the TPM to the system. Used by Manufacturing; not for general customer use.",,
+"A003","Trusted Platform Module","Disable","Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the disable state will cause the BIOS to hardware disable the TPM at the next boot, and the TPM will NOT appear as installed hardware. Used by Manufacturing; not for general customer use.",,
