@@ -110,7 +110,7 @@ def wrap(s, line_len=80, indent=0, first_line_indent=0, first_line_start=0):
     for c in s:
         sys.stdout.write(c)
         chars_printed = chars_printed + 1
-        if chars_printed > line_len:
+        if chars_printed >= line_len:
             sys.stdout.write("\n")
             chars_printed=indent
             sys.stdout.write(" "*indent)

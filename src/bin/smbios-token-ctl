@@ -165,11 +165,19 @@ class TokenTranslator(object):
                 sys.stderr.write("="*79 + "\n")
 
 class TokenTranslatorCsv(TokenTranslator):
+    def utf8_decode_gen(self, dictiter):
+        for d in dictiter:
+            for k,v in d.iteritems():
+                if v is not None and isinstance(v, str):
+                    d[k] = unicode(v, 'utf-8')
+                yield d
+
     def __init__(self, *args, **kargs):
         super(TokenTranslatorCsv,self).__init__(self, *args, **kargs)
         for csvfile in kargs.get('csvlist', []):
             try:
-                csvdict = csv.DictReader(CommentedFile(open(csvfile, "rb")))
+                csvdict = self.utf8_decode_gen(csv.DictReader(
+                    CommentedFile(open(csvfile, "rb"))))
                 self.addToList(csvdict, self.tokens)
             except IOError, e:
                 sys.stderr.write(_("Skipping '%s' due to IOError.\n") % cvsfile)
