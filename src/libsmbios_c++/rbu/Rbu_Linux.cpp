@@ -178,6 +178,7 @@ const int RBU_PACKET_SIZE = 4096;
     static void setSize(const char *fn, size_t sz)
     {
         FILE *size_fh = fopen(fn, "wb");
+        int saved_errno = 0;
         if (!size_fh)
             throw RbuDriverIOErrorImpl(strerror(errno));
 
@@ -186,9 +187,12 @@ const int RBU_PACKET_SIZE = 4096;
         cout << "writing (" << sz << ") to file: " << fn << endl;
         FWRITE(ost.str().c_str(), 1, ost.str().length(), size_fh);
         if (ferror(size_fh))
-            throw RbuDriverIOErrorImpl(strerror(errno));
+               saved_errno = errno;
         fclose(size_fh);
         size_fh = 0;
+
+        if (saved_errno)
+            throw RbuDriverIOErrorImpl(strerror(saved_errno));
     }
 
     static void doPacketUpdate_v1(FILE *hdr_fh) 
@@ -313,6 +317,7 @@ const int RBU_PACKET_SIZE = 4096;
     static void setLoadValue(char val)
     {
         FILE *load_fh = 0;
+        int saved_errno = 0;
     
         waitForFile(rbu_v2_fw_load_file, 10);
     
@@ -322,9 +327,13 @@ const int RBU_PACKET_SIZE = 4096;
     
         FWRITE(&val, 1, 1, load_fh);
         if (ferror(load_fh))
-            throw RbuDriverIOErrorImpl(strerror(errno));
+            saved_errno = errno;
+
         fclose(load_fh);
         fflush(NULL);
+
+        if (saved_errno)
+            throw RbuDriverIOErrorImpl(strerror(saved_errno));
     }
     
     static void doPacketUpdate_v2(FILE *hdr_fh) 
