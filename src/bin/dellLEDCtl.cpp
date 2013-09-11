@@ -228,7 +228,7 @@ static void printLEDInfo()
 
 static inline bool zoneIsSet( DELL_LED_COLOR z )
 {
-    return( (z >= DELL_LED_COLOR_Off) || (z < NUM_DELL_LED_COLORS) );
+    return( (z >= DELL_LED_COLOR_Off) && (z < NUM_DELL_LED_COLORS) );
 }
 
 static void setAllLEDs( int level, DELL_LED_COLOR zone[], bool preserve )
