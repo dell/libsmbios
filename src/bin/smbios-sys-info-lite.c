@@ -35,12 +35,31 @@
 #define gettext_noop(String) String
 #define N_(String) gettext_noop (String)
 
+/*  0x0B is the OEM Strings smbios structure    */
+#define SMBIOS_TBL_OEM_Strings      0x0B
+
 struct options opts[] =
     {
         { 254, "memory_file", N_("Debug: Memory dump file to use instead of physical memory"), "m", 1 },
         { 255, "version", N_("Display libsmbios version information"), "v", 0 },
         { 0, NULL, NULL, NULL, 0 }
     };
+
+/*  Print out all the OEM strings   */
+static int print_oem_strings() 
+{
+    int i=0;
+    smbios_for_each_struct_type(s, SMBIOS_TBL_OEM_Strings) {
+        const char *str = 0;
+        i=1; // SMBIOS strings always start at index 1.
+        while(1) {
+            str = smbios_struct_get_string_number(s, i);
+            if(!str) break;
+            printf(_("OEM String %d: %s\n"), i, str);
+            i++;
+        }
+    }
+}
 
 int
 main (int argc, char **argv)
@@ -154,20 +173,7 @@ main (int argc, char **argv)
 
     printf(_("Is Dell:      %d\n"), (sysid!=0));
 
-#if 0
-    // Print out all the OEM strings
-    // 0x0B is the OEM Strings smbios structure
-    smbios_for_each_struct_type(s, 0x0B) {
-        const char *str = 0;
-        int i=1; // SMBIOS strings always start at index 1.
-        while(1) {
-            str = smbios_struct_get_string_number(s, i);
-            if(!str) break;
-            printf(_("OEM String %d: %s\n"), i, str);
-            i++;
-        }
-    }
-#endif
+    print_oem_strings();
 
     return retval;
 }
