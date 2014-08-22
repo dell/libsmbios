@@ -59,3 +59,15 @@
 0xC013,"Reserved."
 0xC014,"Reserved."
 0xC015,"Reserved."
+
+# Inventory Check
+0x02FF,"Manufacturing Use."
+0x0300,"Manufacturing Use."
+0x0301,"Manufacturing Use."
+0x0302,"Manufacturing Use."
+
+# Factory use 
+0x0326,"TPM Use"
+
+# Manageability Engine
+0x02E3,"Manufacturing Use."
