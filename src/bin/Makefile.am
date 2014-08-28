@@ -38,6 +38,9 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-rbu-bios-update
 
 dist_sbin_SCRIPTS += src/bin/smbios-lcd-brightness
 DATA_HOOK_REPLACE += $(sbindir)/smbios-lcd-brightness
+
+dist_sbin_SCRIPTS += src/bin/smbios-keyboard-ctl
+DATA_HOOK_REPLACE += $(sbindir)/smbios-keyboard-ctl
 endif
 
 #
