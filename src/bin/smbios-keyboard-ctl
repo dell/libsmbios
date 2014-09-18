@@ -51,6 +51,7 @@ def command_parse():
     parser.add_option("--set_mode", action="store_true", help=_("Option to set USER Selectable Keyboard Mode"))
     parser.add_option("--set_trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
     parser.add_option("--set_timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
+    parser.add_option("--set_level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
 
     cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
     return parser.parse_args()
@@ -94,6 +95,7 @@ def get_mode_settings():
         if is_set (res[smi.cbRES2], 7): print ("\t7\tAuto: Input-activity-based On (illumination level 75%); input-activity based Off")
         if is_set (res[smi.cbRES2], 8): print ("\t8\tAuto: Input-activity-based On (illumination level 100%); input-activity based Off")
 
+        print _("\n Note: some modes might need the keyboard set at specific illumination levels\n")
         try:
             val = int(raw_input("Select Mode: "))
 
@@ -155,7 +157,7 @@ def get_trigger_settings():
 def _set_keyboard_attr( reg, flag='default'):
     """A Generic function to sets keyboard illuminations settings.Flag="trigger", set keyboard illumination "Trigger" settings. Flag="timeout", set keyboard illumination "Timeout" settings."""
 
-    if flag != 'trigger' and flag != 'timeout' and flag != 'mode':
+    if flag != 'trigger' and flag != 'timeout' and flag != 'mode' and flag != 'level':
         raise RunTimeKeyboardErr( _("\t _set_keyboard_attr Flag error: %s  ") % flag )
 
     # Get Current settings. Need this to write back flags that we are not interested in
@@ -182,6 +184,12 @@ def _set_keyboard_attr( reg, flag='default'):
 
         elif flag == 'mode':
             mode_state = reg
+
+        elif flag == 'level':
+            keybrd_light_level = reg
+            if keybrd_light_level != 0 and mode_state & 1<<0:
+                print _("\n The current mode (Always OFF) might prevent level changes, select a new mode")
+                mode_state = get_mode_settings()
 
         # Now lets write Arg2 and Arg3, 4 bytes long each
         # Just do a blind write of reserved region as well.
@@ -290,6 +298,39 @@ def set_KeyBoardIllumination_timeout(s_timeout):
     _set_keyboard_attr((t_unit << 6 | timeout) , flag='timeout')
 
     return 0
+
+
+def print_current_level():
+    try:
+        res = smi.simple_ci_smi( 4, 11, 1 )
+        verboseLog.info( _("Get Keyboard illumination Current State: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
+
+        if res[smi.cbRES1] != 0 :
+            raise RunTimeKeyboardErr( _("\t Error reading keyboard settings."), res[smi.cbRES1], res[smi.cbRES2], res[smi.cbRES3] )
+
+        print _("\nOld Keyboard illumination level is: %d") % (get_byte(res[smi.cbRES3], 2))
+
+    except RunTimeKeyboardErr, e:
+        print "\t%s" % e
+
+
+def set_KeyBoardIllumination_level(s_level):
+    """ This function will set a new Keyboard Illumination level value"""
+
+    try:
+        res = smi.simple_ci_smi( 4, 11, 0 )
+        range = get_byte(res[smi.cbRES3], 2)
+        level = int(s_level)
+
+        if level < 0 or level > range:
+            print _("\n Value out of range, range is 0-%d") % range
+            raise RunTimeKeyboardErr
+
+        print_current_level()
+        _set_keyboard_attr(level, flag='level')
+
+    except RunTimeKeyboardErr:
+        print "\t%s" % e
 
 
 def PrintKeyBoardStatus():
@@ -458,6 +499,9 @@ def main():
 
         if options.set_timeout:
             set_KeyBoardIllumination_timeout(options.set_timeout)
+
+        if options.set_level:
+            set_KeyBoardIllumination_level(options.set_level)
 
     except (smi.SMIExecutionError, ), e:
         exit_code=3
