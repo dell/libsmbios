@@ -429,7 +429,7 @@ def PrintKeyBoardCapab():
 
     except RunTimeKeyboardErr, e:
         print "\t %s" % e
-        print( _("\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+        print( _("\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES2], res[smi.cbRES3], res[smi.cbRES4]) )
 
 
 def main():
