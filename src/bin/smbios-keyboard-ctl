@@ -95,10 +95,11 @@ def get_trigger_settings():
         trigger=[]
 
         try:
-            for opt in trigger_opt:
-                if int(opt) < 0 or int(opt) > 3:
-                    raise RunTimeKeyboardErr( "Invalid trigger options detected. Selected option not in range")
-                else: trigger.append(int(opt))
+            if val != "":
+                for opt in trigger_opt:
+                    if int(opt) < 0 or int(opt) > 3:
+                        raise RunTimeKeyboardErr( "Invalid trigger options detected. Selected option not in range")
+                    else: trigger.append(int(opt))
 
         except ValueError:
             raise RunTimeKeyboardErr( "Invalid Trigger options detected")
