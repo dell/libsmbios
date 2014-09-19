@@ -285,8 +285,12 @@ def PrintKeyBoardStatus():
         elif is_set (res[smi.cbRES2], 2): print "\t Auto: ALS-based ON"
         elif is_set (res[smi.cbRES2], 3): print "\t Auto: ALS- and input-activity-based On; input-activity based Off"
         elif is_set (res[smi.cbRES2], 4): print "\t Auto: Input-activity-based On; input-activity based Off"
+        elif is_set (res[smi.cbRES2], 5): print "\t Auto: Input-activity-based On (illumination level 25%); input-activity based Off"
+        elif is_set (res[smi.cbRES2], 6): print "\t Auto: Input-activity-based On (illumination level 50%); input-activity based Off"
+        elif is_set (res[smi.cbRES2], 7): print "\t Auto: Input-activity-based On (illumination level 75%); input-activity based Off"
+        elif is_set (res[smi.cbRES2], 8): print "\t Auto: Input-activity-based On (illumination level 100%); input-activity based Off"
         else : print "\t Reserved setting"
-        #[5:15] resev
+        #[9:15] resev
 
         #cbRes2 byte2
         trigger_map = get_byte(res[smi.cbRES2] ,2)
@@ -339,6 +343,10 @@ def PrintKeyBoardCapab():
         if is_set (res[smi.cbRES2], 2): print "\t Auto: ALS-based ON"
         if is_set (res[smi.cbRES2], 3): print "\t Auto: ALS- and input-activity-based On; input-activity based Off"
         if is_set (res[smi.cbRES2], 4): print "\t Auto: Input-activity-based On; input-activity based Off"
+        if is_set (res[smi.cbRES2], 5): print "\t Auto: Input-activity-based On (illumination level 25%); input-activity based Off"
+        if is_set (res[smi.cbRES2], 6): print "\t Auto: Input-activity-based On (illumination level 50%); input-activity based Off"
+        if is_set (res[smi.cbRES2], 7): print "\t Auto: Input-activity-based On (illumination level 75%); input-activity based Off"
+        if is_set (res[smi.cbRES2], 8): print "\t Auto: Input-activity-based On (illumination level 100%); input-activity based Off"
 
         #byte 3 byt 0,1,2 mask
         keyboard_type=['Reserved', 'Tasklight', 'Backlight', 'Reserved for Future']
@@ -442,7 +450,11 @@ if __name__ == "__main__":
 #     bit 2     Auto: ALS-based On; ALS-based Off (Travis ATG)
 #     bit 3     Auto: ALS- and input-activity-based On; input-activity based Off
 #     bit 4     Auto: Input-activity-based On; input-activity based Off
-#     bits 5-15 Reserved for future use
+#     bit 5     Auto: Input-activity-based On (illumination level 25%); input-activity based Off
+#     bit 6     Auto: Input-activity-based On (illumination level 50%); input-activity based Off
+#     bit 7     Auto: Input-activity-based On (illumination level 75%); input-activity based Off
+#     bit 8     Auto: Input-activity-based On (illumination level 100%); input-activity based Off
+#     bits 9-15 Reserved for future use
 #  cbRES2, byte2  Reserved for future use
 #  cbRES2, byte3  Keyboard illumination type
 #     0         Reserved
@@ -475,7 +487,11 @@ if __name__ == "__main__":
 #     bit 2     Auto: ALS-based On; ALS-based Off (Travis ATG)
 #     bit 3     Auto: ALS- and input-activity-based On; input-activity based Off
 #     bit 4     Auto: Input-activity-based On; input-activity based Off
-#     bits 5-15 Reserved for future use
+#     bit 5     Auto: Input-activity-based On (illumination level 25%); input-activity based Off
+#     bit 6     Auto: Input-activity-based On (illumination level 50%); input-activity based Off
+#     bit 7     Auto: Input-activity-based On (illumination level 75%); input-activity based Off
+#     bit 8     Auto: Input-activity-based On (illumination level 100%); input-activity based Off
+#     bits 9-15 Reserved for future use
 #     Note: Only One bit can be set
 #  cbRES2, byte2  Currently active auto keyboard illumination triggers.
 #     bit 0     Any keystroke
@@ -504,7 +520,11 @@ if __name__ == "__main__":
 #     bit 2     Auto: ALS-based On; ALS-based Off (Travis ATG)
 #     bit 3     Auto: ALS- and input-activity-based On; input-activity based Off
 #     bit 4     Auto: Input-activity-based On; input-activity based Off
-#     bits 5-15 Reserved for future use
+#     bit 5     Auto: Input-activity-based On (illumination level 25%); input-activity based Off
+#     bit 6     Auto: Input-activity-based On (illumination level 50%); input-activity based Off
+#     bit 7     Auto: Input-activity-based On (illumination level 75%); input-activity based Off
+#     bit 8     Auto: Input-activity-based On (illumination level 100%); input-activity based Off
+#     bits 9-15 Reserved for future use
 #     Note: Only One bit can be set
 #  cbArg2, byte2  Desired auto keyboard illumination triggers. Must remain inactive to allow
 #                 keyboard to turn off automatically.
