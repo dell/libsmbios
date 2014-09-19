@@ -47,11 +47,11 @@ def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
 
     parser.add_option("--info", "-i", action="store_true", default=False, help=_("This will Display the Supported Features for Keyboard illumination"))
-    parser.add_option("--get_status", "-g",  action="store_true", default=False, help=_("This will Display the current Status of Keyboard Illumination Settings"))
-    parser.add_option("--set_mode", action="store_true", help=_("Option to set USER Selectable Keyboard Mode"))
-    parser.add_option("--set_trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
-    parser.add_option("--set_timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
-    parser.add_option("--set_level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
+    parser.add_option("--get-status", "-g",  action="store_true", default=False, help=_("This will Display the current Status of Keyboard Illumination Settings"))
+    parser.add_option("--set-mode", action="store_true", help=_("Option to set USER Selectable Keyboard Mode"))
+    parser.add_option("--set-trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
+    parser.add_option("--set-timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
+    parser.add_option("--set-level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
 
     cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
     return parser.parse_args()
