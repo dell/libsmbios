@@ -4,6 +4,7 @@
   #############################################################################
   #
   # Copyright (c) 2005 Dell Computer Corporation
+  # Copyright (c) 2014 Pali Rohar <pali.rohar@gmail.com>
   # Dual Licenced under GNU GPL and OSL
   #
   #############################################################################
@@ -47,6 +48,7 @@ def command_parse():
 
     parser.add_option("--info", "-i", action="store_true", default=False, help=_("This will Display the Supported Features for Keyboard illumination"))
     parser.add_option("--get_status", "-g",  action="store_true", default=False, help=_("This will Display the current Status of Keyboard Illumination Settings"))
+    parser.add_option("--set_mode", action="store_true", help=_("Option to set USER Selectable Keyboard Mode"))
     parser.add_option("--set_trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
     parser.add_option("--set_timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
 
@@ -68,6 +70,43 @@ def get_byte(num, byte_pos):
         print "\t%s" % e
 
     return ((num >> (byte_pos*8)) & 0xFF)
+
+
+def get_mode_settings():
+    try:
+        res = smi.simple_ci_smi( 4, 11, 0 )
+        verboseLog.info( _("Get Keyboard Illumination Capability: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X,res[smi.cbRES4]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3],res[smi.cbRES4]) )
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeKeyboardErr( _("\ttCould not retrieve supported USER Selectable Modes") )
+
+
+        print _("\n Supported USER Selectable Modes: ")
+        print _("\tOption\tMode")
+        print _("------------------------------------------------")
+        if is_set (res[smi.cbRES2], 0): print ("\t0\tAlways OFF")
+        if is_set (res[smi.cbRES2], 1): print ("\t1\tAlways ON")
+        if is_set (res[smi.cbRES2], 2): print ("\t2\tAuto: ALS-based ON")
+        if is_set (res[smi.cbRES2], 3): print ("\t3\tAuto: ALS- and input-activity-based On; input-activity based Off")
+        if is_set (res[smi.cbRES2], 4): print ("\t4\tAuto: Input-activity-based On; input-activity based Off")
+        if is_set (res[smi.cbRES2], 5): print ("\t5\tAuto: Input-activity-based On (illumination level 25%); input-activity based Off")
+        if is_set (res[smi.cbRES2], 6): print ("\t6\tAuto: Input-activity-based On (illumination level 50%); input-activity based Off")
+        if is_set (res[smi.cbRES2], 7): print ("\t7\tAuto: Input-activity-based On (illumination level 75%); input-activity based Off")
+        if is_set (res[smi.cbRES2], 8): print ("\t8\tAuto: Input-activity-based On (illumination level 100%); input-activity based Off")
+
+        try:
+            val = int(raw_input("Select Mode: "))
+
+        except ValueError:
+            raise RunTimeKeyboardErr("Invalid Mode detected")
+
+        if val >= 0 and val <= 8 and is_set (res[smi.cbRES2], val):
+            return 1 << val
+
+        raise RunTimeKeyboardErr("Invalid Mode detected")
+
+    except RunTimeKeyboardErr, e:
+        print "\t%s" % e
 
 
 def get_trigger_settings():
@@ -111,13 +150,12 @@ def get_trigger_settings():
         print "\t%s" % e
 
 #To-do
-#  - user-selectable modes
 #  - ALS Setting
 #  - Keyboard light level
 def _set_keyboard_attr( reg, flag='default'):
     """A Generic function to sets keyboard illuminations settings.Flag="trigger", set keyboard illumination "Trigger" settings. Flag="timeout", set keyboard illumination "Timeout" settings."""
 
-    if flag != 'trigger' and flag != 'timeout':
+    if flag != 'trigger' and flag != 'timeout' and flag != 'mode':
         raise RunTimeKeyboardErr( _("\t _set_keyboard_attr Flag error: %s  ") % flag )
 
     # Get Current settings. Need this to write back flags that we are not interested in
@@ -128,25 +166,28 @@ def _set_keyboard_attr( reg, flag='default'):
         if res[smi.cbRES1] != 0 :
             raise RunTimeKeyboardErr( _("\t Failed to set Keyboard illumination attributes. Could not read the current settings") )
 
-        mode_state = res[smi.cbRES2]
+        mode_state = res[smi.cbRES2] & 0xFFFF
+        trigger_map = get_byte(res[smi.cbRES2] ,2)
         timeout = get_byte(res[smi.cbRES2] ,3)
         asl_setting = get_byte(res[smi.cbRES3] ,0)
         keybrd_light_level = get_byte(res[smi.cbRES3] ,2)
-
-        # Now lets write Arg2 and Arg3, 4 bytes long each
-        # Just do a blind write of reserved region as well.
-        cbArg2_w0 = mode_state & 0xFFFF
 
         if flag == 'trigger':
             trigger_map = 0
             for opt in reg:
                 trigger_map|=1<<opt
-            cbArg2_b2 = trigger_map << 16
-            cbArg2_b3 = timeout << 24
 
         elif flag == 'timeout':
-            cbArg2_b2 = get_byte(res[smi.cbRES2] ,2) << 16
-            cbArg2_b3 = reg << 24
+            timeout = reg
+
+        elif flag == 'mode':
+            mode_state = reg
+
+        # Now lets write Arg2 and Arg3, 4 bytes long each
+        # Just do a blind write of reserved region as well.
+        cbArg2_w0 = mode_state
+        cbArg2_b2 = trigger_map << 16
+        cbArg2_b3 = timeout << 24
 
         cbArg3_b0 = asl_setting
         cbArg3_b1 = 0x00
@@ -166,6 +207,10 @@ def _set_keyboard_attr( reg, flag='default'):
         print "\t %s" % e
         print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
 
+
+def set_mode():
+    mode=get_mode_settings()
+    _set_keyboard_attr(mode, flag='mode')
 
 def set_trigger():
     trigger=get_trigger_settings()
@@ -402,6 +447,10 @@ def main():
         if options.get_status:
             print _("Helper function to print current status of keyboard illumination")
             PrintKeyBoardStatus()
+
+        if options.set_mode:
+            print _("Setting USER Selectable Keyboard Mode")
+            set_mode()
 
         if options.set_trigger:
             print _("Setting Keyboard illumination Triggers ")
