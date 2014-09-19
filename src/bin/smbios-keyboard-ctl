@@ -225,7 +225,8 @@ def timeout_parser(s_timeout):
         print ("Setting keyboard illumination timeout value  of:  %d%s") % (timeout, t_units[t_unit])
         return (timeout, t_unit)
 
-    except RunTimeKeyboardErr:
+    except RunTimeKeyboardErr, e:
+        print "%s" % e
         print _("\n To set timeout value as 45 seconds enter: 45s ")
         print _(" You can specify time out values in  s[Seconds], m[Minutes], h[hours], d[days]")
         print _(" Timeout value range is 0-63, timeout value of 0 means its always ON ")
