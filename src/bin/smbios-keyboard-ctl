@@ -75,7 +75,7 @@ def get_trigger_settings():
     try:
         # Get the supported trigger types.
         res = smi.simple_ci_smi( 4, 11, 0 )
-        verboseLog.info( _("Get Keyboard Illumination Capability: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
+        verboseLog.info( _("Get Keyboard Illumination Capability: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X,res[smi.cbRES4]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3],res[smi.cbRES4]) )
 
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("\tCould not retrieve supported KeyBoard Illumination Capabilities") )
@@ -327,7 +327,7 @@ def PrintKeyBoardCapab():
 
     try:
         res = smi.simple_ci_smi( 4, 11, 0 )
-        verboseLog.info( _("Get Keyboard Illumination Capability: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
+        verboseLog.info( _("Get Keyboard Illumination Capability: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X,res[smi.cbRES4]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3],res[smi.cbRES4]) )
 
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("Warning:: Your Keyboard may not support Keyboard illumination Feature") )
