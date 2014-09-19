@@ -54,6 +54,11 @@ def command_parse():
     parser.add_option("--set-level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
 
     cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit()
+
     return parser.parse_args()
 
 
