@@ -97,7 +97,7 @@ def get_trigger_settings():
         try:
             if val != "":
                 for opt in trigger_opt:
-                    if int(opt) < 0 or int(opt) > 3:
+                    if int(opt) < 0 or int(opt) > 3 or not is_set (res[smi.cbRES3], int(opt)):
                         raise RunTimeKeyboardErr( "Invalid trigger options detected. Selected option not in range")
                     else: trigger.append(int(opt))
 
