@@ -334,7 +334,7 @@ def set_KeyBoardIllumination_level(s_level):
         print_current_level()
         _set_keyboard_attr(level, flag='level')
 
-    except RunTimeKeyboardErr:
+    except RunTimeKeyboardErr, e:
         print "\t%s" % e
 
 
