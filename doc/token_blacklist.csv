@@ -71,3 +71,7 @@
 
 # Manageability Engine
 0x02E3,"Manufacturing Use."
+
+
+#LCD touchscreen, Enable only mode
+0x0363,"Manufacturing Use."
