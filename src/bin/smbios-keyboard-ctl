@@ -52,6 +52,7 @@ def command_parse():
     parser.add_option("--set-trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
     parser.add_option("--set-timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
     parser.add_option("--set-level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
+    parser.add_option("--als", action="store", dest="als_option", help=_("Set/Get ALS (Ambient Light Sensor Status and Control Level)"))
 
     cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
 
@@ -478,6 +479,130 @@ def PrintKeyBoardCapab():
         print( _("\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES2], res[smi.cbRES3], res[smi.cbRES4]) )
 
 
+def get_als_status():
+    """This function is used to get the Ambient Light Sensor Status(ALS)"""
+
+    try:
+        res = smi.simple_ci_smi( 17, 10, 0 )
+        verboseLog.info( _("Get Ambient Light Sensor(ALS) Status: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]))
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeKeyboardErr( _("Unable to get ALS settings: Feature Not supported on this system\n"))
+
+        print "Current ALS Status: "
+        #cbArg2,byte0 - 0/1, this should return 0 or 1.
+        print 'Enabled' if (get_byte(res[smi.cbRES2] ,0) ) else 'Disabled'
+
+        print "Current ALS low limit  : ", get_byte(res[smi.cbRES3] ,0)
+        print "Current ALS High limit : ", get_byte(res[smi.cbRES3] ,1)
+        print "Absolute ALS low limit : ", get_byte(res[smi.cbRES3] ,2)
+        print "Absolute ALS High limit: ", get_byte(res[smi.cbRES3] ,3)
+
+    except RunTimeKeyboardErr, e:
+        print "\t %s" % e
+        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+
+
+def print_als_brightness_table():
+    """This function is used to fetch the ALS Brightness Table"""
+
+    try:
+        res = smi.simple_ci_smi( 17, 10, 2 )
+        verboseLog.info( _("Get Ambient Light Sensor(ALS) Brightness Table: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]))
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeKeyboardErr( _("Unable to get ALS Brightness Table: Feature Not supported on this system\n"))
+
+        print "Brightness Table: ", hex(res[smi.cbRES3])+hex(res[smi.cbRES2])[2:]
+
+    except RunTimeKeyboardErr, e:
+        print "\t %s" % e
+        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+
+
+def validate_als_limit(s_val):
+    int_als = 0
+    try:
+        int_als = int(s_val)
+        verboseLog.info( _("ALS high/low limit: %d ") % (int_als))
+        return int_als
+
+    except (TypeError, ValueError):
+        print "Enter the ALS value as integer: ", s_val
+        raise RunTimeKeyboardErr("Invalid Integer valie detected")
+
+
+def set_als_param(parm_str='NA', parm=0):
+    """This function is used to Enable/disable ALS and also the ALS high and low limits"""
+
+    try:
+        res = smi.simple_ci_smi( 17, 10, 0 )
+        verboseLog.info( _("Get Ambient Light Sensor(ALS) Status: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]))
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeKeyboardErr( _("Unable to get ALS settings: Feature Not supported on this system\n"))
+
+        # Get current settings
+        status     = get_byte(res[smi.cbRES2] ,0 )
+        low_limit  = get_byte(res[smi.cbRES3] ,0 )
+        high_limit = get_byte(res[smi.cbRES3] ,1 )
+
+        if parm_str == 'status':
+            status = parm
+
+        elif parm_str == 'als_high':
+            high_limit = parm
+
+        elif parm_str == 'als_low':
+            low_limit = parm
+
+        else:
+            raise RunTimeKeyboardErr( _("Invalid parm_str detected \n"))
+
+        cbArg2 =  high_limit << 16 | low_limit << 8 | status
+
+        res = smi.simple_ci_smi( 17, 10, 1, cbArg2 )
+        verboseLog.info( _("Set Ambient Light Sensor(ALS) Status: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]))
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeKeyboardErr( _("Unable to Set ALS settings\n"))
+
+        print "ALS parameter set successfully"
+
+    except RunTimeKeyboardErr, e:
+        print "\t %s" % e
+        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+
+
+def set_als_settings(als_param):
+
+    if als_param == 'get':
+        get_als_status()
+        print_als_brightness_table()
+
+    elif als_param == 'enable':
+        set_als_param('status', 1)
+
+    elif als_param == 'disable':
+        set_als_param('status', 0)
+
+    elif als_param[:8] == 'set-low=':
+        als_low = validate_als_limit(als_param[9:])
+        set_als_param('als_low', als_low)
+
+    elif als_param[:9] == 'set-high=':
+        als_high = validate_als_limit(als_param[9:])
+        set_als_param('als_high', als_high)
+
+    else:
+        print "invalide --als [%s]" % als_param
+        print "\tget  		- Get ALS Settings  "
+        print "\tenable    	- Enable ALS  "
+        print "\tdisable   	- Disable ALS "
+        print "\tset-high=<int>  - set ALS High Limit "
+        print "\tset-low =<int>  - set ALS Low  Limit "
+
+
 def main():
     exit_code = 0
     (options, args) = command_parse()
@@ -507,6 +632,10 @@ def main():
 
         if options.set_level:
             set_KeyBoardIllumination_level(options.set_level)
+
+        if options.als_option:
+            set_als_settings(options.als_option)
+
 
     except (smi.SMIExecutionError, ), e:
         exit_code=3
@@ -640,3 +769,31 @@ if __name__ == "__main__":
 #     bits 5:0  Timeout value (0-63) in sec/min/hr/day
 #  cbArg3, byte0  Desired setting of ALS value that turns the light on or off.
 #  cbArg3, byte2  Desired keyboard light level.
+
+# cbClass 17
+# cbSelect 10
+# Ambient Light Sensor Status and Control
+# cbArg1 determines the function to be performed
+#
+# cbArg1 0x0 = Get ALS Status
+# Set New Status
+# cbRes2, byte 0 Current ALS Status
+#  0 Disabled
+#  1 Enabled
+# cbRes3, byte 0 Current ALS low limit
+# cbRes3, byte 1 Current ALS high limit
+# cbRes3, byte 2 Absolute ALS low limit
+# cbRes3, byte 3 Absolute ALS high limit
+#
+# cbArg1 0x1 = Control ALS
+# cbArg2, byte 0
+#  0 Disable ALS
+#  1 Enable ALS
+# cbArg2, byte 1 ALS low limit to set
+# cbArg2, byte 2 ALS high limit to set
+# On return:
+# cbRes1 Standard return values (0, -1, -2)#
+#
+# cbArg1 0x2 = Get Brightness Table
+# cbRes2 Bytes 3..0 of the brightness table
+# cbRes3 Bytes 7..4 of the brightness table
