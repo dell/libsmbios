@@ -1,0 +1,294 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2015 Dell Computer Corporation
+  # by Srinivas Gowda <srinivas_g_gowda@dell.com>
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""smbios-thermal-ctl"""
+
+from __future__ import generators
+
+# import arranged alphabetically
+import gettext
+import locale
+import os
+import sys
+
+# the following vars are all substituted on install
+# this bin isnt byte-compiled, so this is ok
+__VERSION__="uninstalled-version"
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
+# end vars
+
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
+
+import cli
+from libsmbios_c import token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
+
+class RunTimeThermalSensorErr(Exception): pass
+
+def command_parse():
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
+
+    parser.add_option("--info", "-i", action="store_true", default=False, help=_("This will Display the Supported Features for Keyboard illumination"))
+    parser.add_option("--get-thermal-info", "-g",  action="store_true", default=False, help=_("This will Display the Thermal Information of a system"))
+    parser.add_option("--set-thermal-mode", action="store", dest="thermal_mode", help=_("Option to set Thermal Mode; balanced, cool-bottom, quiet, performance"))
+
+    cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit()
+
+    return parser.parse_args()
+
+
+def is_set(num, pos):
+    mask = 1 << pos
+    return True if (num & mask) else False
+
+
+# Return a the byte specified by byte_pos from a double word num
+def get_byte(num, byte_pos):
+    try :
+        if byte_pos < 0 or byte_pos > 3:
+            raise RunTimeThermalSensorErr( "Internal Error: Byte position out of bound - ", byte_pos )
+    except RunTimeThermalSensorErr, e:
+        print "\t%s" % e
+
+    return ((num >> (byte_pos*8)) & 0xFF)
+
+
+def PrintSupportedThermModes(flag='default'):
+    print _("\n Print all the Available Thermal Information of your system: ")
+    print _("-------------------------------------------------------------------")
+
+    try:
+        res = smi.simple_ci_smi( 17, 19, 0 )
+        verboseLog.info( _("Get Thermal Information: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X, res[smi.cbRES3]=0x%X") %
+                              (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
+
+        if res[smi.cbRES1] != 0:
+            verboseLog.info( _(" Info: Unable to Get Thermal Information on this system\n") )
+
+        if flag == 'thermal-mode': return (res[smi.cbRES2] & 0xF )
+        print _(" \nSupported Thermal Modes: ")
+        if is_set (res[smi.cbRES2], 0): print "\t Balanced"
+        if is_set (res[smi.cbRES2], 1): print "\t Cool Bottom"
+        if is_set (res[smi.cbRES2], 2): print "\t Quiet"
+        if is_set (res[smi.cbRES2], 3): print "\t Performance"
+
+        print _(" \nSupported Active Acoustic Controller (AAC) modes: ")
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 0): print "\t AAC (Balanced)"
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 1): print "\t AAC (Cool Bottom)"
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 2): print "\t ACC (Quiet)"
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 3): print "\t ACC (Performance)"
+
+        if flag == 'acc-config' : return get_byte(res[smi.cbRES3], 1)
+        print _(" \nSupported AAC Configuration type: ")
+        if (get_byte(res[smi.cbRES3], 1)) == 0 : print "\tGlobal (AAC enable/disable applies to all supported USTT modes)"
+        if (get_byte(res[smi.cbRES3], 1)) == 1 : print "\tUser Selectable Thermal Table(USTT) mode specific"
+
+    except RunTimeThermalSensorErr, e:
+        print "\t%s" % e
+
+
+def GetCurrentThermalMode(flag='default'):
+    try:
+        res = smi.simple_ci_smi( 17, 19, 0 )
+        verboseLog.info( _("Get Thermal Information: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") %
+                              (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
+
+        if res[smi.cbRES1] != 0:
+            verboseLog.info( _(" Info: Unable to Get Thermal Information on this system\n") )
+
+        if flag == 'thermal-mode': return res[smi.cbRES3]
+        if flag == 'acc-mode' : return (get_byte(res[smi.cbRES3], 2))
+
+        print _("\n Print Current Status of Thermal Information: ")
+        print _("-------------------------------------------------------------------")
+        print _(" \nCurrent Thermal Modes: ")
+        if is_set (res[smi.cbRES3], 0): print "\t Balanced"
+        if is_set (res[smi.cbRES3], 1): print "\t Cool Bottom"
+        if is_set (res[smi.cbRES3], 2): print "\t Quiet"
+        if is_set (res[smi.cbRES3], 3): print "\t Performance"
+
+        print _(" \nCurrent Active Acoustic Controller (AAC) Mode: ")
+        "If AAC Configuration Type is Global,"
+
+        if (get_byte(res[smi.cbRES3], 2))== 0  : print "\t AAC mode Disabled"
+        if (get_byte(res[smi.cbRES3], 2))== 1  : print "\t AAC mode Enabled "
+
+
+        print _(" \nCurrent Active Acoustic Controller (AAC) Mode: ")
+
+        if (get_byte(res[smi.cbRES3], 1)) == 0:
+            if (get_byte(res[smi.cbRES3], 2)) == 0 : print "\tGlobal (AAC enable/disable applies to all supported USTT modes)"
+            if (get_byte(res[smi.cbRES3], 2)) == 1 : print "\tUSTT mode specific"
+
+        elif (get_byte(res[smi.cbRES3], 1)) == 1:
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 0): print "\t AAC (Balanced)"
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 1): print "\t AAC (Cool Bottom)"
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 2): print "\t ACC (Quiet)"
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 3): print "\t ACC (Performance)"
+
+        print _(" \nCurrent Fan Failure Mode: ")
+        if is_set ((get_byte(res[smi.cbRES3], 3)), 0): print "\tMinimal Fan Failure (at least one fan has failed, one fan working)"
+        if is_set ((get_byte(res[smi.cbRES3], 3)), 1): print "\tCatastrophic Fan Failure (all fans have failed)"
+
+
+    except RunTimeThermalSensorErr, e:
+        print "\t%s" % e
+
+
+def SetThermalMode(thermal_mode):
+    verboseLog.info( _("Selected Thermal Mode = %s") % (thermal_mode))
+
+    try :
+        if   thermal_mode.lower() == 'balanced'   : var_thermal_mode = 1
+        elif thermal_mode.lower() == 'cool-bottom': var_thermal_mode = 1 << 1
+        elif thermal_mode.lower() == 'quite'      : var_thermal_mode = 1 << 2
+        elif thermal_mode.lower() == 'performance': var_thermal_mode = 1 << 3
+        else :
+            raise RunTimeThermalSensorErr( _("Invalid thermal mode option specified: %s,  \
+                      Supported modes : balanced, cool-bottom, quite, performance") % thermal_mode)
+
+        #Set ACC settings as current, since here we only modify the thermal mode
+        acc_mode = GetCurrentThermalMode('acc-mode')
+
+        cbArg2 = acc_mode << 8 | var_thermal_mode
+
+        res = smi.simple_ci_smi( 17, 19, 1, cbArg2 )
+        verboseLog.info( _("Set Thermal Information: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") %
+                              (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]))
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeThermalSensorErr( _("Set Thermal Information failed: arg2- %x cbRES1: 0x%X\
+                      cbRES2: 0x%X cbRES3: 0x%X \n") % (cbArg2, res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]))
+
+        print ( _("Thermal Information Set successfully to: %s") % thermal_mode)
+
+    except RunTimeThermalSensorErr, e:
+        print "\t %s" % e
+        print "\t Set Thermal Information Failed"
+
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+
+    try:
+        if options.info:
+            print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
+            print _("smbios-thermal-ctl version : %s") % __VERSION__
+            verboseLog.info( _(" You can use smbios-thermal-ctl utlity to control the fan speed"))
+            # Info will show the all the supported attributes of User selectable Thermal settings
+            PrintSupportedThermModes()
+
+        if options.get_thermal_info:
+            print _("Helper function to Get current Thermal Mode settings")
+            GetCurrentThermalMode()
+
+        if options.thermal_mode:
+            print _("Helper function to Set Thermal Mode")
+            SetThermalMode(options.thermal_mode)
+
+    except (smi.SMIExecutionError, ), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not execute SMI.") )
+        verboseLog.info( _("The smi library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (smbios.TableParseError, token.TokenTableParseError), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    return exit_code
+
+if __name__ == "__main__":
+    sys.exit( main() )
+
+
+# cbClass 17
+# cbSelect 19
+# User Selectable Thermal Tables(USTT)
+# cbArg1 determines the function to be performed
+
+# cbArg1 0x0 = Get Thermal Information
+#  cbRES1         Standard return codes (0, -1, -2)
+#  cbRES2, byte 0  Bitmap of supported thermal modes. A mode is supported if its bit is set to 1
+#     Bit 0 Balanced
+#     Bit 1 Cool Bottom
+#     Bit 2 Quiet
+#     Bit 3 Performance
+#  cbRES2, byte 1 Bitmap of supported Active Acoustic Controller (AAC) modes. Each mode
+#                 corresponds to the supported thermal modes in byte 0. A mode is supported if
+#                 its bit is set to 1.
+#     Bit 0 AAC (Balanced)
+#     Bit 1 AAC (Cool Bottom
+#     Bit 2 AAC (Quiet)
+#     Bit 3 AAC (Performance)
+#  cbRes3, byte 0 Current Thermal Mode
+#     Bit 0 Balanced
+#     Bit 1 Cool Bottom
+#     Bit 2 Quiet
+#     Bit 3 Performanc
+#  cbRes3, byte 1  AAC Configuration type
+#          0       Global (AAC enable/disable applies to all supported USTT modes)
+#          1       USTT mode specific
+#  cbRes3, byte 2  Current Active Acoustic Controller (AAC) Mode
+#     If AAC Configuration Type is Global,
+#          0       AAC mode disabled
+#          1       AAC mode enabled
+#     If AAC Configuration Type is USTT mode specific (multiple bits may be set),
+#          Bit 0 AAC (Balanced)
+#          Bit 1 AAC (Cool Bottom
+#          Bit 2 AAC (Quiet)
+#          Bit 3 AAC (Performance)
+#  cbRes3, byte 3  Current Fan Failure Mode
+#     Bit 0 Minimal Fan Failure (at least one fan has failed, one fan working)
+#     Bit 1 Catastrophic Fan Failure (all fans have failed)
+
+#  cbArg1 0x1   (Set Thermal Information), both desired thermal mode and
+#               desired AAC mode shall be applied
+#  cbArg2, byte 0  Desired Thermal Mode to set (only one bit may be set for this parameter)
+#     Bit 0 Balanced
+#     Bit 1 Cool Bottom
+#     Bit 2 Quiet
+#     Bit 3 Performance
+#  cbArg2, byte 1  Desired Active Acoustic Controller (AAC) Mode to set
+#     If AAC Configuration Type is Global,
+#         0  AAC mode disabled
+#         1  AAC mode enabled
+#
+#     If AAC Configuration Type is USTT mode specific (multiple bits may be set for this parameter),
+#         Bit 0 AAC (Balanced)
+#         Bit 1 AAC (Cool Bottom
+#         Bit 2 AAC (Quiet)
+#         Bit 3 AAC (Performance)
