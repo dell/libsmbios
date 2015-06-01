@@ -44,7 +44,7 @@ class RunTimeThermalSensorErr(Exception): pass
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
 
-    parser.add_option("--info", "-i", action="store_true", default=False, help=_("This will Display the Supported Features for Keyboard illumination"))
+    parser.add_option("--info", "-i", action="store_true", default=False, help=_("This will Display the Supported Features of USTT and AAC"))
     parser.add_option("--get-thermal-info", "-g",  action="store_true", default=False, help=_("This will Display the Thermal Information of a system"))
     parser.add_option("--set-thermal-mode", action="store", dest="thermal_mode", help=_("Option to set Thermal Mode; balanced, cool-bottom, quiet, performance"))
 
