@@ -41,6 +41,9 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-lcd-brightness
 
 dist_sbin_SCRIPTS += src/bin/smbios-keyboard-ctl
 DATA_HOOK_REPLACE += $(sbindir)/smbios-keyboard-ctl
+
+dist_sbin_SCRIPTS += src/bin/smbios-thermal-ctl
+DATA_HOOK_REPLACE += $(sbindir)/smbios-thermal-ctl
 endif
 
 #
