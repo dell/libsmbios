@@ -161,11 +161,11 @@ def SetThermalMode(thermal_mode):
     try :
         if   thermal_mode.lower() == 'balanced'   : var_thermal_mode = 1
         elif thermal_mode.lower() == 'cool-bottom': var_thermal_mode = 1 << 1
-        elif thermal_mode.lower() == 'quite'      : var_thermal_mode = 1 << 2
+        elif thermal_mode.lower() == 'quiet'      : var_thermal_mode = 1 << 2
         elif thermal_mode.lower() == 'performance': var_thermal_mode = 1 << 3
         else :
             raise RunTimeThermalSensorErr( _("Invalid thermal mode option specified: %s,  \
-                      Supported modes : balanced, cool-bottom, quite, performance") % thermal_mode)
+                      Supported modes : balanced, cool-bottom, quiet, performance") % thermal_mode)
 
         #Set ACC settings as current, since here we only modify the thermal mode
         acc_mode = GetCurrentThermalMode('acc-mode')
