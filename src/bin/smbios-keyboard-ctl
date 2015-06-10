@@ -797,3 +797,17 @@ if __name__ == "__main__":
 # cbArg1 0x2 = Get Brightness Table
 # cbRes2 Bytes 3..0 of the brightness table
 # cbRes3 Bytes 7..4 of the brightness table
+
+# cbClass 4
+# cbSelect 9
+# Get Keyboard Illumination Configuration
+# On return:
+# cbRes1 Standard return values (0, -1, -2)
+# cbRes2, byte 0 Current keyboard illumination mode:
+#     0x00 - Automatic
+#     0x01 - Always off
+#     0x02 - Always on
+# cbRes2, byte 1 Current automatic mode threshold
+#     0x00-0xFF - Ambient light level to trigger automatic keyboard illumination
+# cbRes2, byte 2 Current ambient light level
+#     0x00-0xFF - Last know n light level read from the system ambient light sensor.
