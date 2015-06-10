@@ -46,7 +46,7 @@ struct options opts[] =
     };
 
 /*  Print out all the OEM strings   */
-static int print_oem_strings() 
+static void print_oem_strings()
 {
     int i=0;
     smbios_for_each_struct_type(s, SMBIOS_TBL_OEM_Strings) {
