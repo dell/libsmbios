@@ -830,6 +830,7 @@
 0345,"Battery Slice Charge Configuration","Express Charge","Dell fast charging technology. Switches the battery to Express Charge mode using the express charging algorithm",3.002,
 0346,"Primary Battery Charge Configuration","Standard Charge","Battery is charged over a longer period of time",3.002,
 0347,"Primary Battery Charge Configuration","Express Charge","Dell fast charging technology. Switches the primary battery to Express Charge mode using the express charging algorithm",3.002,
+0348,"Primary Battery Charge Configuration","Custom Charge","The battery will start and stop charging based on user input",3.002,
 0349,"Primary Battery Custom Charge Start",NA,"Sets the percentage value at which the battery charging will start Implementation Note: This field must be in the range [50, 95] with a step value of 1 and at least 5% less than Primary Custom Charge End",3.002,
 034A,"Primary Battery Custom Charge End",NA,"Sets the percentage value at which the custom battery charging will stop Implementation Note: This field must be in the range [55,100] with a step value of 1 and at least 5% greater than Primary Custom Charge Start",3.002,
 034B,"Media Bay Battery Charge Configuration",StandardCharge,"Battery is charged over a longer period of time",3.002,

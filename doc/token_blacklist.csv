@@ -59,6 +59,17 @@
 0xC013,"Reserved."
 0xC014,"Reserved."
 0xC015,"Reserved."
+0xF000,"Reserved."
+0xF001,"Reserved."
+0xF002,"Reserved."
+0xF003,"Reserved."
+0xF004,"Reserved."
+0xF005,"Reserved."
+0xF006,"Reserved."
+0xF007,"Reserved."
+0xF008,"Reserved."
+0xF009,"Reserved."
+0xF00A,"Reserved."
 
 # Inventory Check
 0x02FF,"Manufacturing Use."
