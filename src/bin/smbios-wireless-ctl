@@ -375,6 +375,28 @@ if __name__ == "__main__":
 # WiFi Control
 # Entry/return values grouped by the value of cbARG1, byte0 which indicates the function to perform:
 
+# 0x0 = Return Wireless Info
+#  cbRES1      Standard return codes (0, -1, -2)
+#  cbRES2      Info bit flags:
+#      0 Hardware switch supported (1)
+#      1 WiFi locator supported (1)
+#      2 WLAN supported (1)
+#      3 Bluetooth (BT) supported (1)
+#      4 WWAN supported (1)
+#      5 Wireless KBD supported (1)
+#      6-7 Reserved (0)
+#      8 WLAN installed (1)
+#      9 BT installed (1)
+#      10 WWAN installed (1)
+#      11-15 Reserved (0)
+#      16 Hardware (HW) switch is On (1)
+#      17 WLAN disabled (1)
+#      18 BT disabled (1)
+#      19 WWAN disabled (1)
+#      20-31 Reserved (0)
+#  cbRES3      NVRAM size in bytes
+#  cbRES4, byte 0  NVRAM format version number
+
 # 0x1 = Set QuickSet Radio Disable Flag
 #  cbARG1, byte1    Radio ID value:
 #      0 Radio Status
@@ -414,4 +436,26 @@ if __name__ == "__main__":
 #      9-14 Reserved (0)
 #      15 WiFi locator setting locked (1)
 #      16-31 Reserved (0)
+
+# 0x10 = Read Local Config Data (LCD)
+#  cbARG1, byte1   NVRAM index low byte
+#  cbARG1, byte2   NVRAM index high byte
+#  cbRES1      Standard return codes (0, -1, -2)
+#  cbRES2      4 bytes read from LCD[index]
+#  cbRES3      4 bytes read from LCD[index+4]
+#  cbRES4      4 bytes read from LCD[index+8]
+
+# 0x11 = Write Local Config Data (LCD)
+#  cbARG1, byte1   NVRAM index low byte
+#  cbARG1, byte2   NVRAM index high byte
+#  cbARG2      4 bytes to write at LCD[index]
+#  cbARG3      4 bytes to write at LCD[index+4]
+#  cbARG4      4 bytes to write at LCD[index+8]
+#  cbRES1      Standard return codes (0, -1, -2)
+
+# 0x12 = Populate Local Config Data from NVRAM
+#  cbRES1      Standard return codes (0, -1, -2)
+
+# 0x13 = Commit Local Config Data to NVRAM
+#  cbRES1      Standard return codes (0, -1, -2)
 
