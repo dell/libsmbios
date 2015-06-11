@@ -60,7 +60,6 @@ main (int argc, char **argv)
     int owner = 0;
     bool set = false;
     int newvalue = 0;
-    bool ownerset = false;
     
     setlocale(LC_ALL, "");
     bindtextdomain(GETTEXT_PACKAGE, LIBSMBIOS_LOCALEDIR);
@@ -81,7 +80,6 @@ main (int argc, char **argv)
             newvalue = strtoul( args, 0, 0 );
             break;
         case 4:
-            ownerset = true;
             owner = strtoul( args, 0, 0 );
             break;
         default:
