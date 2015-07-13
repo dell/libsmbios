@@ -83,7 +83,7 @@ def PrintSupportedThermModes(flag='default'):
                               (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
 
         if res[smi.cbRES1] != 0:
-            verboseLog.info( _(" Info: Unable to Get Thermal Information on this system\n") )
+            raise RunTimeThermalSensorErr( _(" Info: Unable to Get Thermal Information on this system\n") )
 
         if flag == 'thermal-mode': return (res[smi.cbRES2] & 0xF )
         print _(" \nSupported Thermal Modes: ")
@@ -114,7 +114,7 @@ def GetCurrentThermalMode(flag='default'):
                               (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
 
         if res[smi.cbRES1] != 0:
-            verboseLog.info( _(" Info: Unable to Get Thermal Information on this system\n") )
+            raise RunTimeThermalSensorErr( _(" Info: Unable to Get Thermal Information on this system\n") )
 
         if flag == 'thermal-mode': return res[smi.cbRES3]
         if flag == 'acc-mode' : return (get_byte(res[smi.cbRES3], 2))
