@@ -85,7 +85,7 @@ namespace smbios
             strategies.push_back( new SmbiosLinuxEFIStrategy() );
 #endif
             strategies.push_back( new SmbiosMemoryStrategy(getParameterNum("offset")) );
-#ifdef LIBSMBIOS_PLATFORM_WIN32
+#if (defined(LIBSMBIOS_PLATFORM_WIN32) || defined(LIBSMBIOS_PLATFORM_WIN64))
             strategies.push_back( new SmbiosWinGetFirmwareTableStrategy() );
             strategies.push_back( new SmbiosWinWMIStrategy() );
 #endif
