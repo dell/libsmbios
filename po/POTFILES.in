@@ -5,6 +5,8 @@ src/bin/smbios-wakeup-ctl
 src/bin/smbios-wireless-ctl
 src/bin/smbios-lcd-brightness
 src/bin/smbios-rbu-bios-update
+src/bin/smbios-keyboard-ctl
+src/bin/smbios-thermal-ctl
 
 src/bin/smbios-upflag-ctl.c
 src/bin/smbios-get-ut-data.c
