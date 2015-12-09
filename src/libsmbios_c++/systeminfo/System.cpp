@@ -350,10 +350,10 @@ struct DellGetServiceTagFunctions
 
 /* try dynamic functions first to make sure we get current data. */
 DellGetServiceTagFunctions[] = {
-                                   {&getServiceTagFromSMI,},       // SMI Token
-                                   {&getServiceTagFromCMOSToken,}, // CMOS Token
                                    {&getServiceTagFromSysInfo,},   // SMBIOS System Information Item
                                    {&getServiceTagFromSysEncl,},   // SMBIOS System Enclosure Item
+                                   {&getServiceTagFromSMI,},       // SMI Token
+                                   {&getServiceTagFromCMOSToken,}, // CMOS Token
                                };
 
 const char *SMBIOSGetServiceTag()
@@ -563,9 +563,9 @@ struct DellAssetTagFunctions
 
 /* try dynamic functions first to make sure we get current data. */
 DellAssetTagFunctions[] = {
-                              {&getAssetTagFromSMI,},     // SMI
                               {&getAssetTagFromToken,},   // SMBIOS Token
                               {&getAssetTagFromSysEncl,}, // SMBIOS System Information Item
+                              {&getAssetTagFromSMI,},     // SMI
                           };
 
 const char *SMBIOSGetAssetTag()

@@ -287,10 +287,10 @@ static struct DellGetServiceTagFunctions
 {
     char *(*f_ptr)();
 } DellGetServiceTagFunctions[] = {
-                                   {&getServiceTagFromSMI,},       // SMI Token
-                                   {&getServiceTagFromCMOSToken,}, // CMOS Token
                                    {&getServiceTagFromSysInfo,},   // SMBIOS System Information Item
                                    {&getServiceTagFromSysEncl,},   // SMBIOS System Enclosure Item
+                                   {&getServiceTagFromSMI,},       // SMI Token
+                                   {&getServiceTagFromCMOSToken,}, // CMOS Token
                                };
 
 LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_service_tag()

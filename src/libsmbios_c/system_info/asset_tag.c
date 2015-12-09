@@ -113,9 +113,9 @@ static struct DellAssetTagFunctions
 {
     char *(*f_ptr)();
 } DellAssetTagFunctions[] = {
-                              {&getAssetTagFromSMI,},     // SMI
                               {&getAssetTagFromToken,},   // SMBIOS Token
                               {&getAssetTagFromSysEncl,}, // SMBIOS System Information Item
+                              {&getAssetTagFromSMI,},     // SMI
                           };
 
 LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_asset_tag()
