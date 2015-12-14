@@ -57,6 +57,8 @@
 #define SVC_TAG_LEN_MAX                             7
 #define ASSET_TAG_CMOS_LEN_MAX                      10
 #define ASSET_TAG_LEN_MAX                           10
+#define ASSET_TAG_NOT_SPECIFIED                     "Not Specified"
+#define ASSET_TAG_NOT_SPECIFIED_LEN                 14
 
 #if defined(_MSC_VER)
 #pragma pack(push,1)

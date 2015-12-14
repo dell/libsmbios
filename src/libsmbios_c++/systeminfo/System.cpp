@@ -563,8 +563,8 @@ struct DellAssetTagFunctions
 
 /* try dynamic functions first to make sure we get current data. */
 DellAssetTagFunctions[] = {
-                              {&getAssetTagFromToken,},   // SMBIOS Token
                               {&getAssetTagFromSysEncl,}, // SMBIOS System Information Item
+                              {&getAssetTagFromToken,},   // SMBIOS CMOS Token
                               {&getAssetTagFromSMI,},     // SMI
                           };
 

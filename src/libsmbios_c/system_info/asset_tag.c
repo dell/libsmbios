@@ -86,20 +86,16 @@ char *getAssetTagFromToken()
         goto out_err;
 
     fnprintf("GOT CMOS TAG: %s\n", tag);
-    goto out;
+    fnprintf("- out\n");
+
+    return tag;
 
 out_err:
     fnprintf("- out_err\n");
     free(tag);
     tag = 0;
-
-out:
-    fnprintf("- out\n");
-    return tag;
+    return NULL;
 }
-
-
-
 
 static char *getAssetTagFromSMI()
 {
@@ -113,8 +109,8 @@ static struct DellAssetTagFunctions
 {
     char *(*f_ptr)();
 } DellAssetTagFunctions[] = {
-                              {&getAssetTagFromToken,},   // SMBIOS Token
                               {&getAssetTagFromSysEncl,}, // SMBIOS System Information Item
+                              {&getAssetTagFromToken,},   // SMBIOS CMOS Token
                               {&getAssetTagFromSMI,},     // SMI
                           };
 
@@ -137,12 +133,20 @@ LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_asset_tag()
             strip_trailing_whitespace(assetTag);
             if (!strlen(assetTag))
             {
-                fnprintf("string is zero len, discarding\n");
-                free(assetTag);
-                assetTag=0;
+                fnprintf("string is zero len, returning as not specified\n");
+                /*
+                 * In case one of the function returns an empty string (zero len),
+                 * we would be returning the value "Not Specified" to the caller.
+                 */
+                assetTag = realloc(assetTag, ASSET_TAG_NOT_SPECIFIED_LEN);
+                if (assetTag)
+                    strncpy(assetTag, ASSET_TAG_NOT_SPECIFIED, ASSET_TAG_NOT_SPECIFIED_LEN - 1);
+                goto out;
             }
         }
     }
+
+out:
     return assetTag;
 }
 

@@ -133,10 +133,10 @@ main (int argc, char **argv)
 
     str    = sysinfo_get_asset_tag();
     if(str)
-        printf(_("Aset Tag:  %s\n"), str);
+        printf(_("Asset Tag:  %s\n"), str);
     else
     {
-        printf(_("Error getting the Aset Tag:  unknown error\n"));
+        printf(_("Error getting the Asset Tag:  unknown error\n"));
         retval = 1;
     }
     sysinfo_string_free(str);

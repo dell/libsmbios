@@ -97,26 +97,27 @@ __hidden char * smbios_struct_get_string_from_table(u8 type, u8 offset)
 {
     const struct smbios_struct *s;
     const char *r;
-    char *ret=0;
+    char *ret = 0;
 
     sysinfo_clearerr();
     s = smbios_get_next_struct_by_type(0, type);
     if (!s)
-        goto out;
+        goto out_err;
 
     r = smbios_struct_get_string_from_offset(s, offset);
     if (!r)
-        goto out;
+        goto out_err;
 
     ret = calloc(1, strlen(r)+1);
     if(!ret)
-        goto out;
+        goto out_err;
 
     strcpy(ret, r);
     strip_trailing_whitespace(ret);
-
-out:
     return ret;
+
+out_err:
+    return NULL;
 }
 
 LIBSMBIOS_C_DLL_SPEC void sysinfo_string_free(void *f)
