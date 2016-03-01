@@ -276,6 +276,7 @@ cd _build
 TOPDIR=..
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
 mkdir -p %{buildroot}/%{_includedir}
+mkdir -p %{buildroot}/%{_bindir}
 cp -a $TOPDIR/src/include/*  %{buildroot}/%{_includedir}/
 cp -a out/public-include/*  %{buildroot}/%{_includedir}/
 rm -f %{buildroot}/%{_libdir}/lib*.{la,a}
@@ -399,6 +400,8 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-get-ut-data
 %{_sbindir}/smbios-upflag-ctl
 %{_sbindir}/smbios-sys-info-lite
+%{_sbindir}/smbios-keyboard-ctl
+%{_sbindir}/smbios-thermal-ctl
 
 %files -n python-smbios -f _build/files-python-smbios
 %defattr(-,root,root,-)
