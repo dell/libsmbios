@@ -12,8 +12,8 @@
 #   libraries, which are defined further below.
 #
 m4_define([release_major_version], [2])
-m4_define([release_minor_version], [2])
-m4_define([release_micro_version], [29])
+m4_define([release_minor_version], [3])
+m4_define([release_micro_version], [0])
 # if you define any "extra" version info, include a leading dot (".")
 m4_define([release_extra_version], [])
 
