@@ -86,3 +86,8 @@
 
 #LCD touchscreen, Enable only mode
 0x0363,"Manufacturing Use."
+
+# TPM
+0x03F6,"Manufacturing use."
+0x03F7,"Manufacturing use."
+
