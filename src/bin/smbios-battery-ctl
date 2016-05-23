@@ -1,0 +1,223 @@
+#!/usr/bin/python
+# vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
+
+  #############################################################################
+  #
+  # Copyright (c) 2016 Dell Computer Corporation
+  # by Srinivas Gowda <srinivas_g_gowda@dell.com>
+  # Dual Licenced under GNU GPL and OSL
+  #
+  #############################################################################
+"""smbios-battery-ctl"""
+
+from __future__ import generators
+
+# import arranged alphabetically
+import gettext
+import locale
+import os
+import sys
+
+# the following vars are all substituted on install
+# this bin isnt byte-compiled, so this is ok
+__VERSION__="uninstalled-version"
+pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
+clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
+# end vars
+
+# import all local modules after this.
+sys.path.insert(0,pythondir)
+sys.path.insert(0,clidir)
+
+import cli
+from libsmbios_c import token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+
+locale.setlocale(locale.LC_ALL, '')
+gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+
+moduleLog = getLog()
+verboseLog = getLog(prefix="verbose.")
+
+class RunTimeBatteryErr(Exception): pass
+
+
+def command_parse():
+    parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
+    cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
+    parser.add_option("--battery-charge", "-c", action="store_true", default=False, help=_("This will get the Current Battery Charging State"))
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit()
+    return parser.parse_args()
+
+
+def is_set(num, pos):
+    mask = 1 << pos
+    return True if (num & mask) else False
+
+# Return a the byte specified by byte_pos from a double word num
+def get_byte(num, byte_pos):
+    try :
+        if byte_pos < 0 or byte_pos > 3:
+            raise RunTimeBatteryErr( "Internal Error: Byte position out of bound - ", byte_pos )
+    except RunTimeBatteryErr, e:
+        print "\t%s" % e
+
+    return ((num >> (byte_pos*8)) & 0xFF)
+
+
+def print_express_charge_status(n):
+    if n == 0: print '\t Battery is not present'
+    elif n == 1: print '\t Standard'
+    elif n == 2: print '\t Express'
+    elif n == 3: print '\t One-time express'
+    elif n == 0xFF: print '\t Battery is present, and it does not support express charge'
+    else : print '\t Unknown'
+
+
+def PrintBatteryChargingState():
+    try:
+        res = smi.simple_ci_smi( 4, 12, 0 )
+        verboseLog.info( _(" Get Charging State : res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X, res[smi.cbRES3]=0x%X") %
+                              (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
+
+        if res[smi.cbRES1] != 0:
+            raise RunTimeBatteryErr( _(" Info: Unable to read Current Battery Charging State on this system\n") )
+
+        # cbRES2 byte 0 gives supported Features
+        print _(" \n Supported battery charging features: ")
+        if is_set (res[smi.cbRES2], 0): print "\t Express Charging"
+        if is_set (res[smi.cbRES2], 1): print "\t Charge Disable"
+        if (get_byte(res[smi.cbRES2], 0) == 0 ): print "\t NIL"
+
+        print _(" \n Battery charging Status: ")
+        # cbRES2 byte 1 gives the status of supported Features
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 0): print "\t One or more batteries are present that support Express charge"
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 1): print "\t Charging is disabled"
+        if (get_byte(res[smi.cbRES2], 1) == 0 ): print "\t NIL"
+
+        # cbRes3, bytes 0-3 contain the status of batteries 0-3 respectively
+        for i in range(4):
+            expr_status = get_byte(res[smi.cbRES3], i)
+            if(expr_status):
+                print _("\n Battery %d Express Charge State:") % (i)
+                print_express_charge_status(expr_status)
+
+    except RunTimeBatteryErr, e:
+        print "\t%s" % e
+
+
+def main():
+    exit_code = 0
+    (options, args) = command_parse()
+    cli.setup_std_options(options)
+
+    try:
+        if options.battery_charge:
+            print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
+            print _("smbios-battery-ctl version : %s") % __VERSION__
+            verboseLog.info( _(" You can use smbios-battery-ctl utility to view/modify battery settings"))
+            PrintBatteryChargingState()
+
+    except (smi.SMIExecutionError, ), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not execute SMI.") )
+        verboseLog.info( _("The smi library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (smbios.TableParseError, token.TokenTableParseError), e:
+        exit_code=3
+        moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
+        verboseLog.info( _("The smbios library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    except (token.TokenManipulationFailure,), e:
+        exit_code=4
+        moduleLog.info( _("ERROR: Could not manipulate system token.") )
+        verboseLog.info( _("The token library returned this error:") )
+        verboseLog.info( str(e) )
+        moduleLog.info( cli.standardFailMessage )
+
+    return exit_code
+
+if __name__ == "__main__":
+    sys.exit( main() )
+
+
+# cbClass 4
+# cbSelect 12
+# Battery Charging
+#
+# cbArg1 determines the function to be performed
+# On return:
+# cbRES1         Standard return codes (0, -1, -2)
+#
+# cbArg1 0x0 = Get Current State
+# cbRes2, byte 0	Supported feature bits
+#	bit 0	Express charge is supported (by the BIOS)
+#	bit 1	Charge disable is supported
+#	bits 2-7	Reserved for future use
+# cbRes2, byte 1	Status bits
+#	bit 0	One or more batteries are present that support Express charge
+#	bit 1	Charging is disabled
+#	bits 2-7	Reserved for future use
+# If the system supports Express Charge, cbRes3, bytes 0-3 contain the status of batteries 0-3 respectively (numbered as with the Class 8 function).
+# cbRes3, byte n	Battery n express charge status:
+#	0	Battery is not present
+#	1	Standard
+#	2	Express
+#	3	One-time express
+#	0xFF	Battery is present, and it does not support express charge
+#
+# cbArg2, byte 0	Set charge disable state:
+#	0	Off (enable charging)
+#	1	On (disable charging)
+#
+# cbArg2, bytes 0-3 contain the new state of batteries 0-3 respectively
+# 	Battery Status:
+#	00h	High
+#	01h	Low
+#	02h 	Critical
+#	03h	Charging
+#
+# cbArg2, byte n Battery n state:
+#	0	No change (state remains as it was previously)
+#	1	Standard . Express charge not supported by the battery
+#	2	Express
+#	3	One-time express
+#
+#
+# cbClass 8
+# cbSelect 16
+# Set Battery Desktop Mode
+#
+# cbArg1 determines the function to be performed
+# On return:
+# cbRES1         Standard return codes (0, -1, -2)
+#
+# cbArg1, byte 0
+#	Mode Enablement
+#	0		Disable desktop mode
+#	1		Fully enable desktop mode
+#	2 - 255	Undefined
+#
+# On return:
+# cbRES1         Standard return codes (0, -1, -2)
+#
+#
+# cbClass 8
+# cbSelect 17
+# Get Battery Desktop Mode
+#
+# On return:
+# cbRES1         Standard return codes (0, -1, -2)
+#
+# cbRes2	Status
+#		Bit 0		1 = Supported, 0 = Not Supported
+#		Bit 1		1 = Desktop Mode, 0 = Laptop Mode
+#		Bit 2		1 = Battery is ready to enter desktop mode, 0 = Not ready
+#		Bit 3 to 31	Unused
