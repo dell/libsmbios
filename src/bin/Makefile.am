@@ -44,6 +44,9 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-keyboard-ctl
 
 dist_sbin_SCRIPTS += src/bin/smbios-thermal-ctl
 DATA_HOOK_REPLACE += $(sbindir)/smbios-thermal-ctl
+
+dist_sbin_SCRIPTS += src/bin/smbios-battery-ctl
+DATA_HOOK_REPLACE += $(sbindir)/smbios-battery-ctl
 endif
 
 #
