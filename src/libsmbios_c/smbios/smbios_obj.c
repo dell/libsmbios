@@ -440,8 +440,7 @@ bool __hidden validate_smbios_tep( const struct smbios_table_entry_point *tempTE
     fnprintf("SMBIOS TEP csum %d.\n", (int)checksum);
     if(checksum) // Checking entry point structure checksum
         retval = false;  // validation failed
-
-    if(tempTEP->major_ver!=0x02)     // Checking smbios major version
+    if(! (tempTEP->major_ver!=0x02 || tempTEP->major_ver!=0x03) ) // Checking smbios major version
         retval = false;  // validation failed
 
     // Entry Point Length field is at least 0x1f.
