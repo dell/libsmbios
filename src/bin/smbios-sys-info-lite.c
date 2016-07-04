@@ -64,7 +64,6 @@ static void print_oem_strings()
 int
 main (int argc, char **argv)
 {
-    int retval = 0;
     int reseller_sysid = 0, sysid = 0;
     char *str;
 
@@ -103,7 +102,6 @@ main (int argc, char **argv)
     else
     {
         printf(_("Error getting the System ID:    unknown error.\n"));
-        retval = 1;
     }
 
     reseller_sysid     = sysinfo_get_dell_oem_system_id();
@@ -114,7 +112,6 @@ main (int argc, char **argv)
         else
         {
             printf(_("Error getting the System ID:    unknown error.\n"));
-            retval = 1;
         }
     }
 
@@ -127,7 +124,6 @@ main (int argc, char **argv)
     else
     {
         printf(_("Error getting the Service Tag:  unknown error\n"));
-        retval = 1;
     }
     sysinfo_string_free(str);
 
@@ -137,7 +133,6 @@ main (int argc, char **argv)
     else
     {
         printf(_("Error getting the Asset Tag:  unknown error\n"));
-        retval = 1;
     }
     sysinfo_string_free(str);
 
@@ -147,7 +142,6 @@ main (int argc, char **argv)
     else
     {
         printf(_("Error getting the System Name:    unknown error.\n"));
-        retval = 1;
     }
     sysinfo_string_free(str);
 
@@ -157,7 +151,6 @@ main (int argc, char **argv)
     else
     {
         printf(_("Error getting the BIOS Version:    unknown error.\n"));
-        retval = 1;
     }
     sysinfo_string_free(str);
 
@@ -167,7 +160,6 @@ main (int argc, char **argv)
     else
     {
         printf(_("Error getting the Vendor:    unknown error.\n"));
-        retval = 1;
     }
     sysinfo_string_free(str);
 
@@ -175,5 +167,5 @@ main (int argc, char **argv)
 
     print_oem_strings();
 
-    return retval;
+    return 0;
 }
