@@ -323,6 +323,7 @@ cat > files-smbios-utils-python <<-EOF
 	%{_sbindir}/smbios-lcd-brightness
 	%{_sbindir}/smbios-keyboard-ctl
 	%{_sbindir}/smbios-thermal-ctl
+	%{_sbindir}/smbios-battery-ctl
 	
 	# symlinks: backwards compat
 	%{_sbindir}/dellLcdBrightness
