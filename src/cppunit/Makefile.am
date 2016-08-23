@@ -31,12 +31,6 @@ out_libxmlutil_la_LDFLAGS = $(AM_LDFLAGS) -static
 
 TEST_CPPFLAGS = $(AM_CPPFLAGS) $(CPPUNIT_CFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common $(UT_CFLAGS)
 
-check_PROGRAMS += out/testRbu
-out_testRbu_SOURCES = src/cppunit/testRbu.h src/cppunit/testRbu.cpp
-out_testRbu_LDADD = out/libxmlutil.la out/libtestmain.la $(AM_LDADD)
-out_testRbu_LDFLAGS = $(AM_LDFLAGS) -static
-out_testRbu_CPPFLAGS = $(TEST_CPPFLAGS)
-
 check_PROGRAMS += out/testPlatform
 out_testPlatform_SOURCES = src/cppunit/testPlatform.h src/cppunit/testPlatform.cpp
 out_testPlatform_LDADD = out/libxmlutil.la out/libtestmain.la $(AM_LDADD)

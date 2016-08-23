@@ -28,8 +28,6 @@ import smbios
 import smi
 import system_info
 import token
-import rbu_hdr
-import rbu_update
 
 # push gettext vars into namespaces
 import gettext

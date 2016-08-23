@@ -44,16 +44,14 @@ msgstr ""
 #: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:120
 #: src/bin/smbios-token-ctl:433 src/bin/smbios-wakeup-ctl:120
 #: src/bin/smbios-wireless-ctl:387 src/bin/smbios-lcd-brightness:120
-#: src/bin/smbios-rbu-bios-update:169 src/bin/smbios-keyboard-ctl:649
-#: src/bin/smbios-thermal-ctl:220
+#: src/bin/smbios-keyboard-ctl:649 src/bin/smbios-thermal-ctl:220
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
 #: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:121
 #: src/bin/smbios-token-ctl:434 src/bin/smbios-wakeup-ctl:121
 #: src/bin/smbios-wireless-ctl:388 src/bin/smbios-lcd-brightness:121
-#: src/bin/smbios-rbu-bios-update:170 src/bin/smbios-keyboard-ctl:650
-#: src/bin/smbios-thermal-ctl:221
+#: src/bin/smbios-keyboard-ctl:650 src/bin/smbios-thermal-ctl:221
 msgid "The smbios library returned this error:"
 msgstr ""
 
@@ -370,15 +368,13 @@ msgstr ""
 
 #: src/bin/smbios-token-ctl:439 src/bin/smbios-wakeup-ctl:127
 #: src/bin/smbios-wireless-ctl:394 src/bin/smbios-lcd-brightness:127
-#: src/bin/smbios-rbu-bios-update:175 src/bin/smbios-keyboard-ctl:656
-#: src/bin/smbios-thermal-ctl:227
+#: src/bin/smbios-keyboard-ctl:656 src/bin/smbios-thermal-ctl:227
 msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
 #: src/bin/smbios-token-ctl:440 src/bin/smbios-wakeup-ctl:128
 #: src/bin/smbios-wireless-ctl:395 src/bin/smbios-lcd-brightness:128
-#: src/bin/smbios-rbu-bios-update:176 src/bin/smbios-keyboard-ctl:657
-#: src/bin/smbios-thermal-ctl:228
+#: src/bin/smbios-keyboard-ctl:657 src/bin/smbios-thermal-ctl:228
 msgid "The token library returned this error:"
 msgstr ""
 
@@ -893,148 +889,6 @@ msgstr ""
 
 #: src/bin/smbios-lcd-brightness:109
 msgid "value outside legal bounds"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:58
-msgid "The BIOS update file (.HDR file)"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:59
-msgid "Show information about a given BIOS HDR file"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:60
-msgid "Show system information and RBU completion codes"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:61
-msgid "Cancel pending BIOS update"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:62
-msgid "Stage BIOS for update at next reboot"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:63
-msgid "Test HDR file to see if it is appropriate for this system"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:65
-msgid "Automatically select the optimal update mode (default, recommended)"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:66
-msgid "Force update to use packet-mode"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:67
-msgid "Force update to use monolithic-mode"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:68
-msgid "Force update to use old dellBiosUpdate binary"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:70
-msgid "Allow BIOS downgrades and re-flash"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:71
-msgid "Disable check for system-id (Dangerous)"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:73
-msgid "Reboot the system after successfully staging update."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:74
-msgid "Do not reboot the system after staging update."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:102
-msgid "RBU Update information:"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:103
-#, c-format
-msgid "\tMinimum size: %d"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:104
-#, c-format
-msgid "\tCompletion Code: %d"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:105
-#, c-format
-msgid "\tCompletion Message: %s"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:106
-#, c-format
-msgid "\tLast Update Date - Year  : %02x"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:107
-#, c-format
-msgid "\tLast Update Date - Month : %02x"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:108
-#, c-format
-msgid "\tLast Update Date - Day   : %02x"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:109
-#, c-format
-msgid "\tLast Update Date - time  : %02x:%02x"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:110
-#, c-format
-msgid "\tBoot Feature Flags: 0x%08x"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:111
-#, c-format
-msgid "\tCharacteristics: 0x%04x"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:112
-#, c-format
-msgid "\tUpdate modes supported: %s"
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:120
-msgid "No reboot option specified. The --reboot option is highly recommended."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:122
-msgid "Rebooting system to update the BIOS."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:146
-msgid "Cancelling BIOS update..."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:148
-msgid "BIOS update cancelled."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:152
-msgid "Performing BIOS update..."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:154
-msgid "Update successfully staged. Reboot the system to begin BIOS update."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:158
-msgid "The BIOS update did NOT complete successfully."
-msgstr ""
-
-#: src/bin/smbios-rbu-bios-update:165
-msgid "RBU Bios Update not supported on this system."
 msgstr ""
 
 #: src/bin/smbios-keyboard-ctl:49

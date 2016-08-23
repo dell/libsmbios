@@ -2,7 +2,6 @@
 - Error handling, message propagation upwards
 - implement 0xD5, 0xD6 tokens
 - implement SMI
-- implement RBU
 - L10N
 - EFI support
 - sysinfo functions - asset/service tags

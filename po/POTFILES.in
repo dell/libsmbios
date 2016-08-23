@@ -4,7 +4,6 @@ src/bin/smbios-token-ctl
 src/bin/smbios-wakeup-ctl
 src/bin/smbios-wireless-ctl
 src/bin/smbios-lcd-brightness
-src/bin/smbios-rbu-bios-update
 src/bin/smbios-keyboard-ctl
 src/bin/smbios-thermal-ctl
 

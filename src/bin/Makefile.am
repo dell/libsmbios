@@ -33,9 +33,6 @@ DATA_HOOK_REPLACE += $(sbindir)/smbios-wakeup-ctl
 dist_sbin_SCRIPTS += src/bin/smbios-wireless-ctl
 DATA_HOOK_REPLACE += $(sbindir)/smbios-wireless-ctl
 
-dist_sbin_SCRIPTS += src/bin/smbios-rbu-bios-update
-DATA_HOOK_REPLACE += $(sbindir)/smbios-rbu-bios-update
-
 dist_sbin_SCRIPTS += src/bin/smbios-lcd-brightness
 DATA_HOOK_REPLACE += $(sbindir)/smbios-lcd-brightness
 
@@ -83,13 +80,7 @@ sbin_PROGRAMS += out/dellMediaDirectCtl
 out_dellMediaDirectCtl_SOURCES = src/bin/dellMediaDirectCtl.cpp
 out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 endif
-
-# dellBiosUpdate uses private headers... this is bad.
-sbin_PROGRAMS += out/dellBiosUpdate-compat
-out_dellBiosUpdate_compat_SOURCES = src/bin/dellBiosUpdate.cpp
-out_dellBiosUpdate_compat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-out_dellBiosUpdate_compat_CPPFLAGS = $(AM_CPPFLAGS) -Isrc/libsmbios_c++/common
-endif
+endif #BUILD_LIBSMBIOS_CXX
 if BUILD_LINUX
 sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
@@ -101,10 +92,5 @@ out_dellMediaDirectCtl_SOURCES = src/bin/dellMediaDirectCtl.cpp
 out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
 endif
 
-# dellBiosUpdate uses private headers... this is bad.
-sbin_PROGRAMS += out/dellBiosUpdate-compat
-out_dellBiosUpdate_compat_SOURCES = src/bin/dellBiosUpdate.cpp
-out_dellBiosUpdate_compat_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-out_dellBiosUpdate_compat_CPPFLAGS = $(AM_CPPFLAGS) -Isrc/libsmbios_c++/common
-endif
-endif
+endif #BUILD_LINUX
+endif #BUILD_LIBSMBIOS_CXX

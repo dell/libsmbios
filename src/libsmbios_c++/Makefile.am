@@ -13,8 +13,6 @@ out_libsmbios_la_SOURCES = \
     src/libsmbios_c++/common/Observer.cpp               \
     src/libsmbios_c++/memory/MemoryImpl.h		\
     src/libsmbios_c++/memory/Memory.cpp                 \
-    src/libsmbios_c++/rbu/RbuHdr.cpp                    \
-    src/libsmbios_c++/rbu/RbuImpl.h			\
     src/libsmbios_c++/smbios/SmbiosFactory.cpp          \
     src/libsmbios_c++/smbios/SmbiosItem.cpp             \
     src/libsmbios_c++/smbios/SmbiosStrategy.cpp         \
@@ -53,14 +51,12 @@ out_libsmbios_la_SOURCES = \
 SOLARIS_SOURCES = \
     src/libsmbios_c++/cmos/CmosRW_SolarisIO.cpp           \
     src/libsmbios_c++/memory/Memory_Solaris.cpp           \
-    src/libsmbios_c++/rbu/Rbu_Solaris.cpp                 \
     src/libsmbios_c++/smbios/SmbiosStrategy_Solaris.cpp   \
     src/libsmbios_c++/smi/Smi_Solaris.cpp
 
 LINUX_SOURCES = \
     src/libsmbios_c++/cmos/CmosRW_LinuxIO.cpp           \
     src/libsmbios_c++/memory/Memory_Linux.cpp           \
-    src/libsmbios_c++/rbu/Rbu_Linux.cpp                 \
     src/libsmbios_c++/smbios/SmbiosStrategy_Linux.cpp   \
     src/libsmbios_c++/smi/Smi_Linux.cpp
 

@@ -5,10 +5,8 @@ pkgpythondir=$(pythondir)/libsmbios_c
 if HAVE_PYTHON
 pkgpython_PYTHON = \
 	src/python/libsmbios_c/cmos.py		\
-	src/python/libsmbios_c/rbu_hdr.py		\
 	src/python/libsmbios_c/token.py		\
 	src/python/libsmbios_c/_common.py		\
-	src/python/libsmbios_c/rbu_update.py		\
 	src/python/libsmbios_c/trace_decorator.py		\
 	src/python/libsmbios_c/__init__.py		\
 	src/python/libsmbios_c/smbios.py		\

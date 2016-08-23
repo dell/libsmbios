@@ -65,7 +65,6 @@ run_test() {
 
 
 [ ${RUN_C_TEST:=1} -ne 1 ] || run_test testC_memory_cmos ""                  "\n\nRunning CInterface tests."
-[ ${RUN_CPP_TEST:=1} -ne 1 ] || run_test testRbu           $DIR/test_data/rbu  "\n\nRunning test for RBU"
 [ ${RUN_CPP_TEST} -ne 1 ] || run_test testStandalone    $DIR/test_data/opti "\n\nRunning Standalone tests."
 [ ${RUN_C_TEST} -ne 1 ] || run_test testC_smi         $DIR/test_data/opti "\n\nRunning SMI tests."
 

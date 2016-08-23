@@ -66,16 +66,14 @@ msgstr "Owner password"
 #: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:120
 #: src/bin/smbios-token-ctl:433 src/bin/smbios-wakeup-ctl:120
 #: src/bin/smbios-wireless-ctl:387 src/bin/smbios-lcd-brightness:120
-#: src/bin/smbios-rbu-bios-update:169 src/bin/smbios-keyboard-ctl:649
-#: src/bin/smbios-thermal-ctl:220
+#: src/bin/smbios-keyboard-ctl:649 src/bin/smbios-thermal-ctl:220
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr "ERROR: Could not parse system SMBIOS table."
 
 #: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:121
 #: src/bin/smbios-token-ctl:434 src/bin/smbios-wakeup-ctl:121
 #: src/bin/smbios-wireless-ctl:388 src/bin/smbios-lcd-brightness:121
-#: src/bin/smbios-rbu-bios-update:170 src/bin/smbios-keyboard-ctl:650
-#: src/bin/smbios-thermal-ctl:221
+#: src/bin/smbios-keyboard-ctl:650 src/bin/smbios-thermal-ctl:221
 msgid "The smbios library returned this error:"
 msgstr "The smbios library returned this error:"
 
@@ -406,15 +404,13 @@ msgstr "Activating token..."
 
 #: src/bin/smbios-token-ctl:439 src/bin/smbios-wakeup-ctl:127
 #: src/bin/smbios-wireless-ctl:394 src/bin/smbios-lcd-brightness:127
-#: src/bin/smbios-rbu-bios-update:175 src/bin/smbios-keyboard-ctl:656
-#: src/bin/smbios-thermal-ctl:227
+#: src/bin/smbios-keyboard-ctl:656 src/bin/smbios-thermal-ctl:227
 msgid "ERROR: Could not manipulate system token."
 msgstr "ERROR: Could not manipulate system token."
 
 #: src/bin/smbios-token-ctl:440 src/bin/smbios-wakeup-ctl:128
 #: src/bin/smbios-wireless-ctl:395 src/bin/smbios-lcd-brightness:128
-#: src/bin/smbios-rbu-bios-update:176 src/bin/smbios-keyboard-ctl:657
-#: src/bin/smbios-thermal-ctl:228
+#: src/bin/smbios-keyboard-ctl:657 src/bin/smbios-thermal-ctl:228
 msgid "The token library returned this error:"
 msgstr "The token library returned this error:"
 
@@ -956,148 +952,6 @@ msgstr "Could not set value because the password was incorrect"
 #: src/bin/smbios-lcd-brightness:109
 msgid "value outside legal bounds"
 msgstr "value outside legal bounds"
-
-#: src/bin/smbios-rbu-bios-update:58
-msgid "The BIOS update file (.HDR file)"
-msgstr "The BIOS update file (.HDR file)"
-
-#: src/bin/smbios-rbu-bios-update:59
-msgid "Show information about a given BIOS HDR file"
-msgstr "Show information about a given BIOS HDR file"
-
-#: src/bin/smbios-rbu-bios-update:60
-msgid "Show system information and RBU completion codes"
-msgstr "Show system information and RBU completion codes"
-
-#: src/bin/smbios-rbu-bios-update:61
-msgid "Cancel pending BIOS update"
-msgstr "Cancel pending BIOS update"
-
-#: src/bin/smbios-rbu-bios-update:62
-msgid "Stage BIOS for update at next reboot"
-msgstr "Stage BIOS for update at next reboot"
-
-#: src/bin/smbios-rbu-bios-update:63
-msgid "Test HDR file to see if it is appropriate for this system"
-msgstr "Test HDR file to see if it is appropriate for this system"
-
-#: src/bin/smbios-rbu-bios-update:65
-msgid "Automatically select the optimal update mode (default, recommended)"
-msgstr "Automatically select the optimal update mode (default, recommended)"
-
-#: src/bin/smbios-rbu-bios-update:66
-msgid "Force update to use packet-mode"
-msgstr "Force update to use packet-mode"
-
-#: src/bin/smbios-rbu-bios-update:67
-msgid "Force update to use monolithic-mode"
-msgstr "Force update to use monolithic-mode"
-
-#: src/bin/smbios-rbu-bios-update:68
-msgid "Force update to use old dellBiosUpdate binary"
-msgstr "Force update to use old dellBiosUpdate binary"
-
-#: src/bin/smbios-rbu-bios-update:70
-msgid "Allow BIOS downgrades and re-flash"
-msgstr "Allow BIOS downgrades and re-flash"
-
-#: src/bin/smbios-rbu-bios-update:71
-msgid "Disable check for system-id (Dangerous)"
-msgstr "Disable check for system-id (Dangerous)"
-
-#: src/bin/smbios-rbu-bios-update:73
-msgid "Reboot the system after successfully staging update."
-msgstr "Reboot the system after successfully staging update."
-
-#: src/bin/smbios-rbu-bios-update:74
-msgid "Do not reboot the system after staging update."
-msgstr "Do not reboot the system after staging update."
-
-#: src/bin/smbios-rbu-bios-update:102
-msgid "RBU Update information:"
-msgstr "RBU Update information:"
-
-#: src/bin/smbios-rbu-bios-update:103
-#, c-format
-msgid "\tMinimum size: %d"
-msgstr "\tMinimum size: %d"
-
-#: src/bin/smbios-rbu-bios-update:104
-#, c-format
-msgid "\tCompletion Code: %d"
-msgstr "\tCompletion Code: %d"
-
-#: src/bin/smbios-rbu-bios-update:105
-#, c-format
-msgid "\tCompletion Message: %s"
-msgstr "\tCompletion Message: %s"
-
-#: src/bin/smbios-rbu-bios-update:106
-#, c-format
-msgid "\tLast Update Date - Year  : %02x"
-msgstr "\tLast Update Date - Year  : %02x"
-
-#: src/bin/smbios-rbu-bios-update:107
-#, c-format
-msgid "\tLast Update Date - Month : %02x"
-msgstr "\tLast Update Date - Month : %02x"
-
-#: src/bin/smbios-rbu-bios-update:108
-#, c-format
-msgid "\tLast Update Date - Day   : %02x"
-msgstr "\tLast Update Date - Day   : %02x"
-
-#: src/bin/smbios-rbu-bios-update:109
-#, c-format
-msgid "\tLast Update Date - time  : %02x:%02x"
-msgstr "\tLast Update Date - time  : %02x:%02x"
-
-#: src/bin/smbios-rbu-bios-update:110
-#, c-format
-msgid "\tBoot Feature Flags: 0x%08x"
-msgstr "\tBoot Feature Flags: 0x%08x"
-
-#: src/bin/smbios-rbu-bios-update:111
-#, c-format
-msgid "\tCharacteristics: 0x%04x"
-msgstr "\tCharacteristics: 0x%04x"
-
-#: src/bin/smbios-rbu-bios-update:112
-#, c-format
-msgid "\tUpdate modes supported: %s"
-msgstr "\tUpdate modes supported: %s"
-
-#: src/bin/smbios-rbu-bios-update:120
-msgid "No reboot option specified. The --reboot option is highly recommended."
-msgstr "No reboot option specified. The --reboot option is highly recommended."
-
-#: src/bin/smbios-rbu-bios-update:122
-msgid "Rebooting system to update the BIOS."
-msgstr "Rebooting system to update the BIOS."
-
-#: src/bin/smbios-rbu-bios-update:146
-msgid "Cancelling BIOS update..."
-msgstr "Cancelling BIOS update..."
-
-#: src/bin/smbios-rbu-bios-update:148
-msgid "BIOS update cancelled."
-msgstr "BIOS update cancelled."
-
-#: src/bin/smbios-rbu-bios-update:152
-msgid "Performing BIOS update..."
-msgstr "Performing BIOS update..."
-
-#: src/bin/smbios-rbu-bios-update:154
-msgid "Update successfully staged. Reboot the system to begin BIOS update."
-msgstr "Update successfully staged. Reboot the system to begin BIOS update."
-
-#: src/bin/smbios-rbu-bios-update:158
-msgid "The BIOS update did NOT complete successfully."
-msgstr "The BIOS update did NOT complete successfully."
-
-#: src/bin/smbios-rbu-bios-update:165
-msgid "RBU Bios Update not supported on this system."
-msgstr "RBU Bios Update not supported on this system."
 
 #: src/bin/smbios-keyboard-ctl:49
 msgid "This will Display the Supported Features for Keyboard illumination"
@@ -1981,6 +1835,107 @@ msgstr "Cannot dereference NULL ID"
 #, python-format
 msgid "ID 0x%04x not found"
 msgstr "ID 0x%04x not found"
+
+#~ msgid "The BIOS update file (.HDR file)"
+#~ msgstr "The BIOS update file (.HDR file)"
+
+#~ msgid "Show information about a given BIOS HDR file"
+#~ msgstr "Show information about a given BIOS HDR file"
+
+#~ msgid "Show system information and RBU completion codes"
+#~ msgstr "Show system information and RBU completion codes"
+
+#~ msgid "Cancel pending BIOS update"
+#~ msgstr "Cancel pending BIOS update"
+
+#~ msgid "Stage BIOS for update at next reboot"
+#~ msgstr "Stage BIOS for update at next reboot"
+
+#~ msgid "Test HDR file to see if it is appropriate for this system"
+#~ msgstr "Test HDR file to see if it is appropriate for this system"
+
+#~ msgid "Automatically select the optimal update mode (default, recommended)"
+#~ msgstr "Automatically select the optimal update mode (default, recommended)"
+
+#~ msgid "Force update to use packet-mode"
+#~ msgstr "Force update to use packet-mode"
+
+#~ msgid "Force update to use monolithic-mode"
+#~ msgstr "Force update to use monolithic-mode"
+
+#~ msgid "Force update to use old dellBiosUpdate binary"
+#~ msgstr "Force update to use old dellBiosUpdate binary"
+
+#~ msgid "Allow BIOS downgrades and re-flash"
+#~ msgstr "Allow BIOS downgrades and re-flash"
+
+#~ msgid "Disable check for system-id (Dangerous)"
+#~ msgstr "Disable check for system-id (Dangerous)"
+
+#~ msgid "Reboot the system after successfully staging update."
+#~ msgstr "Reboot the system after successfully staging update."
+
+#~ msgid "Do not reboot the system after staging update."
+#~ msgstr "Do not reboot the system after staging update."
+
+#~ msgid "RBU Update information:"
+#~ msgstr "RBU Update information:"
+
+#~ msgid "\tMinimum size: %d"
+#~ msgstr "\tMinimum size: %d"
+
+#~ msgid "\tCompletion Code: %d"
+#~ msgstr "\tCompletion Code: %d"
+
+#~ msgid "\tCompletion Message: %s"
+#~ msgstr "\tCompletion Message: %s"
+
+#~ msgid "\tLast Update Date - Year  : %02x"
+#~ msgstr "\tLast Update Date - Year  : %02x"
+
+#~ msgid "\tLast Update Date - Month : %02x"
+#~ msgstr "\tLast Update Date - Month : %02x"
+
+#~ msgid "\tLast Update Date - Day   : %02x"
+#~ msgstr "\tLast Update Date - Day   : %02x"
+
+#~ msgid "\tLast Update Date - time  : %02x:%02x"
+#~ msgstr "\tLast Update Date - time  : %02x:%02x"
+
+#~ msgid "\tBoot Feature Flags: 0x%08x"
+#~ msgstr "\tBoot Feature Flags: 0x%08x"
+
+#~ msgid "\tCharacteristics: 0x%04x"
+#~ msgstr "\tCharacteristics: 0x%04x"
+
+#~ msgid "\tUpdate modes supported: %s"
+#~ msgstr "\tUpdate modes supported: %s"
+
+#~ msgid ""
+#~ "No reboot option specified. The --reboot option is highly recommended."
+#~ msgstr ""
+#~ "No reboot option specified. The --reboot option is highly recommended."
+
+#~ msgid "Rebooting system to update the BIOS."
+#~ msgstr "Rebooting system to update the BIOS."
+
+#~ msgid "Cancelling BIOS update..."
+#~ msgstr "Cancelling BIOS update..."
+
+#~ msgid "BIOS update cancelled."
+#~ msgstr "BIOS update cancelled."
+
+#~ msgid "Performing BIOS update..."
+#~ msgstr "Performing BIOS update..."
+
+#~ msgid "Update successfully staged. Reboot the system to begin BIOS update."
+#~ msgstr "Update successfully staged. Reboot the system to begin BIOS update."
+
+#~ msgid "The BIOS update did NOT complete successfully."
+#~ msgstr "The BIOS update did NOT complete successfully."
+
+#~ msgid "RBU Bios Update not supported on this system."
+#~ msgstr "RBU Bios Update not supported on this system."
 
 #~ msgid "Debug: Memory dump file to use instead of physical memory"
 #~ msgstr "Debug: Memory dump file to use instead of physical memory"
