@@ -32,5 +32,3 @@ for i in *.tar.{gz,bz2} *.zip *.src.rpm; do
     [ ! -e $DEST/$(basename $i) ] || continue
     cp $i $DEST
 done
-
-git push --tags origin master:master

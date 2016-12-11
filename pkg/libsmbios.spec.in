@@ -299,17 +299,15 @@ ln -s %{_sbindir}/dellWirelessCtl %{buildroot}/%{_bindir}/dellWirelessCtl
 ln -s smbios-sys-info %{buildroot}/%{_sbindir}/getSystemId
 ln -s smbios-wireless-ctl %{buildroot}/%{_sbindir}/dellWirelessCtl
 ln -s smbios-lcd-brightness %{buildroot}/%{_sbindir}/dellLcdBrightness
-ln -s smbios-rbu-bios-update %{buildroot}/%{_sbindir}/dellBiosUpdate
 
 cat > files-python-smbios <<-EOF
-	%doc COPYING-GPL COPYING-OSL README
+	%doc COPYING-GPL COPYING-OSL
 	%{python_sitelib}/*
 EOF
 
 cat > files-smbios-utils-python <<-EOF
-	%doc COPYING-GPL COPYING-OSL README
+	%doc COPYING-GPL COPYING-OSL
 	%doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
-	%doc doc/pkgheader.sh
 	%dir %{_sysconfdir}/libsmbios
 	%config(noreplace) %{_sysconfdir}/libsmbios/*
 	
@@ -319,18 +317,17 @@ cat > files-smbios-utils-python <<-EOF
 	%{_sbindir}/smbios-passwd
 	%{_sbindir}/smbios-wakeup-ctl
 	%{_sbindir}/smbios-wireless-ctl
-	%{_sbindir}/smbios-rbu-bios-update
 	%{_sbindir}/smbios-lcd-brightness
 	%{_sbindir}/smbios-keyboard-ctl
 	%{_sbindir}/smbios-thermal-ctl
 	%{_sbindir}/smbios-battery-ctl
 	
-	# symlinks: backwards compat
+	# used by HAL in old location, so keep it around until HAL is updated.
+	%{_sbindir}/dellLEDCtl
 	%{_sbindir}/dellLcdBrightness
+	%{_sbindir}/dellMediaDirectCtl
 	%{_sbindir}/getSystemId
 	%{_sbindir}/dellWirelessCtl
-	%{_sbindir}/dellBiosUpdate
-	# used by HAL in old location, so keep it around until HAL is updated.
 	%{_bindir}/dellWirelessCtl
 	
 	# data files
@@ -338,7 +335,7 @@ cat > files-smbios-utils-python <<-EOF
 EOF
 
 cat > files-yum-dellsysid <<-EOF
-	%doc COPYING-GPL COPYING-OSL README
+	%doc COPYING-GPL COPYING-OSL
 	# YUM Plugin
 	%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/*
 	%{_exec_prefix}/lib/yum-plugins/*
@@ -368,7 +365,7 @@ rm -rf %{buildroot}
 
 %files -n libsmbios-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+%doc COPYING-GPL COPYING-OSL src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
 %{_includedir}/smbios
 %{_includedir}/smbios_c
 %{_libdir}/libsmbios.so
@@ -380,22 +377,14 @@ rm -rf %{buildroot}
 %files -n smbios-utils
 # opensuse 11.1 enforces non-empty file list :(
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README
+%doc COPYING-GPL COPYING-OSL
 # no other files.
 
 %files -n smbios-utils-bin
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL README
+%doc COPYING-GPL COPYING-OSL
 %doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
-%doc doc/pkgheader.sh
-#
-# legacy C++
-%{_sbindir}/dellBiosUpdate-compat
-%{_sbindir}/dellLEDCtl
-%ifnarch ia64
-%{_sbindir}/dellMediaDirectCtl
-%endif
-#
+
 # new C utilities
 %{_sbindir}/smbios-state-byte-ctl
 %{_sbindir}/smbios-get-ut-data
