@@ -21,14 +21,3 @@ pushd _builddir
 ../autogen.sh
 make rpm RPM_DEFINES="--without unit-tests"
 make distcheck
-
-make git-tag
-eval "$(make get-version)"
-
-DEST=$LIBSMBIOS_TOPDIR/download/$PACKAGE/$PACKAGE-$PACKAGE_VERSION/
-mkdir -p $DEST
-for i in *.tar.{gz,bz2} *.zip *.src.rpm; do
-    [ -e $i ] || continue
-    [ ! -e $DEST/$(basename $i) ] || continue
-    cp $i $DEST
-done

@@ -43,3 +43,6 @@ po/insert-header.sin
 po/quot.sed
 po/remove-potcdate.sin
 
+# docker build process
+/Dockerfile
+/*-entrypoint.sh

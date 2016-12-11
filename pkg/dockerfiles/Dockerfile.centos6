@@ -1,0 +1,15 @@
+FROM centos:6
+
+VOLUME /output
+
+ENV OUTPUT_DIR /output
+ENV BUILD_DIR /build
+
+RUN yum install -y \
+  rpm-build gettext-devel libxml2-devel cppunit-devel xz libtool git gcc-c++ hardlink doxygen \
+  && yum clean all
+
+WORKDIR $BUILD_DIR
+COPY . .
+
+CMD ["./centos6-entrypoint.sh"]
