@@ -10,4 +10,13 @@
         <isDellSystem>1</isDellSystem>
     </systemInfo>
     <smbios offset="0x000e0000"/>
+    <testsToSkip>
+        <test name="testServiceTag">
+            <reason>Broken testcase</reason>
+        </test>
+	<test name="testServiceTagWriting">
+            <reason>Broken testcase</reason>
+        </test>
+    </testsToSkip>
+
 </TESTINPUT>
