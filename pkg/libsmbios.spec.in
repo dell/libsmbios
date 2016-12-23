@@ -216,7 +216,7 @@ substitutions in yum repository configuration files on Dell systems.
 %setup -q -n libsmbios-%{version}
 find . -type d -exec chmod -f 755 {} \;
 find doc src -type f -exec chmod -f 644 {} \;
-chmod 755 src/cppunit/*.sh
+find ./src/cppunit/ -name "*.sh" -type f -exec chmod 755  '{}' \;
 
 %build
 # this line lets us build an RPM directly from a git tarball

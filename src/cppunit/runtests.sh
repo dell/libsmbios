@@ -74,5 +74,5 @@ for i in $DIR/test_data/opti $DIR/system_dumps/* ${UNIT_TEST_DATA_DIR}/platform/
     [ -e $i ] || continue
 [ ${RUN_C_TEST} -ne 1 ] || run_test testC_token  $i "\n\nRunning TOKEN test for $i"
 [ ${RUN_C_TEST} -ne 1 ] || run_test testC_smbios $i "\n\nRunning SMBIOS test for $i"
-[ ${RUN_CPP_TEST} -ne 1 ] || run_test testPlatform $i "\n\nRunning PLATFORM test for $i"
+[ ${RUN_CPP_TEST:=1} -ne 1 ] || run_test testPlatform $i "\n\nRunning PLATFORM test for $i"
 done
