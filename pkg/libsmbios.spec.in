@@ -420,10 +420,10 @@ rm -rf %{buildroot}
 * Mon May 18 2009 Matt Domsch <Matt_Domsch@dell.com> - 2.2.16-3
 - split yum plugin into yum-dellsysid package
 
-* Mon Tue 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.16-1
+* Tue Mar 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.16-1
 - add gcc 4.4 support
 
-* Mon Tue 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.15-1
+* Tue Mar 24 2009 Michael E Brown <michael_e_brown at dell.com> - 2.2.15-1
 - update to lastest upstream.
 - fixes bug in bios update on systems with versions like x.y.z.
 
