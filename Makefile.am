@@ -18,8 +18,8 @@ lib_LTLIBRARIES=
 TESTS=
 
 AM_CPPFLAGS = -I$(top_builddir)/out/include -I$(top_srcdir)/src/include -DLIBSMBIOS_LOCALEDIR=\"$(localedir)\"
-AM_CFLAGS = -Wall
-AM_CXXFLAGS = -Wall
+AM_CFLAGS = -Wall -fPIC
+AM_CXXFLAGS = -Wall -fPIC
 AM_LDADD = $(LIBINTL)
 
 AM_LDFLAGS = -L$(top_builddir)/out/
