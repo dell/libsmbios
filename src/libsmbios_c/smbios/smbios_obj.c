@@ -96,7 +96,6 @@ struct smbios_table *smbios_table_factory(int flags, ...)
 out_init_fail:
     // fail. init_smbios_* functions are responsible for free-ing memory if they
     // return failure.
-    toReturn->initialized = 0;
     toReturn = 0;
 
 out:
