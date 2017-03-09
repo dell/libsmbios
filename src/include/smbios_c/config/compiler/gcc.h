@@ -24,12 +24,3 @@
 #  error "GCC versions < 2.90 not supported"
 #endif
 //
-#if (__GNUC__ > 5)
-#  if defined(LIBSMBIOS_C_ASSERT_CONFIG)
-#     error "Unknown compiler version - please run the configure tests and report the results"
-#  else
-#     warning "Unknown compiler version - please run the configure tests and report the results"
-#  endif
-#endif
-
-
