@@ -10,7 +10,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 cd $SCRIPT_DIR
 
-autoreconf -i -f -Wno-portability
+autoreconf -v -i -f
 
 run_configure=true
 for arg in $*; do
