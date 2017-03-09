@@ -85,8 +85,8 @@ AC_SUBST([LIBSMBIOS_CPLUSPLUS_SONAME], [libsmbios.so.$LIBSMBIOS_CPLUSPLUS_SO_MAJ
 
 dnl Help line for doxygen
 AC_ARG_ENABLE([libsmbios_cxx],
-    AS_HELP_STRING([--disable-libsmbios_cxx],[Disable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: enabled]),
-    [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=yes])
+    AS_HELP_STRING([--enable-libsmbios_cxx],[Disable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: disabled]),
+    [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=no])
 AM_CONDITIONAL(BUILD_LIBSMBIOS_CXX, [test x$want_libsmbios_cxx == xyes])
 
 dnl Help line for doxygen
@@ -212,3 +212,17 @@ AC_CONFIG_FILES([out/public-include/smbios/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([out/public-include/smbios_c/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([pkg/pkginfo])
 AC_OUTPUT
+
+# ==============================================
+# Display final informations about configuration
+# ==============================================
+AC_MSG_NOTICE([
+==============================================================================
+Build configuration:
+    c++ library:            ${want_libsmbios_cxx}
+    doxygen:                ${wantdoxygen}
+    graphviz:               ${wantgraphviz}
+    python:                 ${wantpython}
+    as-needed:              ${wantasneeded}
+==============================================================================
+])
