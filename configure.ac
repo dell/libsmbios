@@ -91,17 +91,17 @@ AM_CONDITIONAL(BUILD_LIBSMBIOS_CXX, [test x$want_libsmbios_cxx == xyes])
 
 dnl Help line for doxygen
 AC_ARG_ENABLE(doxygen,
-    AS_HELP_STRING(--disable-doxygen,Disable API docs build via Doxygen. default: enabled if doxygen present),
+    AS_HELP_STRING([--disable-doxygen],[Disable API docs build via Doxygen. default: enabled if doxygen present]),
     [wantdoxygen=$enableval], [wantdoxygen=yes])
 
 dnl Help line for graphviz
 AC_ARG_ENABLE(graphviz,
-    AS_HELP_STRING(--disable-graphviz,Enhance API docs with pretty graphs and pictures. default: enabled if graphviz present),
+    AS_HELP_STRING([--disable-graphviz],[Enhance API docs with pretty graphs and pictures. default: enabled if graphviz present]),
     [wantgraphviz=$enableval], [wantgraphviz=yes])
 
 dnl Help line for graphviz
 AC_ARG_ENABLE(python,
-    AS_HELP_STRING(--disable-python,Build and install python utilities. default: enabled if python present),
+    AS_HELP_STRING([--disable-python],[Build and install python utilities. default: enabled if python present]),
     [wantpython=$enableval], [wantpython=yes])
 
 AC_ARG_ENABLE(as-needed,
