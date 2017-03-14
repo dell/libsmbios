@@ -113,12 +113,3 @@
 #  error "Compiler too old. GCC > 3.0 required"
 #endif
 //
-#if (__GNUC__ > 5)
-#  if defined(LIBSMBIOS_ASSERT_CONFIG)
-#     error "Unknown compiler version - please run the configure tests and report the results"
-#  else
-#     warning "Unknown compiler version - please run the configure tests and report the results"
-#  endif
-#endif
-
-

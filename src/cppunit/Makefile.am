@@ -6,6 +6,7 @@ EXTRA_DIST += \
 	src/cppunit/test_data	\
 	src/cppunit/system_dumps
 
+if BUILD_LIBSMBIOS_CXX
 TESTS += src/cppunit/runtests.sh
 
 UT_CFLAGS=
@@ -16,10 +17,12 @@ if BUILD_WINDOWS
 UT_CFLAGS += -DBUILD_WINDOWS
 endif
 
+TEST_CPPFLAGS = $(AM_CPPFLAGS) $(CPPUNIT_CFLAGS) $(UT_CFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
+
 # convenience library for test stuff
 check_LTLIBRARIES = out/libtestmain.la
 out_libtestmain_la_SOURCES = src/cppunit/outputctl.h src/cppunit/main.cpp src/cppunit/main.h
-out_libtestmain_la_LIBADD =  $(CPPUNIT_LIBS) out/libsmbios.la out/libsmbios_c.la
+out_libtestmain_la_LIBADD =  $(CPPUNIT_LIBS) out/libsmbios_c.la out/libsmbios.la
 out_libtestmain_la_LDFLAGS = $(AM_LDFLAGS) -static
 
 # convenience library for XML stuff
@@ -28,8 +31,6 @@ out_libxmlutil_la_SOURCES = src/cppunit/XmlUtils.cpp src/cppunit/XmlUtils.h
 out_libxmlutil_la_LIBADD =  $(LIBXML2_LIBS)
 out_libxmlutil_la_CPPFLAGS = $(AM_CPPFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common
 out_libxmlutil_la_LDFLAGS = $(AM_LDFLAGS) -static
-
-TEST_CPPFLAGS = $(AM_CPPFLAGS) $(CPPUNIT_CFLAGS) $(LIBXML2_CFLAGS) -I$(top_srcdir)/src/libsmbios_c++/common $(UT_CFLAGS)
 
 check_PROGRAMS += out/testPlatform
 out_testPlatform_SOURCES = src/cppunit/testPlatform.h src/cppunit/testPlatform.cpp
@@ -66,4 +67,4 @@ out_testC_memory_cmos_SOURCES = src/cppunit/testC_memory_cmos.h src/cppunit/test
 out_testC_memory_cmos_LDADD = out/libtestmain.la $(AM_LDADD)
 out_testC_memory_cmos_LDFLAGS = $(AM_LDFLAGS) -static
 out_testC_memory_cmos_CPPFLAGS = $(CPPUNIT_CFLAGS) $(AM_CPPFLAGS) $(UT_CFLAGS)
-
+endif

@@ -13,7 +13,7 @@
 #
 m4_define([release_major_version], [2])
 m4_define([release_minor_version], [3])
-m4_define([release_micro_version], [1])
+m4_define([release_micro_version], [3])
 # if you define any "extra" version info, include a leading dot (".")
 m4_define([release_extra_version], [])
 
@@ -45,7 +45,7 @@ AC_PREREQ(2.59)
 AC_CONFIG_AUX_DIR([pkg])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
-AM_INIT_AUTOMAKE([subdir-objects tar-ustar dist-bzip2 dist-xz no-define -Wno-portability foreign])
+AM_INIT_AUTOMAKE([subdir-objects dist-xz no-define foreign])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.14])
 AC_GNU_SOURCE
@@ -59,6 +59,9 @@ AC_SUBST([RELEASE_MICRO], [release_micro_version()])
 AC_SUBST([RELEASE_EXTRA], [release_extra_version()])
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
+
+# Ensure we use c++98 instead of c++14
+CXXFLAGS="$CXXFLAGS -std=c++98"
 
 if test "$enable_shared" != "no"; then
     AC_DEFINE([LIBSMBIOS_C_ALL_DYN_LINK],[1],[Enable dynamic libraries to build])
@@ -85,23 +88,23 @@ AC_SUBST([LIBSMBIOS_CPLUSPLUS_SONAME], [libsmbios.so.$LIBSMBIOS_CPLUSPLUS_SO_MAJ
 
 dnl Help line for doxygen
 AC_ARG_ENABLE([libsmbios_cxx],
-    AS_HELP_STRING([--disable-libsmbios_cxx],[Disable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: enabled]),
-    [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=yes])
+    AS_HELP_STRING([--enable-libsmbios_cxx],[Disable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: disabled]),
+    [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=no])
 AM_CONDITIONAL(BUILD_LIBSMBIOS_CXX, [test x$want_libsmbios_cxx == xyes])
 
 dnl Help line for doxygen
 AC_ARG_ENABLE(doxygen,
-    AS_HELP_STRING(--disable-doxygen,Disable API docs build via Doxygen. default: enabled if doxygen present),
+    AS_HELP_STRING([--disable-doxygen],[Disable API docs build via Doxygen. default: enabled if doxygen present]),
     [wantdoxygen=$enableval], [wantdoxygen=yes])
 
 dnl Help line for graphviz
 AC_ARG_ENABLE(graphviz,
-    AS_HELP_STRING(--disable-graphviz,Enhance API docs with pretty graphs and pictures. default: enabled if graphviz present),
+    AS_HELP_STRING([--disable-graphviz],[Enhance API docs with pretty graphs and pictures. default: enabled if graphviz present]),
     [wantgraphviz=$enableval], [wantgraphviz=yes])
 
 dnl Help line for graphviz
 AC_ARG_ENABLE(python,
-    AS_HELP_STRING(--disable-python,Build and install python utilities. default: enabled if python present),
+    AS_HELP_STRING([--disable-python],[Build and install python utilities. default: enabled if python present]),
     [wantpython=$enableval], [wantpython=yes])
 
 AC_ARG_ENABLE(as-needed,
@@ -212,3 +215,17 @@ AC_CONFIG_FILES([out/public-include/smbios/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([out/public-include/smbios_c/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([pkg/pkginfo])
 AC_OUTPUT
+
+# ==============================================
+# Display final informations about configuration
+# ==============================================
+AC_MSG_NOTICE([
+==============================================================================
+Build configuration:
+    c++ library:            ${want_libsmbios_cxx}
+    doxygen:                ${wantdoxygen}
+    graphviz:               ${wantgraphviz}
+    python:                 ${wantpython}
+    as-needed:              ${wantasneeded}
+==============================================================================
+])
