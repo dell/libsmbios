@@ -50,7 +50,8 @@ def command_parse():
     parser.add_option("--get-status", "-g",  action="store_true", default=False, help=_("This will Display the current Status of Keyboard Illumination Settings"))
     parser.add_option("--set-mode", action="store_true", help=_("Option to set USER Selectable Keyboard Mode"))
     parser.add_option("--set-trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
-    parser.add_option("--set-timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
+    parser.add_option("--set-timeout-battery", action="store", dest="set_timeout_battery", help=_("Set Keyboard Illumination Timeout Value (battery)"))
+    parser.add_option("--set-timeout-ac", action="store", dest="set_timeout_ac", help=_("Set Keyboard Illumination Timeout Value (ac)"))
     parser.add_option("--set-level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
     parser.add_option("--als", action="store", dest="als_option", help=_("Set/Get ALS (Ambient Light Sensor Status and Control Level)"))
 
@@ -163,7 +164,7 @@ def get_trigger_settings():
 def _set_keyboard_attr( reg, flag='default'):
     """A Generic function to sets keyboard illuminations settings.Flag="trigger", set keyboard illumination "Trigger" settings. Flag="timeout", set keyboard illumination "Timeout" settings."""
 
-    if flag != 'trigger' and flag != 'timeout' and flag != 'mode' and flag != 'level':
+    if flag != 'trigger' and flag != 'timeout-ac' and flag != 'timeout-battery' and flag != 'mode' and flag != 'level':
         raise RunTimeKeyboardErr( _("\t _set_keyboard_attr Flag error: %s  ") % flag )
 
     # Get Current settings. Need this to write back flags that we are not interested in
@@ -176,7 +177,8 @@ def _set_keyboard_attr( reg, flag='default'):
 
         mode_state = res[smi.cbRES2] & 0xFFFF
         trigger_map = get_byte(res[smi.cbRES2] ,2)
-        timeout = get_byte(res[smi.cbRES2] ,3)
+        timeout_bat = get_byte(res[smi.cbRES2] ,3)
+        timeout_ac =  get_byte(res[smi.cbRES3] ,3)
         asl_setting = get_byte(res[smi.cbRES3] ,0)
         keybrd_light_level = get_byte(res[smi.cbRES3] ,2)
 
@@ -185,8 +187,11 @@ def _set_keyboard_attr( reg, flag='default'):
             for opt in reg:
                 trigger_map|=1<<opt
 
-        elif flag == 'timeout':
-            timeout = reg
+        elif flag == 'timeout-ac':
+            timeout_ac = reg
+
+        elif flag == 'timeout-battery':
+            timeout_bat = reg
 
         elif flag == 'mode':
             mode_state = reg
@@ -201,14 +206,15 @@ def _set_keyboard_attr( reg, flag='default'):
         # Just do a blind write of reserved region as well.
         cbArg2_w0 = mode_state
         cbArg2_b2 = trigger_map << 16
-        cbArg2_b3 = timeout << 24
+        cbArg2_b3 = timeout_bat << 24
 
         cbArg3_b0 = asl_setting
         cbArg3_b1 = 0x00
         cbArg3_b2 = keybrd_light_level << 16
+        cbArg3_b3 = timeout_ac << 24
 
         Arg2 = cbArg2_b3 | cbArg2_b2 | cbArg2_w0
-        Arg3 = cbArg3_b0 | cbArg3_b1 | cbArg3_b2
+        Arg3 = cbArg3_b0 | cbArg3_b1 | cbArg3_b2 | cbArg3_b3
 
         verboseLog.info( _("Setting new params in _set_keyboard_attr : Arg2=0x%X Arg3=0x%X") % (Arg2, Arg3) )
         res = smi.simple_ci_smi( 4, 11, 2, Arg2, Arg3)
@@ -250,14 +256,23 @@ def print_current_timeout():
         if is_set (trigger_map, 3): print ("\tAny mouse movement")
         #Note - Touchpad activity & Pointing stick seems to be symbiotic the system that I used!!!
 
-        #Timeout units indicator cbRes2 byte2 [7:6]
+        #Timeout battery units indicator cbRes2 byte3 [7:6]
         t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
         time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
 
-        #Timeout value cbRes2 byte2 [5:0]
+        #Timeout battery value cbRes2 byte3 [5:0]
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
-        print _("\nOld Keyboard illumination timeout is: %d %s") % (timeout, time_unit)
+        print _("\nOld Keyboard illumination battery timeout is: %d %s") % (timeout, time_unit)
+
+        #Timeout ac units indicator cbRes3 byte2 [7:6]
+        t_unit = (get_byte(res[smi.cbRES3] ,3) & 0xC0) >> 6
+        time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
+
+        #Timeout ac value cbRes3 byte3 [5:0]
+        timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
+
+        print _("\nOld Keyboard illumination AC timeout is: %d %s") % (timeout, time_unit)
 
     except RunTimeKeyboardErr, e:
         print "\t%s" % e
@@ -292,7 +307,7 @@ def timeout_parser(s_timeout):
         return (-1,-1)
 
 
-def set_KeyBoardIllumination_timeout(s_timeout):
+def set_KeyBoardIllumination_timeout(s_timeout, timeout_type):
     """ This function will set a new Keyboard Illumination timeout value"""
 
     (timeout, t_unit) = timeout_parser(s_timeout)
@@ -301,7 +316,7 @@ def set_KeyBoardIllumination_timeout(s_timeout):
     # Unlike set_trigger, here I print the current keyboard illumination timeout value and not the capability.
     # Printing the current timeout settings seems more apt than printing the capabilitie
     print_current_timeout()
-    _set_keyboard_attr((t_unit << 6 | timeout) , flag='timeout')
+    _set_keyboard_attr((t_unit << 6 | timeout) , flag='timeout-%s' % timeout_type)
 
     return 0
 
@@ -400,7 +415,17 @@ def PrintKeyBoardStatus():
         #Timeout value cbRes2 byte2 [5:0]
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
-        print _("\n Keyboard illumination timeout has been set at: %d %s") % (timeout, time_unit)
+        print _("\n Keyboard illumination timeout on battery has been set at: %d %s") % (timeout, time_unit)
+        verboseLog.info ( _(" Note - Timeout value of 0 means its always ON "))
+
+        #Timeout units indicator cbRes3 byte3 [7:6]
+        t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
+        time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
+
+        #Timeout value cbRes3 byte3 [5:0]
+        timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
+
+        print _("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit)
         verboseLog.info ( _(" Note - Timeout value of 0 means its always ON "))
 
         #cbRes3 byte0
@@ -627,8 +652,11 @@ def main():
             print _("Setting Keyboard illumination Triggers ")
             set_trigger()
 
-        if options.set_timeout:
-            set_KeyBoardIllumination_timeout(options.set_timeout)
+        if options.set_timeout_battery:
+            set_KeyBoardIllumination_timeout(options.set_timeout_battery, "battery")
+
+        if options.set_timeout_ac:
+            set_KeyBoardIllumination_timeout(options.set_timeout_ac, "ac")
 
         if options.set_level:
             set_KeyBoardIllumination_level(options.set_level)
