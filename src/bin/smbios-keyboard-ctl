@@ -188,9 +188,13 @@ def _set_keyboard_attr( reg, flag='default'):
                 trigger_map|=1<<opt
 
         elif flag == 'timeout-ac':
+            if reg == 0:
+                raise RunTimeKeyboardErr( _("\t A timeout of zero is not supported") )
             timeout_ac = reg
 
         elif flag == 'timeout-battery':
+            if reg == 0:
+                raise RunTimeKeyboardErr( _("\t A timeout of zero is not supported") )
             timeout_bat = reg
 
         elif flag == 'mode':
