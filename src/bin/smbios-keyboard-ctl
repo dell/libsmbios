@@ -269,14 +269,14 @@ def print_current_timeout():
 
         print _("\nOld Keyboard illumination battery timeout is: %d %s") % (timeout, time_unit)
 
-        #Timeout ac units indicator cbRes3 byte2 [7:6]
-        t_unit = (get_byte(res[smi.cbRES3] ,3) & 0xC0) >> 6
-        time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
+        if supports_ac_timeout():
+            #Timeout ac units indicator cbRes3 byte2 [7:6]
+            t_unit = (get_byte(res[smi.cbRES3] ,3) & 0xC0) >> 6
+            time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
 
-        #Timeout ac value cbRes3 byte3 [5:0]
-        timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
-
-        print _("\nOld Keyboard illumination AC timeout is: %d %s") % (timeout, time_unit)
+            #Timeout ac value cbRes3 byte3 [5:0]
+            timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
+            print _("\nOld Keyboard illumination AC timeout is: %d %s") % (timeout, time_unit)
 
     except RunTimeKeyboardErr, e:
         print "\t%s" % e
@@ -631,6 +631,13 @@ def set_als_settings(als_param):
         print "\tset-high=<int>  - set ALS High Limit "
         print "\tset-low =<int>  - set ALS Low  Limit "
 
+def supports_ac_timeout():
+    try:
+        tokenTable = token.TokenTable()
+        supports_ac = tokenTable[0x451]
+        return True
+    except IndexError:
+        return False
 
 def main():
     exit_code = 0
@@ -660,7 +667,10 @@ def main():
             set_KeyBoardIllumination_timeout(options.set_timeout_battery, "battery")
 
         if options.set_timeout_ac:
-            set_KeyBoardIllumination_timeout(options.set_timeout_ac, "ac")
+            if supports_ac_timeout():
+                set_KeyBoardIllumination_timeout(options.set_timeout_ac, "ac")
+            else:
+                raise RunTimeKeyboardErr("This system doesn't support AC timeout" )
 
         if options.set_level:
             set_KeyBoardIllumination_level(options.set_level)
