@@ -424,14 +424,14 @@ def PrintKeyBoardStatus():
 
         print _("\n Keyboard illumination timeout on battery has been set at: %d %s") % (timeout, time_unit)
 
-        #Timeout units indicator cbRes3 byte3 [7:6]
-        t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
-        time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
+        if supports_ac_timeout():
+            #Timeout units indicator cbRes3 byte3 [7:6]
+            t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
+            time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
 
-        #Timeout value cbRes3 byte3 [5:0]
-        timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
-
-        print _("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit)
+            #Timeout value cbRes3 byte3 [5:0]
+            timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
+            print _("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit)
 
         #cbRes3 byte0
         print _("\n Current setting of ALS value that turns the light on or off: %d") % ( get_byte(res[smi.cbRES3] ,0))
