@@ -93,7 +93,7 @@ def get_mode_settings():
         print _("\tOption\tMode")
         print _("------------------------------------------------")
         if is_set (res[smi.cbRES2], 0): print ("\t0\tAlways OFF")
-        # Always On (bit 1) is explicitly removed.  Most systems should not accept this value
+        if is_set (res[smi.cbRES2], 1): print ("\t1\tAlways ON")
         if is_set (res[smi.cbRES2], 2): print ("\t2\tAuto: ALS-based ON")
         if is_set (res[smi.cbRES2], 3): print ("\t3\tAuto: ALS- and input-activity-based On; input-activity based Off")
         if is_set (res[smi.cbRES2], 4): print ("\t4\tAuto: Input-activity-based On; input-activity based Off")
@@ -461,8 +461,7 @@ def PrintKeyBoardCapab():
 
         print _(" Supported USER Selectable Modes : ")
         if is_set (res[smi.cbRES2], 0): print "\t Always OFF"
-        #Explicitly have removed Always ON (bit 1).
-        #this bit should not be supported on many systems as EC will reject it
+        if is_set (res[smi.cbRES2], 1): print "\t Always ON"
         if is_set (res[smi.cbRES2], 2): print "\t Auto: ALS-based ON"
         if is_set (res[smi.cbRES2], 3): print "\t Auto: ALS- and input-activity-based On; input-activity based Off"
         if is_set (res[smi.cbRES2], 4): print "\t Auto: Input-activity-based On; input-activity based Off"
