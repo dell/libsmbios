@@ -88,6 +88,8 @@ def get_mode_settings():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("\ttCould not retrieve supported USER Selectable Modes") )
 
+        #remove the Always ON bit, it should not be supported on most systems
+        res[smi.cbRES2] &= 0xFFFD
 
         print _("\n Supported USER Selectable Modes: ")
         print _("\tOption\tMode")
@@ -421,7 +423,6 @@ def PrintKeyBoardStatus():
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
         print _("\n Keyboard illumination timeout on battery has been set at: %d %s") % (timeout, time_unit)
-        verboseLog.info ( _(" Note - Timeout value of 0 means its always ON "))
 
         #Timeout units indicator cbRes3 byte3 [7:6]
         t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
@@ -431,7 +432,6 @@ def PrintKeyBoardStatus():
         timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
 
         print _("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit)
-        verboseLog.info ( _(" Note - Timeout value of 0 means its always ON "))
 
         #cbRes3 byte0
         print _("\n Current setting of ALS value that turns the light on or off: %d") % ( get_byte(res[smi.cbRES3] ,0))
@@ -458,6 +458,8 @@ def PrintKeyBoardCapab():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("Warning:: Your Keyboard may not support Keyboard illumination Feature") )
 
+        #remove the Always ON bit, it should not be supported on most systems
+        res[smi.cbRES2] &= 0xFFFD
 
         print _(" Supported USER Selectable Modes : ")
         if is_set (res[smi.cbRES2], 0): print "\t Always OFF"
