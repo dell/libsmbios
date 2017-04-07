@@ -783,7 +783,15 @@ if __name__ == "__main__":
 #  cbRES3, byte0  Current setting of ALS value that turns the light on or off.
 #  cbRES3, byte1  Current ALS reading
 #  cbRES3, byte2  Current keyboard light level.
-
+#  cbRES3, byte3  Current timeout, on AC Power Bits
+#     7:6 Timeout units indicator:
+#     00b Seconds
+#     01b Minutes
+#     10b Hours
+#     11b Days
+#     Bits 5:0 Timeout value (0-63) in sec/min/hr/day
+#     NOTE: A value of 0 means always on (no timeout) if any bits of RES3 byte2
+#     are set upon return from the upon return from the [Get Feature information] call.
 # cbArg1 0x2 = Set New State
 #  cbRES1         Standard return codes (0, -1, -2)
 #  cbArg2, word0  Bitmap of current mode state
@@ -814,6 +822,13 @@ if __name__ == "__main__":
 #     bits 5:0  Timeout value (0-63) in sec/min/hr/day
 #  cbArg3, byte0  Desired setting of ALS value that turns the light on or off.
 #  cbArg3, byte2  Desired keyboard light level.
+#  cbArg3, byte3  Desired Timeout on AC power
+#     bits 7:6  Timeout units indicator:
+#     00b       Seconds
+#     01b       Minutes
+#     10b       Hours
+#     11b       Days
+#     bits 5:0  Timeout value (0-63) in sec/min/hr/day
 
 # cbClass 17
 # cbSelect 10
