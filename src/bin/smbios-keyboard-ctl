@@ -234,7 +234,8 @@ def _set_keyboard_attr( reg, flag='default'):
 
 def set_mode():
     mode=get_mode_settings()
-    _set_keyboard_attr(mode, flag='mode')
+    if (mode):
+        _set_keyboard_attr(mode, flag='mode')
 
 def set_trigger():
     trigger=get_trigger_settings()
