@@ -50,7 +50,8 @@ def command_parse():
     parser.add_option("--get-status", "-g",  action="store_true", default=False, help=_("This will Display the current Status of Keyboard Illumination Settings"))
     parser.add_option("--set-mode", action="store_true", help=_("Option to set USER Selectable Keyboard Mode"))
     parser.add_option("--set-trigger" , action="store_true", help=_("Option to set Trigger types for Keyboard Illumination  "))
-    parser.add_option("--set-timeout", action="store", dest="set_timeout", help=_("Set Keyboard Illumination Timeout Value"))
+    parser.add_option("--set-timeout-battery", action="store", dest="set_timeout_battery", help=_("Set Keyboard Illumination Timeout Value (battery)"))
+    parser.add_option("--set-timeout-ac", action="store", dest="set_timeout_ac", help=_("Set Keyboard Illumination Timeout Value (ac)"))
     parser.add_option("--set-level", action="store", dest="set_level", help=_("Set Keyboard Illumination Level"))
     parser.add_option("--als", action="store", dest="als_option", help=_("Set/Get ALS (Ambient Light Sensor Status and Control Level)"))
 
@@ -87,6 +88,8 @@ def get_mode_settings():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("\ttCould not retrieve supported USER Selectable Modes") )
 
+        #remove the Always ON bit, it should not be supported on most systems
+        res[smi.cbRES2] &= 0xFFFD
 
         print _("\n Supported USER Selectable Modes: ")
         print _("\tOption\tMode")
@@ -163,7 +166,7 @@ def get_trigger_settings():
 def _set_keyboard_attr( reg, flag='default'):
     """A Generic function to sets keyboard illuminations settings.Flag="trigger", set keyboard illumination "Trigger" settings. Flag="timeout", set keyboard illumination "Timeout" settings."""
 
-    if flag != 'trigger' and flag != 'timeout' and flag != 'mode' and flag != 'level':
+    if flag != 'trigger' and flag != 'timeout-ac' and flag != 'timeout-battery' and flag != 'mode' and flag != 'level':
         raise RunTimeKeyboardErr( _("\t _set_keyboard_attr Flag error: %s  ") % flag )
 
     # Get Current settings. Need this to write back flags that we are not interested in
@@ -176,7 +179,8 @@ def _set_keyboard_attr( reg, flag='default'):
 
         mode_state = res[smi.cbRES2] & 0xFFFF
         trigger_map = get_byte(res[smi.cbRES2] ,2)
-        timeout = get_byte(res[smi.cbRES2] ,3)
+        timeout_bat = get_byte(res[smi.cbRES2] ,3)
+        timeout_ac =  get_byte(res[smi.cbRES3] ,3)
         asl_setting = get_byte(res[smi.cbRES3] ,0)
         keybrd_light_level = get_byte(res[smi.cbRES3] ,2)
 
@@ -185,8 +189,15 @@ def _set_keyboard_attr( reg, flag='default'):
             for opt in reg:
                 trigger_map|=1<<opt
 
-        elif flag == 'timeout':
-            timeout = reg
+        elif flag == 'timeout-ac':
+            if reg == 0:
+                raise RunTimeKeyboardErr( _("\t A timeout of zero is not supported") )
+            timeout_ac = reg
+
+        elif flag == 'timeout-battery':
+            if reg == 0:
+                raise RunTimeKeyboardErr( _("\t A timeout of zero is not supported") )
+            timeout_bat = reg
 
         elif flag == 'mode':
             mode_state = reg
@@ -201,14 +212,15 @@ def _set_keyboard_attr( reg, flag='default'):
         # Just do a blind write of reserved region as well.
         cbArg2_w0 = mode_state
         cbArg2_b2 = trigger_map << 16
-        cbArg2_b3 = timeout << 24
+        cbArg2_b3 = timeout_bat << 24
 
         cbArg3_b0 = asl_setting
         cbArg3_b1 = 0x00
         cbArg3_b2 = keybrd_light_level << 16
+        cbArg3_b3 = timeout_ac << 24
 
         Arg2 = cbArg2_b3 | cbArg2_b2 | cbArg2_w0
-        Arg3 = cbArg3_b0 | cbArg3_b1 | cbArg3_b2
+        Arg3 = cbArg3_b0 | cbArg3_b1 | cbArg3_b2 | cbArg3_b3
 
         verboseLog.info( _("Setting new params in _set_keyboard_attr : Arg2=0x%X Arg3=0x%X") % (Arg2, Arg3) )
         res = smi.simple_ci_smi( 4, 11, 2, Arg2, Arg3)
@@ -224,7 +236,8 @@ def _set_keyboard_attr( reg, flag='default'):
 
 def set_mode():
     mode=get_mode_settings()
-    _set_keyboard_attr(mode, flag='mode')
+    if (mode):
+        _set_keyboard_attr(mode, flag='mode')
 
 def set_trigger():
     trigger=get_trigger_settings()
@@ -250,14 +263,23 @@ def print_current_timeout():
         if is_set (trigger_map, 3): print ("\tAny mouse movement")
         #Note - Touchpad activity & Pointing stick seems to be symbiotic the system that I used!!!
 
-        #Timeout units indicator cbRes2 byte2 [7:6]
+        #Timeout battery units indicator cbRes2 byte3 [7:6]
         t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
         time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
 
-        #Timeout value cbRes2 byte2 [5:0]
+        #Timeout battery value cbRes2 byte3 [5:0]
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
-        print _("\nOld Keyboard illumination timeout is: %d %s") % (timeout, time_unit)
+        print _("\nOld Keyboard illumination battery timeout is: %d %s") % (timeout, time_unit)
+
+        if supports_ac_timeout():
+            #Timeout ac units indicator cbRes3 byte2 [7:6]
+            t_unit = (get_byte(res[smi.cbRES3] ,3) & 0xC0) >> 6
+            time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
+
+            #Timeout ac value cbRes3 byte3 [5:0]
+            timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
+            print _("\nOld Keyboard illumination AC timeout is: %d %s") % (timeout, time_unit)
 
     except RunTimeKeyboardErr, e:
         print "\t%s" % e
@@ -288,11 +310,11 @@ def timeout_parser(s_timeout):
         print "%s" % e
         print _("\n To set timeout value as 45 seconds enter: 45s ")
         print _(" You can specify time out values in  s[Seconds], m[Minutes], h[hours], d[days]")
-        print _(" Timeout value range is 0-63, timeout value of 0 means its always ON ")
+        print _(" Timeout value range is 1-63 ")
         return (-1,-1)
 
 
-def set_KeyBoardIllumination_timeout(s_timeout):
+def set_KeyBoardIllumination_timeout(s_timeout, timeout_type):
     """ This function will set a new Keyboard Illumination timeout value"""
 
     (timeout, t_unit) = timeout_parser(s_timeout)
@@ -301,7 +323,7 @@ def set_KeyBoardIllumination_timeout(s_timeout):
     # Unlike set_trigger, here I print the current keyboard illumination timeout value and not the capability.
     # Printing the current timeout settings seems more apt than printing the capabilitie
     print_current_timeout()
-    _set_keyboard_attr((t_unit << 6 | timeout) , flag='timeout')
+    _set_keyboard_attr((t_unit << 6 | timeout) , flag='timeout-%s' % timeout_type)
 
     return 0
 
@@ -400,8 +422,16 @@ def PrintKeyBoardStatus():
         #Timeout value cbRes2 byte2 [5:0]
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
-        print _("\n Keyboard illumination timeout has been set at: %d %s") % (timeout, time_unit)
-        verboseLog.info ( _(" Note - Timeout value of 0 means its always ON "))
+        print _("\n Keyboard illumination timeout on battery has been set at: %d %s") % (timeout, time_unit)
+
+        if supports_ac_timeout():
+            #Timeout units indicator cbRes3 byte3 [7:6]
+            t_unit = (get_byte(res[smi.cbRES2] ,3) & 0xC0) >> 6
+            time_unit=[' Seconds', 'Minutes', 'Hours', 'Days'][t_unit]
+
+            #Timeout value cbRes3 byte3 [5:0]
+            timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
+            print _("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit)
 
         #cbRes3 byte0
         print _("\n Current setting of ALS value that turns the light on or off: %d") % ( get_byte(res[smi.cbRES3] ,0))
@@ -428,6 +458,8 @@ def PrintKeyBoardCapab():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("Warning:: Your Keyboard may not support Keyboard illumination Feature") )
 
+        #remove the Always ON bit, it should not be supported on most systems
+        res[smi.cbRES2] &= 0xFFFD
 
         print _(" Supported USER Selectable Modes : ")
         if is_set (res[smi.cbRES2], 0): print "\t Always OFF"
@@ -602,6 +634,13 @@ def set_als_settings(als_param):
         print "\tset-high=<int>  - set ALS High Limit "
         print "\tset-low =<int>  - set ALS Low  Limit "
 
+def supports_ac_timeout():
+    try:
+        tokenTable = token.TokenTable()
+        supports_ac = tokenTable[0x451]
+        return True
+    except IndexError:
+        return False
 
 def main():
     exit_code = 0
@@ -627,8 +666,14 @@ def main():
             print _("Setting Keyboard illumination Triggers ")
             set_trigger()
 
-        if options.set_timeout:
-            set_KeyBoardIllumination_timeout(options.set_timeout)
+        if options.set_timeout_battery:
+            set_KeyBoardIllumination_timeout(options.set_timeout_battery, "battery")
+
+        if options.set_timeout_ac:
+            if supports_ac_timeout():
+                set_KeyBoardIllumination_timeout(options.set_timeout_ac, "ac")
+            else:
+                raise RunTimeKeyboardErr("This system doesn't support AC timeout" )
 
         if options.set_level:
             set_KeyBoardIllumination_level(options.set_level)
@@ -738,7 +783,15 @@ if __name__ == "__main__":
 #  cbRES3, byte0  Current setting of ALS value that turns the light on or off.
 #  cbRES3, byte1  Current ALS reading
 #  cbRES3, byte2  Current keyboard light level.
-
+#  cbRES3, byte3  Current timeout, on AC Power Bits
+#     7:6 Timeout units indicator:
+#     00b Seconds
+#     01b Minutes
+#     10b Hours
+#     11b Days
+#     Bits 5:0 Timeout value (0-63) in sec/min/hr/day
+#     NOTE: A value of 0 means always on (no timeout) if any bits of RES3 byte2
+#     are set upon return from the upon return from the [Get Feature information] call.
 # cbArg1 0x2 = Set New State
 #  cbRES1         Standard return codes (0, -1, -2)
 #  cbArg2, word0  Bitmap of current mode state
@@ -769,6 +822,13 @@ if __name__ == "__main__":
 #     bits 5:0  Timeout value (0-63) in sec/min/hr/day
 #  cbArg3, byte0  Desired setting of ALS value that turns the light on or off.
 #  cbArg3, byte2  Desired keyboard light level.
+#  cbArg3, byte3  Desired Timeout on AC power
+#     bits 7:6  Timeout units indicator:
+#     00b       Seconds
+#     01b       Minutes
+#     10b       Hours
+#     11b       Days
+#     bits 5:0  Timeout value (0-63) in sec/min/hr/day
 
 # cbClass 17
 # cbSelect 10
