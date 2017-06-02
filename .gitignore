@@ -46,3 +46,22 @@ po/remove-potcdate.sin
 # docker build process
 /Dockerfile
 /*-entrypoint.sh
+
+AUTHORS
+ChangeLog
+Makefile
+config.log
+config.status
+libsmbios-*.tar.*
+*.spec
+*.pc
+libtool
+out/
+pkg/pkginfo
+pkg/test-driver
+po/POTFILES
+po/en@boldquot.insert-header
+po/en@quot.insert-header
+po/remove-potcdate.sed
+po/stamp-po
+src/python/_vars.py
