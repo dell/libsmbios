@@ -304,11 +304,16 @@ out_fail:
     fnprintf(" out_fail \n");
     retval = -1;
     errbuf = smi_get_module_error_buf();
-    if (errbuf){
+    if (errbuf) {
+        char *smberr = smbios_strerror();
         fnprintf("error: %s\n", error);
         strlcpy(errbuf, error, ERROR_BUFSIZE);
-        fnprintf("smbios_strerror: %s\n", smbios_strerror());
-        strlcat(errbuf, smbios_strerror(), ERROR_BUFSIZE);
+        if (smberr)
+        {
+            fnprintf("smbios_strerror: %s\n", smberr);
+            strlcat(errbuf, smberr, ERROR_BUFSIZE);
+            free(smberr);
+        }
     }
 
 out:

@@ -127,7 +127,7 @@ LIBSMBIOS_C_DLL_SPEC const char * smbios_struct_get_string_number(const struct s
  * Can return 0. The buffer used is guaranteed to be valid until the next call
  * to any smbios_* function. Copy the contents if you need it longer.
  */
-LIBSMBIOS_C_DLL_SPEC const char * smbios_strerror();
+LIBSMBIOS_C_DLL_SPEC char * smbios_strerror();
 
 EXTERN_C_END;
 
