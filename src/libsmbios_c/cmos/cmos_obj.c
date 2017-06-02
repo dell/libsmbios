@@ -91,9 +91,9 @@ LIBSMBIOS_C_DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...)
     if (ret==0)
         goto out;
 
-    // fail. init_cmos_* functions are responsible for free-ing memory if they
-    // return failure.
     toReturn->initialized = 0;
+    if (toReturn != &singleton)
+        free(toReturn);
     toReturn = 0;
 
 out:
