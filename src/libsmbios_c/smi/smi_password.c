@@ -294,7 +294,7 @@ int verify_password(int which, const char *password_scancodes, u16 *security_key
 
     // copy password into arg
     if (password_scancodes)
-        for (int i=0; i<strlen(password_scancodes) && i < sizeof(arg); ++i)
+        for (unsigned int i=0; i<strlen(password_scancodes) && i < sizeof(arg); ++i)
             ((u8*)arg)[i] = password_scancodes[i];
 
     dell_smi_obj_set_arg(smi, cbARG1, arg[0]);
@@ -322,11 +322,11 @@ int change_password(int which, const char *oldpw_scancode, const char *newpw_sca
 
     // copy password into arg
     if (oldpw_scancode)
-        for (int i=0; i<strlen(oldpw_scancode) && i < sizeof(arg)/2; ++i)
+        for (unsigned int i=0; i<strlen(oldpw_scancode) && i < sizeof(arg)/2; ++i)
             ((u8*)arg)[i] = oldpw_scancode[i];
 
     if (newpw_scancode)
-        for (int i=0; i<strlen(newpw_scancode) && i < sizeof(arg)/2; ++i)
+        for (unsigned int i=0; i<strlen(newpw_scancode) && i < sizeof(arg)/2; ++i)
             ((u8*)arg)[i + sizeof(arg)/2 ] = newpw_scancode[i];
 
     dell_smi_obj_set_arg(smi, cbARG1, arg[0]);

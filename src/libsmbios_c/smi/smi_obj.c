@@ -201,7 +201,7 @@ u8 * dell_smi_obj_make_buffer_frombios_withheader(struct dell_smi_obj *this, u8 
     if(buf)
     {
         // write buffer pattern
-        for (int i=0; i<size+4; i++)
+        for (unsigned int i=0; i<size+4; i++)
             buf[i] = bufpat[i%4];
 
         // write size of remaining bytes
