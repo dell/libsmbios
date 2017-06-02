@@ -90,7 +90,7 @@ out:
 u32 __hidden set_phys_buf_size(u32 newsize)
 {
     char fn[bufsize] = {0,};
-    FILE *fd = 0;
+    FILE *fd = NULL;
     char linebuf[bufsize] = {0,};
     u32 phys_buf_addr=0;
 
@@ -298,6 +298,8 @@ int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 
     // update smi buffer
     copy_phys_bufs(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
+
+    fclose(fd);
 
     retval = 0;
     goto out;
