@@ -222,7 +222,8 @@ LIBSMBIOS_C_DLL_SPEC int sysinfo_get_dell_oem_system_id()
     sysinfo_clearerr();
     for (int i = 0; i < numEntries; ++i)
     {
-        fnprintf("calling id_byte function: %s\n", DellIdByteFunctions[i].name);
+        fnprintf("calling id_byte function: %s\n",
+                 DellOemIdByteFunctions[i].name);
         // first function to return non-zero id wins.
         systemId = DellOemIdByteFunctions[i].f_ptr ();
 
