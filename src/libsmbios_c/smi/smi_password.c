@@ -177,43 +177,39 @@ out:
 
 int dell_smi_password_verify(int which, const char *password)
 {
-    int retval = 2;
     struct smi_password_properties p = {0,};
     int tmpret = get_password_properties_2(which, &p);
-    if (tmpret == 0 && p.installed != 0)
-        // if function succeeded and password *not* installed, skip
-        goto out;
-    else if (tmpret == 0)
+
+    // if function succeeded and password *not* installed, skip
+    if (tmpret == 0 && p.installed != SMI_PASSWORD_INSTALLED)
+        return 2;
+
+    if (tmpret == 0)
     {
-        // else _2 function is valid, so use it.
         tmpret = verify_password_2(which, password, p.maxlen, 0);
-        retval = 1;
-        if (tmpret==0) // correct, security key set
-            goto out;
+        if (tmpret == SMI_PASSWORD_CORRECT) // correct, security key set
+            return 1;
 
-        retval = 0; // incorrect password
-        if (tmpret==2)
-            goto out;
+        if (tmpret == SMI_PASSWORD_INCORRECT)
+            return 0;
     }
-
 
     tmpret = password_installed(which);
-    if (tmpret == 0 && tmpret == 2)
-        // function succeeded and password not installed
-        goto out;
-    else if (tmpret == 0)
+    // function succeeded and password not installed
+    if (!(tmpret == 0 || tmpret == 2))
+        return 2;
+
+    if (tmpret == 0)
     {
         tmpret = verify_password(which, password, 0);
-        retval = 1;
-        if (tmpret==0) // correct, security key set
-            goto out;
-        retval = 0; // incorrect password
-        if (tmpret==2)
-            goto out;
+        if (tmpret == SMI_PASSWORD_CORRECT) // correct, security key set
+            return 1;
+
+        if (tmpret == SMI_PASSWORD_INCORRECT)
+            return 0;
     }
 
-out:
-    return retval;
+    return 2;
 }
 
 int dell_smi_password_format(int which)
