@@ -114,6 +114,11 @@ void dumpCmosIndexPort(const char *fn, u32 indexPort, u32 dataPort)
 
     // ensure file exists
     FILE *fd = fopen(cmosDumpFile, "a+");
+    if (!fd)
+    {
+        printf( _("error opening dump file \"%s\": %m\n"), cmosDumpFile);
+        return;
+    }
     fclose(fd);
 
     cmos = cmos_obj_factory(CMOS_GET_SINGLETON);
@@ -172,15 +177,34 @@ out:
 
 void dumpMem( const char *fn, size_t offset, size_t len)
 {
-    FILE *fd = fopen( fn, "w+" );
-    u8 *buf = calloc(1, len);
-    memory_read(buf, offset, len);
+    FILE *fd = NULL;
+    u8 *buf = NULL;
+    int ret;
+
+    fd = fopen( fn, "w+" );
+    if (!fd)
+    {
+        printf( _("error opening dump file \"%s\": %m\n"), fn);
+        return;
+    }
+    buf = calloc(1, len);
+    if (!buf)
+    {
+        printf( _("could not allocate memory: %m\n"));
+        goto err;
+    }
+    ret = memory_read(buf, offset, len);
+    if (ret < 0)
+    {
+        printf( _("could not read from memory: %m\n"));
+        goto err;
+    }
     int recs = fwrite(buf, len, 1, fd);
     if (recs != 1)
-    {
-        ; // nada
-    }
-    free(buf);
+        printf( _("could not write to \"%s\": %m\n"), fn);
+err:
+    if (buf)
+        free(buf);
     fclose(fd);
 }
 
