@@ -177,7 +177,9 @@ void dumpMem( const char *fn, size_t offset, size_t len)
     memory_read(buf, offset, len);
     int recs = fwrite(buf, len, 1, fd);
     if (recs != 1)
+    {
         ; // nada
+    }
     free(buf);
     fclose(fd);
 }
