@@ -209,7 +209,7 @@ int __hidden add_da_tokens(struct token_table *table)
                 continue;
             }
 
-            if ( (void* )(token + sizeof(*token) ) > (void *)(da_struct + da_struct->length ))
+            if ( (void *)(token + 1) > (void *)(da_struct + da_struct->length))
             {
                 fnprintf("\n");
                 fnprintf("\n");

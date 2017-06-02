@@ -318,7 +318,7 @@ int __hidden add_d4_tokens(struct token_table *table)
                 continue;
             }
 
-            if ( (void* )(token + sizeof(*token) ) > (void *)(d4_struct + d4_struct->length ))
+            if ( (void *)(token + 1) > (void *)(d4_struct + d4_struct->length))
             {
                 fnprintf("\n");
                 fnprintf("\n");
