@@ -104,14 +104,23 @@ out:
     return toReturn;
 }
 
-void smbios_table_free(struct smbios_table *m)
+void smbios_table_free(struct smbios_table *this)
 {
-    if (!m) goto out;
-    if (m != &singleton)
-        _smbios_table_free(m);
+    if (!this || this == &singleton)
+        return;
 
-out:
-    return;
+    memset(&this->tep, 0, sizeof(this->tep));
+
+    free(this->errstring);
+    this->errstring = 0;
+
+    free(this->table);
+    this->table = 0;
+
+    this->initialized=0;
+
+    memset(this, 0, sizeof(*this)); // big hammer
+    free(this);
 }
 
 const char *smbios_table_strerror(const struct smbios_table *m)
@@ -313,22 +322,6 @@ void smbios_table_walk(struct smbios_table *table, void (*fn)(const struct smbio
  * Internal functions
  *
  **************************************************/
-
-void __hidden _smbios_table_free(struct smbios_table *this)
-{
-    memset(&this->tep, 0, sizeof(this->tep));
-
-    free(this->errstring);
-    this->errstring = 0;
-
-    free(this->table);
-    this->table = 0;
-
-    this->initialized=0;
-
-    memset(this, 0, sizeof(*this)); // big hammer
-    free(this);
-}
 
 int __hidden init_smbios_struct(struct smbios_table *m)
 {
