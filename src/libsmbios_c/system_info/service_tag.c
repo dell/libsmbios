@@ -146,7 +146,7 @@ static void dell_encode_service_tag( char *tag, size_t len )
     newTagBuf[4] = newTagBuf[4] | dell_encode_digit(tagToSet[6]);
 
     memset(tag, 0, len);
-    memcpy(tag, newTagBuf, len < SVC_TAG_CMOS_LEN_MAX ? len: SVC_TAG_CMOS_LEN_MAX);
+    memcpy(tag, newTagBuf, SVC_TAG_CMOS_LEN_MAX);
     return;
 }
 
