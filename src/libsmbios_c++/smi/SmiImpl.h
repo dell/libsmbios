@@ -84,7 +84,9 @@ namespace smi
         };
         virtual void execute()
         {
-            fseek(fh,0,0);
+            int ret = fseek(fh,0,0);
+            if (ret < 0)
+                throw std::exception();
         };
         virtual void getResultBuffer(u8 *buffer, size_t size)
         {

@@ -79,7 +79,7 @@ namespace smi
     void SmiArchStrategy::lock()
     {
         smiSolarisPrivateData *tmpPrivPtr = reinterpret_cast<smiSolarisPrivateData *>(privateData);
-
+        int ret;
 
         tmpPrivPtr->fh_data = fopen(SMI_DATA_FILE, "r+b");
         if( ! tmpPrivPtr->fh_data )
@@ -89,9 +89,13 @@ namespace smi
         if( ! tmpPrivPtr->fh_doReq)
             throw smbios::InternalErrorImpl("Could not open file " SMI_DO_REQUEST_FILE ". Check that dcdbas driver is properly loaded.");
 
-        fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        ret = fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        if (ret < 0)
+            throw std::exception();
         FWRITE("0", 1, 1, tmpPrivPtr->fh_doReq);
-        fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        ret = fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        if (ret < 0)
+            throw std::exception();
     }
 
     size_t SmiArchStrategy::getPhysicalBufferBaseAddress()
@@ -99,6 +103,7 @@ namespace smi
         const int bufSize=63;
         char tmpBuf[bufSize+1] = {0,};
         size_t retval = 0;
+        int ret;
 
         fflush(NULL);
 
@@ -106,7 +111,12 @@ namespace smi
         if( ! fh )
             throw smbios::InternalErrorImpl("Could not open file " SMI_PHYS_ADDR_FILE ". Check that dcdbas driver is properly loaded.");
 
-        fseek(fh, 0L, 0);
+        ret = fseek(fh, 0L, 0);
+        if (ret < 0)
+        {
+            fclose(fh);
+            throw std::exception();
+        }
         size_t numBytes = fread(tmpBuf, 1, bufSize, fh);
         fclose(fh);
         fh=0;
@@ -155,11 +165,14 @@ namespace smi
 
     void SmiArchStrategy::execute()
     {
+        int ret;
         smiSolarisPrivateData *tmpPrivPtr = reinterpret_cast<smiSolarisPrivateData *>(privateData);
         fflush(NULL);
         FWRITE("1", 1, 1, tmpPrivPtr->fh_doReq);
         fflush(NULL);
-        fseek(tmpPrivPtr->fh_data, 0L, 0);
+        ret = fseek(tmpPrivPtr->fh_data, 0L, 0);
+        if (ret < 0)
+            throw std::exception();
     }
 
     void SmiArchStrategy::finish()
