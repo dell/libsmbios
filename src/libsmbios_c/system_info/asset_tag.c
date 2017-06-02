@@ -128,25 +128,20 @@ LIBSMBIOS_C_DLL_SPEC char *sysinfo_get_asset_tag()
         // first function to return non-zero id with strlen()>0 wins.
         assetTag = DellAssetTagFunctions[i].f_ptr ();
         fnprintf("got result: %p\n", assetTag);
-        if (assetTag)
+        if (!assetTag)
+            continue;
+
+        strip_trailing_whitespace(assetTag);
+        if (!strlen(assetTag))
         {
-            strip_trailing_whitespace(assetTag);
-            if (!strlen(assetTag))
-            {
-                fnprintf("string is zero len, returning as not specified\n");
-                /*
-                 * In case one of the function returns an empty string (zero len),
-                 * we would be returning the value "Not Specified" to the caller.
-                 */
-                assetTag = realloc(assetTag, ASSET_TAG_NOT_SPECIFIED_LEN);
-                if (assetTag)
-                    strncpy(assetTag, ASSET_TAG_NOT_SPECIFIED, ASSET_TAG_NOT_SPECIFIED_LEN - 1);
-                goto out;
-            }
+            fnprintf("string is zero len, not using it\n");
+            free(assetTag);
+            assetTag = NULL;
         }
     }
 
-out:
+    if (!assetTag)
+        assetTag = strdup(ASSET_TAG_NOT_SPECIFIED);
     return assetTag;
 }
 
