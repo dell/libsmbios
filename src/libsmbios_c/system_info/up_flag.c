@@ -57,7 +57,12 @@ __hidden bool get_up_offset_and_flag(struct up_info *up)
         offset = memory_search( UP_ANCHOR, UP_ANCHOR_LEN,  0xF0000UL, 0xFFFFFUL, 1);
 
     if (offset!=0 && offset!=-1)
-        memory_read(up, (u64)offset, sizeof(*up));
+    {
+        int ret;
+        ret = memory_read(up, (u64)offset, sizeof(*up));
+        if (ret < 0)
+            return false;
+    }
 
     fnprintf("offset 0x%llx", offset);
     return (offset!=0 && offset!=-1);

@@ -118,6 +118,7 @@ namespace cmos
     //
     u8 CmosRWFile::readByte (u32 indexPort, u32 dataPort, u32 offset) const
     {
+        int ret;
         u8 retval = 0xFF;
         u32 realOffset = indexPort * 256 + offset;
         (void) dataPort; // unused
@@ -127,7 +128,12 @@ namespace cmos
         if( !fh )
             throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
-        fseek (fh, static_cast<long>(realOffset), SEEK_SET);
+        ret = fseek (fh, static_cast<long>(realOffset), SEEK_SET);
+        if (ret < 0)
+        {
+            fclose (fh);
+            throw std::exception();
+        }
         size_t numRecs = fread (&retval, sizeof (retval), 1, fh); // only used in unit tests, so isnt critical
         fclose (fh);
         if (numRecs != 1)
@@ -141,6 +147,7 @@ namespace cmos
     void CmosRWFile::writeByte (u32 indexPort, u32 dataPort, u32 offset, u8 byte) const
     {
         //cout << "w(" << offset << ")";
+        int ret;
         u32 realOffset = indexPort * 256 + offset;
         (void) dataPort; // unused
         string errMessage("Could not open CMOS file(" + fileName + ") for writing: ");
@@ -149,7 +156,12 @@ namespace cmos
         if( !fh )
             throw smbios::InternalErrorImpl(errMessage + strerror(errno));
 
-        fseek (fh, static_cast<long>(realOffset), SEEK_SET);
+        ret = fseek (fh, static_cast<long>(realOffset), SEEK_SET);
+        if (ret < 0)
+        {
+            fclose (fh);
+            throw std::exception();
+        }
         size_t recs = fwrite (&byte, sizeof (byte), 1, fh);
         fclose (fh);
         fflush(NULL);

@@ -165,7 +165,7 @@ static char * _d4_get_string(const struct token_obj *t, size_t *len)
     if (!retval)
         goto out_err;
 
-    for (int i=0; i<strSize; ++i){
+    for (unsigned int i=0; i<strSize; ++i){
         fnprintf("read byte %d/%zd\n", i+1, strSize);
         int ret = cmos_read_byte(retval + i,
                   cast_struct(t)->indexPort,
@@ -206,7 +206,7 @@ static int _d4_set_string(const struct token_obj *t, const char *str, size_t siz
 
     memcpy( targetBuffer, str, size < strSize ? size : strSize );
 
-    for (int i=0; i<strSize; ++i){
+    for (unsigned int i=0; i<strSize; ++i){
         int ret = cmos_write_byte(targetBuffer[i],
                   cast_struct(t)->indexPort,
                   cast_struct(t)->dataPort,
@@ -318,7 +318,7 @@ int __hidden add_d4_tokens(struct token_table *table)
                 continue;
             }
 
-            if ( (void* )(token + sizeof(*token) ) > (void *)(d4_struct + d4_struct->length ))
+            if ( (void *)(token + 1) > (void *)(d4_struct + d4_struct->length))
             {
                 fnprintf("\n");
                 fnprintf("\n");

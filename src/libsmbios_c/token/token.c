@@ -40,24 +40,27 @@ const char * token_strerror()
     const char *retval = 0;
     struct token_table *table = token_table_factory(TOKEN_DEFAULTS | TOKEN_NO_ERR_CLEAR);
     fnprintf("\n");
-    if (table)
+    if (table) {
         retval = token_table_strerror(table);
+        free(table);
+    }
     return retval;
 }
 
-#define make_token_fn(ret, defret, callname)\
-    ret token_##callname (u16 id)    \
-    {\
-        struct token_table *table = 0;              \
-        const struct token_obj *token = 0;          \
-        fnprintf("\n"); \
-        table = token_table_factory(TOKEN_DEFAULTS); \
-        if (!table) goto out;                       \
-        token = token_table_get_next_by_id(table, 0, id); \
-        if (!token) goto out;                       \
-        return token_obj_##callname (token);                    \
-out:\
-        return defret;  \
+#define make_token_fn(ret, defret, callname)                \
+    ret token_##callname (u16 id)                           \
+    {                                                       \
+        struct token_table *table = 0;                      \
+        const struct token_obj *token = 0;                  \
+        fnprintf("\n");                                     \
+        table = token_table_factory(TOKEN_DEFAULTS);        \
+        if (!table) goto out;                               \
+        token = token_table_get_next_by_id(table, 0, id);   \
+        free(table);                                        \
+        if (!token) goto out;                               \
+        return token_obj_##callname (token);                \
+out:                                                        \
+        return defret;                                      \
     }
 
 make_token_fn(int, 0, get_type)

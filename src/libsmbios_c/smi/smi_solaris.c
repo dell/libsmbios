@@ -59,6 +59,7 @@ u32 __internal get_phys_buf_addr()
     FILE *fd = 0;
     u32 physaddr = 0;
     char linebuf[bufsize] = {0,};
+    int ret;
 
     fnprintf("\n");
 
@@ -68,7 +69,10 @@ u32 __internal get_phys_buf_addr()
     if (!fd)
         goto out;
 
-    fseek(fd, 0L, 0);
+    ret = fseek(fd, 0L, 0);
+    if (ret < 0)
+        goto out_close;
+
     size_t numBytes = fread(linebuf, 1, bufsize, fd);
     if (!numBytes)
         goto out_close;

@@ -91,9 +91,9 @@ LIBSMBIOS_C_DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...)
     if (ret==0)
         goto out;
 
-    // fail. init_cmos_* functions are responsible for free-ing memory if they
-    // return failure.
     toReturn->initialized = 0;
+    if (toReturn != &singleton)
+        free(toReturn);
     toReturn = 0;
 
 out:
@@ -155,16 +155,19 @@ out:
     return retval;
 }
 
-void __hidden _cmos_obj_cleanup(struct cmos_access_obj *m)
-{
-    if(m->cleanup)
-        m->cleanup(m);
-}
-
-void __hidden _cmos_obj_free(struct cmos_access_obj *m)
+void cmos_obj_free(struct cmos_access_obj *m)
 {
     struct callback *ptr = 0;
     struct callback *next = 0;
+
+    if (!m)
+        return;
+
+    if(m->cleanup)
+        m->cleanup(m);
+
+    if (m == &singleton)
+        return;
 
     ptr = m->cb_list_head;
     // free callback list
@@ -191,16 +194,6 @@ void __hidden _cmos_obj_free(struct cmos_access_obj *m)
 
     memset(m, 0, sizeof(*m)); // big hammer
     free(m);
-}
-
-void cmos_obj_free(struct cmos_access_obj *m)
-{
-    if (!m) goto out;
-    _cmos_obj_cleanup(m);
-    if (m != &singleton)
-        _cmos_obj_free(m);
-out:
-    return;
 }
 
 void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_callback cb_fn, void *userdata, void (*destructor)(void *))

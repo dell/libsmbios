@@ -22,6 +22,7 @@
 #include "smbios_c/compat.h"
 
 // system
+#include <alloca.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,22 +54,40 @@ void set_basedir(const char *newdir)
     sysfs_basedir = newdir;
 }
 
+#define allocate_path(a, b) (                               \
+    {                                                       \
+        char *fn_;                                          \
+        size_t sz_ = strlen(a) + strlen(b) + 1;             \
+        fn_ = alloca(sz_);                                  \
+        if (fn_)                                            \
+        {                                                   \
+            strcpy(fn_, (a));                               \
+            strcat(fn_, (b));                               \
+        }                                                   \
+        fn_;                                                \
+    })
+
 u32 __hidden get_phys_buf_addr()
 {
-    char fn[bufsize] = {0,};
+    char *fn = NULL;
     FILE *fd = 0;
     u32 physaddr = 0;
     char linebuf[bufsize] = {0,};
+    int ret;
 
     fnprintf("\n");
 
-    strcat(fn, sysfs_basedir);
-    strcat(fn, smi_data_buf_phys_addr_fn);
+    fn = allocate_path(sysfs_basedir, smi_data_buf_phys_addr_fn);
+    if (!fn)
+        goto out;
+
     fd = fopen(fn, "rb");
     if (!fd)
         goto out;
 
-    fseek(fd, 0L, 0);
+    ret = fseek(fd, 0L, 0);
+    if (ret < 0)
+        goto out_close;
     size_t numBytes = fread(linebuf, 1, bufsize, fd);
     if (!numBytes)
         goto out_close;
@@ -76,7 +95,8 @@ u32 __hidden get_phys_buf_addr()
     physaddr = strtoll(linebuf, NULL, 16);
 
 out_close:
-    fclose(fd);
+    if (fd)
+        fclose(fd);
     fflush(NULL);
 
 out:
@@ -86,15 +106,17 @@ out:
 // returns physaddr
 u32 __hidden set_phys_buf_size(u32 newsize)
 {
-    char fn[bufsize] = {0,};
-    FILE *fd = 0;
+    char *fn;
+    FILE *fd = NULL;
     char linebuf[bufsize] = {0,};
     u32 phys_buf_addr=0;
 
     fnprintf("\n");
 
-    strcat(fn, sysfs_basedir);
-    strcat(fn, smi_data_buf_size_fn);
+    fn = allocate_path(sysfs_basedir, smi_data_buf_size_fn);
+    if (!fn)
+        goto out;
+
     fd = fopen(fn, "w+b");
     if (!fd)
         goto out;
@@ -104,26 +126,26 @@ u32 __hidden set_phys_buf_size(u32 newsize)
     if (recs != 1)
         goto out;
 
-    fclose(fd);
-
-    fflush(NULL);
-
     phys_buf_addr = get_phys_buf_addr();
-    goto out;
 
 out:
+    if (fd)
+        fclose(fd);
+    fflush(NULL);
+
     return phys_buf_addr;
 }
 
 void __hidden write_smi_data(u8 *buffer, size_t size)
 {
-    char fn[bufsize] = {0,};
+    char *fn;
     FILE *fd = 0;
 
     fnprintf("\n");
 
-    strcat(fn, sysfs_basedir);
-    strcat(fn, smi_data_fn);
+    fn = allocate_path(sysfs_basedir, smi_data_fn);
+    if (!fn)
+        goto out;
 
     fnprintf("open data file: '%s'\n", fn);
 
@@ -159,13 +181,15 @@ out:
 
 void __hidden get_smi_results(u8 *buffer, size_t size)
 {
-    char fn[bufsize] = {0,};
+    char *fn;
     FILE *fd = 0;
 
     fnprintf("\n");
 
-    strcat(fn, sysfs_basedir);
-    strcat(fn, smi_data_fn);
+    fn = allocate_path(sysfs_basedir, smi_data_fn);
+    if (!fn)
+        goto out;
+
     fd = fopen(fn, "rb");
     if (!fd)
         goto out;
@@ -179,17 +203,21 @@ out:
 
 FILE *open_request_file()
 {
-    char fn[bufsize] = {0,};
+    char *fn;
     FILE *fd = 0;
     int ret;
-    strcat(fn, sysfs_basedir);
-    strcat(fn, smi_request_fn);
+
+    fn = allocate_path(sysfs_basedir, smi_request_fn);
+    if (!fn)
+        return NULL;
+
     fnprintf("open request file: '%s'\n", fn);
     fd = fopen(fn, "wb");
-    if(fd)
-        flock( fileno(fd), LOCK_EX );
-    if(fd)
-        ret = fwrite("0", 1, 1, fd);
+    if (!fd)
+        return NULL;
+
+    flock( fileno(fd), LOCK_EX );
+    ret = fwrite("0", 1, 1, fd);
 
     fnprintf("got fd for request file: %p\n", fd);
     UNREFERENCED_PARAMETER(ret);
@@ -295,6 +323,8 @@ int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 
     // update smi buffer
     copy_phys_bufs(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
+
+    fclose(fd);
 
     retval = 0;
     goto out;

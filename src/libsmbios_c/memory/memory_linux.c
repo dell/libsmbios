@@ -234,14 +234,19 @@ static void linux_free(struct memory_access_obj *this)
     struct linux_data *private_data = (struct linux_data *)this->private_data;
     fnprintf("\n");
 
-    free(this->errstring);
-    this->errstring = 0;
+    if (this->errstring)
+        free(this->errstring);
+    this->errstring = NULL;
 
-    free(private_data->filename);
-    private_data->filename = 0;
+    if (private_data)
+    {
+        if (private_data->filename)
+            free(private_data->filename);
+        private_data->filename = NULL;
 
-    free(private_data);
-    this->private_data = 0;
+        free(private_data);
+        this->private_data = NULL;
+    }
 
     this->initialized=0;
 }
@@ -251,22 +256,27 @@ __hidden int init_mem_struct_filename(struct memory_access_obj *m, const char *f
     char *errbuf=0;
     int retval = 0;
     const char *error;
+    struct linux_data *private_data;
 
     fnprintf("\n");
 
     // do allocations
     error = _("There was an allocation failure while trying to construct the memory object. Filename: ");
-    struct linux_data *private_data = calloc(1, sizeof(struct linux_data));
+
+    m->private_data = NULL;
+    m->private_data = private_data = calloc(1, sizeof(struct linux_data));
+    if (!private_data)
+        goto out_fail;
+
     private_data->filename = calloc(1, strlen(fn) + 1);
     m->errstring = calloc(1, ERROR_BUFSIZE);
-    if (!private_data || !private_data->filename || !m->errstring)
+    if (!private_data->filename || !m->errstring)
         goto out_fail;
 
     strcat(private_data->filename, fn);
     private_data->lastMappedOffset = -1;
     private_data->rw = 0;
     private_data->mappingSize = getpagesize(); // must be power of 2, >= getpagesize()
-    m->private_data = private_data;
 
     m->free = linux_free;
     m->read_fn = linux_read_fn;
@@ -287,8 +297,7 @@ out_fail:
     errbuf = memory_get_module_error_buf();
     if (errbuf){
         strlcpy(errbuf, error, ERROR_BUFSIZE);
-
-        strlcat(errbuf, private_data->filename, ERROR_BUFSIZE);
+        strlcat(errbuf, fn, ERROR_BUFSIZE);
         strlcat(errbuf, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
         fixed_strerror(errno, errbuf, ERROR_BUFSIZE);
     }

@@ -38,7 +38,7 @@
 
 // forward declarations
 static int init_token_table(struct token_table *);
-static void _token_table_free(struct token_table *);
+static void _token_table_free_tokens(struct token_table *this);
 
 // static vars
 static struct token_table singleton; // auto-init to 0
@@ -101,14 +101,20 @@ out:
     return toReturn;
 }
 
-
 void token_table_free(struct token_table *m)
 {
     fnprintf("\n");
-    if (m && m != &singleton)
-        _token_table_free(m);
 
     // can do special cleanup for singleton, but none necessary atm
+    if (!m || m == &singleton)
+        return;
+
+    _token_table_free_tokens(m);
+
+    free(m->errstring);
+    m->errstring = 0;
+
+    free(m);
 }
 
 const char * token_table_strerror(const struct token_table *table)
@@ -237,16 +243,6 @@ static void _token_table_free_tokens(struct token_table *this)
     }
 
     this->list_head = 0;
-}
-
-static void _token_table_free(struct token_table *this)
-{
-    _token_table_free_tokens(this);
-
-    free(this->errstring);
-    this->errstring = 0;
-
-    free(this);
 }
 
 void __hidden add_token(struct token_table *t, struct token_obj *o)

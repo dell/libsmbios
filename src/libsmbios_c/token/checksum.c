@@ -46,7 +46,7 @@ __hidden int update_checksum(const struct cmos_access_obj *c, bool do_update, vo
     fnprintf(" calculated 0x%x\n", wordRetval);
 
     u32 actualcsum = 0;
-    for( int i=0; i<data->csumlen; ++i )
+    for( unsigned int i=0; i<data->csumlen; ++i )
     {
         u8 byte;
         int ret = cmos_obj_read_byte(c, &byte, data->indexPort, data->dataPort, data->csumloc+i);
@@ -70,7 +70,7 @@ __hidden int update_checksum(const struct cmos_access_obj *c, bool do_update, vo
     {
         // write new checksum
         fnprintf("REWRITE CSUM\n");
-        for( int i=0; i<data->csumlen; ++i )
+        for( unsigned int i=0; i<data->csumlen; ++i )
         {
             int ret = cmos_obj_write_byte(c, data->indexPort, data->dataPort, data->csumloc+i, csum[data->csumlen -i -1]);
             if (ret)

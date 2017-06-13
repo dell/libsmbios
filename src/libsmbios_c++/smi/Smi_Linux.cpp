@@ -76,6 +76,7 @@ namespace smi
 
     void SmiArchStrategy::lock()
     {
+        int ret;
         smiLinuxPrivateData *tmpPrivPtr = reinterpret_cast<smiLinuxPrivateData *>(privateData);
 
 
@@ -89,9 +90,13 @@ namespace smi
 
         flock( fileno(tmpPrivPtr->fh_data), LOCK_EX );
 
-        fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        ret = fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        if (ret < 0)
+            throw std::exception();
         FWRITE("0", 1, 1, tmpPrivPtr->fh_doReq);
-        fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        ret = fseek(tmpPrivPtr->fh_doReq, 0L, 0);
+        if (ret < 0)
+            throw std::exception();
     }
 
     size_t SmiArchStrategy::getPhysicalBufferBaseAddress()
@@ -99,6 +104,7 @@ namespace smi
         const int bufSize=63;
         char tmpBuf[bufSize+1] = {0,};
         size_t retval = 0;
+        int ret;
 
         fflush(NULL);
 
@@ -106,7 +112,12 @@ namespace smi
         if( ! fh )
             throw smbios::InternalErrorImpl("Could not open file " SMI_PHYS_ADDR_FILE ". Check that dcdbas driver is properly loaded.");
 
-        fseek(fh, 0L, 0);
+        ret = fseek(fh, 0L, 0);
+        if (ret < 0)
+        {
+            fclose(fh);
+            throw std::exception();
+        }
         size_t numBytes = fread(tmpBuf, 1, bufSize, fh);
         fclose(fh);
         fh=0;
@@ -155,11 +166,14 @@ namespace smi
 
     void SmiArchStrategy::execute()
     {
+        int ret;
         smiLinuxPrivateData *tmpPrivPtr = reinterpret_cast<smiLinuxPrivateData *>(privateData);
         fflush(NULL);
         FWRITE("1", 1, 1, tmpPrivPtr->fh_doReq);
         fflush(NULL);
-        fseek(tmpPrivPtr->fh_data, 0L, 0);
+        ret = fseek(tmpPrivPtr->fh_data, 0L, 0);
+        if (ret < 0)
+            throw std::exception();
     }
 
     void SmiArchStrategy::finish()
