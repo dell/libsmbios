@@ -109,20 +109,20 @@ changelog: $(CHANGELOG)
 $(CHANGELOG): version.mk
 	cd pkg/ && fakeroot debchange -v $(PACKAGE_VERSION)-$(DEB_RELEASE) $(CHANGELOG_TEXT)
 
-TARBALL=$(PACKAGE_STRING).tar.gz
+TARBALL=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.xz
 
 debmagic:
 	[ -n "$$DEB_TMP_BUILDDIR" ] || (echo "Must set DEB_TMP_BUILDDIR=/tmp/... for deb and sdeb targets"; exit 1)
 	[ -n "$$DIST" ] || (echo "Must set DIST={gutsy,hardy,sid,...} for deb and sdeb targets"; exit 1)
 	[ -n "$$DIST" ] || echo "Remember to set DISTTAG='~gutsy1' for deb and sdeb targets for backports"
 	mkdir -p dist/$(DIST)
-	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.gz
-	tar -C $(DEB_TMP_BUILDDIR) -xzf $(TARBALL)
-	cp -ar pkg/debian $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian
-	chmod +x $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/rules
-	sed -e "s/#DISTTAG#/$(DISTTAG)/g" -e "s/#DIST#/$(DIST)/g" $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/changelog.in > $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/changelog
-	rm $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING)/debian/changelog.in
-	cd $(DEB_TMP_BUILDDIR)/$(PACKAGE_STRING) ; \
+	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.xz
+	tar -C $(DEB_TMP_BUILDDIR) -xf $(TARBALL)
+	cp -ar pkg/debian $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian
+	chmod +x $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/rules
+	sed -e "s/#DISTTAG#/$(DISTTAG)/g" -e "s/#DIST#/$(DIST)/g" $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/changelog.in > $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/changelog
+	rm $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/changelog.in
+	cd $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION) ; \
 	./configure ; \
 	pdebuild --use-pdebuild-internal --buildresult $(TOPDIR)/dist/$(DIST) ; \
 	dpkg-buildpackage -D -S -sa -rfakeroot ; \
