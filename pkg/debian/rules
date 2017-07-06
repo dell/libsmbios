@@ -1,0 +1,102 @@
+#!/usr/bin/make -f
+
+
+CFLAGS += -Wall -g -O$(if $(findstring noopt,$(DEB_BUILD_OPTIONS)),0,2)
+CXXFLAGS += -Wno-error
+LDFLAGS += -Wl,-z,defs -Wl,--as-needed
+
+configure_flags += \
+	--prefix=/usr \
+	--with-cppunit-prefix=/usr \
+	--with-gnu-ld \
+	--sysconfdir=/etc
+
+ifeq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+	configure_flags += --build=$(DEB_BUILD_GNU_TYPE)
+else
+	configure_flags += --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
+endif
+
+config.status:
+	dh_testdir
+	[ ! -e build/config.sub ] || cp -f /usr/share/misc/config.sub build
+	[ ! -e build/config.guess ] || cp -f /usr/share/misc/config.guess build
+	autoreconf --verbose --force --install
+	./configure \
+		CFLAGS="$(CFLAGS)"  LDFLAGS="$(LDFLAGS)" \
+		$(configure_flags)
+
+build: build-arch build-indep
+build-arch: build-stamp
+build-indep: build-stamp
+build-stamp: config.status
+	dh_testdir
+	$(MAKE)
+#ifeq ($(findstring nocheck,$(DEB_BUILD_OPTIONS)),)
+#	$(MAKE) check
+#endif
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	[ ! -f Makefile ] || $(MAKE) distclean
+	$(RM) -vf config.log Makefile
+	dh_clean build-stamp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	# get rid of RPATH on 64-bits arches (usually caused by broken upstream
+	# libtool)
+	# only the old legacy C++ binaries need this
+	cd debian/tmp/usr/sbin; ls | grep -v '\.sh$$' | grep dell | xargs chrpath -d
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_install -i
+	dh_installchangelogs -i
+	dh_installexamples -i
+	dh_installdocs -i
+	dh_install -i
+	$(RM) -vf debian/libsmbios-doc/usr/share/doc/libsmbios-doc/getopt/LICENSE
+	dh_python2
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs  -s
+	dh_installdocs -s
+	dh_install -s
+	$(RM) -vf debian/libsmbios-dev/usr/include/smbios/config/boost_LICENSE_1_0_txt
+	$(RM) -v debian/smbios-utils/usr/share/smbios-utils/cli.pyc
+	$(RM) -v debian/smbios-utils/usr/share/smbios-utils/cli.pyo
+	#$(RM) -v debian/smbios-utils/usr/share/smbios-utils/cli.py
+	dh_python2
+	dh_installman -s
+# manpage currently disabled, see #394898
+#	cd $(CURDIR)/debian/libsmbios-bin; for f in usr/sbin/*; do \
+#	    ln -s smbios-bin.1 usr/share/man/man1/$$(basename $$f).1; \
+	done
+	dh_strip -s
+	dh_compress -s
+	dh_fixperms -s
+	dh_makeshlibs -s
+	dh_link -s
+	dh_installdeb -s
+	dh_shlibdeps -s
+	dh_gencontrol -s
+	dh_md5sums -s
+	dh_builddeb -s
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

@@ -1,0 +1,58 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH WX-CONSOLE 1 "Apr 28, 2004" "Kern Sibbald&John Walker" "Network backup, recovery and verification"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.SH NAME
+ smbios-bin \- SMBIOS management/utility program
+.SH SYNOPSIS
+.B program
+.RI [options]
+.br
+.SH DESCRIPTION
+This manual page documents briefly the utility programs included with libsmbios
+.PP
+The files contained in usr/sbin retrieve and/or manipulate several
+parameters via the SMBIOS calls:
+.BR
+.RI activateCmosToken
+.RI ascii2enUS_scancode
+.RI assetTag
+retrieve the system's Asset Tag
+.RI createUnitTestFiles
+.RI dellBiosUpdate
+.RI dellLcdBrightness
+.RI dellWirelessCtl
+.RI disable_console_redir
+.RI dumpCmos
+produce a dump of the CMOS
+.RI dumpSmbios
+produce a dump of the SMBIOS in this system
+.RI getPasswordFormat
+.RI getSystemId
+.RI isCmosTokenActive
+.RI probes
+.RI propertyTag
+retrieve the PropertyTag, if set
+.RI serviceTag
+retrieve the Service Tag, the same which can be read in the label at the
+back (necessary to call DELL's customer service)
+.RI smitest
+perform SMI tests
+.RI stateByteCtl
+.RI tokenCtl
+.RI upBootCtl
+.RI verifySmiPassword
+.RI wakeupCtl
+
+.PP
+This manual page was written for the Debian distribution
+because the original program does not have a manual page.
+.PP
+.SH AUTHOR
+This manual page was written by Jose Luis Tallon
+.nh 
+<jltallon@adv\-solutions.net>,
+for the Debian GNU/Linux system (but may be used by others).

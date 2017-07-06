@@ -1,0 +1,4 @@
+usr/sbin/smbios-wireless-ctl    usr/sbin/dellWirelessCtl
+usr/sbin/smbios-sys-info        usr/sbin/getSystemId
+usr/sbin/smbios-lcd-brightness  usr/sbin/dellLcdBrightness
+usr/sbin/smbios-rbu-bios-update usr/sbin/dellBiosUpdate

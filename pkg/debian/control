@@ -1,0 +1,110 @@
+Source: libsmbios
+Priority: optional
+Section: libs
+Maintainer: Jose Luis Tallon <jltallon@adv-solutions.net>
+Uploaders: Loic Minier <lool@dooz.org>, tony mancill <tmancill@debian.org>
+Vcs-Git: https://anonscm.debian.org/git/collab-maint/libsmbios.git
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libsmbios.git
+Homepage: https://github.com/dell/libsmbios/
+Build-Depends: debhelper (>= 9),
+               autotools-dev,
+               libcppunit-dev,
+               doxygen,
+               graphviz,
+               python (>= 2.6.5),
+               chrpath,
+               libxml2-dev,
+               pkg-config,
+               autoconf,
+               automake,
+               libtool,
+               autopoint
+Standards-Version: 3.9.8
+
+Package: libsmbios2
+Architecture: i386 amd64 ia64
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Suggests: libsmbios-doc
+Description: Provide access to (SM)BIOS information -- dynamic library
+ libsmbios aims towards providing access to as much BIOS information as
+ possible. It does this by providing a library of functions that can be used 
+ as well as sample binaries.
+ .
+ It incorporates extensible access to SMBIOS information capabilities and
+ ability to perform unit tests across multiple systems without using physical
+ hardware. Moreover, centralized, data-driven exception handling for broken 
+ BIOS tables is provided. Currently, full access to the SMBIOS table and its 
+ items is implemented. Additionally, access and manipulation of Dell Indexed 
+ IO Token (type 0xD4) is implemented. This token is a vendor-extention 
+ SMBIOS structure which allows uniform access to manipulate the system CMOS 
+ to enable, disable, or otherwise manipulate normal BIOS functions or features.
+
+Package: libsmbios-dev
+Section: libdevel
+Architecture: i386 amd64 ia64 lpia
+Depends: libsmbios2 (= ${binary:Version}),
+         ${shlibs:Depends},
+         ${misc:Depends}
+Description: Provide access to (SM)BIOS information - development files
+ libsmbios aims towards providing access to as much BIOS information as
+ possible. It does this by providing a library of functions that can be 
+ used as well as sample binaries.
+ .
+ It incorporates extensible access to SMBIOS information capabilities and
+ ability to perform unit tests across multiple systems without using physical
+ hardware. Moreover, centralized, data-driven exception handling for broken 
+ BIOS tables is provided.
+ .
+ To start out with, the focus is on the SMBIOS tables. Currently, full access
+ to the SMBIOS table and its items is implemented. In the future, it will
+ provide $PIR, MPTABLE, RCI, RBU, and other tables as well.
+ .
+ Additionally, access and manipulation of Dell Indexed IO Token (type 0xD4)
+ is implemented. This token is a vendor-extention SMBIOS structure which
+ allows uniform access to manipulate the system CMOS to enable, disable, or
+ otherwise manipulate normal BIOS functions or features.
+
+Package: smbios-utils
+Section: admin
+Provides: libsmbios-bin
+Conflicts: libsmbios-bin
+Replaces: libsmbios-bin
+Architecture: i386 amd64 ia64 lpia
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         python-libsmbios,
+         python
+Suggests: libsmbios-doc
+Description: Provide access to (SM)BIOS information -- utility binaries
+ libsmbios aims towards providing access to as much BIOS information as
+ possible. This package includes libsmbios' sample binaries/utilities.
+
+Package: python-libsmbios
+Section: python
+Architecture: all
+Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}, libsmbios2
+Breaks: ${python:Breaks}
+Suggests: libsmbios-doc
+Description: Provide access to (SM)BIOS information -- Python libraries
+ libsmbios aims towards providing access to as much BIOS information as
+ possible. This package provides Python functions that can be imported
+ into userspace programs.
+
+Package: libsmbios-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: Access to (SM)BIOS information in an OS-indepent way (docs)
+ libsmbios aims towards providing access to as much BIOS information as
+ possible. It does this by providing a library of functions that can be used 
+ as well as sample binaries.
+ .
+ It incorporates extensible access to SMBIOS information capabilities and
+ ability to perform unit tests across multiple systems without using physical
+ hardware. Moreover, centralized, data-driven exception handling for broken 
+ BIOS tables is provided. Currently, full access to the SMBIOS table and its 
+ items is implemented. Additionally, access and manipulation of Dell Indexed 
+ IO Token (type 0xD4) is implemented. This token is a vendor-extension
+ SMBIOS structure which allows uniform access to manipulate the system CMOS 
+ to enable, disable, or otherwise manipulate normal BIOS functions or features.

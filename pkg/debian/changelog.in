@@ -1,0 +1,288 @@
+libsmbios (2.3.1-1) unstable; urgency=medium
+
+  * New upstream version.
+  * Sync with Ubuntu 2.3.1-0ubuntu1.
+    - With thanks to Mario Limonciello <mario.limonciello@dell.com>
+  * Adds libsmbios 3.0 support (LP: #1630480)
+  * Update debian/watch for moving to github.
+  * debian/patches:
+    - Drop, unnecessary with new version.
+  * Bump Standards-Version to 3.9.8.
+  * Use HTTPS URLs for Vcs links.
+  * Drop lpia from Arch list.
+
+ -- tony mancill <tmancill@debian.org>  Sun, 09 Oct 2016 14:21:11 -0700
+
+libsmbios (2.3.0-1) unstable; urgency=low
+
+  [ Mathieu Malaterre ]
+  * Add debian/control: Homepage field
+
+  [ tony mancill ]
+  * New upstream release.
+    - Address warnings when compiling with newer versions of gcc.
+      (Closes: #816331)
+  * Include pkgconfig files in libsmbios-dev
+    - Thanks to Mario Limonciello (Closes: #816330)
+  * Drop am_disable_lzma.patch.
+
+ -- tony mancill <tmancill@debian.org>  Sat, 09 Apr 2016 19:00:59 -0700
+
+libsmbios (2.2.28-2) unstable; urgency=low
+
+  * cli.py should in fact be part of python-smbios
+    (Closes: LP: #1185871)
+  * Fix FTBFS problems on sid:
+    - Add patch to disable dist-lzma for automake.
+    - Add --install argument to autoreconf during build.
+    - Add autopoint to build-depends.
+  * Bump Standards-Version to 3.9.4.
+  * Remove extraneous LICENSE file from libsmbios-doc.
+
+ -- tony mancill <tmancill@debian.org>  Thu, 30 May 2013 22:16:44 -0700
+
+libsmbios (2.2.28-1) unstable; urgency=low
+
+  * Upload to unstable.
+
+ -- tony mancill <tmancill@debian.org>  Wed, 08 May 2013 20:51:06 -0700
+
+libsmbios (2.2.28-1~exp1) experimental; urgency=low
+
+  * New upstream release.  (Closes: #607725)
+  * Apply Jari Aalto's patch to update packaging.  (Closes: #664393)
+    - Remove deprecated dpatch and upgrade to packaging format 3.0 quilt.
+    - Update to Standards-Version to 3.9.3 and debhelper to 9.
+  * Sync up package with Ubuntu 2.2.28
+    - libsmbios-bin is now smbios-utils
+    - python-libsmbios (python bindings) binary package is new
+    - remove 01-gcc-4.4-fixes patch
+  * Move cli.py from smbios-utils to python-smbios/examples
+  * Change section of libsmbios-doc from libs to doc
+  * Change section of python-smbios from admin to python
+  * Add Vcs-Git and Vcs-Browser fields to d/control.
+  * Add myself to Uploaders.
+
+ -- tony mancill <tmancill@debian.org>  Wed, 26 Dec 2012 22:31:08 -0800
+
+libsmbios (2.0.3.dfsg-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix compilation with GCC 4.4, thanks to Martin Michlmayr for the
+    patch.  (Closes: #505589)
+
+ -- Philipp Kern <pkern@debian.org>  Sun, 22 Aug 2010 16:28:25 +0200
+
+libsmbios (2.0.3.dfsg-1) unstable; urgency=low
+
+  [ Jose Luis Tallon ]
+  * New upstream version (Closes: #494316)
+    - merged enhancements from Ubuntu (thanks, guys)
+
+  * debian/control:
+    - Drop build depend on libxml2, xml packages since they are no longer
+    supported upstream
+    - Build libsmbios2 packages (soname bump)
+    - Add dpatch to build-depends
+    - Enable building on lpia (Closes: #488278)
+
+  * debian/rules:
+    - Add dpatch support
+    - Don't clean up ltmain.sh, config.sub, or config.guess
+      as they are shipped in the upstream tarball (Closes: #491795)
+
+  * Additions:
+    - removed (lib)smbiosxml.pc; it isn't needed anymore
+
+  [ Loic Minier ]
+  * Add empty dpatch 00list.
+  * Add myself as Uploader.
+  * Wrap build-deps and deps.
+  * Drop useless debian/*.dirs.
+  * Cleanup rules; drop useless vars, commented out sample constructs etc.
+  * Pass -s to dh_* in binary-arch; call dh_testroot, and dh_install*,
+    _compress, _fixperms, _installdeb, _gencontrol, _md5sums, _builddeb in
+    binary-indep (with -i).
+  * Drop useless dh_installdirs, dh_installexamples and dh_link calls.
+  * Actually pass CFLAGS to ./configure; set LDFLAGS in the same way.
+  * Prepend -z defs to LDFLAGS for safety with --as-needed.
+  * Move configure flags to their own var, configure_flags.
+  * Only pass --host to configure if DEB_HOST_GNU_TYPE and DEB_BUILD_GNU_TYPE
+    differ.
+  * Honor distclean exit status.
+  * Drop configure from .PHONY, no such target.
+  * Add patch and unpatch to .PHONY as dpatch.make doesn't do so.
+  * Drop debian/README.Debian which only has a description of the packages and
+    still listed libsmbiosxml.
+  * Cleanup watch file.
+  * Drop maintainer scripts which were mostly unused except for a manual
+    ldconfig call which is handled by debhelper anyway.
+  * Drop --disable-rpath configure flag; doesn't seem to be supported.
+  * Drop duplicate dh_installman call and move man page symlinks to
+    binary-arch.
+  * Refactor man page symlinks shell snippet.
+  * Drop useless debian/libsmbios-bin.docs.
+  * Cleanup debian/Makefile.
+  * Fix watch file.
+  * Cleanup debian/*.install files.
+  * Add ${shlibs:Depends} and ${misc:Depends} to libsmbios-dev.
+  * Don't fixup the perms or include/smbios; these should be fixed on the
+    package's dirs and dh_fixperms will fix them anyway.
+  * Let config.status depend on $(DPATCH_STAMPFN) instead of build depending
+    on patch-stamp.
+  * Bump up debhelper compat level to 5; build-dep on >= 5.
+  * Disable manpage and symlinks for now; closes: #394898.
+  * Build-dep on chpath and chrpath -d binaries in usr/sbin after install to
+    drop the RPATHes on the binaries (usually caused by a broken upstream
+    libtool).
+  * Do update build/config.guess and build/config.sub; this is safe and
+    actually recommended; see autotools-dev README.Debian for rationale;
+    ideally, we'd also save and restore upstream's files to keep a minimum
+    Debian .diff, but this isn't too nice with the dpatch include.
+  * Drop now useless libtool bdep.
+  * Mention full download address in copyright.
+  * Redo copyright and stop installing COPYING-OSL; do some copyright holders
+    research aside of the upstream's COPYING information.
+  * Don't ship README which only has licensing and build/install information.
+  * Stop shipping obsolete TODO.
+  * Jump on the SONAME package renaming train to stop shipping *.la files.
+  * Fix snippet to avoid shipping boost_LICENSE_1_0_txt in libsmbios-dev.
+  * Run testsuite after build unless nocheck is set in DEB_BUILD_OPTIONS.
+  * Remove build-stamp in clean.
+  * Strip binary blobs from the tarball (hence use a .dfsg version suffix) as
+    the upstream tarball includes binary blobs in cppunit/platform/ which are
+    memory dumps including a proprietary BIOS; document this in copyright;
+    NB: upstream was contacted and will reply ASAP.  Comment out testsuite as
+    a result.  Update watch file to mangle version number appropriately.
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Wed,  1 Oct 2008 1:15:56 +0200
+
+libsmbios (0.13.13-1) unstable; urgency=low
+
+  * Fixed FTBFS with gcc4.3 *again* (Closes: 455641)
+    - Thanks to Cyril Brulebois for providing the patch
+
+  * Added missing additional README files (Closes: #443723)
+
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Fri, 07 Mar 2008 23:40:37 +0100
+
+libsmbios (0.13.10-2) unstable; urgency=low
+
+  * Fixed FTBFS with gcc4.3 *again* (Closes: 455641)
+    - Thanks to Cyril Brulebois for providing the patch
+
+  * Added missing additional README files (Closes: #443723)
+
+  * Kudos to Julien Blache for his support and sponsoring
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Sun,  7 Sep 2007 23:46:42 +0200
+
+libsmbios (0.13.10-1) unstable; urgency=low
+
+  * New upstream version (Closes: #441288)
+
+  * Build process fixes/enhancements
+    - Fixed debian/control to be binNMU-safe
+    - Upstream's libtool had enabled 'rpath': re-libtoolize'd source
+    - Added dependency on libtool following fix above
+
+  * Kudos to Julien Blache for his support and sponsoring
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Sun,  7 Sep 2007 23:46:42 +0200
+
+libsmbios (0.13.6-1) unstable; urgency=low
+
+  * New upstream version
+    - Adds complete support for EFI (i.e. intel-based Macs)
+
+  * Fixed FTBFS with gcc4.3 (missing includes) (Closes: #418621)
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Sun, 22 Apr 2007 13:04:55 +0200
+
+libsmbios (0.13.5-1) unstable; urgency=medium
+
+  * New upstream version (Closes: #418018)
+    - Fix broken libtool in previous version (Closes: #418425)
+    - New libtool version used: relibtoolized source (Closes: #418134)
+
+  * Fixed debian/rules to put config.{sub,guess} into proper place
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Tue, 10 Apr 2007 22:06:25 +0200
+
+libsmbios (0.13.4-1) unstable; urgency=low
+
+  * New upstream version
+    - Xerces is not a build-dep anymore
+
+  * Source tarball cleanup: do not ship generated binaries (Closes: 399201)
+
+  * libsmbios-doc: package now contains the Doxy-generated
+    libsmbios documentation (in HTML format) (Closes: #399200)
+
+  * Enhanced man page a bit, barring proper documentation from upstream
+    A separate, complete version for every binary shipped is still pending,
+    though 
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Wed, 14 Mar 2007 13:17:20 +0100
+
+libsmbios (0.12.1-3) unstable; urgency=low
+
+  * Ensure including libsmbios.so in -dev (Closes: #399205)
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Sat, 18 Nov 2006 16:57:48 +0100
+
+libsmbios (0.12.1-2) unstable; urgency=low
+
+  * Acknowledge NMU (Closes: #393443)
+    - Thanks, Bas
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Mon, 23 Oct 2006 19:32:27 +0200
+
+libsmbios (0.12.1-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload
+  * Moved the binaries of libsmbios-bin to /usr/sbin (closes: #393443)
+
+ -- Bas Zoetekouw <bas@debian.org>  Mon, 23 Oct 2006 17:33:42 +0200
+
+libsmbios (0.12.1-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Fri,  1 Sep 2006 18:59:08 +0200
+
+libsmbios (0.11.5-2) unstable; urgency=low
+
+  * Fix FTBFS due to bashisms in debian/rules (Closes: #380610)
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Thu, 31 Aug 2006 22:36:31 +0200
+
+libsmbios (0.11.5-1) unstable; urgency=low
+
+  * New upstream version (Closes: #354900)
+
+  * Packaging
+    - Depend on libxerces27-dev now (Closes: #368915)
+    - Upgraded to Standards-Version 3.7.2 with no changes
+
+  * Package sponsored by Roberto Lumbreras <rover@debian.org>
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Sat, 10 Jun 2006 14:54:36 +0200
+
+libsmbios (0.10.6-2) unstable; urgency=low
+
+  * FTBFS: Restrict building to supported architectures (Closes: #344652)
+    - moved 'doxygen' to Build-Depends (from -Indep) (Closes: #344745)
+
+  * Package sponsored by Roberto Lumbreras <rover@debian.org>
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Thu, 29 Dec 2005  3:52:25 +0100
+
+libsmbios (0.10.6-1) unstable; urgency=low
+
+  * New upstream version. Initial upload to Debian (Closes: #316502)
+
+  * Package sponsored by Roberto Lumbreras <rover@debian.org>
+
+ -- Jose Luis Tallon <jltallon@adv-solutions.net>  Sun, 11 Dec 2005 20:40:43 +0100
