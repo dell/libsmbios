@@ -52,7 +52,7 @@ void testCInterface::setUp()
     DCERR( " write some junk" << endl);
     for (int i=0; i < pagesize*4 + 1;++i)
         if (fwrite("j", 1, 1, fd) != 1)
-            ;
+        {;}
     DCERR( "\tfclose()" << endl);
     fclose(fd);
 
