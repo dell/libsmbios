@@ -48,6 +48,7 @@ struct options opts[] =
     { 2, "cmos_file",   N_("Debug: CMOS dump file to use instead of physical cmos"), "c", 1 },
     { 3, "set",         N_("Set CMOS state byte to new value"), "s", 1 },
     { 4, "owner",       N_("Set state byte owner"), "o", 1 },
+    { 255, "version",   N_("Display libsmbios version information"), "v", 0 },
     { 0, NULL, NULL, NULL, 0 }
 };
 
@@ -81,6 +82,10 @@ main (int argc, char **argv)
             break;
         case 4:
             owner = strtoul( args, 0, 0 );
+            break;
+        case 255:
+            printf("%s\n", smbios_get_library_version_string());
+            exit(0);
             break;
         default:
             break;

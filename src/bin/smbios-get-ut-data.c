@@ -81,7 +81,7 @@ main (int argc, char **argv)
             memory_obj_factory(MEMORY_UNIT_TEST_MODE | MEMORY_GET_SINGLETON, args);
             break;
         case 255:
-            printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
+            printf("%s\n", smbios_get_library_version_string());
             exit(0);
             break;
         default:
