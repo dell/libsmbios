@@ -20,7 +20,6 @@ import traceback
 
 # the following vars are all substituted on install
 # this bin isnt byte-compiled, so this is ok
-__VERSION__="uninstalled-version"
 pythondir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "python")
 clidir=os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "..", "py-cli")
 # end vars
@@ -32,6 +31,9 @@ sys.path.insert(0,clidir)
 import cli
 from libsmbios_c import smi, localedir, GETTEXT_PACKAGE
 from libsmbios_c.trace_decorator import traceLog, getLog
+from libsmbios_c import system_info as sysinfo
+
+__VERSION__=sysinfo.get_library_version_string()
 
 locale.setlocale(locale.LC_ALL, '')
 gettext.install(GETTEXT_PACKAGE, localedir)
