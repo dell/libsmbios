@@ -186,17 +186,12 @@ case $host_os in
 	linux*)
 		linux_os=1
 		;;
-	solaris*)
-		solaris_os=1
-		AC_SEARCH_LIBS([nanosleep],[rt])
-		;;
 	mingw32*)
 		windows_os=1
 		;;
 esac
 
 AM_CONDITIONAL(BUILD_LINUX,   [test -n "$linux_os"])
-AM_CONDITIONAL(BUILD_SOLARIS, [test -n "$solaris_os"])
 AM_CONDITIONAL(BUILD_WINDOWS, [test -n "$windows_os"])
 
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
