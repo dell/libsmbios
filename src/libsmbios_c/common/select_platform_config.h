@@ -9,9 +9,6 @@
 #elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 // win32:
 #  define LIBSMBIOS_C_INTERNAL_PLATFORM_CONFIG "platform/win32.h"
-#elif defined(sun)
-// solaris:
-#  define LIBSMBIOS_C_INTERNAL_PLATFORM_CONFIG "platform/solaris.h"
 #else
 
 // this must come last - generate an error if we don't

@@ -55,12 +55,6 @@ out_libsmbios_c_la_SOURCES = \
     src/libsmbios_c/token/token_da.c			\
     src/libsmbios_c/token/token_impl.h
 
-libsmbios_c_SOLARIS_SOURCES = \
-    src/libsmbios_c/cmos/cmos_solaris.c			\
-    src/libsmbios_c/memory/memory_solaris.c		\
-    src/libsmbios_c/smbios/smbios_solaris.c		\
-    src/libsmbios_c/smi/smi_solaris.c
-
 libsmbios_c_LINUX_SOURCES = \
     src/libsmbios_c/cmos/cmos_linux.c			\
     src/libsmbios_c/memory/memory_linux.c		\
@@ -78,16 +72,10 @@ libsmbios_c_WINDOWS_SOURCES = 	\
 
 if BUILD_WINDOWS
 out_libsmbios_c_la_SOURCES += $(libsmbios_c_WINDOWS_SOURCES)
-EXTRA_DIST += $(libsmbios_c_LINUX_SOURCES) $(libsmbios_c_SOLARIS_SOURCES)
+EXTRA_DIST += $(libsmbios_c_LINUX_SOURCES)
 endif
 
 if BUILD_LINUX
 out_libsmbios_c_la_SOURCES += $(libsmbios_c_LINUX_SOURCES)
-EXTRA_DIST += $(libsmbios_c_WINDOWS_SOURCES) $(libsmbios_c_SOLARIS_SOURCES)
+EXTRA_DIST += $(libsmbios_c_WINDOWS_SOURCES)
 endif
-
-if BUILD_SOLARIS
-out_libsmbios_c_la_SOURCES += $(libsmbios_c_SOLARIS_SOURCES)
-EXTRA_DIST += $(libsmbios_c_WINDOWS_SOURCES) $(libsmbios_c_LINUX_SOURCES)
-endif
-

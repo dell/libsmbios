@@ -70,17 +70,6 @@ out_smbios_upflag_ctl_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
 # C++
 #
 if BUILD_LIBSMBIOS_CXX
-if BUILD_SOLARIS
-sbin_PROGRAMS += out/dellLEDCtl
-out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
-out_dellLEDCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-if BUILD_MEDIA_DIRECT
-sbin_PROGRAMS += out/dellMediaDirectCtl
-out_dellMediaDirectCtl_SOURCES = src/bin/dellMediaDirectCtl.cpp
-out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-endif
-endif #BUILD_LIBSMBIOS_CXX
 if BUILD_LINUX
 sbin_PROGRAMS += out/dellLEDCtl
 out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp

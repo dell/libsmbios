@@ -33,11 +33,3 @@ void fixed_strerror(int errval, char *errbuf, size_t bufsize)
     }
 }
 #endif
-
-#ifdef LIBSMBIOS_C_PLATFORM_SOLARIS
-void fixed_strerror(int errval, char *errbuf, size_t bufsize)
-{
-    fnprintf("\n");
-    size_t curstrsize = strlen(errbuf);
-}
-#endif

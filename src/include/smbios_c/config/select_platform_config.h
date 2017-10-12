@@ -33,10 +33,6 @@
 // win32:
 #  define LIBSMBIOS_C_PLATFORM_CONFIG "smbios_c/config/platform/win32.h"
 
-#elif defined(sun)
-// solaris
-#  define LIBSMBIOS_C_PLATFORM_CONFIG "smbios_c/config/platform/solaris.h"
-
 #else
 
 #  if defined (LIBSMBIOS_C_ASSERT_CONFIG)
