@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/file.h>  // flock
+#include <sys/ioctl.h> // ioctl
 #include <errno.h>
 
 // public
@@ -35,11 +36,20 @@
 #include "libsmbios_c_intlize.h"
 #include "internal_strl.h"
 
+// kernel
+#include <linux/version.h>
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
+#include <linux/wmi.h>
+#else
+#include "wmi.h"
+#endif
+
 // private
 #include "smi_impl.h"
 
 // forward declarations
 
+const char *wmi_char                  = "/dev/wmi/dell-smbios";
 const char *sysfs_basedir             = "/sys/devices/platform/dcdbas/";
 const char *smi_data_fn               = "smi_data";
 const char *smi_data_buf_phys_addr_fn = "smi_data_buf_phys_addr";
@@ -228,7 +238,7 @@ FILE *open_request_file()
 #define TO_KERNEL_BUF true
 #define FROM_KERNEL_BUF false
 
-void copy_phys_bufs(struct dell_smi_obj *this, struct callintf_cmd *kernel_buf, u32 physaddr, bool direction)
+void copy_phys_bufs_smi(struct dell_smi_obj *this, struct callintf_cmd *kernel_buf, u32 physaddr, bool direction)
 {
     u32 curoffset = sizeof(this->smi_buf) + sizeof(struct callintf_cmd);
 
@@ -260,6 +270,88 @@ void copy_phys_bufs(struct dell_smi_obj *this, struct callintf_cmd *kernel_buf, 
     }
 }
 
+void copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer *buf, bool direction)
+{
+    // starts at offset of blength
+    u32 curoffset = (u8*) &buf->ext.blength - (u8*) &buf->std;
+
+    u8 *dest = 0;
+    u8 *source = 0;
+
+    for (int i=0;i<4;i++)
+    {
+        if (! this->physical_buffer[i])
+            continue;
+
+        /* blength incremented for each increasing physical buffer */
+        buf->ext.blength += this->physical_buffer_size[i];
+        /* mark which attributes have buffer offsets */
+        buf->ext.argattrib |= 1 << (i * 8);
+        source = this->physical_buffer[i];
+        dest = (u8*)&buf->std + curoffset;
+        if (direction == FROM_KERNEL_BUF)
+        {
+            source = (u8*)&buf->std + curoffset;
+            dest = this->physical_buffer[i];
+        }
+
+        memcpy(dest, source, this->physical_buffer_size[i]);
+        buf->std.input[i] = curoffset;
+        curoffset += this->physical_buffer_size[i];
+    }
+}
+
+int __hidden wmi_supported()
+{
+    if (access(wmi_char, F_OK) != -1)
+        return 1;
+    return 0;
+}
+
+int __hidden LINUX_dell_wmi_obj_execute(struct dell_smi_obj *this)
+{
+    struct dell_wmi_smbios_buffer *buffer;
+    u64 length;
+    FILE *f;
+    int fd;
+    int ret;
+
+    // setup buffer size
+    f = fopen(wmi_char, "rb");
+    if (!f)
+        return -EINVAL;
+    ret = fread(&length, sizeof(__u64), 1, f);
+    fclose(f);
+    if (ret <= 0 || !length)
+        return -EIO;
+    buffer = calloc(1, length);
+    if (!buffer)
+        return -ENOMEM;
+    buffer->length = length;
+
+    // update our buf
+    memcpy(&buffer->std, &(this->smi_buf), sizeof(this->smi_buf));
+
+    // copy in each physical addr buf
+    copy_phys_bufs_wmi(this, buffer, TO_KERNEL_BUF);
+
+    // perform command
+    fd = open(wmi_char, O_NONBLOCK);
+    ret = ioctl(fd, DELL_WMI_SMBIOS_CMD, buffer);
+    close(fd);
+    if (ret)
+        goto out_wmi;
+
+    // copy result out
+    memcpy(&(this->smi_buf), &buffer->std, sizeof(this->smi_buf));
+
+    // update smi buffer
+    copy_phys_bufs_wmi(this, buffer, FROM_KERNEL_BUF);
+
+out_wmi:
+    free(buffer);
+    return ret;
+}
 
 int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
 {
@@ -298,7 +390,7 @@ int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     kernel_buf->command_code = this->command_code;
 
     // copy in each physical addr buf
-    copy_phys_bufs(this, kernel_buf, physaddr, TO_KERNEL_BUF);
+    copy_phys_bufs_smi(this, kernel_buf, physaddr, TO_KERNEL_BUF);
 
     // setup std smi args
     memcpy(kernel_buf->command_buffer_start, &(this->smi_buf), sizeof(this->smi_buf));
@@ -322,7 +414,7 @@ int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     memcpy(&(this->smi_buf), kernel_buf->command_buffer_start, sizeof(this->smi_buf));
 
     // update smi buffer
-    copy_phys_bufs(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
+    copy_phys_bufs_smi(this, kernel_buf, physaddr, FROM_KERNEL_BUF);
 
     fclose(fd);
 
@@ -345,6 +437,9 @@ out:
 
 int __hidden init_dell_smi_obj(struct dell_smi_obj *this)
 {
-    this->execute = LINUX_dell_smi_obj_execute;
+    if (wmi_supported())
+        this->execute = LINUX_dell_wmi_obj_execute;
+    else
+        this->execute = LINUX_dell_smi_obj_execute;
     return init_dell_smi_obj_std(this);
 }
