@@ -188,20 +188,6 @@ information from standard BIOS tables, such as the SMBIOS table.
 This package contains the headers and .a files necessary to compile new client
 programs against libsmbios.
 
-%package -n yum-dellsysid
-Summary: YUM plugin to retrieve the Dell System ID
-Group: Development/Tools
-# yum plugin and supporting functions first appeared in 2.2.0
-Requires: smbios-utils-python >= 2.2.0
-
-%description -n yum-dellsysid
-Libsmbios is a library and utilities that can be used by client programs to get
-information from standard BIOS tables, such as the SMBIOS table.
-
-This package contains a YUM plugin which allows the use of certain
-substitutions in yum repository configuration files on Dell systems.
-
-
 %prep
 : '########################################'
 : '########################################'
@@ -288,7 +274,6 @@ mv out/libsmbios_c    out/libsmbios_c-%{_arch}
 rename %{pot_file}.mo %{lang_dom}.mo $(find %{buildroot}/%{_datadir} -name %{pot_file}.mo)
 %find_lang %{lang_dom}
 
-touch files-yum-dellsysid
 touch files-smbios-utils-python
 touch files-python-smbios
 
@@ -334,19 +319,6 @@ cat > files-smbios-utils-python <<-EOF
 	%{_datadir}/smbios-utils
 EOF
 
-cat > files-yum-dellsysid <<-EOF
-	%doc COPYING-GPL COPYING-OSL
-	# YUM Plugin
-	%config(noreplace) %{_sysconfdir}/yum/pluginconf.d/*
-	%{_exec_prefix}/lib/yum-plugins/*
-	# SUSE build has anal directory ownership check. RPM which owns all dirs *must*
-	# be installed at buildtime.
-	%if 0%{?suse_version} >= 1100
-	%dir %{_sysconfdir}/yum
-	%dir %{_sysconfdir}/yum/pluginconf.d/
-	%dir %{_exec_prefix}/lib/yum-plugins/
-	%endif
-EOF
 %endif
 
 # hardlink files to save some space.
