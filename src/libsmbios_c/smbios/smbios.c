@@ -74,11 +74,10 @@ char *smbios_strerror(const struct smbios_struct *cur)
     char *ret;
     struct smbios_table *table = smbios_table_factory(SMBIOS_DEFAULTS | SMBIOS_NO_ERR_CLEAR);
     if (table) {
-        /* leak */
         ret = strdup(smbios_table_strerror(table));
         smbios_table_free(table);
     } else {
-        ret = "";
+        ret = NULL;
     }
     return ret;
 }

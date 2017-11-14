@@ -124,8 +124,7 @@ LIBSMBIOS_C_DLL_SPEC const char * smbios_struct_get_string_from_offset(const str
 LIBSMBIOS_C_DLL_SPEC const char * smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 
 /** Returns string describing the last error condition.
- * Can return 0. The buffer used is guaranteed to be valid until the next call
- * to any smbios_* function. Copy the contents if you need it longer.
+ *  Needs to be freed by caller
  */
 LIBSMBIOS_C_DLL_SPEC char * smbios_strerror();
 
