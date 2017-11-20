@@ -60,8 +60,8 @@ AC_SUBST([RELEASE_EXTRA], [release_extra_version()])
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 
-# Ensure we use c++98 instead of c++14
-CXXFLAGS="$CXXFLAGS -std=c++98"
+# Ensure we use c++11 instead of c++14
+CXXFLAGS="$CXXFLAGS -std=c++11"
 
 if test "$enable_shared" != "no"; then
     AC_DEFINE([LIBSMBIOS_C_ALL_DYN_LINK],[1],[Enable dynamic libraries to build])
