@@ -23,6 +23,14 @@ Common problems are:\n\
           Linux  : run as 'root' user\n\
           Windows: run as 'administrator' user\n\
 \n\
+    -- dell-smbios-wmi driver not loaded \n\
+       Try loading the dell-smbios-wmi driver \n\
+          Linux : modprobe dell-smbios-wmi \n\
+\n\
+    -- Call filtered by Linux kernel \n\
+       Some functionality is natively supported \n\
+       by the Linux kernel \n\
+\n\
     -- dcdbas device driver not loaded.\n\
        Try loading the dcdbas driver\n\
           Linux  : modprobe dcdbas\n\
