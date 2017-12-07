@@ -255,6 +255,10 @@ void dump_smbios_table(const char *smbiosDumpFile)
     struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON | SMBIOS_NO_FIXUPS);
     struct smbios_table_entry_point tep;
     struct my_smbios_table *my = (struct my_smbios_table *)table;
+    if (!my) {
+        printf("error initializing SMBIOS table\n");
+        return;
+    }
     memcpy(&tep, & (my->tep), sizeof(my->tep));
     tep.dmi.table_address = 0xE0000UL + sizeof(tep);
 
