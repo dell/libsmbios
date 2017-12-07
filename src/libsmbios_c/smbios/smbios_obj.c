@@ -538,14 +538,17 @@ int __hidden smbios_get_table_memory(struct smbios_table *m)
     m->table = (struct table*)calloc(1, len);
     retval = memory_read(m->table, m->tep.dmi.table_address, len);
     if (retval != 0)
-        goto out_err; // success
+        goto out_free_table;
 
     goto out;
 
-out_err:
-    fnprintf(" out_err\n");
+out_free_table:
+    fnprintf(" out_free_table\n");
     free(m->table);
     m->table = 0;
+
+out_err:
+    fnprintf(" out_err\n");
     if (strlen(m->errstring))
         strlcat(m->errstring, "\n", ERROR_BUFSIZE);
     strlcat (m->errstring, error, ERROR_BUFSIZE);
