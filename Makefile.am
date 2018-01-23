@@ -88,13 +88,15 @@ coverage:
 
 
 ########## DOCS ################
-all: doxygen
 if HAVE_DOXYGEN
+all: doxygen
 DOXYGEN_DEPS=out/libsmbios_c/html/index.html
 if BUILD_LIBSMBIOS_CXX
 DOXYGEN_DEPS+=out/libsmbios_c++/html/index.html
 endif
 doxygen: $(DOXYGEN_DEPS)
+else
+all:
 endif
 
 DOT=@DOT@
