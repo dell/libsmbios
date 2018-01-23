@@ -86,9 +86,9 @@ AC_SUBST([LIBSMBIOS_C_SONAME], [libsmbios_c.so.$LIBSMBIOS_C_SO_MAJOR])
 AC_SUBST([LIBSMBIOS_CPLUSPLUS_SO_MAJOR], [$(($LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT - $LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE))])
 AC_SUBST([LIBSMBIOS_CPLUSPLUS_SONAME], [libsmbios.so.$LIBSMBIOS_CPLUSPLUS_SO_MAJOR])
 
-dnl Help line for doxygen
+dnl Help line for libsmbios_cxx
 AC_ARG_ENABLE([libsmbios_cxx],
-    AS_HELP_STRING([--enable-libsmbios_cxx],[Disable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: disabled]),
+    AS_HELP_STRING([--enable-libsmbios_cxx],[Enable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: disabled]),
     [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=no])
 AM_CONDITIONAL(BUILD_LIBSMBIOS_CXX, [test x$want_libsmbios_cxx == xyes])
 
@@ -102,7 +102,7 @@ AC_ARG_ENABLE(graphviz,
     AS_HELP_STRING([--disable-graphviz],[Enhance API docs with pretty graphs and pictures. default: enabled if graphviz present]),
     [wantgraphviz=$enableval], [wantgraphviz=yes])
 
-dnl Help line for graphviz
+dnl Help line for python
 AC_ARG_ENABLE(python,
     AS_HELP_STRING([--disable-python],[Build and install python utilities. default: enabled if python present]),
     [wantpython=$enableval], [wantpython=yes])
@@ -125,7 +125,7 @@ AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_INSTALL
 
-dnl Check for doxygen support
+dnl Check for python support
 AM_CONDITIONAL([HAVE_PYTHON], [false])
 if test x$wantpython == xyes ; then
     AM_PATH_PYTHON([2.3],,[:])
