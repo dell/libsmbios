@@ -6,7 +6,7 @@ ENV OUTPUT_DIR /output
 ENV BUILD_DIR /build
 
 RUN yum install -y \
-  rpm-build gettext-devel libxml2-devel cppunit-devel xz libtool git gcc-c++ hardlink doxygen make \
+  rpm-build gettext-devel libxml2-devel cppunit-devel xz libtool git gcc-c++ doxygen make \
   && yum clean all
 
 WORKDIR $BUILD_DIR

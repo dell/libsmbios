@@ -31,13 +31,9 @@
 %{?_without_as_needed: %undefine as_needed}
 %{?_with_as_needed:    %define as_needed 1}
 
-# some distros already have fdupes macro. If not, we just set it to something innocuous
-%{?!fdupes: %define fdupes /usr/sbin/hardlink -c -v}
-
 %define cppunit_BR cppunit-devel
 %define pkgconfig_BR pkgconfig
 %define ctypes_BR python-ctypes
-%define fdupes_BR hardlink
 %define valgrind_BR valgrind
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
@@ -54,20 +50,10 @@
     # suse never added python-ctypes provides to python 2.5 :(
     %define ctypes_BR %{nil}
 %endif
-%if 0%{?suse_version} > 1020
-    %define fdupes_BR fdupes
-%else
-    %define fdupes_BR %{nil}
-    %define fdupes echo fdupes disabled
-%endif
 %endif
 
 # rhel (should work on OBS and EPEL)
 %if 0%{?rhel}
-%if 0%{?rhel} < 5
-    %define fdupes echo fdupes disabled
-    %define fdupes_BR %{nil}
-%endif
 %if 0%{?rhel} < 4
     # dont yet have rhel3 valgrind
     %define valgrind_BR %{nil}
@@ -101,12 +87,12 @@ Name: %{release_name}
 Version: %{release_version}
 Release: 3%{?dist}
 License: GPLv2+ or OSL 2.1
-Summary: Libsmbios C/C++ shared libraries
+Summary: Libsmbios C shared libraries
 Group: System Environment/Libraries
-Source: http://linux.dell.com/libsmbios/download/libsmbios/libsmbios-%{version}/libsmbios-%{version}.tar.bz2
-URL: http://linux.dell.com/libsmbios/main
+Source: libsmbios-%{version}.tar.xz
+URL: http://github.com/dell/libsmbios
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{fdupes_BR} %{pkgconfig_BR} %{python_devel_BR}
+BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{pkgconfig_BR} %{python_devel_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
@@ -122,11 +108,6 @@ Libsmbios is a library and utilities that can be used by client programs to get
 information from standard BIOS tables, such as the SMBIOS table.
 
 This package provides the C-based libsmbios library, with a C interface.
-
-This package also has a C++-based library, with a C++ interface. It is not
-actively maintained, but provided for backwards compatibility. New programs
-should use the libsmbios C interface.
-
 
 %package -n python-smbios
 Summary: Python interface to Libsmbios C library
@@ -218,7 +199,6 @@ chmod +x ./configure
     %{?!as_needed:--disable-as-needed} %{?!build_python:--disable-python}
 
 mkdir -p out/libsmbios_c
-mkdir -p out/libsmbios_c++
 make CFLAGS="-Werror" %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
 
 echo \%doc _build/build-%{_arch}.log > buildlogs.txt
@@ -266,9 +246,8 @@ mkdir -p %{buildroot}/%{_bindir}
 cp -a $TOPDIR/src/include/*  %{buildroot}/%{_includedir}/
 cp -a out/public-include/*  %{buildroot}/%{_includedir}/
 rm -f %{buildroot}/%{_libdir}/lib*.{la,a}
-find %{buildroot}/%{_includedir} out/libsmbios_c++ out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
+find %{buildroot}/%{_includedir} out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
-mv out/libsmbios_c++  out/libsmbios_c++-%{_arch}
 mv out/libsmbios_c    out/libsmbios_c-%{_arch}
 
 rename %{pot_file}.mo %{lang_dom}.mo $(find %{buildroot}/%{_datadir} -name %{pot_file}.mo)
@@ -292,10 +271,10 @@ EOF
 
 cat > files-smbios-utils-python <<-EOF
 	%doc COPYING-GPL COPYING-OSL
-	%doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+	%doc src/bin/getopts_LICENSE.txt
 	%dir %{_sysconfdir}/libsmbios
 	%config(noreplace) %{_sysconfdir}/libsmbios/*
-	
+
 	# python utilities
 	%{_sbindir}/smbios-sys-info
 	%{_sbindir}/smbios-token-ctl
@@ -306,23 +285,18 @@ cat > files-smbios-utils-python <<-EOF
 	%{_sbindir}/smbios-keyboard-ctl
 	%{_sbindir}/smbios-thermal-ctl
 	%{_sbindir}/smbios-battery-ctl
-	
+
 	# used by HAL in old location, so keep it around until HAL is updated.
-	%{_sbindir}/dellLEDCtl
 	%{_sbindir}/dellLcdBrightness
-	%{_sbindir}/dellMediaDirectCtl
 	%{_sbindir}/getSystemId
 	%{_sbindir}/dellWirelessCtl
 	%{_bindir}/dellWirelessCtl
-	
+
 	# data files
 	%{_datadir}/smbios-utils
 EOF
 
 %endif
-
-# hardlink files to save some space.
-%fdupes $RPM_BUILD_ROOT
 
 %clean
 rm -rf %{buildroot}
@@ -333,17 +307,14 @@ rm -rf %{buildroot}
 %files -f _build/%{lang_dom}.lang
 %defattr(-,root,root,-)
 %{_libdir}/libsmbios_c.so.*
-%{_libdir}/libsmbios.so.*
 
 %files -n libsmbios-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
-%doc COPYING-GPL COPYING-OSL src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+%doc COPYING-GPL COPYING-OSL src/bin/getopts_LICENSE.txt
 %{_includedir}/smbios
 %{_includedir}/smbios_c
-%{_libdir}/libsmbios.so
 %{_libdir}/libsmbios_c.so
 %{_libdir}/pkgconfig/*.pc
-%doc _build/out/libsmbios_c++-%{_arch}
 %doc _build/out/libsmbios_c-%{_arch}
 
 %files -n smbios-utils
@@ -355,7 +326,7 @@ rm -rf %{buildroot}
 %files -n smbios-utils-bin
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL
-%doc src/bin/getopts_LICENSE.txt src/include/smbios/config/boost_LICENSE_1_0_txt
+%doc src/bin/getopts_LICENSE.txt
 
 # new C utilities
 %{_sbindir}/smbios-state-byte-ctl
@@ -369,9 +340,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %files -n smbios-utils-python -f _build/files-smbios-utils-python
-%defattr(-,root,root,-)
-
-%files -n yum-dellsysid -f _build/files-yum-dellsysid
 %defattr(-,root,root,-)
 
 %changelog
