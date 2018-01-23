@@ -55,10 +55,13 @@ endif
 
 pcdir = ${libdir}/pkgconfig
 pc_DATA = pkg/libsmbios_c.pc pkg/libsmbios_c++.pc
-DISTCLEANFILES += pkg/*.pc *-uninstalled.pc
+DISTCLEANFILES += pkg/*.pc *-uninstalled.pc pkg/config* pkg/depcomp
 
 CLEANFILES+=_buildtemp smbios-utils*.rpm out/libsmbios_c out/libsmbios_c++
-DISTCLEANFILES += out
+DISTCLEANFILES += out ABOUT-NLS Makefile.in aclocal.m4 autom4te.cache/ configure m4/
+DISTCLEANFILES += pkg/compile pkg/install-sh pkg/ltmain.sh pkg/missing
+DISTCLEANFILES += pkg/mkinstall* pkg/py-compile pkg/test-driver
+
 
 CLEANFILES += $(EXTRA_PROGRAMS)
 
