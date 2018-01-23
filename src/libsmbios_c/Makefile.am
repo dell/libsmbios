@@ -59,6 +59,7 @@ libsmbios_c_LINUX_SOURCES = \
     src/libsmbios_c/cmos/cmos_linux.c			\
     src/libsmbios_c/memory/memory_linux.c		\
     src/libsmbios_c/smbios/smbios_linux.c		\
+    src/libsmbios_c/smi/wmi.h				\
     src/libsmbios_c/smi/smi_linux.c
 
 libsmbios_c_WINDOWS_SOURCES = 	\
