@@ -7,12 +7,12 @@ Vcs-Git: https://anonscm.debian.org/git/collab-maint/libsmbios.git
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libsmbios.git
 Homepage: https://github.com/dell/libsmbios/
 Build-Depends: debhelper (>= 9),
+               dh-autoreconf,
                autotools-dev,
                libcppunit-dev,
                doxygen,
                graphviz,
                python (>= 2.6.5),
-               chrpath,
                libxml2-dev,
                pkg-config,
                autoconf,
