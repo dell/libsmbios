@@ -2,7 +2,7 @@
 #  This is a template of all of the 'Standard' stuff that we use in all our
 #  projects.
 
-CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.bz2 $(PACKAGE_NAME)-*.rpm _buildtemp version
+CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.xz $(PACKAGE_NAME)-*.rpm _buildtemp version
 DISTCLEANFILES=*~
 
 EXTRA_DIST =
@@ -36,8 +36,6 @@ AUTHORS:
 
 REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
 export $(REPLACE_VARS)
-# compat for RHEL3, dont ask
-export GETTEXT_PACKAGE
 
 DATA_HOOK_REPLACE=
 install-data-hook:
@@ -110,13 +108,8 @@ $(CHANGELOG): version.mk
 	cd pkg/ && fakeroot debchange -v $(PACKAGE_VERSION)-$(DEB_RELEASE) $(CHANGELOG_TEXT)
 
 
-TARBALL=dist/$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.xz
-$(TARBALL):
-	mkdir -p dist
-	git archive --list | grep tar.xz || git config tar.tar.xz.command "xz -c"
-	git archive --format=tar.xz --prefix $(PACKAGE_NAME)-$(PACKAGE_VERSION)/ -o $(TARBALL) HEAD
-
-debmagic: $(TARBALL)
+TARBALL=$(PACKAGE_NAME)-*.tar.xz
+debmagic: dist-xz
 	mkdir -p dist/$(DIST)
 	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.xz
 	tar -C $(DEB_TMP_BUILDDIR) -xf $(TARBALL)
