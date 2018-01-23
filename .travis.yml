@@ -6,7 +6,7 @@ services:
   - docker
 
 before_script:
-  - docker build -t libsmbios-debian-unstable -f docker/Dockerfile-debian-unstable .
+  - docker build -t libsmbios-debian-unstable -f pkg/dockerfiles/Dockerfile-debian-unstable .
 
 script:
-  - docker run -t -v `pwd`:/build libsmbios-debian-unstable ./docker/build_and_test.sh
+  - docker run -t -v `pwd`:/build libsmbios-debian-unstable ./pkg/build_and_test.sh
