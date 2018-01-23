@@ -1,3 +1,2 @@
 doc/*  usr/share/doc/libsmbios-doc
-out/libsmbios_c++/html/*  usr/share/doc/libsmbios-doc/doxygen/libsmbios_c++
 out/libsmbios_c/html/*  usr/share/doc/libsmbios-doc/doxygen/libsmbios_c
