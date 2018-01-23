@@ -109,27 +109,28 @@ changelog: $(CHANGELOG)
 $(CHANGELOG): version.mk
 	cd pkg/ && fakeroot debchange -v $(PACKAGE_VERSION)-$(DEB_RELEASE) $(CHANGELOG_TEXT)
 
-TARBALL=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.xz
 
-debmagic:
-	[ -n "$$DEB_TMP_BUILDDIR" ] || (echo "Must set DEB_TMP_BUILDDIR=/tmp/... for deb and sdeb targets"; exit 1)
-	[ -n "$$DIST" ] || (echo "Must set DIST={gutsy,hardy,sid,...} for deb and sdeb targets"; exit 1)
-	[ -n "$$DIST" ] || echo "Remember to set DISTTAG='~gutsy1' for deb and sdeb targets for backports"
+TARBALL=dist/$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.xz
+$(TARBALL):
+	mkdir -p dist
+	git archive --list | grep tar.xz || git config tar.tar.xz.command "xz -c"
+	git archive --format=tar.xz --prefix $(PACKAGE_NAME)-$(PACKAGE_VERSION)/ -o $(TARBALL) HEAD
+
+debmagic: $(TARBALL)
 	mkdir -p dist/$(DIST)
 	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.xz
 	tar -C $(DEB_TMP_BUILDDIR) -xf $(TARBALL)
 	cp -ar pkg/debian $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian
 	chmod +x $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/rules
-	sed -e "s/#DISTTAG#/$(DISTTAG)/g" -e "s/#DIST#/$(DIST)/g" $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/changelog.in > $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/changelog
-	rm $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/changelog.in
 	cd $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION) ; \
-	./configure ; \
-	pdebuild --use-pdebuild-internal --buildresult $(TOPDIR)/dist/$(DIST) ; \
-	dpkg-buildpackage -D -S -sa -rfakeroot ; \
-	mv ../$(PACKAGE_NAME)_* $(TOPDIR)/dist/$(DIST) ; \
+	mv debian/changelog.in debian/changelog; \
+	dch -D $(DIST) "Built from source `git describe`" -v "$(PACKAGE_VERSION)-0" ;\
+	dpkg-buildpackage -us -uc -D -rfakeroot ; \
+	mv ../*.deb $(TOPDIR)/dist/$(DIST) ; \
 	cd -
 
 debs:
-	tmp_dir=`mktemp -d /tmp/firmware-tools.XXXXXXXX` ; \
-	make debmagic DEB_TMP_BUILDDIR=$${tmp_dir} DIST=$(DIST) DISTTAG=$(DISTTAG) ; \
+	dist=$(DIST); [ "x$${dist}" != "x" ] || dist=`lsb_release -c -s`; \
+	tmp_dir=`mktemp -d /tmp/libsmbios.XXXXXXXX` ; \
+	make debmagic DEB_TMP_BUILDDIR=$${tmp_dir} DIST=$${dist}; \
 	rm -rf $${tmp_dir}
