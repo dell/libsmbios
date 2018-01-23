@@ -210,17 +210,3 @@ AC_CONFIG_FILES([out/public-include/smbios/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([out/public-include/smbios_c/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([pkg/pkginfo])
 AC_OUTPUT
-
-# ==============================================
-# Display final informations about configuration
-# ==============================================
-AC_MSG_NOTICE([
-==============================================================================
-Build configuration:
-    c++ library:            ${want_libsmbios_cxx}
-    doxygen:                ${wantdoxygen}
-    graphviz:               ${wantgraphviz}
-    python:                 ${wantpython}
-    as-needed:              ${wantasneeded}
-==============================================================================
-])
