@@ -35,6 +35,7 @@
 #include "smbios_c/types.h"
 #include "libsmbios_c_intlize.h"
 #include "internal_strl.h"
+#include "common_internal.h"
 
 // kernel
 #include <linux/version.h>
@@ -358,7 +359,6 @@ int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     struct callintf_cmd *kernel_buf;
     size_t alloc_size = sizeof(struct callintf_cmd) + sizeof(this->smi_buf);
     int retval = -1;
-    size_t curstrsize;
     u8 *buffer = 0;
 
     fnprintf("\n");
@@ -425,9 +425,7 @@ err_out:
     fnprintf(" err_out\n");
     strlcpy( this->errstring, _("There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' kernel module loaded?"), ERROR_BUFSIZE);
     strlcat(this->errstring, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
-    curstrsize = strlen(this->errstring);
-    if ((size_t)(ERROR_BUFSIZE - curstrsize - 1) < ERROR_BUFSIZE)
-        strerror_r(errno, this->errstring + curstrsize, ERROR_BUFSIZE - curstrsize - 1);
+    fixed_strerror(errno, this->errstring, ERROR_BUFSIZE);
 
 out:
     free(buffer);
