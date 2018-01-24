@@ -26,6 +26,8 @@ Architecture: i386 amd64 ia64
 Depends: ${shlibs:Depends},
          ${misc:Depends}
 Suggests: libsmbios-doc
+Conflicts: libsmbios2v5
+Replaces: libsmbios2v5
 Description: Provide access to (SM)BIOS information -- dynamic library
  libsmbios aims towards providing access to as much BIOS information as
  possible. It does this by providing a library of functions that can be used 
