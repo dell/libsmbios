@@ -44,7 +44,7 @@ Description: Provide access to (SM)BIOS information -- dynamic library
 
 Package: libsmbios-dev
 Section: libdevel
-Architecture: i386 amd64 ia64 lpia
+Architecture: i386 amd64 ia64
 Depends: libsmbios2 (= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends}
@@ -72,7 +72,7 @@ Section: admin
 Provides: libsmbios-bin
 Conflicts: libsmbios-bin
 Replaces: libsmbios-bin
-Architecture: i386 amd64 ia64 lpia
+Architecture: i386 amd64 ia64
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          python-libsmbios,
