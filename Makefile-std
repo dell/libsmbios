@@ -28,12 +28,6 @@ get-version:
 	@echo 'PACKAGE_VERSION="$(PACKAGE_VERSION)"'
 	@echo 'PACKAGE="$(PACKAGE)"'
 
-ChangeLog:
-	(GIT_DIR=$(top_srcdir)/.git git log > .changelog.tmp && mv .changelog.tmp ChangeLog; rm -f .changelog.tmp) || (touch ChangeLog; echo 'git directory not found: installing possibly empty changelog.' >&2)
-
-AUTHORS:
-	(GIT_DIR=$(top_srcdir)/.git git log | grep ^Author | sort |uniq > .authors.tmp && mv .authors.tmp AUTHORS; rm -f .authors.tmp) || (touch AUTHORS; echo 'git directory not found: installing possibly empty AUTHORS.' >&2)
-
 REPLACE_VARS=GETTEXT_PACKAGE PACKAGE_VERSION PACKAGE localedir libdir libexecdir datadir sysconfdir pythondir pkgpythondir pkgdatadir pkgconfdir pkggladedir pkglibexecdir
 export $(REPLACE_VARS)
 
@@ -97,16 +91,6 @@ srpm: pkg/$(PACKAGE_NAME).spec dist
 	mkdir -p $(BUILDDIR)
 	rpmbuild $(AM_RPM_DEFINES) -bs --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
-
-# This updates the debian version information, similar to how specfile for RPM
-# is updated. It has to be manually invoked becuase it wont work for rpm builds.
-CHANGELOG=pkg/debian/changelog
-CHANGELOG_TEXT="Placeholder changelog entry. Please update this for release."
-changelog: $(CHANGELOG)
-.PHONY: $(CHANGELOG)
-$(CHANGELOG): version.mk
-	cd pkg/ && fakeroot debchange -v $(PACKAGE_VERSION)-$(DEB_RELEASE) $(CHANGELOG_TEXT)
-
 
 TARBALL=$(PACKAGE_NAME)-*.tar.xz
 debmagic: dist-xz
