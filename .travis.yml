@@ -10,9 +10,9 @@ env:
   - OS=centos7
 
 install:
-  - if [[ "$OS" == "debian" ]]; then docker build -t libsmbios-debian-unstable -f pkg/dockerfiles/Dockerfile-debian-unstable .; fi
+  - if [[ "$OS" == "debian" ]]; then docker build -t libsmbios-debian-testing -f pkg/dockerfiles/Dockerfile-debian-testing .; fi
   - if [[ "$OS" == "centos7" ]]; then ./pkg/build-dockerfile.sh centos7; fi
 
 script:
-  - if [[ "$OS" == "debian" ]]; then docker run -t -v `pwd`:/build libsmbios-debian-unstable ./pkg/build_and_test.sh; fi
+  - if [[ "$OS" == "debian" ]]; then docker run -t -v `pwd`:/build libsmbios-debian-testing pkg/mk-rel-deb.sh; fi
   - if [[ "$OS" == "centos7" ]]; then mkdir -p output; docker run -v `pwd`/output:/output centos7-libsmbios; fi
