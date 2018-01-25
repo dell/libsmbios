@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --with autoreconf
+	dh $@ --with autoreconf,python3
 
 override_dh_auto_install:
 	#rm -f debian/libsmbios-doc/usr/share/doc/libsmbios-doc/getopt/LICENSE

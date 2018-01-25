@@ -7,6 +7,7 @@ Vcs-Git: https://anonscm.debian.org/git/collab-maint/libsmbios.git
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libsmbios.git
 Homepage: https://github.com/dell/libsmbios/
 Build-Depends: debhelper (>= 9),
+               dh-python,
                dh-autoreconf,
                autotools-dev,
                libcppunit-dev,
@@ -85,8 +86,8 @@ Description: Provide access to (SM)BIOS information -- utility binaries
 Package: python3-libsmbios
 Section: python
 Architecture: all
-Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}, libsmbios2
-Breaks: ${python:Breaks}
+Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}, libsmbios2
+Breaks: ${python3:Breaks}
 Suggests: libsmbios-doc
 Description: Provide access to (SM)BIOS information -- Python libraries
  libsmbios aims towards providing access to as much BIOS information as
