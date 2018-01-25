@@ -27,6 +27,7 @@ Architecture: i386 amd64 ia64
 Depends: ${shlibs:Depends},
          ${misc:Depends}
 Suggests: libsmbios-doc
+Provides: libsmbios2v5 (=2.3.1-0ubuntu2)
 Conflicts: libsmbios2v5
 Replaces: libsmbios2v5
 Description: Provide access to (SM)BIOS information -- dynamic library
