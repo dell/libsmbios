@@ -12,7 +12,7 @@ Build-Depends: debhelper (>= 9),
                libcppunit-dev,
                doxygen,
                graphviz,
-               python (>= 2.6.5),
+               python3,
                libxml2-dev,
                pkg-config,
                autoconf,
@@ -75,14 +75,14 @@ Replaces: libsmbios-bin
 Architecture: i386 amd64 ia64
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         python-libsmbios,
-         python
+         python3-libsmbios,
+         python3
 Suggests: libsmbios-doc
 Description: Provide access to (SM)BIOS information -- utility binaries
  libsmbios aims towards providing access to as much BIOS information as
  possible. This package includes libsmbios' sample binaries/utilities.
 
-Package: python-libsmbios
+Package: python3-libsmbios
 Section: python
 Architecture: all
 Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}, libsmbios2

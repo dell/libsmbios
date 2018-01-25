@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/python3
 # VIM declarations
 # vim:tw=0:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 

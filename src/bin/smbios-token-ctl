@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
 
   #############################################################################
@@ -9,7 +9,7 @@
   #############################################################################
 """smbios-token-ctl"""
 
-from __future__ import generators
+
 
 # import arranged alphabetically
 import csv
@@ -18,7 +18,7 @@ import locale
 import fnmatch
 from optparse import OptionParser
 import os
-import StringIO
+import io
 import string
 import sys
 import traceback
@@ -35,11 +35,11 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 
 import cli
-from libsmbios_c import token, localedir, GETTEXT_PACKAGE, pkgdatadir
-from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+from libsmbios_c import smbios_token, localedir, GETTEXT_PACKAGE, pkgdatadir
+from libsmbios_c.trace_decorator import traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
-gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+gettext.install(GETTEXT_PACKAGE, localedir)
 
 moduleLog = getLog()
 verboseLog = getLog(prefix="verbose.")
@@ -100,20 +100,6 @@ def command_parse():
     cli.addStdOptions(parser)
     return parser.parse_args()
 
-class CommentedFile:
-    def __init__(self, f, commentstring="#"):
-        self.f = f
-        self.commentstring = commentstring
-
-    def next(self):
-        line = self.f.next()
-        while line[0] in self.commentstring:
-            line = self.f.next()
-        return line
-
-    def __iter__(self):
-        return self
-
 class translatedToken(object):
     id = ""
     name = _("unknown")
@@ -128,15 +114,13 @@ class TokenTranslator(object):
         self.tokens={}
         self.blacklist_tokens={}
         self.honorBlacklist=kargs.get('honorBlacklist',1)
-        #print "add internal blacklist"
-        self.addToList(csv.DictReader(CommentedFile(StringIO.StringIO(INTERNAL_BLACKLIST))), self.blacklist_tokens)
+        self.addToList(csv.DictReader(filter(lambda row: row[0]!='#', io.StringIO(INTERNAL_BLACKLIST))), self.blacklist_tokens)
 
-        #print "add file blacklist"
         for csvfile in kargs.get('csvblacklist',[]):
             try:
-                csvdict = csv.DictReader(CommentedFile(open(csvfile, "rb")))
+                csvdict = csv.DictReader(filter(lambda row: row[0]!='#', open(csvfile, "r")))
                 self.addToList(csvdict, self.blacklist_tokens)
-            except IOError, e:
+            except IOError as e:
                 pass
 
     def __call__(self, tokenObj):
@@ -147,7 +131,7 @@ class TokenTranslator(object):
             retval.description = self.tokens[retval.id]["Description"]
             retval.spec = self.tokens[retval.id]["Spec"]
         if self.blacklist_tokens.get(retval.id) and self.honorBlacklist:
-            raise BlacklistedToken, self.blacklist_tokens[retval.id]['Reason']
+            raise BlacklistedToken(self.blacklist_tokens[retval.id]['Reason'])
         return retval
 
     def addToList(self, csvdict, whichlist):
@@ -156,9 +140,7 @@ class TokenTranslator(object):
                 val = int(line["Token Value"],16)
                 line["Token Value"] = "0x%04x" % val
                 whichlist[val] = line
-#                if whichlist == self.blacklist_tokens:
-#                    print "add blacklist: (%s) = %s" % (val, line)
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("="*79 + "\n")
                 sys.stderr.write(_("Ignoring parsing error in CSV file:") )
                 traceback.print_exc()
@@ -167,19 +149,19 @@ class TokenTranslator(object):
 class TokenTranslatorCsv(TokenTranslator):
     def utf8_decode_gen(self, dictiter):
         for d in dictiter:
-            for k,v in d.iteritems():
+            for k,v in d.items():
                 if v is not None and isinstance(v, str):
-                    d[k] = unicode(v, 'utf-8')
+                    d[k] = str(v, 'utf-8')
                 yield d
 
     def __init__(self, *args, **kargs):
         super(TokenTranslatorCsv,self).__init__(self, *args, **kargs)
         for csvfile in kargs.get('csvlist', []):
             try:
-                csvdict = self.utf8_decode_gen(csv.DictReader(
-                    CommentedFile(open(csvfile, "rb"))))
+                csvdict = csv.DictReader(
+                    filter(lambda row: row[0]!='#', open(csvfile, "r")))
                 self.addToList(csvdict, self.tokens)
-            except IOError, e:
+            except IOError as e:
                 sys.stderr.write(_("Skipping '%s' due to IOError.\n") % cvsfile)
                 sys.stderr.write(_("The error message was: %s") % e)
                 continue
@@ -229,7 +211,7 @@ def dumpTokens(tokenTable, tokenXlator, options):
      for token in tokenTable:
         try:
             translatedToken = tokenXlator(token)
-        except BlacklistedToken, e:
+        except BlacklistedToken as e:
             #sys.stdout.write( "="*80 + "\n" )
             #print "Not dumping blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
             continue
@@ -238,18 +220,18 @@ def dumpTokens(tokenTable, tokenXlator, options):
             continue
 
         sys.stdout.write( "="*80 + "\n" )
-        print _("  Token: 0x%04x - %s (%s)") % (translatedToken.id, translatedToken.name, translatedToken.setting)
+        print(_("  Token: 0x%04x - %s (%s)") % (translatedToken.id, translatedToken.name, translatedToken.setting))
 
         try:
             (e, type, value) = tokenInfo(token, "dump-tokens")
-            print _("  value: %s = %s") % (type, cli.makePrintable(value))
-        except RuntimeError, e:
+            print(_("  value: %s = %s") % (type, cli.makePrintable(value)))
+        except RuntimeError as e:
             pass
 
         desc = _("   Desc: ")
         sys.stdout.write(desc)
         cli.wrap(translatedToken.description, indent=len(desc), first_line_start=len(desc))
-        print
+        print()
 
 
 def dumpTokensCsv(tokenTable, tokenXlator, options):
@@ -259,7 +241,7 @@ def dumpTokensCsv(tokenTable, tokenXlator, options):
     for token in tokenTable:
         try:
             translatedToken = tokenXlator(token)
-        except BlacklistedToken, e:
+        except BlacklistedToken as e:
             #sys.stdout.write( "="*80 + "\n" )
             #print "Not dumping blacklisted token 0x%04x. Reason: %s" % (token.getId(), str(e))
             continue
@@ -273,16 +255,16 @@ def dumpTokensCsv(tokenTable, tokenXlator, options):
 
 def importTokensCsv(tokenTable, tokenXlator, options, args):
     retval=True
-    print _("Importing token values from '%s'") % args[0]
+    print(_("Importing token values from '%s'") % args[0])
     csvdict = csv.DictReader(CommentedFile(open(args[0], "rb")))
     for line in csvdict:
         try:
             id = int(line["ID"], 0)
             type=line["Type"]
             value=line["Value"]
-        except KeyError, e:
-            print _("File format error. The first line should list the column names. Could not find the %s column") % str(e)
-            print _("Cannot continue, exiting.")
+        except KeyError as e:
+            print(_("File format error. The first line should list the column names. Could not find the %s column") % str(e))
+            print(_("Cannot continue, exiting."))
             retval=False
             break
 
@@ -293,62 +275,62 @@ def importTokensCsv(tokenTable, tokenXlator, options, args):
                 continue
 
             if translatedToken.name == _("unknown") or translatedToken.setting == _("unknown"):
-                print _("Not importing token that is unknown: 0x%04x") % id
+                print(_("Not importing token that is unknown: 0x%04x") % id)
                 retval=False
                 continue
 
             if translatedToken.name != line["Name"]:
-                print _("INFO: token 0x%04x settings file name does not match my DB. Applying setting anyways.") % id
-                print _("\tsettings file: %s") % line["Name"]
-                print _("\tDB name      : %s") % translatedToken.name
+                print(_("INFO: token 0x%04x settings file name does not match my DB. Applying setting anyways.") % id)
+                print(_("\tsettings file: %s") % line["Name"])
+                print(_("\tDB name      : %s") % translatedToken.name)
 
             if translatedToken.setting != line["Setting"]:
-                print _("INFO: token 0x%04x settings file setting-name does not match my DB. Applying setting anyways.") % id
-                print _("\tsettings file: %s") % line["Setting"]
-                print _("\tDB name      : %s") % translatedToken.setting
+                print(_("INFO: token 0x%04x settings file setting-name does not match my DB. Applying setting anyways.") % id)
+                print(_("\tsettings file: %s") % line["Setting"])
+                print(_("\tDB name      : %s") % translatedToken.setting)
 
             if type == "bool":
                 if not token.isBool():
-                    print _("SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but it doesnt pass bool check.") % (id)
+                    print(_("SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but it doesnt pass bool check.") % (id))
                     retval=False
                     continue
                 elif value == "true":
                     if not token.isActive():
-                        print _("Importing setting for token (active): 0x%04x") % id
+                        print(_("Importing setting for token (active): 0x%04x") % id)
                         token.activate()
                     else:
-                        print _("Token already correct (bool, active): 0x%04x") % id
+                        print(_("Token already correct (bool, active): 0x%04x") % id)
                 elif value == "false":
                     if token.isActive():
-                        print _("Info: Cannot de-activate tokens, can only activate the contrapositive. (0x%04x == false)") % id
+                        print(_("Info: Cannot de-activate tokens, can only activate the contrapositive. (0x%04x == false)") % id)
                     else:
-                        print _("Token already correct (bool, inactive): 0x%04x") % id
+                        print(_("Token already correct (bool, inactive): 0x%04x") % id)
                 else:
-                    print _("UNEXPECTED VALUE: Bool token should only ever have values of 'true' or 'false', but token 0x%04x tries to set value '%s'") % (id, value)
+                    print(_("UNEXPECTED VALUE: Bool token should only ever have values of 'true' or 'false', but token 0x%04x tries to set value '%s'") % (id, value))
                     continue
 
             elif type == "string":
                 if not token.isString():
-                    print _("SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, but it doesnt pass string check.") % (id)
+                    print(_("SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, but it doesnt pass string check.") % (id))
                     retval=False
                     continue
                 if token.getString() != value:
-                    print _("Importing setting for token (string): 0x%04x") % id
+                    print(_("Importing setting for token (string): 0x%04x") % id)
                     token.setString(value)
                 else:
-                    print _("Token already correct (string=='%s'): 0x%04x") % (value, id)
+                    print(_("Token already correct (string=='%s'): 0x%04x") % (value, id))
 
-        except IndexError, e:
-            print _("Not importing token which is inapplicable to this system: 0x%04x") % (id)
+        except IndexError as e:
+            print(_("Not importing token which is inapplicable to this system: 0x%04x") % (id))
             retval=False
             continue
 
-        except BlacklistedToken, e:
-            print _("Not importing blacklisted token 0x%04x. Reason: %s") % (token.getId(), str(e))
+        except BlacklistedToken as e:
+            print(_("Not importing blacklisted token 0x%04x. Reason: %s") % (token.getId(), str(e)))
             retval=False
             continue
 
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write("="*79 + "\n")
             sys.stderr.write(_("Ignoring parsing error in CSV file:") )
             traceback.print_exc()
@@ -363,7 +345,7 @@ def getTokenObj(tokenTable, tokenXlator, options):
         return tokenTable[options.token_id]
 
     if options.token_name is None or options.token_setting is None:
-        raise CmdlineError, _("require token-id or token name/setting pair.")
+        raise CmdlineError(_("require token-id or token name/setting pair."))
 
     for token in tokenTable:
         try:
@@ -371,11 +353,11 @@ def getTokenObj(tokenTable, tokenXlator, options):
             if shouldSkipToken(translatedToken, options):
                 continue
             return token
-        except BlacklistedToken, e:
+        except BlacklistedToken as e:
             pass
 
-    raise CmdlineError, _("token not found. Name(%s) Setting(%s).") % (
-            options.token_name, options.token_setting)
+    raise CmdlineError(_("token not found. Name(%s) Setting(%s).") % (
+            options.token_name, options.token_setting))
 
 def main():
     exit_code = 0
@@ -387,7 +369,7 @@ def main():
     try:
         tokenXlator = TokenTranslatorCsv(csvlist=options.token_csv, csvblacklist=options.token_blacklist_csv)
 
-        tokenTable = token.TokenTable()
+        tokenTable = smbios_token.TokenTable()
 
         if options.action == "dump-tokens":
             dumpTokens(tokenTable, tokenXlator, options)
@@ -406,35 +388,35 @@ def main():
 
         if options.action in ("set-string", "activate"):
             (exit_code, type, value) = tokenInfo(tokenObj, options.action)
-            print _("Original Value")
-            print _("       token: 0x%04x") % tokenObj.getId()
-            print _("        type: %s") % type
-            print _("       value: %s") % cli.makePrintable(value)
+            print(_("Original Value"))
+            print(_("       token: 0x%04x") % tokenObj.getId())
+            print(_("        type: %s") % type)
+            print(_("       value: %s") % cli.makePrintable(value))
 
         if options.action == "set-string":
             (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-            print _("Setting string value ...")
+            print(_("Setting string value ..."))
             tokenObj.setString(args[0])
-            print _("New value")
+            print(_("New value"))
 
         if options.action == "activate":
             (exit_code, type, value) = tokenInfo(tokenObj, "dump-tokens")
-            print _("Activating token...")
+            print(_("Activating token..."))
             tokenObj.activate()
-            print _("New value")
+            print(_("New value"))
 
         if options.action in ("set-string", "activate", "is-bool", "is-string", "is-active", "get-string"):
             (exit_code, type, value) = tokenInfo(tokenObj, options.action)
-            print _("        type: %s") % type
-            print _("       value: %s") % cli.makePrintable(value)
+            print(_("        type: %s") % type)
+            print(_("       value: %s") % cli.makePrintable(value))
 
-    except (token.TokenTableParseError, ), e:
+    except (smbios_token.TokenTableParseError, ) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
-    except (token.TokenManipulationFailure,), e:
+    except (smbios_token.TokenManipulationFailure,) as e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )

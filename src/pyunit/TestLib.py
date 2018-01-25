@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/python3
 # VIM declarations
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 
@@ -15,7 +15,7 @@ class TestCase(unittest.TestCase):
             self._testMethodName = getattr(self, "_TestCase__testMethodName", "")
 
 def usage():
-    print "wrong command line options." #need better help eventually
+    print("wrong command line options.") #need better help eventually
 
 def parseOptions(*args):
     pass
@@ -46,7 +46,7 @@ def areFilesDifferent( orig, copy ):
         return 0
     if ret == 1:
         return 1
-    raise "something bad happened"
+    raise OSError(ret)
 
 def copyFile( source, dest ):
     fileOrig = open( source, "r" )
@@ -61,4 +61,4 @@ def copyFile( source, dest ):
     fileCopy.close()
 
 if __name__ == "__main__":
-    print "This file is not executable."
+    print("This file is not executable.")

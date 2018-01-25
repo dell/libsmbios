@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
 
   #############################################################################
@@ -10,7 +10,7 @@
   #############################################################################
 """smbios-battery-ctl"""
 
-from __future__ import generators
+
 
 # import arranged alphabetically
 import gettext
@@ -30,11 +30,11 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 
 import cli
-from libsmbios_c import token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
-from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+from libsmbios_c import smbios_token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
-gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+gettext.install(GETTEXT_PACKAGE, localedir)
 
 moduleLog = getLog()
 verboseLog = getLog(prefix="verbose.")
@@ -62,19 +62,19 @@ def get_byte(num, byte_pos):
     try :
         if byte_pos < 0 or byte_pos > 3:
             raise RunTimeBatteryErr( "Internal Error: Byte position out of bound - ", byte_pos )
-    except RunTimeBatteryErr, e:
-        print "\t%s" % e
+    except RunTimeBatteryErr as e:
+        print("\t%s" % e)
 
     return ((num >> (byte_pos*8)) & 0xFF)
 
 
 def print_express_charge_status(n):
-    if n == 0: print '\t Battery is not present'
-    elif n == 1: print '\t Standard'
-    elif n == 2: print '\t Express'
-    elif n == 3: print '\t One-time express'
-    elif n == 0xFF: print '\t Battery is present, and it does not support express charge'
-    else : print '\t Unknown'
+    if n == 0: print('\t Battery is not present')
+    elif n == 1: print('\t Standard')
+    elif n == 2: print('\t Express')
+    elif n == 3: print('\t One-time express')
+    elif n == 0xFF: print('\t Battery is present, and it does not support express charge')
+    else : print('\t Unknown')
 
 
 def PrintBatteryChargingState():
@@ -87,26 +87,26 @@ def PrintBatteryChargingState():
             raise RunTimeBatteryErr( _(" Info: Unable to read Current Battery Charging State on this system\n") )
 
         # cbRES2 byte 0 gives supported Features
-        print _(" \n Supported battery charging features: ")
-        if is_set (res[smi.cbRES2], 0): print "\t Express Charging"
-        if is_set (res[smi.cbRES2], 1): print "\t Charge Disable"
-        if (get_byte(res[smi.cbRES2], 0) == 0 ): print "\t NIL"
+        print(_(" \n Supported battery charging features: "))
+        if is_set (res[smi.cbRES2], 0): print("\t Express Charging")
+        if is_set (res[smi.cbRES2], 1): print("\t Charge Disable")
+        if (get_byte(res[smi.cbRES2], 0) == 0 ): print("\t NIL")
 
-        print _(" \n Battery charging Status: ")
+        print(_(" \n Battery charging Status: "))
         # cbRES2 byte 1 gives the status of supported Features
-        if is_set ((get_byte(res[smi.cbRES2], 1)), 0): print "\t One or more batteries are present that support Express charge"
-        if is_set ((get_byte(res[smi.cbRES2], 1)), 1): print "\t Charging is disabled"
-        if (get_byte(res[smi.cbRES2], 1) == 0 ): print "\t NIL"
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 0): print("\t One or more batteries are present that support Express charge")
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 1): print("\t Charging is disabled")
+        if (get_byte(res[smi.cbRES2], 1) == 0 ): print("\t NIL")
 
         # cbRes3, bytes 0-3 contain the status of batteries 0-3 respectively
         for i in range(4):
             expr_status = get_byte(res[smi.cbRES3], i)
             if(expr_status):
-                print _("\n Battery %d Express Charge State:") % (i)
+                print(_("\n Battery %d Express Charge State:") % (i))
                 print_express_charge_status(expr_status)
 
-    except RunTimeBatteryErr, e:
-        print "\t%s" % e
+    except RunTimeBatteryErr as e:
+        print("\t%s" % e)
 
 
 def main():
@@ -116,26 +116,26 @@ def main():
 
     try:
         if options.battery_charge:
-            print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
-            print _("smbios-battery-ctl version : %s") % __VERSION__
+            print(_("Libsmbios version : %s") % sysinfo.get_library_version_string())
+            print(_("smbios-battery-ctl version : %s") % __VERSION__)
             verboseLog.info( _(" You can use smbios-battery-ctl utility to view/modify battery settings"))
             PrintBatteryChargingState()
 
-    except (smi.SMIExecutionError, ), e:
+    except (smi.SMIExecutionError, ) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not execute SMI.") )
         verboseLog.info( _("The smi library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (smbios.TableParseError, token.TokenTableParseError), e:
+    except (smbios.TableParseError, token.TokenTableParseError) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (token.TokenManipulationFailure,), e:
+    except (token.TokenManipulationFailure,) as e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )

@@ -1,9 +1,9 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 """
 """
 
-from __future__ import generators
+
 
 import os
 import sys
@@ -43,13 +43,21 @@ class TestCase(TestLib.TestCase):
         import libsmbios_c.smbios as s
 
         # initialize global singletons
-        m.MemoryAccess(m.MEMORY_GET_SINGLETON | m.MEMORY_UNIT_TEST_MODE, "%s/memdump.dat" % getTempDir())
-        c.CmosAccess(c.CMOS_GET_SINGLETON | c.CMOS_UNIT_TEST_MODE, "%s/cmos.dat" % getTempDir())
+        filename = "%s/memdump.dat" % getTempDir()
+        filename = filename.encode('utf-8')
+        m.MemoryAccess(m.MEMORY_GET_SINGLETON | m.MEMORY_UNIT_TEST_MODE, filename)
+        filename = "%s/cmos.dat" % getTempDir()
+        filename = filename.encode('utf-8')
+        c.CmosAccess(c.CMOS_GET_SINGLETON | c.CMOS_UNIT_TEST_MODE, filename)
         s.SmbiosTable(s.SMBIOS_GET_SINGLETON | s.SMBIOS_UNIT_TEST_MODE)
 
         # use private copies for testing
-        self.memObj = m.MemoryAccess(m.MEMORY_GET_NEW | m.MEMORY_UNIT_TEST_MODE, "%s/memdump.dat" % getTempDir())
-        self.cmosObj = c.CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, "%s/cmos.dat" % getTempDir())
+        filename = "%s/memdump.dat" % getTempDir()
+        filename = filename.encode('utf-8')
+        self.memObj = m.MemoryAccess(m.MEMORY_GET_NEW | m.MEMORY_UNIT_TEST_MODE, filename)
+        filename = "%s/cmos.dat" % getTempDir()
+        filename = filename.encode('utf-8')
+        self.cmosObj = c.CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, filename)
         self.tableObj =  s.SmbiosTable(s.SMBIOS_GET_NEW | s.SMBIOS_UNIT_TEST_MODE)
 
     def tearDown(self):
@@ -65,16 +73,16 @@ class TestCase(TestLib.TestCase):
 
             biosStruct = self.tableObj.getStructureByType(0) # BIOS Table type
             if len(biosVendorStr):
-                self.assertEquals( biosVendorStr, biosStruct.getString(4) ) # BIOS VENDOR
+                self.assertEqual( biosVendorStr, biosStruct.getString(4) ) # BIOS VENDOR
             if len(versionStr):
-                self.assertEquals( versionStr, biosStruct.getString(5) ) # BIOS VERSION
+                self.assertEqual( versionStr, biosStruct.getString(5) ) # BIOS VERSION
             if len(releaseStr):
-                self.assertEquals( releaseStr, biosStruct.getString(8) ) # RELEASE DATE
+                self.assertEqual( releaseStr, biosStruct.getString(8) ) # RELEASE DATE
 
             import libsmbios_c.system_info as si
-            self.assertEquals( si.get_bios_version(), biosStruct.getString(5) )
-        except SkipTest, e:
-            print "skip ",
+            self.assertEqual( si.get_bios_version(), biosStruct.getString(5) )
+        except SkipTest as e:
+            print("skip ", end=' ')
 
     def testIdByte(self):
         try:
@@ -82,9 +90,9 @@ class TestCase(TestLib.TestCase):
             expected = int(HelperXml.getNodeText( self.dom, "TESTINPUT", "systemInfo", "idByte"), 0)
 
             import libsmbios_c.system_info as si
-            self.assertEquals( si.get_dell_system_id(), expected )
-        except SkipTest, e:
-            print "skip ",
+            self.assertEqual( si.get_dell_system_id(), expected )
+        except SkipTest as e:
+            print("skip ", end=' ')
 
     def testServiceTag(self):
         try:
@@ -92,9 +100,9 @@ class TestCase(TestLib.TestCase):
             expected = HelperXml.getNodeText( self.dom, "TESTINPUT", "systemInfo", "serviceTag")
 
             import libsmbios_c.system_info as si
-            self.assertEquals( si.get_service_tag(), expected )
-        except SkipTest, e:
-            print "skip ",
+            self.assertEqual( si.get_service_tag(), expected )
+        except SkipTest as e:
+            print("skip ", end=' ')
 
 if __name__ == "__main__":
     sys.exit(not TestLib.runTests( [TestCase] ))

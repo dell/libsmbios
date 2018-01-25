@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:textwidth=0:
 # License: GPL2 or later see COPYING
 # Written by Michael Brown
@@ -11,14 +12,6 @@ import types
 
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
-
-# use python-decoratortools if it is installed, otherwise use our own local
-# copy. Imported this locally because it doesnt appear to be available on SUSE
-# and the fedora RPM doesnt appear to compile cleanly on SUSE
-try:
-    from peak.util.decorators import rewrap, decorate
-except ImportError:
-    from _peak_util_decorators import rewrap, decorate
 
 def makePrintable(s):
     printable = 1
@@ -42,9 +35,11 @@ def strip_trailing_whitespace():
     def decorator(func):
         def dostrip(*args, **kw):
             result = func(*args, **kw)
+            if type(result) is bytes:
+                result = result.decode('utf-8')
             while len(result) and result[-1] == " ": result=result[:-1]
             return result
-        return rewrap(func, dostrip)
+        return dostrip
     return decorator
 
 # defaults to module verbose log
@@ -83,30 +78,30 @@ def traceLog(log = None):
             # make sure this doesnt conflict with one of the parameters
             # you are expecting
 
-            filename = os.path.normcase(func.func_code.co_filename)
-            func_name = func.func_code.co_name
-            lineno = func.func_code.co_firstlineno
+            filename = os.path.normcase(func.__code__.co_filename)
+            func_name = func.__code__.co_name
+            lineno = func.__code__.co_firstlineno
 
             l2 = kw.get('logger', log)
             if l2 is None:
                 l2 = logging.getLogger("trace.%s" % func.__module__)
-            if isinstance(l2, basestring):
+            if isinstance(l2, str):
                 l2 = logging.getLogger(l2)
 
             message = "ENTER %s(" % func_name
             for arg in args:
                 message = message + repr(arg) + ", "
-            for k,v in kw.items():
+            for k,v in list(kw.items()):
                 message = message + "%s=%s" % (k,repr(v))
             message = message + ")"
 
-            frame = sys._getframe(2)
+            frame = sys._getframe(1)
             doLog(l2, logging.INFO, os.path.normcase(frame.f_code.co_filename), frame.f_lineno, message, args=[], exc_info=None, func=frame.f_code.co_name)
             try:
                 result = "Bad exception raised: Exception was not a derived class of 'Exception'"
                 try:
                     result = func(*args, **kw)
-                except (KeyboardInterrupt, Exception), e:
+                except (KeyboardInterrupt, Exception) as e:
                     result = "EXCEPTION RAISED"
                     doLog(l2, logging.INFO, filename, lineno, "EXCEPTION: %s\n" % e, args=[], exc_info=sys.exc_info(), func=func_name)
                     raise
@@ -114,7 +109,7 @@ def traceLog(log = None):
                 doLog(l2, logging.INFO, filename, lineno, "LEAVE %s --> %s\n" % (func_name, repr(result)), args=[], exc_info=None, func=func_name)
 
             return result
-        return rewrap(func, trace)
+        return trace
     return decorator
 
 # helper function so we can use back-compat format but not be ugly
@@ -137,7 +132,7 @@ if __name__ == "__main__":
     log.debug(" --> debug")
     log.error(" --> error")
 
-    decorate(traceLog(log))
+    @traceLog(log)
     def testFunc(arg1, arg2="default", *args, **kargs):
         return 42
 
@@ -145,13 +140,13 @@ if __name__ == "__main__":
     testFunc("happy", "joy", name="skippy")
     testFunc("hi")
 
-    decorate(traceLog(root))
+    @traceLog(root)
     def testFunc22():
         return testFunc("archie", "bunker")
 
     testFunc22()
 
-    decorate(traceLog(root))
+    @traceLog(root)
     def testGen():
         yield 1
         yield 2
@@ -159,7 +154,7 @@ if __name__ == "__main__":
     for i in testGen():
         log.debug("got: %s" % i)
 
-    decorate(traceLog())
+    @traceLog()
     def anotherFunc(*args):
         return testFunc(*args)
 

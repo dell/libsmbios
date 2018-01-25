@@ -128,7 +128,7 @@ AC_PROG_INSTALL
 dnl Check for python support
 AM_CONDITIONAL([HAVE_PYTHON], [false])
 if test x$wantpython == xyes ; then
-    AM_PATH_PYTHON([2.3],,[:])
+    AM_PATH_PYTHON([3.0],,[:])
     AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
 fi
 

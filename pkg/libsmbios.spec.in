@@ -39,44 +39,9 @@
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
 # Fedora: fedora dist fc8 fc9
 
-# suse/sles
-%if 0%{?suse_version}
-%if 0%{?suse_version} < 1000
-    %define valgrind_BR %{nil}
-    # sles 9 doesnt have as_needed
-    %undefine as_needed
-%endif
-%if 0%{?suse_version} >= 1020
-    # suse never added python-ctypes provides to python 2.5 :(
-    %define ctypes_BR %{nil}
-%endif
-%endif
-
-# rhel (should work on OBS and EPEL)
-%if 0%{?rhel}
-%if 0%{?rhel} < 4
-    # dont yet have rhel3 valgrind
-    %define valgrind_BR %{nil}
-    # no python-ctypes for python <= 2.2
-    %undefine build_python
-    # rhel3 doesnt have -as-needed
-    %undefine as_needed
-%endif
-%endif
-
 %define python_devel_BR %{nil}
 %if 0%{?build_python}
-    %define python_devel_BR python-devel
-    # per fedora and suse python packaging guidelines
-    # suse: will define py_sitedir for us
-    # fedora: use the !? code below to define when it isnt already
-
-    # pure python stuff goes here
-    %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-
-    # arch-dep python stuff goes here
-    %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-
+    %define python_devel_BR python34-devel
 %endif
 
 # if unit tests are disabled, get rid of a few BuildRequires
@@ -109,14 +74,14 @@ information from standard BIOS tables, such as the SMBIOS table.
 
 This package provides the C-based libsmbios library, with a C interface.
 
-%package -n python-smbios
+%package -n python3-smbios
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
 Requires: %{release_name} = 0:%{version}-%{release}
-Requires: python %{ctypes_BR}
+Requires: python3 %{ctypes_BR}
 
-%description -n python-smbios
-This package provides a Python interface to libsmbios
+%description -n python3-smbios
+This package provides a Python3 interface to libsmbios
 
 %package -n smbios-utils
 Summary: Meta-package that pulls in all smbios binaries and python scripts
@@ -146,7 +111,7 @@ asset tag.
 %package -n smbios-utils-python
 Summary: Python executables that use libsmbios
 Group: Applications/System
-Requires: python-smbios = %{version}-%{release}
+Requires: python3-smbios = %{version}-%{release}
 
 %description -n smbios-utils-python
 Get BIOS information, such as System product name, product id, service tag and
@@ -266,7 +231,7 @@ ln -s smbios-lcd-brightness %{buildroot}/%{_sbindir}/dellLcdBrightness
 
 cat > files-python-smbios <<-EOF
 	%doc COPYING-GPL COPYING-OSL
-	%{python_sitelib}/*
+	%{python3_sitelib}/*
 EOF
 
 cat > files-smbios-utils-python <<-EOF
@@ -336,7 +301,7 @@ rm -rf %{buildroot}
 %{_sbindir}/smbios-keyboard-ctl
 %{_sbindir}/smbios-thermal-ctl
 
-%files -n python-smbios -f _build/files-python-smbios
+%files -n python3-smbios -f _build/files-python-smbios
 %defattr(-,root,root,-)
 
 %files -n smbios-utils-python -f _build/files-smbios-utils-python

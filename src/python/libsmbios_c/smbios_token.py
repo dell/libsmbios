@@ -13,19 +13,10 @@ token:
 
 # imports (alphabetical)
 import ctypes
-import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
-from _common import errorOnNullPtrFN, errorOnNegativeFN, freeLibStringFN
-from trace_decorator import decorate, traceLog, getLog
-
-# use python-decoratortools if it is installed, otherwise use our own local
-# copy. Imported this locally because it doesnt appear to be available on SUSE
-# and the fedora RPM doesnt appear to compile cleanly on SUSE
-try:
-    from peak.util.decorators import decorate_class
-except ImportError:
-    from libsmbios_c._peak_util_decorators import decorate_class
+from ._common import errorOnNullPtrFN, errorOnNegativeFN, freeLibStringFN, c_utf8_p
+from .trace_decorator import traceLog, getLog
 
 __all__ = ["TokenTable", "TOKEN_DEFAULTS", "TOKEN_GET_SINGLETON", "TOKEN_GET_NEW", "TOKEN_UNIT_TEST_MODE"]
 
@@ -37,8 +28,8 @@ TOKEN_UNIT_TEST_MODE=0x0004
 class TokenTableParseError(Exception): pass
 class TokenManipulationFailure(Exception): pass
 
-class Token(ctypes.Structure): 
-    decorate(traceLog())
+class Token(ctypes.Structure):
+    @traceLog()
     def getId(self):
         return DLL.token_obj_get_id(self)
 
@@ -46,33 +37,33 @@ class Token(ctypes.Structure):
     def __repr__(self):
         return "<libsmbios_c.Token ID 0x%04x>" % DLL.token_obj_get_id(self)
 
-    decorate(traceLog())
+    @traceLog()
     def getType(self):
         return DLL.token_obj_get_type(self)
 
-    decorate(traceLog())
+    @traceLog()
     def isBool(self):
         return DLL.token_obj_is_bool(self)
 
-    decorate(traceLog())
+    @traceLog()
     def isActive(self):
         return DLL.token_obj_is_active(self)
 
-    decorate(traceLog())
+    @traceLog()
     def activate(self):
         return DLL.token_obj_activate(self)
 
-    decorate(traceLog())
+    @traceLog()
     def isString(self):
         return DLL.token_obj_is_string(self)
 
-    decorate(traceLog())
+    @traceLog()
     def getPtr(self):
         ptr = DLL.token_obj_get_ptr(self)
         typ = ctypes.POINTER(TokenPtr.subclasses[ self.getType() ])
         return ctypes.cast(ptr, typ).contents
 
-    decorate(traceLog())
+    @traceLog()
     def getString(self):
         len = ctypes.c_size_t()
         retstr = DLL.token_obj_get_string(self, ctypes.byref(len))
@@ -82,40 +73,39 @@ class Token(ctypes.Structure):
         else:
             return None
 
-    decorate(traceLog())
+    @traceLog()
     def setString(self, newstr):
         return DLL.token_obj_set_string(self, newstr, len(newstr))
 
-    decorate(traceLog())
+    @traceLog()
     def tryPassword(self, pass_ascii, pass_scancode):
         return DLL.token_obj_try_password(self, pass_ascii, pass_scancode)
 
 
-# use this class decorator on subclasses
-def TokenPtrSubclass(kind):
+def TokenPtrSubClass(kind):
     def decorator(cls):
         TokenPtr.subclasses[kind] = cls
         return cls
-    decorate_class(decorator)
+    return decorator
 
 class TokenPtr(ctypes.Structure):
     subclasses = {}
     _pack_ = 1
     _fields_ = []
-    def __repr__(self): print "<token ptr>"
-    def __str__(self): print "<token ptr>"
+    def __repr__(self): print("<token ptr>")
+    def __str__(self): print("<token ptr>")
 
+@TokenPtrSubClass(0xD4)
 class _TokenD4(ctypes.Structure):
-    TokenPtrSubclass(0xD4)
     _pack_ = 1
     _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint16), ("value", ctypes.c_uint16)]
 
+@TokenPtrSubClass(0xDA)
 class _TokenDA(ctypes.Structure):
-    TokenPtrSubclass(0xDA)
     _pack_ = 1
     _fields_ = [ ("tokenId", ctypes.c_uint16), ("location", ctypes.c_uint8), ("andMask", ctypes.c_uint8), ("orValue", ctypes.c_uint8)]
 
-decorate(traceLog())
+@traceLog()
 def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
     if factory_args is None: factory_args = []
     if _TokenTable._instance is None:
@@ -124,7 +114,7 @@ def TokenTable(flags=TOKEN_GET_SINGLETON, factory_args=None):
 
 class _TokenTable(ctypes.Structure):
     _instance = None
-    decorate(traceLog())
+    @traceLog()
     def __init__(self, *args):
         self._tableobj = None
         self._tableobj = DLL.token_table_factory(*args)
@@ -133,7 +123,7 @@ class _TokenTable(ctypes.Structure):
         if self._tableobj is not None:
             DLL.token_table_free(self._tableobj)
 
-    decorate(traceLog())
+    @traceLog()
     def __iter__(self):
         cur = ctypes.POINTER(Token)()
         while 1:
@@ -141,34 +131,36 @@ class _TokenTable(ctypes.Structure):
             if bool(cur):
                 yield cur.contents
             else:
-                raise exceptions.StopIteration( _("hit end of table.") )
+                raise StopIteration
 
-    decorate(traceLog())
+    @traceLog()
     def __getitem__(self, id):
         if id is None:
-            raise exceptions.IndexError( _("Cannot dereference NULL ID") )
+            print(_("Cannot dereference NULL ID") )
+            raise IndexError
         cur = ctypes.POINTER(Token)()
         cur =DLL.token_table_get_next_by_id( self._tableobj, cur, id )
         if bool(cur):
             return cur.contents
         else:
-            raise exceptions.IndexError( _("ID 0x%04x not found") % id )
+            print(_("ID 0x%04x not found") % id )
+            raise IndexError
 
 
 #// format error string
 #const char *token_table_strerror(const struct token_table *m);
 # define strerror first so we can use it in error checking other functions.
 DLL.token_table_strerror.argtypes = [ ctypes.POINTER(_TokenTable) ]
-DLL.token_table_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.token_table_strerror.restype = c_utf8_p
+@traceLog()
 def _table_strerror(obj):
     return DLL.token_table_strerror(obj)
 
 #const char *token_obj_strerror(const struct token_table *m);
 # define strerror first so we can use it in error checking other functions.
 DLL.token_obj_strerror.argtypes = [ ctypes.POINTER(Token) ]
-DLL.token_obj_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.token_obj_strerror.restype = c_utf8_p
+@traceLog()
 def _obj_strerror(obj):
     return DLL.token_obj_strerror(obj)
 
@@ -216,7 +208,7 @@ DLL.token_obj_activate.errcheck = errorOnNegativeFN(lambda r,f,a: TokenManipulat
 DLL.token_obj_is_string.argtypes = [ ctypes.POINTER(Token) ]
 DLL.token_obj_is_string.restype = ctypes.c_bool
 
-decorate(traceLog())
+@traceLog()
 def customFree(result, func, args):
     getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
     size = args[1]._obj.value
@@ -253,7 +245,3 @@ DLL.token_obj_try_password.restype = ctypes.c_int
 DLL.token_obj_get_ptr.argtypes = [ ctypes.POINTER(Token), ]
 DLL.token_obj_get_ptr.restype = ctypes.POINTER(TokenPtr)
 DLL.token_obj_get_ptr.errcheck = errorOnNullPtrFN(lambda r,f,a: TokenManipulationFailure(_obj_strerror(r)))
-
-
-
-

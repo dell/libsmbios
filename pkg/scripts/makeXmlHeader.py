@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # vim: et:ai:sw=4:ts=4:filetype=python:nocindent:
 
 import sys
@@ -27,12 +27,12 @@ def processFile( input, output ):
     charsPerLine = 16
     output.write( """
 const char stdXml[] = { """)
-    
+
     charsWrittenThisLine = charsPerLine
     while 1:
         c = input.read(1)
         if c == "":   # end of file
-            break 
+            break
         if charsWrittenThisLine == charsPerLine/2:
             output.write("  ")
         if charsWrittenThisLine >= charsPerLine:
@@ -41,7 +41,7 @@ const char stdXml[] = { """)
             charsWrittenThisLine = 1
         output.write( "0x%02x, " % ord(c) )
         charsWrittenThisLine = charsWrittenThisLine + 1
-        
+
     output.write( """0x00
 };
 """)

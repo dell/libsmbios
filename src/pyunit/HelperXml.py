@@ -9,7 +9,7 @@
   #############################################################################
 
 
-from __future__ import generators
+
 
 import types
 
@@ -57,7 +57,7 @@ def iterNodeElement( node, *args ):
         yield node
      elif node is not None:
         for search in node.childNodes:
-            if isinstance(args[0], types.StringTypes):
+            if isinstance(args[0], (str,)):
                 if search.nodeName == args[0]:
                     for elem in iterNodeElement( search, *args[1:] ):
                         yield elem
@@ -65,7 +65,7 @@ def iterNodeElement( node, *args ):
                 if search.nodeName == args[0][0]:
                     attrHash = args[0][1]
                     found = 1
-                    for (key, value) in attrHash.items():
+                    for (key, value) in list(attrHash.items()):
                         if search.getAttribute( key ) != value:
                             found = 0
                     if found:
@@ -80,7 +80,7 @@ def getNodeElement( node, *args ):
     #print "DEBUG: args(%s)" % repr(args)
     if node is not None:
         for search in node.childNodes:
-            if isinstance(args[0], types.StringTypes):
+            if isinstance(args[0], (str,)):
                 if search.nodeName == args[0]:
                     candidate = getNodeElement( search, *args[1:] )
                     if candidate is not None:
@@ -89,7 +89,7 @@ def getNodeElement( node, *args ):
                 if search.nodeName == args[0][0]:
                     attrHash = args[0][1]
                     found = 1
-                    for (key, value) in attrHash.items():
+                    for (key, value) in list(attrHash.items()):
                         if search.getAttribute( key ) != value:
                             found = 0
                     if found:

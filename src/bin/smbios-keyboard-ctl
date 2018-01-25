@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
 
   #############################################################################
@@ -10,7 +10,7 @@
   #############################################################################
 """smbios-keyboard-ctl"""
 
-from __future__ import generators
+
 
 # import arranged alphabetically
 import gettext
@@ -32,11 +32,11 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 
 import cli
-from libsmbios_c import token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
-from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+from libsmbios_c import smbios_token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
-gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+gettext.install(GETTEXT_PACKAGE, localedir)
 
 moduleLog = getLog()
 verboseLog = getLog(prefix="verbose.")
@@ -74,8 +74,8 @@ def get_byte(num, byte_pos):
     try :
         if byte_pos < 0 or byte_pos > 3:
             raise RunTimeKeyboardErr( "Internal Error: Byte position out of bound - ", byte_pos )
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
     return ((num >> (byte_pos*8)) & 0xFF)
 
@@ -91,9 +91,9 @@ def get_mode_settings():
         #remove the Always ON bit, it should not be supported on most systems
         res[smi.cbRES2] &= 0xFFFD
 
-        print _("\n Supported USER Selectable Modes: ")
-        print _("\tOption\tMode")
-        print _("------------------------------------------------")
+        print(_("\n Supported USER Selectable Modes: "))
+        print(_("\tOption\tMode"))
+        print(_("------------------------------------------------"))
         if is_set (res[smi.cbRES2], 0): print ("\t0\tAlways OFF")
         if is_set (res[smi.cbRES2], 1): print ("\t1\tAlways ON")
         if is_set (res[smi.cbRES2], 2): print ("\t2\tAuto: ALS-based ON")
@@ -104,9 +104,9 @@ def get_mode_settings():
         if is_set (res[smi.cbRES2], 7): print ("\t7\tAuto: Input-activity-based On (illumination level 75%); input-activity based Off")
         if is_set (res[smi.cbRES2], 8): print ("\t8\tAuto: Input-activity-based On (illumination level 100%); input-activity based Off")
 
-        print _("\n Note: some modes might need the keyboard set at specific illumination levels\n")
+        print(_("\n Note: some modes might need the keyboard set at specific illumination levels\n"))
         try:
-            val = int(raw_input("Select Mode: "))
+            val = int(input("Select Mode: "))
 
         except ValueError:
             raise RunTimeKeyboardErr("Invalid Mode detected")
@@ -116,8 +116,8 @@ def get_mode_settings():
 
         raise RunTimeKeyboardErr("Invalid Mode detected")
 
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
 
 def get_trigger_settings():
@@ -130,16 +130,16 @@ def get_trigger_settings():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("\tCould not retrieve supported KeyBoard Illumination Capabilities") )
 
-        print _("\n Select Keyboard illumination on: ")
-        print _("\tTrigger Type\t\tOption")
-        print _("------------------------------------------------")
+        print(_("\n Select Keyboard illumination on: "))
+        print(_("\tTrigger Type\t\tOption"))
+        print(_("------------------------------------------------"))
         if is_set (res[smi.cbRES3], 0): print ("\tAny Keystroke     \t 0")
         if is_set (res[smi.cbRES3], 1): print ("\tTouchpad activity \t 1")
         if is_set (res[smi.cbRES3], 2): print ("\tPointing stick    \t 2")
         if is_set (res[smi.cbRES3], 3): print ("\tAny mouse movement\t 3")
 
-        print _("Eg: to Select Trigger for [Any Keystroke] and [Touchpad activity] specify your option like this 0,1)" )
-        val = raw_input("Trigger on -")
+        print(_("Eg: to Select Trigger for [Any Keystroke] and [Touchpad activity] specify your option like this 0,1)" ))
+        val = input("Trigger on -")
         verboseLog.info ( _('Selected %s') % val)
         trigger_opt = val.split(',')
         trigger=[]
@@ -154,11 +154,11 @@ def get_trigger_settings():
         except ValueError:
             raise RunTimeKeyboardErr( "Invalid Trigger options detected")
 
-        print _("Triggers Validated Successfully"), trigger
+        print(_("Triggers Validated Successfully"), trigger)
         return trigger
 
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
 #To-do
 #  - ALS Setting
@@ -205,7 +205,7 @@ def _set_keyboard_attr( reg, flag='default'):
         elif flag == 'level':
             keybrd_light_level = reg
             if keybrd_light_level != 0 and mode_state & 1<<0:
-                print _("\n The current mode (Always OFF) might prevent level changes, select a new mode")
+                print(_("\n The current mode (Always OFF) might prevent level changes, select a new mode"))
                 mode_state = get_mode_settings()
 
         # Now lets write Arg2 and Arg3, 4 bytes long each
@@ -227,11 +227,11 @@ def _set_keyboard_attr( reg, flag='default'):
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _(" Set Trigger Failed. Failed to write config") )
 
-        print ( _("\nNew %s parameter set Successfully\n") % (flag))
+        print(( _("\nNew %s parameter set Successfully\n") % (flag)))
 
-    except RunTimeKeyboardErr, e:
-        print "\t %s" % e
-        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+    except RunTimeKeyboardErr as e:
+        print("\t %s" % e)
+        print(( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) ))
 
 
 def set_mode():
@@ -256,7 +256,7 @@ def print_current_timeout():
 
         #cbRes2 byte2
         trigger_map = get_byte(res[smi.cbRES2] ,2)
-        print _("\n Your Keyboard will illumination on: ")
+        print(_("\n Your Keyboard will illumination on: "))
         if is_set (trigger_map, 0): print ("\tAny Keystroke")
         if is_set (trigger_map, 1): print ("\tTouchpad activity")
         if is_set (trigger_map, 2): print ("\tPointing stick")
@@ -270,7 +270,7 @@ def print_current_timeout():
         #Timeout battery value cbRes2 byte3 [5:0]
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
-        print _("\nOld Keyboard illumination battery timeout is: %d %s") % (timeout, time_unit)
+        print(_("\nOld Keyboard illumination battery timeout is: %d %s") % (timeout, time_unit))
 
         if supports_ac_timeout():
             #Timeout ac units indicator cbRes3 byte2 [7:6]
@@ -279,10 +279,10 @@ def print_current_timeout():
 
             #Timeout ac value cbRes3 byte3 [5:0]
             timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
-            print _("\nOld Keyboard illumination AC timeout is: %d %s") % (timeout, time_unit)
+            print(_("\nOld Keyboard illumination AC timeout is: %d %s") % (timeout, time_unit))
 
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
 
 def timeout_parser(s_timeout):
@@ -297,20 +297,20 @@ def timeout_parser(s_timeout):
             t_unit = t_units.index(ret[0][-1])
             timeout = int(ret[0][:-1])
         except (IndexError, ValueError):
-            print _("\n Error: Invalid Timeout entry detected")
+            print(_("\n Error: Invalid Timeout entry detected"))
             raise RunTimeKeyboardErr
 
         if timeout < 0 or timeout > 63:
             raise RunTimeKeyboardErr ( _("\t Timeout value out of range: %d") % timeout )
 
-        print ("Setting keyboard illumination timeout value  of:  %d%s") % (timeout, t_units[t_unit])
+        print(("Setting keyboard illumination timeout value  of:  %d%s") % (timeout, t_units[t_unit]))
         return (timeout, t_unit)
 
-    except RunTimeKeyboardErr, e:
-        print "%s" % e
-        print _("\n To set timeout value as 45 seconds enter: 45s ")
-        print _(" You can specify time out values in  s[Seconds], m[Minutes], h[hours], d[days]")
-        print _(" Timeout value range is 1-63 ")
+    except RunTimeKeyboardErr as e:
+        print("%s" % e)
+        print(_("\n To set timeout value as 45 seconds enter: 45s "))
+        print(_(" You can specify time out values in  s[Seconds], m[Minutes], h[hours], d[days]"))
+        print(_(" Timeout value range is 1-63 "))
         return (-1,-1)
 
 
@@ -336,10 +336,10 @@ def print_current_level():
         if res[smi.cbRES1] != 0 :
             raise RunTimeKeyboardErr( _("\t Error reading keyboard settings."), res[smi.cbRES1], res[smi.cbRES2], res[smi.cbRES3] )
 
-        print _("\nOld Keyboard illumination level is: %d") % (get_byte(res[smi.cbRES3], 2))
+        print(_("\nOld Keyboard illumination level is: %d") % (get_byte(res[smi.cbRES3], 2)))
 
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
 
 def set_KeyBoardIllumination_level(s_level):
@@ -351,19 +351,19 @@ def set_KeyBoardIllumination_level(s_level):
         level = int(s_level)
 
         if level < 0 or level > range:
-            print _("\n Value out of range, range is 0-%d") % range
+            print(_("\n Value out of range, range is 0-%d") % range)
             raise RunTimeKeyboardErr
 
         print_current_level()
         _set_keyboard_attr(level, flag='level')
 
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
 
 def PrintKeyBoardStatus():
-    print _("\n Current status of KeyBoard Illumination setting on your system: ")
-    print _("-------------------------------------------------------------------")
+    print(_("\n Current status of KeyBoard Illumination setting on your system: "))
+    print(_("-------------------------------------------------------------------"))
 
     try:
         #Get Keyboard Illumination Configuration,
@@ -376,16 +376,16 @@ def PrintKeyBoardStatus():
         else :
             illu_mode = ['Automatic', 'Always OFF', 'Always ON']
             try:
-                print ("Current Keyboard Illumination mode is: %s") % (illu_mode [res[smi.cbRES1] & 0xFF])
+                print(("Current Keyboard Illumination mode is: %s") % (illu_mode [res[smi.cbRES1] & 0xFF]))
             except IndexError:
-                print _("\t Error: Detected Invalid Keyboar Illumination mode")
+                print(_("\t Error: Detected Invalid Keyboar Illumination mode"))
                 raise RunTimeKeyboardErr
 
             if res[smi.cbRES2] < 0:
                 raise RunTimeKeyboardErr( _("Failed to read: Ambient Light trigger level") )
 
-            print _("\t Ambient Light level to trigger automatic keyboard illumination: 0x%X") % ((res[smi.cbRES2]>>8) & 0xFF)
-            print _("\t Last known Ambient Light level to trigger automatic keyboard illumination: 0x%X") % ((res[smi.cbRES2]>>16) & 0xFF)
+            print(_("\t Ambient Light level to trigger automatic keyboard illumination: 0x%X") % ((res[smi.cbRES2]>>8) & 0xFF))
+            print(_("\t Last known Ambient Light level to trigger automatic keyboard illumination: 0x%X") % ((res[smi.cbRES2]>>16) & 0xFF))
 
         res = smi.simple_ci_smi( 4, 11, 1 )
         verboseLog.info( _("Get Keyboard illumination Current State: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X") % (res[smi.cbRES1],res[smi.cbRES2],res[smi.cbRES3]) )
@@ -393,22 +393,22 @@ def PrintKeyBoardStatus():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("\tYour Keyboard may not support Keyboard illumination Feature") )
 
-        print _("\n Configured mode state: ")
-        if   is_set (res[smi.cbRES2], 0): print "\t Always OFF"
-        elif is_set (res[smi.cbRES2], 1): print "\t Always ON"
-        elif is_set (res[smi.cbRES2], 2): print "\t Auto: ALS-based ON"
-        elif is_set (res[smi.cbRES2], 3): print "\t Auto: ALS- and input-activity-based On; input-activity based Off"
-        elif is_set (res[smi.cbRES2], 4): print "\t Auto: Input-activity-based On; input-activity based Off"
-        elif is_set (res[smi.cbRES2], 5): print "\t Auto: Input-activity-based On (illumination level 25%); input-activity based Off"
-        elif is_set (res[smi.cbRES2], 6): print "\t Auto: Input-activity-based On (illumination level 50%); input-activity based Off"
-        elif is_set (res[smi.cbRES2], 7): print "\t Auto: Input-activity-based On (illumination level 75%); input-activity based Off"
-        elif is_set (res[smi.cbRES2], 8): print "\t Auto: Input-activity-based On (illumination level 100%); input-activity based Off"
-        else : print "\t Reserved setting"
+        print(_("\n Configured mode state: "))
+        if   is_set (res[smi.cbRES2], 0): print("\t Always OFF")
+        elif is_set (res[smi.cbRES2], 1): print("\t Always ON")
+        elif is_set (res[smi.cbRES2], 2): print("\t Auto: ALS-based ON")
+        elif is_set (res[smi.cbRES2], 3): print("\t Auto: ALS- and input-activity-based On; input-activity based Off")
+        elif is_set (res[smi.cbRES2], 4): print("\t Auto: Input-activity-based On; input-activity based Off")
+        elif is_set (res[smi.cbRES2], 5): print("\t Auto: Input-activity-based On (illumination level 25%); input-activity based Off")
+        elif is_set (res[smi.cbRES2], 6): print("\t Auto: Input-activity-based On (illumination level 50%); input-activity based Off")
+        elif is_set (res[smi.cbRES2], 7): print("\t Auto: Input-activity-based On (illumination level 75%); input-activity based Off")
+        elif is_set (res[smi.cbRES2], 8): print("\t Auto: Input-activity-based On (illumination level 100%); input-activity based Off")
+        else : print("\t Reserved setting")
         #[9:15] resev
 
         #cbRes2 byte2
         trigger_map = get_byte(res[smi.cbRES2] ,2)
-        print _("\n Your Keyboard will illumination on: ")
+        print(_("\n Your Keyboard will illumination on: "))
         if is_set (trigger_map, 0): print ("\tAny Keystroke")
         if is_set (trigger_map, 1): print ("\tTouchpad activity")
         if is_set (trigger_map, 2): print ("\tPointing stick")
@@ -422,7 +422,7 @@ def PrintKeyBoardStatus():
         #Timeout value cbRes2 byte2 [5:0]
         timeout = get_byte(res[smi.cbRES2] ,3) & 0x3F
 
-        print _("\n Keyboard illumination timeout on battery has been set at: %d %s") % (timeout, time_unit)
+        print(_("\n Keyboard illumination timeout on battery has been set at: %d %s") % (timeout, time_unit))
 
         if supports_ac_timeout():
             #Timeout units indicator cbRes3 byte3 [7:6]
@@ -431,25 +431,25 @@ def PrintKeyBoardStatus():
 
             #Timeout value cbRes3 byte3 [5:0]
             timeout = get_byte(res[smi.cbRES3] ,3) & 0x3F
-            print _("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit)
+            print(_("\n Keyboard illumination timeout on AC has been set at: %d %s") % (timeout, time_unit))
 
         #cbRes3 byte0
-        print _("\n Current setting of ALS value that turns the light on or off: %d") % ( get_byte(res[smi.cbRES3] ,0))
+        print(_("\n Current setting of ALS value that turns the light on or off: %d") % ( get_byte(res[smi.cbRES3] ,0)))
         #cbRes3 byte1
-        print _(" Current ALS Reading : %d") % ( get_byte(res[smi.cbRES3] ,1))
+        print(_(" Current ALS Reading : %d") % ( get_byte(res[smi.cbRES3] ,1)))
         #cbRes3 byte2
-        print _(" Current keyboard light level : %d") % ( get_byte(res[smi.cbRES3] ,2))
+        print(_(" Current keyboard light level : %d") % ( get_byte(res[smi.cbRES3] ,2)))
 
-    except RunTimeKeyboardErr, e:
-        print "\t%s" % e
+    except RunTimeKeyboardErr as e:
+        print("\t%s" % e)
 
 
 def PrintKeyBoardCapab():
 
     """ This function prints the Supported KeyBoard Illumination features"""
 
-    print _("\n Capabilities of KeyBoard Illumination on your system: ")
-    print _("-------------------------------------------------------------------")
+    print(_("\n Capabilities of KeyBoard Illumination on your system: "))
+    print(_("-------------------------------------------------------------------"))
 
     try:
         res = smi.simple_ci_smi( 4, 11, 0 )
@@ -461,54 +461,54 @@ def PrintKeyBoardCapab():
         #remove the Always ON bit, it should not be supported on most systems
         res[smi.cbRES2] &= 0xFFFD
 
-        print _(" Supported USER Selectable Modes : ")
-        if is_set (res[smi.cbRES2], 0): print "\t Always OFF"
-        if is_set (res[smi.cbRES2], 1): print "\t Always ON"
-        if is_set (res[smi.cbRES2], 2): print "\t Auto: ALS-based ON"
-        if is_set (res[smi.cbRES2], 3): print "\t Auto: ALS- and input-activity-based On; input-activity based Off"
-        if is_set (res[smi.cbRES2], 4): print "\t Auto: Input-activity-based On; input-activity based Off"
-        if is_set (res[smi.cbRES2], 5): print "\t Auto: Input-activity-based On (illumination level 25%); input-activity based Off"
-        if is_set (res[smi.cbRES2], 6): print "\t Auto: Input-activity-based On (illumination level 50%); input-activity based Off"
-        if is_set (res[smi.cbRES2], 7): print "\t Auto: Input-activity-based On (illumination level 75%); input-activity based Off"
-        if is_set (res[smi.cbRES2], 8): print "\t Auto: Input-activity-based On (illumination level 100%); input-activity based Off"
+        print(_(" Supported USER Selectable Modes : "))
+        if is_set (res[smi.cbRES2], 0): print("\t Always OFF")
+        if is_set (res[smi.cbRES2], 1): print("\t Always ON")
+        if is_set (res[smi.cbRES2], 2): print("\t Auto: ALS-based ON")
+        if is_set (res[smi.cbRES2], 3): print("\t Auto: ALS- and input-activity-based On; input-activity based Off")
+        if is_set (res[smi.cbRES2], 4): print("\t Auto: Input-activity-based On; input-activity based Off")
+        if is_set (res[smi.cbRES2], 5): print("\t Auto: Input-activity-based On (illumination level 25%); input-activity based Off")
+        if is_set (res[smi.cbRES2], 6): print("\t Auto: Input-activity-based On (illumination level 50%); input-activity based Off")
+        if is_set (res[smi.cbRES2], 7): print("\t Auto: Input-activity-based On (illumination level 75%); input-activity based Off")
+        if is_set (res[smi.cbRES2], 8): print("\t Auto: Input-activity-based On (illumination level 100%); input-activity based Off")
 
         #byte 3 byt 0,1,2 mask
         keyboard_type=['Reserved', 'Tasklight', 'Backlight', 'Reserved for Future']
         key = get_byte(res[smi.cbRES2] ,3)
-        print _("\n Supported Keyboard illumination type : "), keyboard_type[key] if key < 3 else keyboard_type[3]
+        print(_("\n Supported Keyboard illumination type : "), keyboard_type[key] if key < 3 else keyboard_type[3])
 
         #cbRes3 byte0
-        print _("\n Supports Keyboard illumination on : ")
+        print(_("\n Supports Keyboard illumination on : "))
         if is_set (res[smi.cbRES3], 0): print ("\tAny Keystroke")
         if is_set (res[smi.cbRES3], 1): print ("\tTouchpad activity")
         if is_set (res[smi.cbRES3], 2): print ("\tPointing stick")
         if is_set (res[smi.cbRES3], 3): print ("\tAny mouse movement")
 
         #cbRes3 byte1
-        print _("\n Can configure Keyboard illumination timeout unit in : ")
+        print(_("\n Can configure Keyboard illumination timeout unit in : "))
         if is_set (res[smi.cbRES3], 8) : print ("\tSeconds")
         if is_set (res[smi.cbRES3], 9) : print ("\tMinutes")
         if is_set (res[smi.cbRES3], 10): print ("\tHours")
         if is_set (res[smi.cbRES3], 11): print ("\tDays")
 
         #cbRes3 byte2
-        print _("\n Supported Keyboard light brightness levels : "), get_byte(res[smi.cbRES3], 2)
+        print(_("\n Supported Keyboard light brightness levels : "), get_byte(res[smi.cbRES3], 2))
 
         #cbRes4 byte0
-        print _("\n Maximum acceptable seconds timeout value   : "), get_byte(res[smi.cbRES4], 0)
+        print(_("\n Maximum acceptable seconds timeout value   : "), get_byte(res[smi.cbRES4], 0))
 
         #cbRes4 byte1
-        print _("\n Maximum acceptable minutes timeout value   : "), get_byte(res[smi.cbRES4], 1)
+        print(_("\n Maximum acceptable minutes timeout value   : "), get_byte(res[smi.cbRES4], 1))
 
         #cbRes4 byte2
-        print _("\n Maximum acceptable hours timeout value     : "), get_byte(res[smi.cbRES4], 2)
+        print(_("\n Maximum acceptable hours timeout value     : "), get_byte(res[smi.cbRES4], 2))
 
         #cbRes4 byte3
-        print _("\n Maximum acceptable days timeout value      : "), get_byte(res[smi.cbRES4], 3)
+        print(_("\n Maximum acceptable days timeout value      : "), get_byte(res[smi.cbRES4], 3))
 
-    except RunTimeKeyboardErr, e:
-        print "\t %s" % e
-        print( _("\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES2], res[smi.cbRES3], res[smi.cbRES4]) )
+    except RunTimeKeyboardErr as e:
+        print("\t %s" % e)
+        print(( _("\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES2], res[smi.cbRES3], res[smi.cbRES4]) ))
 
 
 def get_als_status():
@@ -521,18 +521,18 @@ def get_als_status():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("Unable to get ALS settings: Feature Not supported on this system\n"))
 
-        print "Current ALS Status: "
+        print("Current ALS Status: ")
         #cbArg2,byte0 - 0/1, this should return 0 or 1.
-        print 'Enabled' if (get_byte(res[smi.cbRES2] ,0) ) else 'Disabled'
+        print('Enabled' if (get_byte(res[smi.cbRES2] ,0) ) else 'Disabled')
 
-        print "Current ALS low limit  : ", get_byte(res[smi.cbRES3] ,0)
-        print "Current ALS High limit : ", get_byte(res[smi.cbRES3] ,1)
-        print "Absolute ALS low limit : ", get_byte(res[smi.cbRES3] ,2)
-        print "Absolute ALS High limit: ", get_byte(res[smi.cbRES3] ,3)
+        print("Current ALS low limit  : ", get_byte(res[smi.cbRES3] ,0))
+        print("Current ALS High limit : ", get_byte(res[smi.cbRES3] ,1))
+        print("Absolute ALS low limit : ", get_byte(res[smi.cbRES3] ,2))
+        print("Absolute ALS High limit: ", get_byte(res[smi.cbRES3] ,3))
 
-    except RunTimeKeyboardErr, e:
-        print "\t %s" % e
-        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+    except RunTimeKeyboardErr as e:
+        print("\t %s" % e)
+        print(( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) ))
 
 
 def print_als_brightness_table():
@@ -545,11 +545,11 @@ def print_als_brightness_table():
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("Unable to get ALS Brightness Table: Feature Not supported on this system\n"))
 
-        print "Brightness Table: ", hex(res[smi.cbRES3])+hex(res[smi.cbRES2])[2:]
+        print("Brightness Table: ", hex(res[smi.cbRES3])+hex(res[smi.cbRES2])[2:])
 
-    except RunTimeKeyboardErr, e:
-        print "\t %s" % e
-        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+    except RunTimeKeyboardErr as e:
+        print("\t %s" % e)
+        print(( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) ))
 
 
 def validate_als_limit(s_val):
@@ -560,7 +560,7 @@ def validate_als_limit(s_val):
         return int_als
 
     except (TypeError, ValueError):
-        print "Enter the ALS value as integer: ", s_val
+        print("Enter the ALS value as integer: ", s_val)
         raise RunTimeKeyboardErr("Invalid Integer valie detected")
 
 
@@ -599,11 +599,11 @@ def set_als_param(parm_str='NA', parm=0):
         if res[smi.cbRES1] != 0:
             raise RunTimeKeyboardErr( _("Unable to Set ALS settings\n"))
 
-        print "ALS parameter set successfully"
+        print("ALS parameter set successfully")
 
-    except RunTimeKeyboardErr, e:
-        print "\t %s" % e
-        print ( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) )
+    except RunTimeKeyboardErr as e:
+        print("\t %s" % e)
+        print(( _("\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X ") % (res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]) ))
 
 
 def set_als_settings(als_param):
@@ -627,12 +627,12 @@ def set_als_settings(als_param):
         set_als_param('als_high', als_high)
 
     else:
-        print "invalide --als [%s]" % als_param
-        print "\tget  		- Get ALS Settings  "
-        print "\tenable    	- Enable ALS  "
-        print "\tdisable   	- Disable ALS "
-        print "\tset-high=<int>  - set ALS High Limit "
-        print "\tset-low =<int>  - set ALS Low  Limit "
+        print("invalide --als [%s]" % als_param)
+        print("\tget  		- Get ALS Settings  ")
+        print("\tenable    	- Enable ALS  ")
+        print("\tdisable   	- Disable ALS ")
+        print("\tset-high=<int>  - set ALS High Limit ")
+        print("\tset-low =<int>  - set ALS Low  Limit ")
 
 def supports_ac_timeout():
     try:
@@ -649,21 +649,21 @@ def main():
 
     try:
         if options.info:
-            print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
-            print _("smbios-keyboard-ctl version : %s") % __VERSION__
+            print(_("Libsmbios version : %s") % sysinfo.get_library_version_string())
+            print(_("smbios-keyboard-ctl version : %s") % __VERSION__)
             #By default just show the supported features of keyboard illumination
             PrintKeyBoardCapab()
 
         if options.get_status:
-            print _("Helper function to print current status of keyboard illumination")
+            print(_("Helper function to print current status of keyboard illumination"))
             PrintKeyBoardStatus()
 
         if options.set_mode:
-            print _("Setting USER Selectable Keyboard Mode")
+            print(_("Setting USER Selectable Keyboard Mode"))
             set_mode()
 
         if options.set_trigger:
-            print _("Setting Keyboard illumination Triggers ")
+            print(_("Setting Keyboard illumination Triggers "))
             set_trigger()
 
         if options.set_timeout_battery:
@@ -682,21 +682,21 @@ def main():
             set_als_settings(options.als_option)
 
 
-    except (smi.SMIExecutionError, ), e:
+    except (smi.SMIExecutionError, ) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not execute SMI.") )
         verboseLog.info( _("The smi library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (smbios.TableParseError, token.TokenTableParseError), e:
+    except (smbios.TableParseError, token.TokenTableParseError) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (token.TokenManipulationFailure,), e:
+    except (token.TokenManipulationFailure,) as e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )

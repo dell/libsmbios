@@ -13,11 +13,10 @@ memory_obj:
 
 # imports (alphabetical)
 import ctypes
-import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
-from _common import errorOnNegativeFN, errorOnNullPtrFN
-from trace_decorator import decorate, traceLog, getLog
+from ._common import errorOnNegativeFN, errorOnNullPtrFN, c_utf8_p
+from .trace_decorator import traceLog, getLog
 
 __all__ = ["MemoryAccess", "MEMORY_DEFAULTS", "MEMORY_GET_SINGLETON", "MEMORY_GET_NEW", "MEMORY_UNIT_TEST_MODE"]
 
@@ -26,7 +25,7 @@ MEMORY_GET_SINGLETON =0x0001
 MEMORY_GET_NEW       =0x0002
 MEMORY_UNIT_TEST_MODE=0x0004
 
-decorate(traceLog())
+@traceLog()
 def MemoryAccess(flags=MEMORY_GET_SINGLETON, *factory_args):
     if flags & MEMORY_GET_SINGLETON:
         if _MemoryAccess._instance is None:
@@ -38,30 +37,30 @@ def MemoryAccess(flags=MEMORY_GET_SINGLETON, *factory_args):
 class _MemoryAccess(ctypes.Structure):
     _instance = None
 
-    decorate(traceLog())
+    @traceLog()
     def __init__(self, *args):
         self._memobj = None
         self._memobj = DLL.memory_obj_factory(*args)
-            
+
     # dont decorate __del__
     def __del__(self):
         DLL.memory_obj_free(self._memobj)
 
-    decorate(traceLog())
+    @traceLog()
     def read(self, offset, length):
         buf = ctypes.create_string_buffer(length)
         DLL.memory_obj_read(self._memobj, buf, offset, length)
         return buf
 
-    decorate(traceLog())
+    @traceLog()
     def write(self, buf, offset):
         DLL.memory_obj_write(self._memobj, buf, offset, len(buf))
 
-    decorate(traceLog())
+    @traceLog()
     def search(self, pattern, start, end, stride):
         return DLL.memory_obj_search(self._memobj, pattern, len(pattern), start, end, stride)
 
-    decorate(traceLog())
+    @traceLog()
     def close_hint(self, hint=None):
         if hint is not None:
             if hint:
@@ -74,8 +73,8 @@ class _MemoryAccess(ctypes.Structure):
 
 # define strerror first so we can use it in error checking other functions.
 DLL.memory_obj_strerror.argtypes = [ ctypes.POINTER(_MemoryAccess) ]
-DLL.memory_obj_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.memory_obj_strerror.restype = c_utf8_p
+@traceLog()
 def _strerror(obj):
     return Exception(DLL.memory_obj_strerror(obj))
 

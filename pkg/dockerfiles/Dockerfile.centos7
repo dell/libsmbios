@@ -5,6 +5,8 @@ VOLUME /output
 ENV OUTPUT_DIR /output
 ENV BUILD_DIR /build
 
+RUN yum install -y epel-release
+RUN yum --enablerepo=epel install -y python34-devel
 RUN yum install -y \
   rpm-build gettext-devel libxml2-devel cppunit-devel xz libtool git gcc-c++ doxygen make \
   && yum clean all

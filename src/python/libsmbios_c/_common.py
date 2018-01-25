@@ -8,27 +8,26 @@
   #############################################################################
 """
 _common:
-    
+
 """
 
 # imports (alphabetical)
-import exceptions
 import ctypes
 
-from trace_decorator import decorate, traceLog, getLog
+from .trace_decorator import traceLog, getLog
 
 __all__ = ["freeLibStringFN", "errorOnZeroFN", "errorOnNegativeFN", "errorOnNullPtrFN" ]
 
-class Exception(exceptions.Exception): pass
+class SMBIOSException(Exception): pass
 
 def _doExc(exception_fn, r, f, a, msg):
     if exception_fn is not None:
         raise exception_fn(r, f, a)
     else:
-        raise Exception( msg )
+        raise SMBIOSException( msg )
 
 def freeLibStringFN(free_fn, exception_fn=None):
-    decorate(traceLog())
+    @traceLog()
     def _freeLibStringFN(result, func, args):
         getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
         pystr = ctypes.cast(result, ctypes.c_char_p).value
@@ -41,7 +40,7 @@ def freeLibStringFN(free_fn, exception_fn=None):
     return _freeLibStringFN
 
 def errorOnNullPtrFN(exception_fn=None):
-    decorate(traceLog())
+    @traceLog()
     def _errorOnNullPtrFN(result, func, args):
         getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
         if not bool(result): # check for null pointer
@@ -50,16 +49,16 @@ def errorOnNullPtrFN(exception_fn=None):
     return _errorOnNullPtrFN
 
 def errorOnZeroFN(exception_fn=None):
-    decorate(traceLog())
+    @traceLog()
     def _errorOnZeroFN(result, func, args):
         getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
         if result is None or result == 0:
             _doExc(exception_fn, result, func, args, _("function returned error value of zero") )
         return result
     return _errorOnZeroFN
- 
+
 def errorOnNegativeFN(exception_fn=None):
-    decorate(traceLog())
+    @traceLog()
     def _errorOnNegativeFN(result, func, args):
         getLog(prefix="trace.").info("RAN CTYPES FUNCTION: %s" % func.__name__)
         if result is None or result < 0:
@@ -67,4 +66,8 @@ def errorOnNegativeFN(exception_fn=None):
         return result
     return _errorOnNegativeFN
 
-
+class c_utf8_p(ctypes.c_char_p):
+    @classmethod
+    def _check_retval_(cls, result):
+        value = result.value
+        return value.decode('utf-8')

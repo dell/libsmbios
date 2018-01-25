@@ -13,11 +13,10 @@ smbios:
 
 # imports (alphabetical)
 import ctypes
-import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
-from _common import errorOnNullPtrFN, errorOnNegativeFN
-from trace_decorator import decorate, traceLog, getLog, strip_trailing_whitespace
+from ._common import errorOnNullPtrFN, errorOnNegativeFN, c_utf8_p
+from .trace_decorator import traceLog, getLog, strip_trailing_whitespace
 
 __all__ = ["SmbiosTable", "SMBIOS_DEFAULTS", "SMBIOS_GET_SINGLETON", "SMBIOS_GET_NEW", "SMBIOS_UNIT_TEST_MODE"]
 
@@ -28,35 +27,37 @@ SMBIOS_UNIT_TEST_MODE=0x0004
 
 class TableParseError(Exception): pass
 
-class SmbiosStructure(ctypes.Structure): 
-    decorate(traceLog(), strip_trailing_whitespace())
+class SmbiosStructure(ctypes.Structure):
+    @traceLog()
+    @strip_trailing_whitespace()
     def getString(self, off):
         return DLL.smbios_struct_get_string_from_offset(self, off)
 
-    decorate(traceLog(), strip_trailing_whitespace())
+    @traceLog()
+    @strip_trailing_whitespace()
     def getStringNumber(self, num):
         return DLL.smbios_struct_get_string_number(self, num)
 
-    decorate(traceLog())
+    @traceLog()
     def getType(self):
         return DLL.smbios_struct_get_type(self)
 
-    decorate(traceLog())
+    @traceLog()
     def getLength(self):
         return DLL.smbios_struct_get_length(self)
 
-    decorate(traceLog())
+    @traceLog()
     def getHandle(self):
         return DLL.smbios_struct_get_handle(self)
 
     # use struct module to pull data out
-    decorate(traceLog())
+    @traceLog()
     def getData(self, offset, len):
         buf = ctypes.create_string_buffer(len)
         DLL.smbios_struct_get_data(self, buf, offset, len)
         return buf.raw
 
-decorate(traceLog())
+@traceLog()
 def SmbiosTable(flags=SMBIOS_GET_SINGLETON, *factory_args):
     if flags & SMBIOS_GET_SINGLETON:
         if _SmbiosTable._instance is None:
@@ -68,7 +69,7 @@ def SmbiosTable(flags=SMBIOS_GET_SINGLETON, *factory_args):
 class _SmbiosTable(ctypes.Structure):
     _instance = None
 
-    decorate(traceLog())
+    @traceLog()
     def __init__(self, *args):
         self._tableobj = None
         self._tableobj = DLL.smbios_table_factory(*args)
@@ -77,7 +78,7 @@ class _SmbiosTable(ctypes.Structure):
         if self._tableobj is not None:
             DLL.smbios_table_free(self._tableobj)
 
-    decorate(traceLog())
+    @traceLog()
     def __iter__(self):
         cur = ctypes.POINTER(SmbiosStructure)()
         while 1:
@@ -85,9 +86,10 @@ class _SmbiosTable(ctypes.Structure):
             if bool(cur):
                 yield cur.contents
             else:
-                raise exceptions.StopIteration( _("hit end of table.") )
+                print(_("hit end of table."))
+                raise StopIteration
 
-    decorate(traceLog())
+    @traceLog()
     def iterByType(self, t):
         cur = ctypes.POINTER(SmbiosStructure)()
         while 1:
@@ -96,22 +98,25 @@ class _SmbiosTable(ctypes.Structure):
                 if cur.contents.getType() == t:
                     yield cur.contents
             else:
-                raise exceptions.StopIteration( _("hit end of table.") )
+                print(_("hit end of table."))
+                raise StopIteration
 
-    decorate(traceLog())
+    @traceLog()
     def getStructureByHandle(self, handle):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =DLL.smbios_table_get_next_struct_by_handle( self._tableobj, cur, handle )
         if not bool(cur):
-            raise exceptions.IndexError( _("No SMBIOS structure found with handle %s") % handle)
+            print(_("No SMBIOS structure found with handle %s") % handle)
+            raise IndexError
         return cur.contents
 
-    decorate(traceLog())
+    @traceLog()
     def getStructureByType(self, t):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =DLL.smbios_table_get_next_struct_by_type( self._tableobj, cur, t )
         if not bool(cur):
-            raise exceptions.IndexError( _("No SMBIOS structure found with type %s") % t)
+            print(_("No SMBIOS structure found with type %s") % t)
+            raise IndexError
         return cur.contents
 
     __getitem__ = getStructureByType
@@ -120,8 +125,8 @@ class _SmbiosTable(ctypes.Structure):
 #const char *smbios_table_strerror(const struct smbios_table *m);
 # define strerror first so we can use it in error checking other functions.
 DLL.smbios_table_strerror.argtypes = [ ctypes.POINTER(_SmbiosTable) ]
-DLL.smbios_table_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.smbios_table_strerror.restype = c_utf8_p
+@traceLog()
 def _strerror(obj):
     return DLL.smbios_table_strerror(obj)
 
@@ -161,18 +166,15 @@ DLL.smbios_struct_get_handle.restype = ctypes.c_uint16
 
 #const char * DLL_SPEC smbios_struct_get_string_from_offset(const struct smbios_struct *s, u8 offset);
 DLL.smbios_struct_get_string_from_offset.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
-DLL.smbios_struct_get_string_from_offset.restype = ctypes.c_char_p
-DLL.smbios_struct_get_string_from_offset.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.IndexError( _("String from offset %d doesnt exist") % a[1]))
+DLL.smbios_struct_get_string_from_offset.restype = c_utf8_p
+DLL.smbios_struct_get_string_from_offset.errcheck = errorOnNullPtrFN(lambda r,f,a: IndexError)
 
 #const char * DLL_SPEC smbios_struct_get_string_number(const struct smbios_struct *s, u8 which);
 DLL.smbios_struct_get_string_number.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_uint8 ]
-DLL.smbios_struct_get_string_number.restype = ctypes.c_char_p
-DLL.smbios_struct_get_string_number.errcheck = errorOnNullPtrFN(lambda r,f,a: exceptions.IndexError( _("String number %d doesnt exist") % a[1]))
+DLL.smbios_struct_get_string_number.restype = c_utf8_p
+DLL.smbios_struct_get_string_number.errcheck = errorOnNullPtrFN(lambda r,f,a: IndexError)
 
 #int DLL_SPEC smbios_struct_get_data(const struct smbios_struct *s, void *dest, u8 offset, size_t len);
 DLL.smbios_struct_get_data.argtypes = [ ctypes.POINTER(SmbiosStructure), ctypes.c_void_p, ctypes.c_uint8, ctypes.c_size_t ]
 DLL.smbios_struct_get_data.restype = ctypes.c_int
-DLL.smbios_struct_get_data.errcheck = errorOnNegativeFN(lambda r,f,a: exceptions.IndexError( _("Tried to get data past the end of the structure.") ))
-
-
-
+DLL.smbios_struct_get_data.errcheck = errorOnNegativeFN(lambda r,f,a: IndexError)

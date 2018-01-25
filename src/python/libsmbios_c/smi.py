@@ -13,11 +13,10 @@ systeminfo:
 
 # imports (alphabetical)
 import ctypes
-import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
-from _common import errorOnNullPtrFN, errorOnNegativeFN, errorOnZeroFN
-from trace_decorator import decorate, traceLog, getLog
+from ._common import errorOnNullPtrFN, errorOnNegativeFN, errorOnZeroFN, c_utf8_p
+from .trace_decorator import traceLog, getLog
 
 __all__ = ["DellSmi", "DELL_SMI_DEFAULTS", "DELL_SMI_GET_SINGLETON", "DELL_SMI_GET_NEW", "DELL_SMI_UNIT_TEST_MODE"]
 __all__.extend( [ "cbARG1", "cbARG2", "cbARG3", "cbARG4", "cbRES1", "cbRES2", "cbRES3", "cbRES4", ])
@@ -46,7 +45,7 @@ class SmiCreateError(Exception): pass
 class SmiBufferCreateError(Exception): pass
 
 
-decorate(traceLog())
+@traceLog()
 def DellSmi(flags=DELL_SMI_GET_NEW, *args):
     if _DellSmi._instance is None:
         _DellSmi._instance = _DellSmi( flags, *args)
@@ -55,7 +54,7 @@ def DellSmi(flags=DELL_SMI_GET_NEW, *args):
 class _DellSmi(ctypes.Structure):
     _instance = None
 
-    decorate(traceLog())
+    @traceLog()
     def __init__(self, *args, **kargs):
         self._smiobj = None
         self._smiobj = DLL.dell_smi_factory(*args)
@@ -65,53 +64,53 @@ class _DellSmi(ctypes.Structure):
     def __del__(self):
         DLL.dell_smi_obj_free(self._smiobj)
 
-    decorate(traceLog())
+    @traceLog()
     def setClass(self, smiclass):
         DLL.dell_smi_obj_set_class(self._smiobj, smiclass)
 
-    decorate(traceLog())
+    @traceLog()
     def setSelect(self, select):
         DLL.dell_smi_obj_set_select(self._smiobj, select)
 
-    decorate(traceLog())
+    @traceLog()
     def setArg(self, arg, val):
         DLL.dell_smi_obj_set_arg(self._smiobj, arg, val)
 
-    decorate(traceLog())
+    @traceLog()
     def getRes(self, res):
         return DLL.dell_smi_obj_get_res(self._smiobj, res)
 
-    decorate(traceLog())
+    @traceLog()
     def buffer_frombios_auto(self, arg, size):
         self.bufs[arg] = DLL.dell_smi_obj_make_buffer_frombios_auto(self._smiobj, arg, size)
         return self.bufs[arg]
 
-    decorate(traceLog())
+    @traceLog()
     def buffer_frombios_withheader(self, arg, size):
         self.bufs[arg] = DLL.dell_smi_obj_make_buffer_frombios_withheader(self._smiobj, arg, size)
         return self.bufs[arg]
 
-    decorate(traceLog())
+    @traceLog()
     def buffer_frombios_withoutheader(self, arg, size):
         self.bufs[arg] = DLL.dell_smi_obj_make_buffer_frombios_withoutheader(self._smiobj, arg, size)
         return self.bufs[arg]
 
-    decorate(traceLog())
+    @traceLog()
     def buffer_tobios(self, arg, size, buf):
         self.bufs[arg] = DLL.dell_smi_obj_make_buffer_tobios(self._smiobj, arg, size)
         if len(buf) < size: size = len(buf)
         ctypes.memmove( self.bufs[arg], buf, size )
 
-    decorate(traceLog())
+    @traceLog()
     def execute(self):
         ret = DLL.dell_smi_obj_execute(self._smiobj)
         raiseExceptionOnError(ret, self)
 
-    decorate(traceLog())
+    @traceLog()
     def getBufContents(self, arg):
         return self.bufs[arg]
 
-decorate(traceLog())
+@traceLog()
 def raiseExceptionOnError(ret, smiobj=None):
     if ret == -1:
         raise SMIExecutionError( _("SMI executed but returned error"))
@@ -130,8 +129,8 @@ array_4_u32 = ctypes.c_int32 * 4
 
 # define strerror first so we can use it in error checking other functions.
 DLL.dell_smi_strerror.argtypes = [ ]
-DLL.dell_smi_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.dell_smi_strerror.restype = c_utf8_p
+@traceLog()
 def _strerror():
     return DLL.dell_smi_strerror()
 
@@ -139,7 +138,7 @@ def _strerror():
 DLL.dell_simple_ci_smi.argtypes = [ctypes.c_uint16, ctypes.c_uint16, array_4_u32, array_4_u32]
 DLL.dell_simple_ci_smi.restype = ctypes.c_int
 DLL.dell_simple_ci_smi.errcheck = errorOnNegativeFN(lambda r,f,a: SMIExecutionError(_strerror()))
-decorate(traceLog())
+@traceLog()
 def simple_ci_smi(smiClass, select, *args):
     arg = array_4_u32(*args)
     res = array_4_u32(0, 0, 0, 0)
@@ -155,7 +154,7 @@ DLL.dell_smi_read_nv_storage.argtypes = [
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32)]
-decorate(traceLog())
+@traceLog()
 def read_nv_storage(location):
     min = ctypes.c_uint32(0)
     max = ctypes.c_uint32(0)
@@ -172,7 +171,7 @@ DLL.dell_smi_read_battery_mode_setting.argtypes = [
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32)]
-decorate(traceLog())
+@traceLog()
 def read_battery_mode_setting(location):
     min = ctypes.c_uint32(0)
     max = ctypes.c_uint32(0)
@@ -189,7 +188,7 @@ DLL.dell_smi_read_ac_mode_setting.argtypes = [
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32),
         ctypes.POINTER(ctypes.c_uint32)]
-decorate(traceLog())
+@traceLog()
 def read_ac_mode_setting(location):
     min = ctypes.c_uint32(0)
     max = ctypes.c_uint32(0)
@@ -220,7 +219,7 @@ DLL.dell_smi_write_ac_mode_setting.errcheck=errorOnNegativeFN(lambda r,f,a: SMIE
 write_ac_mode_setting = DLL.dell_smi_write_ac_mode_setting
 __all__.append("write_ac_mode_setting")
 
-decorate(traceLog())
+@traceLog()
 def securityException(r):
     if r == -1:
         return BadPassword()
@@ -231,7 +230,7 @@ def securityException(r):
 DLL.dell_smi_get_security_key.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_uint16)]
 DLL.dell_smi_get_security_key.restype = ctypes.c_int
 DLL.dell_smi_get_security_key.errcheck=errorOnNegativeFN(lambda r,f,a: securityException(r))
-decorate(traceLog())
+@traceLog()
 def get_security_key(password):
     key = ctypes.c_uint16(0)
     DLL.dell_smi_get_security_key(password, key)
@@ -295,8 +294,8 @@ __all__.append("password_change")
 
 # define strerror first so we can use it in error checking other functions.
 DLL.dell_smi_obj_strerror.argtypes = [ ctypes.POINTER(_DellSmi) ]
-DLL.dell_smi_obj_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.dell_smi_obj_strerror.restype = c_utf8_p
+@traceLog()
 def _obj_strerror(obj):
     return DLL.dell_smi_obj_strerror(obj)
 
@@ -355,7 +354,7 @@ DLL.dell_smi_obj_execute.restype = ctypes.c_int
 
 
 # for testing only. It only does en_US, which is just wrong.
-decorate(traceLog())
+@traceLog()
 def asc_to_scancode(s):
     return "".join([ chr(asc_to_scancode_map[ord(i)]) for i in s ])
 

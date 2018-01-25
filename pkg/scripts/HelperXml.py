@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # VIM declarations
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 
@@ -39,7 +39,7 @@ def getNodeElement( node, *args ):
     #print "DEBUG: args(%s)" % repr(args)
     if node is not None:
         for search in node.childNodes:
-            if isinstance(args[0], types.StringTypes):
+            if isinstance(args[0], str):
                 if search.nodeName == args[0]:
                     candidate = getNodeElement( search, *args[1:] )
                     if candidate is not None:
@@ -48,7 +48,7 @@ def getNodeElement( node, *args ):
                 if search.nodeName == args[0][0]:
                     attrHash = args[0][1]
                     found = 1
-                    for (key, value) in attrHash.items():
+                    for (key, value) in list(attrHash.items()):
                         if search.getAttribute( key ) != value:
                             found = 0
                     if found:

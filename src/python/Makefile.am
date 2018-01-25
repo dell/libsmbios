@@ -5,14 +5,13 @@ pkgpythondir=$(pythondir)/libsmbios_c
 if HAVE_PYTHON
 pkgpython_PYTHON = \
 	src/python/libsmbios_c/cmos.py		\
-	src/python/libsmbios_c/token.py		\
+	src/python/libsmbios_c/smbios_token.py		\
 	src/python/libsmbios_c/_common.py		\
 	src/python/libsmbios_c/trace_decorator.py		\
 	src/python/libsmbios_c/__init__.py		\
 	src/python/libsmbios_c/smbios.py		\
 	src/python/libsmbios_c/memory.py		\
 	src/python/libsmbios_c/smi.py		\
-	src/python/libsmbios_c/_peak_util_decorators.py		\
 	src/python/libsmbios_c/system_info.py
 
 pkgpython_PYTHON += src/python/_vars.py

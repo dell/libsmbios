@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
 
   #############################################################################
@@ -10,7 +10,7 @@
   #############################################################################
 """smbios-thermal-ctl"""
 
-from __future__ import generators
+
 
 # import arranged alphabetically
 import gettext
@@ -30,11 +30,11 @@ sys.path.insert(0,pythondir)
 sys.path.insert(0,clidir)
 
 import cli
-from libsmbios_c import token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
-from libsmbios_c.trace_decorator import decorate, traceLog, getLog
+from libsmbios_c import smbios_token, smbios, smi, system_info as sysinfo, localedir, GETTEXT_PACKAGE
+from libsmbios_c.trace_decorator import traceLog, getLog
 
 locale.setlocale(locale.LC_ALL, '')
-gettext.install(GETTEXT_PACKAGE, localedir, unicode=1)
+gettext.install(GETTEXT_PACKAGE, localedir)
 
 moduleLog = getLog()
 verboseLog = getLog(prefix="verbose.")
@@ -67,15 +67,15 @@ def get_byte(num, byte_pos):
     try :
         if byte_pos < 0 or byte_pos > 3:
             raise RunTimeThermalSensorErr( "Internal Error: Byte position out of bound - ", byte_pos )
-    except RunTimeThermalSensorErr, e:
-        print "\t%s" % e
+    except RunTimeThermalSensorErr as e:
+        print("\t%s" % e)
 
     return ((num >> (byte_pos*8)) & 0xFF)
 
 
 def PrintSupportedThermModes(flag='default'):
-    print _("\n Print all the Available Thermal Information of your system: ")
-    print _("-------------------------------------------------------------------")
+    print(_("\n Print all the Available Thermal Information of your system: "))
+    print(_("-------------------------------------------------------------------"))
 
     try:
         res = smi.simple_ci_smi( 17, 19, 0 )
@@ -86,25 +86,25 @@ def PrintSupportedThermModes(flag='default'):
             raise RunTimeThermalSensorErr( _(" Info: Unable to Get Thermal Information on this system\n") )
 
         if flag == 'thermal-mode': return (res[smi.cbRES2] & 0xF )
-        print _(" \nSupported Thermal Modes: ")
-        if is_set (res[smi.cbRES2], 0): print "\t Balanced"
-        if is_set (res[smi.cbRES2], 1): print "\t Cool Bottom"
-        if is_set (res[smi.cbRES2], 2): print "\t Quiet"
-        if is_set (res[smi.cbRES2], 3): print "\t Performance"
+        print(_(" \nSupported Thermal Modes: "))
+        if is_set (res[smi.cbRES2], 0): print("\t Balanced")
+        if is_set (res[smi.cbRES2], 1): print("\t Cool Bottom")
+        if is_set (res[smi.cbRES2], 2): print("\t Quiet")
+        if is_set (res[smi.cbRES2], 3): print("\t Performance")
 
-        print _(" \nSupported Active Acoustic Controller (AAC) modes: ")
-        if is_set ((get_byte(res[smi.cbRES2], 1)), 0): print "\t AAC (Balanced)"
-        if is_set ((get_byte(res[smi.cbRES2], 1)), 1): print "\t AAC (Cool Bottom)"
-        if is_set ((get_byte(res[smi.cbRES2], 1)), 2): print "\t ACC (Quiet)"
-        if is_set ((get_byte(res[smi.cbRES2], 1)), 3): print "\t ACC (Performance)"
+        print(_(" \nSupported Active Acoustic Controller (AAC) modes: "))
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 0): print("\t AAC (Balanced)")
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 1): print("\t AAC (Cool Bottom)")
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 2): print("\t ACC (Quiet)")
+        if is_set ((get_byte(res[smi.cbRES2], 1)), 3): print("\t ACC (Performance)")
 
         if flag == 'acc-config' : return get_byte(res[smi.cbRES3], 1)
-        print _(" \nSupported AAC Configuration type: ")
-        if (get_byte(res[smi.cbRES3], 1)) == 0 : print "\tGlobal (AAC enable/disable applies to all supported USTT modes)"
-        if (get_byte(res[smi.cbRES3], 1)) == 1 : print "\tUser Selectable Thermal Table(USTT) mode specific"
+        print(_(" \nSupported AAC Configuration type: "))
+        if (get_byte(res[smi.cbRES3], 1)) == 0 : print("\tGlobal (AAC enable/disable applies to all supported USTT modes)")
+        if (get_byte(res[smi.cbRES3], 1)) == 1 : print("\tUser Selectable Thermal Table(USTT) mode specific")
 
-    except RunTimeThermalSensorErr, e:
-        print "\t%s" % e
+    except RunTimeThermalSensorErr as e:
+        print("\t%s" % e)
 
 
 def GetCurrentThermalMode(flag='default'):
@@ -119,40 +119,40 @@ def GetCurrentThermalMode(flag='default'):
         if flag == 'thermal-mode': return res[smi.cbRES3]
         if flag == 'acc-mode' : return (get_byte(res[smi.cbRES3], 2))
 
-        print _("\n Print Current Status of Thermal Information: ")
-        print _("-------------------------------------------------------------------")
-        print _(" \nCurrent Thermal Modes: ")
-        if is_set (res[smi.cbRES3], 0): print "\t Balanced"
-        if is_set (res[smi.cbRES3], 1): print "\t Cool Bottom"
-        if is_set (res[smi.cbRES3], 2): print "\t Quiet"
-        if is_set (res[smi.cbRES3], 3): print "\t Performance"
+        print(_("\n Print Current Status of Thermal Information: "))
+        print(_("-------------------------------------------------------------------"))
+        print(_(" \nCurrent Thermal Modes: "))
+        if is_set (res[smi.cbRES3], 0): print("\t Balanced")
+        if is_set (res[smi.cbRES3], 1): print("\t Cool Bottom")
+        if is_set (res[smi.cbRES3], 2): print("\t Quiet")
+        if is_set (res[smi.cbRES3], 3): print("\t Performance")
 
-        print _(" \nCurrent Active Acoustic Controller (AAC) Mode: ")
+        print(_(" \nCurrent Active Acoustic Controller (AAC) Mode: "))
         "If AAC Configuration Type is Global,"
 
-        if (get_byte(res[smi.cbRES3], 2))== 0  : print "\t AAC mode Disabled"
-        if (get_byte(res[smi.cbRES3], 2))== 1  : print "\t AAC mode Enabled "
+        if (get_byte(res[smi.cbRES3], 2))== 0  : print("\t AAC mode Disabled")
+        if (get_byte(res[smi.cbRES3], 2))== 1  : print("\t AAC mode Enabled ")
 
 
-        print _(" \nCurrent Active Acoustic Controller (AAC) Mode: ")
+        print(_(" \nCurrent Active Acoustic Controller (AAC) Mode: "))
 
         if (get_byte(res[smi.cbRES3], 1)) == 0:
-            if (get_byte(res[smi.cbRES3], 2)) == 0 : print "\tGlobal (AAC enable/disable applies to all supported USTT modes)"
-            if (get_byte(res[smi.cbRES3], 2)) == 1 : print "\tUSTT mode specific"
+            if (get_byte(res[smi.cbRES3], 2)) == 0 : print("\tGlobal (AAC enable/disable applies to all supported USTT modes)")
+            if (get_byte(res[smi.cbRES3], 2)) == 1 : print("\tUSTT mode specific")
 
         elif (get_byte(res[smi.cbRES3], 1)) == 1:
-            if is_set ((get_byte(res[smi.cbRES3], 2)), 0): print "\t AAC (Balanced)"
-            if is_set ((get_byte(res[smi.cbRES3], 2)), 1): print "\t AAC (Cool Bottom)"
-            if is_set ((get_byte(res[smi.cbRES3], 2)), 2): print "\t ACC (Quiet)"
-            if is_set ((get_byte(res[smi.cbRES3], 2)), 3): print "\t ACC (Performance)"
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 0): print("\t AAC (Balanced)")
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 1): print("\t AAC (Cool Bottom)")
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 2): print("\t ACC (Quiet)")
+            if is_set ((get_byte(res[smi.cbRES3], 2)), 3): print("\t ACC (Performance)")
 
-        print _(" \nCurrent Fan Failure Mode: ")
-        if is_set ((get_byte(res[smi.cbRES3], 3)), 0): print "\tMinimal Fan Failure (at least one fan has failed, one fan working)"
-        if is_set ((get_byte(res[smi.cbRES3], 3)), 1): print "\tCatastrophic Fan Failure (all fans have failed)"
+        print(_(" \nCurrent Fan Failure Mode: "))
+        if is_set ((get_byte(res[smi.cbRES3], 3)), 0): print("\tMinimal Fan Failure (at least one fan has failed, one fan working)")
+        if is_set ((get_byte(res[smi.cbRES3], 3)), 1): print("\tCatastrophic Fan Failure (all fans have failed)")
 
 
-    except RunTimeThermalSensorErr, e:
-        print "\t%s" % e
+    except RunTimeThermalSensorErr as e:
+        print("\t%s" % e)
 
 
 def SetThermalMode(thermal_mode):
@@ -180,11 +180,11 @@ def SetThermalMode(thermal_mode):
             raise RunTimeThermalSensorErr( _("Set Thermal Information failed: arg2- %x cbRES1: 0x%X\
                       cbRES2: 0x%X cbRES3: 0x%X \n") % (cbArg2, res[smi.cbRES1], res[smi.cbRES3], res[smi.cbRES4]))
 
-        print ( _("Thermal Information Set successfully to: %s") % thermal_mode)
+        print(( _("Thermal Information Set successfully to: %s") % thermal_mode))
 
-    except RunTimeThermalSensorErr, e:
-        print "\t %s" % e
-        print "\t Set Thermal Information Failed"
+    except RunTimeThermalSensorErr as e:
+        print("\t %s" % e)
+        print("\t Set Thermal Information Failed")
 
 
 def main():
@@ -194,35 +194,35 @@ def main():
 
     try:
         if options.info:
-            print _("Libsmbios version : %s") % sysinfo.get_library_version_string()
-            print _("smbios-thermal-ctl version : %s") % __VERSION__
+            print(_("Libsmbios version : %s") % sysinfo.get_library_version_string())
+            print(_("smbios-thermal-ctl version : %s") % __VERSION__)
             verboseLog.info( _(" You can use smbios-thermal-ctl utlity to control the fan speed"))
             # Info will show the all the supported attributes of User selectable Thermal settings
             PrintSupportedThermModes()
 
         if options.get_thermal_info:
-            print _("Helper function to Get current Thermal Mode settings")
+            print(_("Helper function to Get current Thermal Mode settings"))
             GetCurrentThermalMode()
 
         if options.thermal_mode:
-            print _("Helper function to Set Thermal Mode")
+            print(_("Helper function to Set Thermal Mode"))
             SetThermalMode(options.thermal_mode)
 
-    except (smi.SMIExecutionError, ), e:
+    except (smi.SMIExecutionError, ) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not execute SMI.") )
         verboseLog.info( _("The smi library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (smbios.TableParseError, token.TokenTableParseError), e:
+    except (smbios.TableParseError, token.TokenTableParseError) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (token.TokenManipulationFailure,), e:
+    except (token.TokenManipulationFailure,) as e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )

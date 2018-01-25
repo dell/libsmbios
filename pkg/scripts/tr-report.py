@@ -1,9 +1,9 @@
-#! /usr/bin/env python
+#! /usr/bin/python3
 # VIM declarations
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 
 #must be first
-from __future__ import division
+
 
 import re
 import sys
@@ -55,7 +55,7 @@ def main():
     fileList = glob.glob( path )
     fileList.sort()
 
-    print " PCT\tLINES\tCODE\tEXEC\tFILENAME"
+    print(" PCT\tLINES\tCODE\tEXEC\tFILENAME")
     for file in fileList:
         (pct, lines, loc, exc) = processFile( file )
         totalLines = totalLines + lines
@@ -63,14 +63,14 @@ def main():
         totalExc = totalExc + exc
         file = os.path.basename(file)
         file = file[:-5]
-        print "%3.0f%%\t%d\t%d\t%d\t%s" % ( (pct*100), lines, loc, exc, file )
+        print(("%3.0f%%\t%d\t%d\t%d\t%s" % ( (pct*100), lines, loc, exc, file )))
 
     if totalLoc == 0:
         pct = 1
     else:
         pct = totalExc / totalLoc
-    print
-    print "%3.0f%%\t%d\t%d\t%d\t%s" % ( (pct*100), totalLines, totalLoc, totalExc, "TOTAL" )
+    print()
+    print(("%3.0f%%\t%d\t%d\t%d\t%s" % ( (pct*100), totalLines, totalLoc, totalExc, "TOTAL" )))
 
 if __name__ == "__main__":
     main()

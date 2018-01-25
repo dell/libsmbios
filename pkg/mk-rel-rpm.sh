@@ -8,9 +8,6 @@ cd $cur_dir/../
 
 umask 002
 
-[ -n "$LIBSMBIOS_TOPDIR" ] ||
-    LIBSMBIOS_TOPDIR=/var/ftp/pub/Applications/libsmbios/
-
 set -e
 
 chmod -R +w _builddir ||:
@@ -19,5 +16,4 @@ rm -rf _builddir
 mkdir _builddir
 pushd _builddir
 ../autogen.sh
-make rpm RPM_DEFINES="--without unit-tests"
-make distcheck
+make rpm

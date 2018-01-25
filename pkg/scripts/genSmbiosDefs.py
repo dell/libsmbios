@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 
 
@@ -13,8 +13,8 @@ def main():
         elem = HelperXml.getNodeElement( doc, "STRUCTUREDEFS" )
         for node in elem.childNodes:
             if node.nodeName == "STRUCTURE":
-                print node.getAttribute("description").replace(" ", "_"), " = ", 
-                print node.getAttribute( "type" ), ","
+                print(node.getAttribute("description").replace(" ", "_"), " = ", end=' ')
+                print(node.getAttribute( "type" ), ",")
     except (IOError, KeyError):
         pass
 

@@ -30,4 +30,4 @@ src/python/libsmbios_c/memory.py
 src/python/libsmbios_c/smbios.py
 src/python/libsmbios_c/smi.py
 src/python/libsmbios_c/system_info.py
-src/python/libsmbios_c/token.py
+src/python/libsmbios_c/smbios_token.py

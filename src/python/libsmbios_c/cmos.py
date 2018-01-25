@@ -13,11 +13,10 @@ cmos_obj:
 
 # imports (alphabetical)
 import ctypes
-import exceptions
 
 from libsmbios_c import libsmbios_c_DLL as DLL
-from _common import errorOnNegativeFN, errorOnNullPtrFN
-from trace_decorator import decorate, traceLog, getLog
+from ._common import errorOnNegativeFN, errorOnNullPtrFN, c_utf8_p
+from .trace_decorator import traceLog
 
 __all__ = ["CmosAccess", "CMOS_DEFAULTS", "CMOS_GET_SINGLETON", "CMOS_GET_NEW", "CMOS_UNIT_TEST_MODE"]
 
@@ -26,7 +25,7 @@ CMOS_GET_SINGLETON =0x0001
 CMOS_GET_NEW       =0x0002
 CMOS_UNIT_TEST_MODE=0x0004
 
-decorate(traceLog())
+@traceLog()
 def CmosAccess(flags=CMOS_GET_SINGLETON, *factory_args):
     if flags & CMOS_GET_SINGLETON:
         if _CmosAccess._instance is None:
@@ -38,7 +37,7 @@ def CmosAccess(flags=CMOS_GET_SINGLETON, *factory_args):
 class _CmosAccess(ctypes.Structure):
     _instance = None
 
-    decorate(traceLog())
+    @traceLog()
     def __init__(self, *args):
         self._cmosobj = None
         self._cmosobj = DLL.cmos_obj_factory(*args)
@@ -48,17 +47,17 @@ class _CmosAccess(ctypes.Structure):
     def __del__(self):
         DLL.cmos_obj_free(self._cmosobj)
 
-    decorate(traceLog())
+    @traceLog()
     def readByte(self, indexPort, dataPort, offset):
         buf = ctypes.c_uint8()
         DLL.cmos_obj_read_byte(self._cmosobj, buf, indexPort, dataPort, offset)
         return buf.value
 
-    decorate(traceLog())
+    @traceLog()
     def writeByte(self, buf, indexPort, dataPort, offset):
         DLL.cmos_obj_write_byte(self._cmosobj, buf, indexPort, dataPort, offset)
 
-    decorate(traceLog())
+    @traceLog()
     def registerCallback(self, callback, userdata, freecb):
         cb = WRITE_CALLBACK(callback)
         # append callback to array that has same lifetime as object so python
@@ -78,8 +77,8 @@ class _CmosAccess(ctypes.Structure):
 #const char *cmos_obj_strerror(const struct cmos_access_obj *m);
 # define strerror first so we can use it in error checking other functions.
 DLL.cmos_obj_strerror.argtypes = [ ctypes.POINTER(_CmosAccess) ]
-DLL.cmos_obj_strerror.restype = ctypes.c_char_p
-decorate(traceLog())
+DLL.cmos_obj_strerror.restype = c_utf8_p
+@traceLog()
 def _strerror(obj):
     return Exception(DLL.cmos_obj_strerror(obj))
 
