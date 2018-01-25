@@ -65,3 +65,7 @@ po/en@quot.insert-header
 po/remove-potcdate.sed
 po/stamp-po
 src/python/_vars.py
+src/pyunit/runtests.sh.log
+src/pyunit/runtests.sh.trs
+test-suite.log
+dist/
