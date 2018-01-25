@@ -4,8 +4,6 @@
 	dh $@ --with autoreconf,python3
 
 override_dh_auto_install:
-	#rm -f debian/libsmbios-doc/usr/share/doc/libsmbios-doc/getopt/LICENSE
-	#$(RM) -vf debian/libsmbios-dev/usr/include/smbios/config/boost_LICENSE_1_0_txt
 	# manpage currently disabled, see #394898
 	#	cd $(CURDIR)/debian/libsmbios-bin; for f in usr/sbin/*; do \
 	#	    ln -s smbios-bin.1 usr/share/man/man1/$$(basename $$f).1; \
@@ -17,6 +15,8 @@ override_dh_auto_install:
 	dh_auto_install
 
 override_dh_install:
+	#extra license not needed
+	rm -f debian/tmp/usr/share/doc/libsmbios-doc/getopt/LICENSE
 	#we don't want to install pre-compiled byte code
 	rm -rf debian/tmp/usr/lib/python3/dist-packages/libsmbios_c/__pycache__ \
 	       debian/tmp/usr/share/smbios-utils/__pycache__/
