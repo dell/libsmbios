@@ -28,9 +28,9 @@ Standard autotools package:
 $ make install
 ```
 
-Documentation is in doxygen format. To view the docs, run "make doxygen", then
-look in the out/libsmbios_c/html/index.html.  Docs are also built as part of
-"make all".
+Documentation is in doxygen format. To view the docs, run `make doxygen`, then
+look in the `out/libsmbios_c/html/index.html`.  Docs are also built as part of
+`make all`.
 
 Distribution packages
 --
