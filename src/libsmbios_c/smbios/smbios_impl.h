@@ -68,16 +68,30 @@ struct smbios_table_entry_point
     u8 padding_for_Intel_BIOS_bugs;
 } LIBSMBIOS_C_PACKED_ATTR;
 
+struct smbios_table_entry_point_64
+{
+    u8 anchor[5];
+    u8 checksum;
+    u8 eps_length;
+    u8 major_ver;
+    u8 minor_ver;
+    u8 smbios_docrev;
+    u8 entry_point_rev;
+    u8 reserved;
+    u32 structure_table_length;
+    u64 structure_table_address;
+} LIBSMBIOS_C_PACKED_ATTR;
+
 #if defined(_MSC_VER)
 #pragma pack(pop)
 #endif
 
-// if this struct changes, update my_smbios_table struct in savesmbios.c
+// if this struct changes, update my_smbios_table struct in smbios-get-ut-data.c
 struct smbios_table
 {
     int initialized;
-    struct smbios_table_entry_point tep;
     struct table *table;
+    long table_length;
     int last_errno;
     char *errstring;
 };
@@ -85,17 +99,12 @@ struct smbios_table
 int __hidden init_smbios_struct(struct smbios_table *m);
 void __hidden _smbios_table_free(struct smbios_table *this);
 void __hidden do_smbios_fixups(struct smbios_table *);
+bool __hidden validate_dmi_tep(const struct dmi_table_entry_point *dmiTEP);
+bool __hidden smbios_verify_smbios(const char *buf, long length, long *dmi_length_out);
+bool __hidden smbios_verify_smbios3(const char *buf, long length, long *dmi_length_out);
+int __hidden smbios_get_table_firm_tables(struct smbios_table *m);
 int __hidden smbios_get_table_memory(struct smbios_table *m);
 
-#if 0
-int __hidden smbios_get_table_efi(struct smbios_table *m);
-int __hidden smbios_get_table_wmi(struct smbios_table *m);
-int __hidden smbios_get_table_firm_tables(struct smbios_table *m);
-#else
-#define smbios_get_table_efi(m)         (-1)
-#define smbios_get_table_wmi(m)         (-1)
-#define smbios_get_table_firm_tables(m) (-1)
-#endif
 
 EXTERN_C_END;
 

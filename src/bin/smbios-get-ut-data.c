@@ -235,6 +235,21 @@ struct smbios_table_entry_point
     struct dmi_table_entry_point dmi;
     u8 padding_for_Intel_BIOS_bugs;
 } LIBSMBIOS_C_PACKED_ATTR;
+
+struct smbios_table_entry_point_64
+{
+    u8 anchor[5];
+    u8 checksum;
+    u8 eps_length;
+    u8 major_ver;
+    u8 minor_ver;
+    u8 smbios_docrev;
+    u8 entry_point_rev;
+    u8 reserved;
+    u32 structure_table_length;
+    u64 structure_table_address;
+} LIBSMBIOS_C_PACKED_ATTR;
+
 #if defined(_MSC_VER)
 #pragma pack(pop)
 #endif
