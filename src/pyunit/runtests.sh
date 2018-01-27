@@ -66,11 +66,11 @@ run_test() {
     $VALGRIND $DIR/$test_binary $TMPDIR $(basename "$source_dir")
 }
 
-run_test testAll.py        $DIR/../cppunit/test_data/opti   "\n\nRunning ALL PYTHON tests."
+run_test testAll.py        $DIR/test_data/opti   "\n\nRunning ALL PYTHON tests."
 
 if [ "$TEST_STANDALONE_ONLY" = "1" ]; then exit 0; fi
 
-for i in $DIR/../cppunit/test_data/opti $DIR/../cppunit/system_dumps/* ${UNIT_TEST_DATA_DIR}/platform/*; do
+for i in $DIR/test_data/opti $DIR/system_dumps/* ${UNIT_TEST_DATA_DIR}/platform/*; do
     [ -e $i ] || continue
     run_test testSmbios.py   $i "\n\nRunning PYTHON SMBIOS tests for $i."
 done

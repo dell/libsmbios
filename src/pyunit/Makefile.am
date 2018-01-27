@@ -1,7 +1,8 @@
 
 EXTRA_DIST += \
- 	src/pyunit/runtests.sh
-
+ 	src/pyunit/runtests.sh \
+	src/pyunit/test_data \
+	src/pyunit/system_dumps
 
 
 
