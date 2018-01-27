@@ -109,8 +109,6 @@ void smbios_table_free(struct smbios_table *this)
     if (!this || this == &singleton)
         return;
 
-    memset(&this->tep, 0, sizeof(this->tep));
-
     free(this->errstring);
     this->errstring = 0;
 
@@ -160,7 +158,7 @@ struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *ta
     // for broken BIOSen.
     // The (3) is to take into account the deref at the end "data[0] ||
     // data[1]", and to take into account the "data += 2" on the next line.
-    while (((data - (u8*)table->table) < (table->tep.dmi.table_length - 3)) && (*data || data[1]))
+    while (((data - (u8*)table->table) < (table->table_length - 3)) && (*data || data[1]))
         data++;
 
     // ok, skip past the actual double null.
@@ -169,7 +167,7 @@ struct smbios_struct *smbios_table_get_next_struct(const struct smbios_table *ta
     // add code specifically to work around crap bios implementations
     // that do not have the _required_ 0x7f end-of-table entry
     //   note: (4) == sizeof a std header.
-    if ( (data - (u8*)table->table) > (table->tep.dmi.table_length - 4))
+    if ( (data - (u8*)table->table) > (table->table_length - 4))
     {
         // really should output some nasty message here... This is very
         // broken
@@ -335,20 +333,12 @@ int __hidden init_smbios_struct(struct smbios_table *m)
     fnprintf("\n");
     error = _("Could not instantiate SMBIOS table. The errors from the low-level modules were:\n");
 
-    // smbios efi strategy
-    if (smbios_get_table_efi(m) >= 0)
+    // smbios firmware tables strategy
+    if (smbios_get_table_firm_tables(m) >= 0)
         return 0;
 
     // smbios memory strategy
     if (smbios_get_table_memory(m) >= 0)
-        return 0;
-
-    // smbios WMI strategy (windows only)
-    if (smbios_get_table_wmi(m) >= 0)
-        return 0;
-
-    // smbios firmware tables strategy (windows only)
-    if (smbios_get_table_firm_tables(m) >= 0)
         return 0;
 
     // fall through to failure...
@@ -367,7 +357,7 @@ out_fail:
 
 
 // validate the smbios table entry point
-bool __hidden validate_dmi_tep( const struct dmi_table_entry_point *dmiTEP, bool strict )
+bool __hidden validate_dmi_tep(const struct dmi_table_entry_point *dmiTEP)
 {
     // This code checks for the following:
     //       entry point structure checksum : As per the specs
@@ -394,166 +384,44 @@ bool __hidden validate_dmi_tep( const struct dmi_table_entry_point *dmiTEP, bool
 
 
 
-// validate the smbios table entry point
-bool __hidden validate_smbios_tep( const struct smbios_table_entry_point *tempTEP, bool strict)
+/* validate the smbios table entry point */
+bool __hidden smbios_verify_smbios(const char *buf, long length, long *dmi_length_out)
 {
-    // This code checks for the following:
-    //       entry point structure checksum : As per the specs
-    //       smbios major version : As per the specs
-    //       Intermediate anchor string : As per the specs
-    //
-    // This code does not check the following:
-    //      intermediate checksum: the main checksum covers the
-    //      entire area
-    //          and should be sufficient, plus there is a
-    //          possibility for
-    //          BIOS bugs in this area.
-    //
-    //      minor version: according to the spec, this parser should
-    //      work
-    //          with any change in minor version. The spec says this
-    //          parser
-    //          will break if major version changes, so we check
-    //          that.
-    //
-
+    struct smbios_table_entry_point *ep;
     bool retval = true;
 
     u8 checksum = 0;
-    const u8 *ptr = (const u8*)(tempTEP);
-    // don't overrun tempTEP if BIOS is buggy... (note sizeof() test here)
-    //      added especially to deal with buggy Intel BIOS.
-    for( unsigned int i = 0; (i < (unsigned int)(tempTEP->eps_length)) && (i < sizeof(*tempTEP)); ++i )
-        // stupid stuff to avoid MVC++ .NET runtime exception check for cast to different size
-        checksum = (checksum + ptr[i]) & 0xFF;
-
-    validate_dmi_tep( &(tempTEP->dmi), strict);
+    for(unsigned int i = 0; i < length ; ++i )
+        checksum = (checksum + buf[i]) & 0xFF;
 
     fnprintf("SMBIOS TEP csum %d.\n", (int)checksum);
     if(checksum) // Checking entry point structure checksum
-        retval = false;  // validation failed
-    if(tempTEP->major_ver != 0x02 && tempTEP->major_ver != 0x03) // Checking smbios major version
-        retval = false;  // validation failed
+        return false;  // validation failed
 
-    // Entry Point Length field is at least 0x1f.
-    if(tempTEP->eps_length < 0x0f)
-        retval = false;  // validation failed
+    ep = (struct smbios_table_entry_point*) buf;
+    retval = validate_dmi_tep( &(ep->dmi));
+
+    *dmi_length_out = ep->dmi.table_length;
+    fnprintf("Major version: %d Minor version: %d\n", ep->major_ver, ep->minor_ver);
 
     return retval;
 }
 
-
-int __hidden smbios_get_tep_memory(struct smbios_table *table, bool strict)
+/* validate the smbios3 table entry point */
+bool __hidden smbios_verify_smbios3(const char *buf, long length, long *dmi_length_out)
 {
-    int retval = 0;
-    unsigned long fp = E_BLOCK_START;
-    const char *errstring;
+    struct smbios_table_entry_point_64 *ep;
+    u8 checksum = 0;
+    for(unsigned int i = 0; i < length ; ++i )
+        checksum = (checksum + buf[i]) & 0xFF;
 
-    fnprintf("\n");
+    fnprintf("SMBIOS TEP csum %d.\n", (int)checksum);
+    if(checksum) // Checking entry point structure checksum
+        return false;  // validation failed
 
-    // tell the memory subsystem that it can optimize here and
-    // keep memory open while we scan rather than open/close/open/close/...
-    // for each fillBuffer() call
-    memory_suggest_leave_open();
+    ep = (struct smbios_table_entry_point_64*) buf;
+    *dmi_length_out = ep->structure_table_length;
+    fnprintf("Major version: %d Minor version: %d\n", ep->major_ver, ep->minor_ver);
 
-    struct smbios_table_entry_point tempTEP;
-    memset(&tempTEP, 0, sizeof(tempTEP));
-    errstring = _("Could not read physical memory. Lowlevel error was:\n");
-    while ( (fp + sizeof(tempTEP)) < F_BLOCK_END)
-    {
-        int ret = memory_read(&tempTEP, fp, sizeof(tempTEP));
-        if (ret)
-            goto out_memerr;
-
-        // search for promising looking headers
-        // first, look for old-style DMI header
-        if (memcmp (&tempTEP, "_DMI_", 5) == 0)
-        {
-            errstring = _("Found _DMI_ anchor but could not parse legacy DMI structure.");
-            dbg_printf("Found _DMI_ anchor. Trying to parse legacy DMI structure.\n");
-            struct dmi_table_entry_point *dmiTEP = (struct dmi_table_entry_point *)(&tempTEP);
-            memmove(&(tempTEP.dmi), &dmiTEP, sizeof(struct dmi_table_entry_point));
-            // fake the rest of the smbios table entry point...
-            tempTEP.major_ver=2;
-            tempTEP.minor_ver=0;
-            if(validate_dmi_tep(dmiTEP, strict))
-                break;
-        }
-
-        // then, look for new-style smbios header. This will always
-        // occur before _DMI_ in memory
-        if ((memcmp (&tempTEP, "_SM_", 4) == 0))
-        {
-            errstring = _("Found _SM_ anchor but could not parse SMBIOS structure.");
-            dbg_printf("Found _SM_ anchor. Trying to parse SMBIOS structure.\n");
-            if(validate_smbios_tep(&tempTEP, strict))
-                break;
-        }
-
-        fp += 16;
-    }
-
-    // dont need memory optimization anymore
-    memory_suggest_close();
-
-    // bad stuff happened if we got to here and fp > 0xFFFFFL
-    errstring = _("Did not find smbios table entry point in memory.");
-    if ((fp + sizeof(tempTEP)) >= F_BLOCK_END)
-        goto out_notfound;
-
-    memcpy( &table->tep, &tempTEP, sizeof(table->tep) );
-    retval = 1;
-    goto out;
-
-out_memerr:
-    fnprintf("out_memerr: %s\n", errstring);
-    strlcat (table->errstring, errstring, ERROR_BUFSIZE);
-    fnprintf(" ->memory_strerror()\n");
-    strlcat (table->errstring, memory_strerror(), ERROR_BUFSIZE);
-    goto out;
-
-out_notfound:
-    fnprintf("out_notfound\n");
-    strlcat (table->errstring, errstring, ERROR_BUFSIZE);
-    goto out;
-
-out:
-    fnprintf("out\n");
-    return retval;
-}
-
-
-int __hidden smbios_get_table_memory(struct smbios_table *m)
-{
-    int retval = -1; //fail
-    const char *error = _("Could not find Table Entry Point.");
-
-    fnprintf("\n");
-
-    if (!smbios_get_tep_memory(m, false))
-        goto out_err;
-
-    error = _("Found table entry point but could not read table from memory. ");
-    size_t len = m->tep.dmi.table_length;
-    m->table = (struct table*)calloc(1, len);
-    retval = memory_read(m->table, m->tep.dmi.table_address, len);
-    if (retval != 0)
-        goto out_free_table;
-
-    goto out;
-
-out_free_table:
-    fnprintf(" out_free_table\n");
-    free(m->table);
-    m->table = 0;
-
-out_err:
-    fnprintf(" out_err\n");
-    if (strlen(m->errstring))
-        strlcat(m->errstring, "\n", ERROR_BUFSIZE);
-    strlcat (m->errstring, error, ERROR_BUFSIZE);
-
-out:
-    fnprintf(" out\n");
-    return retval;
+    return true;
 }
