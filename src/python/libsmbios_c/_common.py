@@ -70,4 +70,7 @@ class c_utf8_p(ctypes.c_char_p):
     @classmethod
     def _check_retval_(cls, result):
         value = result.value
-        return value.decode('utf-8')
+        try:
+            return value.decode('utf-8')
+        except:
+            return value
