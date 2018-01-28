@@ -158,21 +158,6 @@ int __hidden smbios_get_tep_memory(struct smbios_table *table, u64 *address, lon
         if (ret)
             goto out_memerr;
 
-        // search for promising looking headers
-        // first, look for old-style DMI header
-        if (memcmp (&tempTEP, "_DMI_", 5) == 0)
-        {
-            errstring = _("Found _DMI_ anchor but could not parse legacy DMI structure.");
-            dbg_printf("Found _DMI_ anchor. Trying to parse legacy DMI structure.\n");
-            struct dmi_table_entry_point *dmiTEP = (struct dmi_table_entry_point *)(&tempTEP);
-            memmove(&(tempTEP.dmi), &dmiTEP, sizeof(struct dmi_table_entry_point));
-            // fake the rest of the smbios table entry point...
-            tempTEP.major_ver=2;
-            tempTEP.minor_ver=0;
-            if(validate_dmi_tep(dmiTEP))
-                break;
-        }
-
         /* look for SMBIOS 2.x style header */
         if ((memcmp (block, "_SM_", 4) == 0))
         {
