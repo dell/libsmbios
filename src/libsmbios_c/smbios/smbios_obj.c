@@ -23,6 +23,7 @@
 
 // system
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 //#include <stdio.h>
 
@@ -68,6 +69,7 @@ static void clear_err(const struct smbios_table *this)
 
 struct smbios_table *smbios_table_factory(int flags, ...)
 {
+    va_list ap;
     struct smbios_table *toReturn = 0;
     int ret;
 
@@ -83,6 +85,20 @@ struct smbios_table *smbios_table_factory(int flags, ...)
 
     if (toReturn->initialized)
         goto out;
+
+    if (flags & SMBIOS_UNIT_TEST_MODE) {
+        va_start(ap, flags);
+        const char *filename = va_arg(ap, const char *);
+        long len = strlen(filename);
+        va_end(ap);
+        if (len > 0){
+            fnprintf("Input path: %s (%lu)\n", filename, len);
+            toReturn->table_path = calloc(1, len + 1);
+            if (!toReturn->table_path)
+                goto out_init_fail;
+            strcat(toReturn->table_path, filename);
+        }
+    }
 
     ret = init_smbios_struct(toReturn);
     if (ret)
@@ -108,6 +124,7 @@ void smbios_table_free(struct smbios_table *this)
 {
     if (!this || this == &singleton)
         return;
+    free(this->table_path);
 
     free(this->errstring);
     this->errstring = 0;

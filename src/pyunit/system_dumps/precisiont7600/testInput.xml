@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TESTINPUT>
+    <systemInfo>
+    <idByte>0x0495</idByte>
+	<systemName>Precision T7600</systemName>
+	<serviceTag></serviceTag>
+	<assetTag></assetTag>
+	<biosVersion>T51</biosVersion>
+	<vendorName>Dell Inc.</vendorName>
+	<isDellSystem>1</isDellSystem>
+    </systemInfo>
+    <smbios offset="0x000e0000">
+        <biosInformation numstrings="3">
+            <vendor>Dell Inc.</vendor>
+            <version>T51</version>
+            <release>04/06/2012</release>
+        </biosInformation>
+    </smbios>
+</TESTINPUT>

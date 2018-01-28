@@ -49,7 +49,12 @@ class TestCase(TestLib.TestCase):
         filename = "%s/cmos.dat" % getTempDir()
         filename = filename.encode('utf-8')
         c.CmosAccess(c.CMOS_GET_SINGLETON | c.CMOS_UNIT_TEST_MODE, filename)
-        s.SmbiosTable(s.SMBIOS_GET_SINGLETON | s.SMBIOS_UNIT_TEST_MODE)
+        if os.path.exists(os.path.join(getTempDir(), "DMI")):
+            filename = "%s" % getTempDir()
+            filename = filename.encode('utf-8')
+            s.SmbiosTable(s.SMBIOS_GET_SINGLETON | s.SMBIOS_UNIT_TEST_MODE, filename)
+        else:
+            s.SmbiosTable(s.SMBIOS_GET_SINGLETON)
 
         # use private copies for testing
         filename = "%s/memdump.dat" % getTempDir()
@@ -58,7 +63,12 @@ class TestCase(TestLib.TestCase):
         filename = "%s/cmos.dat" % getTempDir()
         filename = filename.encode('utf-8')
         self.cmosObj = c.CmosAccess(c.CMOS_GET_NEW | c.CMOS_UNIT_TEST_MODE, filename)
-        self.tableObj =  s.SmbiosTable(s.SMBIOS_GET_NEW | s.SMBIOS_UNIT_TEST_MODE)
+        if os.path.exists(os.path.join(getTempDir(), "DMI")):
+            filename = "%s" % getTempDir()
+            filename = filename.encode('utf-8')
+            self.tableObj = s.SmbiosTable(s.SMBIOS_GET_SINGLETON | s.SMBIOS_UNIT_TEST_MODE, filename)
+        else:
+            self.tableObj = s.SmbiosTable(s.SMBIOS_GET_SINGLETON)
 
     def tearDown(self):
         del(self.cmosObj)

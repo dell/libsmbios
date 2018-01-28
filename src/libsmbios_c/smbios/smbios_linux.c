@@ -78,27 +78,44 @@ int __hidden smbios_get_table_firm_tables(struct smbios_table *m)
 {
     int retval = -1; //fail
     const char *error = _("Could not open Table Entry Point.");
-    const char *entry_fname = "/sys/firmware/dmi/tables/smbios_entry_point";
-    const char *dmi_fname ="/sys/firmware/dmi/tables/DMI";
+    const char *dirname;
+    char *entry_fname = NULL;
+    char *dmi_fname = NULL;
     char *entry_buffer = NULL;
     long entry_length;
 
+    /* standard */
+    if (!m->table_path)
+        dirname = "/sys/firmware/dmi/tables";
+    /* unit test */
+    else
+        dirname = m->table_path;
+
+    if (asprintf(&entry_fname, "%s/smbios_entry_point", dirname) < 0)
+        goto out_err;
+    fnprintf("Using %s for entry point\n", entry_fname);
+
+    if (asprintf(&dmi_fname, "%s/DMI", dirname) < 0)
+        goto out_free_entry_path;
+    fnprintf("Using %s for DMI\n", dmi_fname);
+
     fnprintf("\n");
+    retval = -1;
 
     if (read_file(entry_fname, 5, &entry_buffer, &entry_length))
-        goto out_err;
+        goto out_free_dmi_path;
 
     error = _("Invalid SMBIOS table signature");
     /* parse SMBIOS structure */
     if (memcmp (entry_buffer, "_SM_", 4) == 0) {
         if (!smbios_verify_smbios (entry_buffer, entry_length, &m->table_length))
-            goto out_free_entry;
+            goto out_free_entry_buffer;
     /* parse SMBIOS 3.0 structure */
     } else if (memcmp (entry_buffer, "_SM3_", 5) == 0) {
     if (!smbios_verify_smbios3 (entry_buffer, entry_length, &m->table_length))
-        goto out_free_entry;
+        goto out_free_entry_buffer;
     } else
-        goto out_free_entry;
+        goto out_free_entry_buffer;
 
     error = _("Could not read table from memory. ");
     m->table = (struct table*)calloc(1, m->table_length);
@@ -115,8 +132,14 @@ out_free_table:
     free(m->table);
     m->table = 0;
 
-out_free_entry:
+out_free_entry_buffer:
     free(entry_buffer);
+
+out_free_dmi_path:
+    free(dmi_fname);
+
+out_free_entry_path:
+    free(entry_fname);
 
 out_err:
     fnprintf(" out_err\n");
