@@ -86,7 +86,6 @@ struct smbios_table_entry_point_64
 #pragma pack(pop)
 #endif
 
-// if this struct changes, update my_smbios_table struct in smbios-get-ut-data.c
 struct smbios_table
 {
     int initialized;

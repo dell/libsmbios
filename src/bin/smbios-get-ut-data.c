@@ -92,9 +92,6 @@ main (int argc, char **argv)
 
     printf(_("Libsmbios:    %s\n"), smbios_get_library_version_string());
 
-    // SMBIOS TABLE
-    dump_smbios_table(smbiosDumpFile);
-
     // CMOS
     smbios_walk(dumpCmos, (void*)cmosDumpFile);
 
@@ -206,119 +203,5 @@ err:
     if (buf)
         free(buf);
     fclose(fd);
-}
-
-#if defined(_MSC_VER)
-#pragma pack(push,1)
-#endif
-struct dmi_table_entry_point
-{
-    u8 anchor[5];
-    u8 checksum;
-    u16 table_length;
-    u32 table_address;
-    u16 table_num_structs;
-    u8 smbios_bcd_revision;
-}
-LIBSMBIOS_C_PACKED_ATTR;
-
-struct smbios_table_entry_point
-{
-    u8 anchor[4];
-    u8 checksum;
-    u8 eps_length;
-    u8 major_ver;
-    u8 minor_ver;
-    u16 max_struct_size;
-    u8 revision;
-    u8 formatted_area[5];
-    struct dmi_table_entry_point dmi;
-    u8 padding_for_Intel_BIOS_bugs;
-} LIBSMBIOS_C_PACKED_ATTR;
-
-struct smbios_table_entry_point_64
-{
-    u8 anchor[5];
-    u8 checksum;
-    u8 eps_length;
-    u8 major_ver;
-    u8 minor_ver;
-    u8 smbios_docrev;
-    u8 entry_point_rev;
-    u8 reserved;
-    u32 structure_table_length;
-    u64 structure_table_address;
-} LIBSMBIOS_C_PACKED_ATTR;
-
-#if defined(_MSC_VER)
-#pragma pack(pop)
-#endif
-
-
-struct my_smbios_table
-{
-    int initialized;
-    struct smbios_table_entry_point tep;
-    struct table *table;
-    int last_errno;
-    char *errstring;
-};
-
-void dump_smbios_table(const char *smbiosDumpFile)
-{
-    FILE *fd = fopen( smbiosDumpFile, "w+" );
-    struct smbios_table *table = smbios_table_factory(SMBIOS_GET_SINGLETON | SMBIOS_NO_FIXUPS);
-    struct smbios_table_entry_point tep;
-    struct my_smbios_table *my = (struct my_smbios_table *)table;
-    if (!my) {
-        printf("error initializing SMBIOS table\n");
-        return;
-    }
-    memcpy(&tep, & (my->tep), sizeof(my->tep));
-    tep.dmi.table_address = 0xE0000UL + sizeof(tep);
-
-    // fixup checksum
-    tep.checksum = 0;
-    tep.dmi.checksum = 0;
-
-    u8 checksum = 0;
-    const u8 *ptr = (const u8*)(&(tep.dmi));
-    for( unsigned int i = 0; i < sizeof(tep.dmi); ++i )
-        checksum = checksum + ptr[i];
-    tep.dmi.checksum = ~checksum + 1;
-
-    checksum = 0;
-    ptr = (const u8*)(&tep);
-    for( unsigned int i = 0; (i < (unsigned int)(tep.eps_length)) && (i < sizeof(tep)); ++i )
-        checksum = checksum + ptr[i];
-    tep.checksum = ~checksum + 1;
-
-
-    printf( _("dumping table header.\n")) ;
-    int ret = fwrite(&tep, sizeof(tep), 1, fd);
-    if (ret != 1)  // one item
-        goto out_err_header;
-
-    printf( _("dumping table.\n")) ;
-    ret = fwrite(my->table, tep.dmi.table_length, 1, fd);
-    if (ret != 1)  // one item
-        goto out_err_table;
-
-    printf(_("dumped table.\n"));
-    printf(_("table length: %d\n"), tep.dmi.table_length);
-
-    goto out;
-out_err_header:
-    printf( _("error dumping header ret(%d) sizeof(tep): %zd\n"), ret, sizeof(tep));
-    goto out;
-
-out_err_table:
-    printf( _("error dumping table\n"));
-    goto out;
-
-out:
-    smbios_table_free(table);
-    fclose(fd);
-    return;
 }
 
