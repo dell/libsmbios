@@ -636,7 +636,7 @@ def set_als_settings(als_param):
 
 def supports_ac_timeout():
     try:
-        tokenTable = token.TokenTable()
+        tokenTable = smbios_token.TokenTable()
         supports_ac = tokenTable[0x451]
         return True
     except IndexError:
@@ -689,14 +689,14 @@ def main():
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (smbios.TableParseError, token.TokenTableParseError) as e:
+    except (smbios.TableParseError, smbios_token.TokenTableParseError) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (token.TokenManipulationFailure,) as e:
+    except (smbios_token.TokenManipulationFailure,) as e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )
