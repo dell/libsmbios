@@ -89,6 +89,7 @@ struct smbios_table_entry_point_64
 struct smbios_table
 {
     int initialized;
+    char *table_path;
     struct table *table;
     long table_length;
     int last_errno;
