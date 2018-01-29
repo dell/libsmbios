@@ -2,8 +2,8 @@
 #  This is a template of all of the 'Standard' stuff that we use in all our
 #  projects.
 
-CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.xz $(PACKAGE_NAME)-*.rpm _buildtemp version
-DISTCLEANFILES=*~
+CLEANFILES=$(PACKAGE_NAME)-*.tar.gz $(PACKAGE_NAME)-*.tar.xz _buildtemp version
+DISTCLEANFILES=*~ dist
 
 EXTRA_DIST =
 EXTRA_PROGRAMS=
@@ -94,7 +94,7 @@ srpm: pkg/$(PACKAGE_NAME).spec dist
 
 TARBALL=$(PACKAGE_NAME)-*.tar.xz
 debmagic: dist-xz
-	mkdir -p dist/$(DIST)
+	mkdir -p dist/
 	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.xz
 	tar -C $(DEB_TMP_BUILDDIR) -xf $(TARBALL)
 	cp -ar pkg/debian $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian
@@ -103,7 +103,7 @@ debmagic: dist-xz
 	mv debian/changelog.in debian/changelog; \
 	dch -D $(DIST) "Built from source `git describe`" -v "$(PACKAGE_VERSION)-0" ;\
 	dpkg-buildpackage -us -uc -D -rfakeroot ; \
-	mv ../*.deb $(TOPDIR)/dist/$(DIST) ; \
+	mv ../*.deb $(TOPDIR)/dist/ ; \
 	cd -
 
 debs:

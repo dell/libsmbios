@@ -2,7 +2,7 @@ FROM centos:7
 
 VOLUME /output
 
-ENV OUTPUT_DIR /output
+ENV OUTPUT_DIR /dist
 ENV BUILD_DIR /build
 
 RUN yum install -y epel-release
