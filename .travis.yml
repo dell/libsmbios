@@ -16,3 +16,14 @@ install:
 script:
   - if [[ "$OS" == "debian" ]]; then docker run -t -v `pwd`:/build libsmbios-debian-testing pkg/mk-rel-deb.sh; fi
   - if [[ "$OS" == "centos7" ]]; then mkdir -p output; docker run -v `pwd`/output:/output centos7-libsmbios; fi
+
+deploy:
+  provider: releases
+  api_key:
+    secure: DyhNsN9qkYM1YPhixEAEE5SfILFKP9WA840rW+F9IQSVlry91or+LsR3Dr15GoMbPRVCkLlrFNdW/CKhqnxyB9pFZKnr/yNzoWP6zlZp8dKzWzmtt/Thr280+XJzHz8XMdofQnPaBXLVpuN+s4tMo9Xy4FhsTPZwUJ7WTYfoWxgvM7A+mMc/kugi2Z9tCPaRX54pHL6OsBNtRD/CR2SMHlC+X3uNIprjaLPZ+cQ8uYUYX8UzV0hBY0nDND/sjkXA9qvnakDikXcagAiV434L2ZM8TAqt6ptgpi65wASitc+BnVzsRD+MJcnkINiOItI4wKUpFmz3EZWuKLCA81atg4C7gjHxQTNYjMv56U7f3AOiIrcRmDeQx2UoShIyKFfEqH+/UEJhHc4NdxuAGYnv7hrGs4Qkl6GCH1LRJ17Y04Su/QpEsjLkreHSRRZZqh2GlT7lV32eNMx0Ua010gh7q26K6GBPL7F4vjtbLDKOLqz6pzsK4Ptd7upOY16GEwGWC6el/kf6fHz4d3hv58OWohbgOspTmzV+DEDAeA/nNqxq8Grk0Jsqyp7OYg9vEbjBIGyQqwv4eGzDlUir8LbEjIOrSDEIyIKZacGlVRITLdJ0SuwK5IPqtFQNDKmAYC9L7BnochgOnsM71Ns3CKx2ugxrTGXv4312N5x4VERkp8s=
+  file_glob: true
+  file: dist/*
+  skip_cleanup:  true
+  on:
+    tags: true
+    repo: dell/libsmbios
