@@ -60,13 +60,19 @@ int read_file(const char *fname, long minimum, char **out_buffer, long *out_leng
     if (ret == 0) {
         fnprintf("Couldn't read file\n");
         ret = -1;
+        goto out_free_memory;
     } else {
         if (feof(f) || ferror(f)) {
             fnprintf("Error reading file\n");
             ret = -1;
+            goto out_free_memory;
         } else
             ret = 0;
     }
+    goto out_close_file;
+
+out_free_memory:
+    free(*out_buffer);
 
 out_close_file:
     fclose(f);
