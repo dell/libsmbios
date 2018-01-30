@@ -300,8 +300,8 @@ out_fail:
         strlcat(errbuf, fn, ERROR_BUFSIZE);
         strlcat(errbuf, _("\nThe OS Error string was: "), ERROR_BUFSIZE);
         fixed_strerror(errno, errbuf, ERROR_BUFSIZE);
+        fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
     }
-    fnprintf(" errbuf ->%p (%zd) '%s'\n", errbuf, strlen(errbuf), errbuf);
     linux_free(m);
     retval = -1;
 
@@ -314,7 +314,3 @@ __hidden int init_mem_struct(struct memory_access_obj *m)
 {
    return init_mem_struct_filename(m, "/dev/mem");
 }
-
-
-
-
