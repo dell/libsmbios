@@ -95,7 +95,7 @@ struct smbios_table *smbios_table_factory(int flags, ...)
             fnprintf("Input path: %s (%lu)\n", filename, len);
             toReturn->table_path = calloc(1, len + 1);
             if (!toReturn->table_path)
-                goto out_init_fail;
+                goto out_clear_memory;
             strcat(toReturn->table_path, filename);
         }
     }
@@ -108,6 +108,10 @@ struct smbios_table *smbios_table_factory(int flags, ...)
         do_smbios_fixups(toReturn);
 
     goto out;
+
+out_clear_memory:
+    if (!(flags & SMBIOS_GET_SINGLETON))
+        free(toReturn);
 
 out_init_fail:
     // fail. init_smbios_* functions are responsible for free-ing memory if they
