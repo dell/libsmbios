@@ -322,8 +322,9 @@ int __hidden LINUX_dell_wmi_obj_execute(struct dell_smi_obj *this)
     if (!f)
         return -EINVAL;
     ret = fread(&length, sizeof(__u64), 1, f);
+    fnprintf("length: %u\n", length);
     fclose(f);
-    if (ret <= 0 || !length)
+    if (ret <= 0 || length > 65536)
         return -EIO;
     buffer = calloc(1, length);
     if (!buffer)
