@@ -120,7 +120,7 @@ int __hidden smbios_get_table_firm_tables(struct smbios_table *m)
     error = _("Could not read table from memory. ");
     m->table = (struct table*)calloc(1, m->table_length);
     if (!m->table)
-        goto out_err;
+        goto out_free_entry_buffer;
 
     retval = read_file(dmi_fname, m->table_length, (char**) &m->table, &m->table_length);
     if (retval)
