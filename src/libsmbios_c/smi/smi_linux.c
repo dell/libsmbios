@@ -338,6 +338,8 @@ int __hidden LINUX_dell_wmi_obj_execute(struct dell_smi_obj *this)
 
     // perform command
     fd = open(wmi_char, O_NONBLOCK);
+    if (fd < 0)
+        return -EIO;
     ret = ioctl(fd, DELL_WMI_SMBIOS_CMD, buffer);
     close(fd);
     if (ret)
