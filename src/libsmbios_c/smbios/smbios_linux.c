@@ -49,7 +49,7 @@ int read_file(const char *fname, long minimum, char **out_buffer, long *out_leng
     fseek(f, 0, SEEK_END);
     *out_length = ftell(f);
     fseek(f, 0, SEEK_SET);
-    if (*out_length < minimum) {
+    if (*out_length < minimum || *out_length < 0) {
         fnprintf("File length: %li\n", *out_length);
         goto out_close_file;
     }
