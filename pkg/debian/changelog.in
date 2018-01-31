@@ -22,6 +22,7 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
     - Fix long lines (Closes: #803607, #803608, #803609)
   * debian/rules:
     - Switch to new debhelper format
+    - Enable hardening flags
 
  -- Mario Limonciello <mario.limonciello@dell.com>  Wed, 31 Jan 2018 14:27:34 -0600
 
