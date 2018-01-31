@@ -15,9 +15,7 @@ override_dh_auto_install:
 	dh_auto_install
 
 override_dh_install:
-	#extra license not needed
-	rm -f debian/tmp/usr/share/doc/libsmbios-doc/getopt/LICENSE
 	#we don't want to install pre-compiled byte code
 	rm -rf debian/tmp/usr/lib/python3/dist-packages/libsmbios_c/__pycache__ \
 	       debian/tmp/usr/share/smbios-utils/__pycache__/
-	dh_install
+	dh_install -XLICENSE
