@@ -21,14 +21,14 @@ Build-Depends: debhelper (>= 9),
                autopoint
 Standards-Version: 4.1.3
 
-Package: libsmbios2
+Package: libsmbios-c2
 Architecture: i386 amd64
 Depends: ${shlibs:Depends},
          ${misc:Depends}
 Suggests: libsmbios-doc
-Provides: libsmbios2v5 (=2.3.1-0ubuntu2)
-Conflicts: libsmbios2v5
-Replaces: libsmbios2v5
+Provides: libsmbios2v5 (=2.3.1-0ubuntu2), libsmbios2 (=2.3.1-1)
+Conflicts: libsmbios2v5, libsmbios2
+Replaces: libsmbios2v5, libsmbios2
 Description: Provide access to (SM)BIOS information -- dynamic library
  libsmbios aims towards providing access to as much BIOS information as
  possible. It does this by providing a library of functions that can be used 
@@ -46,7 +46,7 @@ Description: Provide access to (SM)BIOS information -- dynamic library
 Package: libsmbios-dev
 Section: libdevel
 Architecture: i386 amd64
-Depends: libsmbios2 (= ${binary:Version}),
+Depends: libsmbios-c2 (= ${binary:Version}),
          ${misc:Depends}
 Description: Provide access to (SM)BIOS information - development files
  libsmbios aims towards providing access to as much BIOS information as
@@ -86,7 +86,7 @@ Description: Provide access to (SM)BIOS information -- utility binaries
 Package: python3-libsmbios
 Section: python
 Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends}, libsmbios2
+Depends: ${python3:Depends}, ${misc:Depends}, libsmbios-c2
 Suggests: libsmbios-doc
 Description: Provide access to (SM)BIOS information -- Python libraries
  libsmbios aims towards providing access to as much BIOS information as

@@ -94,6 +94,7 @@ srpm: pkg/$(PACKAGE_NAME).spec dist
 	rm -rf $(BUILDDIR)
 
 TARBALL=$(PACKAGE_NAME)-*.tar.xz
+DESCRIBE=$(shell git describe)
 debmagic: dist-xz
 	mkdir -p dist/
 	cp $(TARBALL) $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)_$(PACKAGE_VERSION).orig.tar.xz
@@ -102,7 +103,7 @@ debmagic: dist-xz
 	chmod +x $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/rules
 	cd $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION) ; \
 	mv debian/changelog.in debian/changelog; \
-	dch -D $(DIST) "Built from source `git describe`" -v "$(PACKAGE_VERSION)-0" ;\
+	dch -D $(DIST) "Built from source $(DESCRIBE)" -v "$(PACKAGE_VERSION)-0" ;\
 	dpkg-buildpackage -us -uc -D -rfakeroot ; \
 	mv ../*.deb $(TOPDIR)/dist/ ; \
 	cd -
