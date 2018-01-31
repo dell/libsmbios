@@ -47,7 +47,6 @@ Package: libsmbios-dev
 Section: libdevel
 Architecture: i386 amd64
 Depends: libsmbios2 (= ${binary:Version}),
-         ${shlibs:Depends},
          ${misc:Depends}
 Description: Provide access to (SM)BIOS information - development files
  libsmbios aims towards providing access to as much BIOS information as
@@ -76,7 +75,7 @@ Replaces: libsmbios-bin
 Architecture: i386 amd64
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         ${python:Depends},
+         ${python3:Depends},
          python3-libsmbios,
          python3
 Suggests: libsmbios-doc
@@ -87,8 +86,7 @@ Description: Provide access to (SM)BIOS information -- utility binaries
 Package: python3-libsmbios
 Section: python
 Architecture: all
-Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}, libsmbios2
-Breaks: ${python3:Breaks}
+Depends: ${python3:Depends}, ${misc:Depends}, libsmbios2
 Suggests: libsmbios-doc
 Description: Provide access to (SM)BIOS information -- Python libraries
  libsmbios aims towards providing access to as much BIOS information as
