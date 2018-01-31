@@ -97,7 +97,7 @@ Package: libsmbios-doc
 Section: doc
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, libjs-jquery
 Description: Access to (SM)BIOS information in an OS-indepent way (docs)
  libsmbios aims towards providing access to as much BIOS information as
  possible. It does this by providing a library of functions that can be used 

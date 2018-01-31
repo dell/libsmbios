@@ -15,6 +15,9 @@ override_dh_auto_install:
 	dh_auto_install
 
 override_dh_install:
+	#use libjs-jquery instead
+	rm -f out/libsmbios_c/html/jquery.js
+	ln -s /usr/share/javascript/jquery/jquery.js out/libsmbios_c/html/jquery.js
 	#we don't want to install pre-compiled byte code
 	rm -rf debian/tmp/usr/lib/python3/dist-packages/libsmbios_c/__pycache__ \
 	       debian/tmp/usr/share/smbios-utils/__pycache__/
