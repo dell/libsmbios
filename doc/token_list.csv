@@ -87,8 +87,8 @@
 0055,Wake-on-LAN,Disabled,"The system will not respond to magic packets or other means of wake-on-LAN. The NIC chip section that looks for packets will not be powered.",,
 0056,Wake-on-LAN,Add-in-card,"Any NIC plugged into an expansion slot will be enabled for Wake-on-LAN. There's only one small white NIC power connector per riser, so if the user has two or more add-in NICs, whichever one is plugged into the special power connector is the source of any Wake-on-LAN signal.",,
 0057,Wake-on-LAN,On-board,"The on-board NIC is enabled for Wake-on-LAN.",,
-0058,"Management Driver",Present,"Internal use by system managment software"
-0059,"Management Driver",Absent,"Internal use by system managment software."
+0058,"Management Driver",Present,"Internal use by system management software"
+0059,"Management Driver",Absent,"Internal use by system management software."
 005A,"Reset Button",Enable,"The system's reset button, if pressed, is enabled to perform a hardware reset of the system.",,
 005B,"Reset Button",Disable,"The system's reset button, if pressed, will not perform a hardware reset of the system.",,
 005C,"Remote BIOS Update",Enable,"Internal use by BIOS update utility."
@@ -591,7 +591,7 @@
 0248,"Help Desk",Enabled,"If Help Desk is enabled in BIOS setup, 'Ctrl+H Help Desk' hotkey message will show on the post screen if ME is alive and CIRA will be supported.",2.005,191
 0249,"Help Desk",Disabled,"If Help Desk is disabled in BIOS setup, 'Ctrl+H Help Desk' hotkey message will not show on the post screen even if ME is alive and CIRA will not be supported.",2.005,191
 024A,"Trusted Platform Module",Activate,"Token for remotely activating the TPM dependent on meeting certain security criteria.",2.005,193
-024B,"C States Control",Enabled,"When set to Enabled, the processor can operate in all availabe Power C States",2.005,197
+024B,"C States Control",Enabled,"When set to Enabled, the processor can operate in all available Power C States",2.005,197
 024C,"C States Control",Disabled,"When set to Disabled, there are no C states available for the processor",2.005,197
 024D,"Prompt on Error",Enabled,"Enabled the BIOS from prompting for F1/F2 on error. BIOS pauses at F1/F2 prompt.",2.005,198
 024E,"Prompt on Error",Disabled,"Disables the BIOS from prompting for F1/F2 on error. BIOS continues to boot as if F1 had been pushed.",2.005,198
@@ -664,7 +664,7 @@
 0291,"Rear Single USB",On,"This feature will allow the users to electrically enable or disable the Rear Single USB ports. If disabled, they are unusable in any OS.",,253
 0292,"Enable Instant ON",Enable,"Enable the Latitude on Instant ON feature.",,254
 0293,"Enable Instant ON",Disable,"Disable the Latitude on Instant ON feature.",,254
-0294,"Enable Media Card",Enable,"Setup is graphical and the represention of the field is a check box. When checked, the media card is enabled and this token is active.",,256
+0294,"Enable Media Card",Enable,"Setup is graphical and the representation of the field is a check box. When checked, the media card is enabled and this token is active.",,256
 0295,"Enable Media Card",Disable,"Setup is graphical and the representation of this field is a check box. When un-checked, the media card is disabled and this token is active.",,256
 0296,"NAND Module",Enabled,"Enable the NAND module.",,265
 0297,"NAND Module",Disabled,"Disable the NAND module.",,265
