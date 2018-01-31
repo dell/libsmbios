@@ -23,6 +23,8 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
   * debian/rules:
     - Switch to new debhelper format
     - Enable hardening flags
+  * debian/smbios-utils.links:
+    - Drop reference to old rbu flash tool.
 
  -- Mario Limonciello <mario.limonciello@dell.com>  Wed, 31 Jan 2018 14:27:34 -0600
 
