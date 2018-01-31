@@ -69,7 +69,7 @@ struct smbios_struct *smbios_get_next_struct_by_handle(const struct smbios_struc
     return ret;
 }
 
-char *smbios_strerror(const struct smbios_struct *cur)
+char *smbios_strerror()
 {
     char *ret;
     struct smbios_table *table = smbios_table_factory(SMBIOS_DEFAULTS | SMBIOS_NO_ERR_CLEAR);
