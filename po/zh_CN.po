@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libsmbios 2.2.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-08 12:19+0530\n"
+"Report-Msgid-Bugs-To: libsmbios-devel@lists.us.dell.com\n"
+"POT-Creation-Date: 2018-01-31 15:58-0600\n"
 "PO-Revision-Date: 2008-10-26 00:19-0500\n"
 "Last-Translator: Michael Brown <Michael_E_Brown@dell.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -41,73 +41,73 @@ msgstr ""
 msgid "Owner password"
 msgstr ""
 
-#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:120
-#: src/bin/smbios-token-ctl:433 src/bin/smbios-wakeup-ctl:120
-#: src/bin/smbios-wireless-ctl:387 src/bin/smbios-lcd-brightness:120
-#: src/bin/smbios-keyboard-ctl:649 src/bin/smbios-thermal-ctl:220
+#: src/bin/smbios-passwd:100 src/bin/smbios-sys-info:123
+#: src/bin/smbios-token-ctl:415 src/bin/smbios-wakeup-ctl:120
+#: src/bin/smbios-wireless-ctl:386 src/bin/smbios-lcd-brightness:120
+#: src/bin/smbios-keyboard-ctl:694 src/bin/smbios-thermal-ctl:220
 msgid "ERROR: Could not parse system SMBIOS table."
 msgstr ""
 
-#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:121
-#: src/bin/smbios-token-ctl:434 src/bin/smbios-wakeup-ctl:121
-#: src/bin/smbios-wireless-ctl:388 src/bin/smbios-lcd-brightness:121
-#: src/bin/smbios-keyboard-ctl:650 src/bin/smbios-thermal-ctl:221
+#: src/bin/smbios-passwd:101 src/bin/smbios-sys-info:124
+#: src/bin/smbios-token-ctl:416 src/bin/smbios-wakeup-ctl:121
+#: src/bin/smbios-wireless-ctl:387 src/bin/smbios-lcd-brightness:121
+#: src/bin/smbios-keyboard-ctl:695 src/bin/smbios-thermal-ctl:221
 msgid "The smbios library returned this error:"
 msgstr ""
 
-#: src/bin/smbios-sys-info:55
+#: src/bin/smbios-sys-info:54
 msgid "Libsmbios version"
 msgstr ""
 
-#: src/bin/smbios-sys-info:56
+#: src/bin/smbios-sys-info:55
 msgid "Product Name"
 msgstr ""
 
-#: src/bin/smbios-sys-info:57
+#: src/bin/smbios-sys-info:56
 msgid "Vendor"
 msgstr ""
 
-#: src/bin/smbios-sys-info:58
+#: src/bin/smbios-sys-info:57
 msgid "BIOS Version"
 msgstr ""
 
-#: src/bin/smbios-sys-info:59
+#: src/bin/smbios-sys-info:58
 msgid "System ID"
 msgstr ""
 
-#: src/bin/smbios-sys-info:60
+#: src/bin/smbios-sys-info:59
 msgid "Service Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:61
+#: src/bin/smbios-sys-info:60
 msgid "Express Service Code"
 msgstr ""
 
-#: src/bin/smbios-sys-info:62
+#: src/bin/smbios-sys-info:61
 msgid "Asset Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:63
+#: src/bin/smbios-sys-info:62
 msgid "Property Ownership Tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:75
+#: src/bin/smbios-sys-info:74
 msgid "Show or set service tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:76
+#: src/bin/smbios-sys-info:75
 msgid "Show or set asset tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:77
+#: src/bin/smbios-sys-info:76
 msgid "Show or set property tag"
 msgstr ""
 
-#: src/bin/smbios-sys-info:78
+#: src/bin/smbios-sys-info:77
 msgid "Set specified tag to new value"
 msgstr ""
 
-#: src/bin/smbios-sys-info:93
+#: src/bin/smbios-sys-info:92
 msgid "Specify which tag to set."
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Current tag value:"
 msgstr ""
 
-#: src/bin/smbios-sys-info:114
+#: src/bin/smbios-sys-info:117
 #, c-format
 msgid "Setting new tag value: %s"
 msgstr ""
@@ -176,205 +176,205 @@ msgstr ""
 msgid "Path to token blacklist file."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:119 src/bin/smbios-token-ctl:120
-#: src/bin/smbios-token-ctl:121 src/bin/smbios-token-ctl:122
-#: src/bin/smbios-token-ctl:295
+#: src/bin/smbios-token-ctl:105 src/bin/smbios-token-ctl:106
+#: src/bin/smbios-token-ctl:107 src/bin/smbios-token-ctl:108
+#: src/bin/smbios-token-ctl:277
 msgid "unknown"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:163 src/bin/smbios-token-ctl:353
+#: src/bin/smbios-token-ctl:145 src/bin/smbios-token-ctl:335
 msgid "Ignoring parsing error in CSV file:"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:183
+#: src/bin/smbios-token-ctl:165
 #, c-format
 msgid "Skipping '%s' due to IOError.\n"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:184
+#: src/bin/smbios-token-ctl:166
 #, c-format
 msgid "The error message was: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:191
+#: src/bin/smbios-token-ctl:173
 msgid "<weird unknown type>"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:192
+#: src/bin/smbios-token-ctl:174
 msgid "<unknown value>"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:241
+#: src/bin/smbios-token-ctl:223
 #, c-format
 msgid "  Token: 0x%04x - %s (%s)"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:245
+#: src/bin/smbios-token-ctl:227
 #, c-format
 msgid "  value: %s = %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:249
+#: src/bin/smbios-token-ctl:231
 msgid "   Desc: "
 msgstr ""
 
-#: src/bin/smbios-token-ctl:276
+#: src/bin/smbios-token-ctl:258
 #, c-format
 msgid "Importing token values from '%s'"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:284
+#: src/bin/smbios-token-ctl:266
 #, c-format
 msgid ""
 "File format error. The first line should list the column names. Could not "
 "find the %s column"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:285
+#: src/bin/smbios-token-ctl:267
 msgid "Cannot continue, exiting."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:296
+#: src/bin/smbios-token-ctl:278
 #, c-format
 msgid "Not importing token that is unknown: 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:301
+#: src/bin/smbios-token-ctl:283
 #, c-format
 msgid ""
 "INFO: token 0x%04x settings file name does not match my DB. Applying setting "
 "anyways."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:302 src/bin/smbios-token-ctl:307
+#: src/bin/smbios-token-ctl:284 src/bin/smbios-token-ctl:289
 #, c-format
 msgid "\tsettings file: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:303 src/bin/smbios-token-ctl:308
+#: src/bin/smbios-token-ctl:285 src/bin/smbios-token-ctl:290
 #, c-format
 msgid "\tDB name      : %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:306
+#: src/bin/smbios-token-ctl:288
 #, c-format
 msgid ""
 "INFO: token 0x%04x settings file setting-name does not match my DB. Applying "
 "setting anyways."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:312
+#: src/bin/smbios-token-ctl:294
 #, c-format
 msgid ""
 "SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but "
 "it doesnt pass bool check."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:317
+#: src/bin/smbios-token-ctl:299
 #, c-format
 msgid "Importing setting for token (active): 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:320
+#: src/bin/smbios-token-ctl:302
 #, c-format
 msgid "Token already correct (bool, active): 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:323
+#: src/bin/smbios-token-ctl:305
 #, c-format
 msgid ""
 "Info: Cannot de-activate tokens, can only activate the contrapositive. (0x"
 "%04x == false)"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:325
+#: src/bin/smbios-token-ctl:307
 #, c-format
 msgid "Token already correct (bool, inactive): 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:327
+#: src/bin/smbios-token-ctl:309
 #, c-format
 msgid ""
 "UNEXPECTED VALUE: Bool token should only ever have values of 'true' or "
 "'false', but token 0x%04x tries to set value '%s'"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:332
+#: src/bin/smbios-token-ctl:314
 #, c-format
 msgid ""
 "SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, "
 "but it doesnt pass string check."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:336
+#: src/bin/smbios-token-ctl:318
 #, c-format
 msgid "Importing setting for token (string): 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:339
+#: src/bin/smbios-token-ctl:321
 #, c-format
 msgid "Token already correct (string=='%s'): 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:342
+#: src/bin/smbios-token-ctl:324
 #, c-format
 msgid "Not importing token which is inapplicable to this system: 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:347
+#: src/bin/smbios-token-ctl:329
 #, c-format
 msgid "Not importing blacklisted token 0x%04x. Reason: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:366
+#: src/bin/smbios-token-ctl:348
 msgid "require token-id or token name/setting pair."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:377
+#: src/bin/smbios-token-ctl:359
 #, c-format
 msgid "token not found. Name(%s) Setting(%s)."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:409
+#: src/bin/smbios-token-ctl:391
 msgid "Original Value"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:410
+#: src/bin/smbios-token-ctl:392
 #, c-format
 msgid "       token: 0x%04x"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:411 src/bin/smbios-token-ctl:428
+#: src/bin/smbios-token-ctl:393 src/bin/smbios-token-ctl:410
 #, c-format
 msgid "        type: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:412 src/bin/smbios-token-ctl:429
+#: src/bin/smbios-token-ctl:394 src/bin/smbios-token-ctl:411
 #, c-format
 msgid "       value: %s"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:416
+#: src/bin/smbios-token-ctl:398
 msgid "Setting string value ..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:418 src/bin/smbios-token-ctl:424
+#: src/bin/smbios-token-ctl:400 src/bin/smbios-token-ctl:406
 msgid "New value"
 msgstr ""
 
-#: src/bin/smbios-token-ctl:422
+#: src/bin/smbios-token-ctl:404
 msgid "Activating token..."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:439 src/bin/smbios-wakeup-ctl:127
-#: src/bin/smbios-wireless-ctl:394 src/bin/smbios-lcd-brightness:127
-#: src/bin/smbios-keyboard-ctl:656 src/bin/smbios-thermal-ctl:227
+#: src/bin/smbios-token-ctl:421 src/bin/smbios-wakeup-ctl:127
+#: src/bin/smbios-wireless-ctl:393 src/bin/smbios-lcd-brightness:127
+#: src/bin/smbios-keyboard-ctl:701 src/bin/smbios-thermal-ctl:227
 msgid "ERROR: Could not manipulate system token."
 msgstr ""
 
-#: src/bin/smbios-token-ctl:440 src/bin/smbios-wakeup-ctl:128
-#: src/bin/smbios-wireless-ctl:395 src/bin/smbios-lcd-brightness:128
-#: src/bin/smbios-keyboard-ctl:657 src/bin/smbios-thermal-ctl:228
+#: src/bin/smbios-token-ctl:422 src/bin/smbios-wakeup-ctl:128
+#: src/bin/smbios-wireless-ctl:394 src/bin/smbios-lcd-brightness:128
+#: src/bin/smbios-keyboard-ctl:702 src/bin/smbios-thermal-ctl:228
 msgid "The token library returned this error:"
 msgstr ""
 
@@ -580,8 +580,8 @@ msgid ""
 "Runtime setting has no effect when boot time config is disabled. Ignoring."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:173 src/bin/smbios-wireless-ctl:247
-#: src/bin/smbios-wireless-ctl:299
+#: src/bin/smbios-wireless-ctl:173 src/bin/smbios-wireless-ctl:246
+#: src/bin/smbios-wireless-ctl:298
 msgid "This system does not support runtime control of wireless settings."
 msgstr ""
 
@@ -596,241 +596,241 @@ msgid ""
 "This system does not support boot-time wireless switch configuration for %s."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:200
+#: src/bin/smbios-wireless-ctl:199
 #, c-format
 msgid ""
 "\n"
 "Set runtime switch settings for %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:208 src/bin/smbios-wireless-ctl:224
-#: src/bin/smbios-wireless-ctl:318
+#: src/bin/smbios-wireless-ctl:207 src/bin/smbios-wireless-ctl:223
+#: src/bin/smbios-wireless-ctl:317
 msgid ""
 "This system does not support runtime control of wireless switch settings."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:241
+#: src/bin/smbios-wireless-ctl:240
 #, c-format
 msgid ""
 "\n"
 "Radio Status for %s:"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:250
+#: src/bin/smbios-wireless-ctl:249
 #, c-format
 msgid "\t%s enabled at boot"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:250
+#: src/bin/smbios-wireless-ctl:249
 #, c-format
 msgid "\t%s disabled at boot"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:252
+#: src/bin/smbios-wireless-ctl:251
 #, c-format
 msgid "\t%s boot-time setting not present"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:255
+#: src/bin/smbios-wireless-ctl:254
 #, c-format
 msgid "\t%s supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:259
+#: src/bin/smbios-wireless-ctl:258
 #, c-format
 msgid "\t%s disabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:262
+#: src/bin/smbios-wireless-ctl:261
 #, c-format
 msgid "\t%s enabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:265
+#: src/bin/smbios-wireless-ctl:264
 #, c-format
 msgid "\t%s installed"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:268
+#: src/bin/smbios-wireless-ctl:267
 #, c-format
 msgid "\t%s not installed"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:271
+#: src/bin/smbios-wireless-ctl:270
 #, c-format
 msgid "\t%s controlled by wireless switch at boot"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:271
+#: src/bin/smbios-wireless-ctl:270
 #, c-format
 msgid "\t%s not controlled by wireless switch at boot"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:273
+#: src/bin/smbios-wireless-ctl:272
 #, c-format
 msgid "\t%s boot-time wireless switch setting not present"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:276
+#: src/bin/smbios-wireless-ctl:275
 #, c-format
 msgid "\t%s runtime switch control currently enabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:276
+#: src/bin/smbios-wireless-ctl:275
 #, c-format
 msgid "\t%s runtime switch control currently disabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:280
+#: src/bin/smbios-wireless-ctl:279
 #, c-format
 msgid "\t%s not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:287
+#: src/bin/smbios-wireless-ctl:286
 #, c-format
 msgid "\t%s legacy switch enabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:287
+#: src/bin/smbios-wireless-ctl:286
 #, c-format
 msgid "\t%s legacy switch disabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:292
+#: src/bin/smbios-wireless-ctl:291
 #, c-format
 msgid "\tStatus Code: %d"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:295
+#: src/bin/smbios-wireless-ctl:294
 msgid "Wireless Info:"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:301
+#: src/bin/smbios-wireless-ctl:300
 msgid "\tHardware switch supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:304
+#: src/bin/smbios-wireless-ctl:303
 msgid "\tHardware switch not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:306
+#: src/bin/smbios-wireless-ctl:305
 msgid "\tWiFi Locator supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:306
+#: src/bin/smbios-wireless-ctl:305
 msgid "\tWiFi Locator not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:307
+#: src/bin/smbios-wireless-ctl:306
 msgid "\tWireless Keyboard supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:307
+#: src/bin/smbios-wireless-ctl:306
 msgid "\tWireless Keyboard not supported"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:308
+#: src/bin/smbios-wireless-ctl:307
 #, c-format
 msgid "\tNVRAM Size: %d bytes"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:309
+#: src/bin/smbios-wireless-ctl:308
 #, c-format
 msgid "\tNVRAM format version: %d"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:314
+#: src/bin/smbios-wireless-ctl:313
 msgid ""
 "\n"
 "Wireless Switch Configuration"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:319
+#: src/bin/smbios-wireless-ctl:318
 #, c-format
 msgid "\tWLAN switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-wireless-ctl:320
-#: src/bin/smbios-wireless-ctl:321 src/bin/smbios-wireless-ctl:322
-#: src/bin/smbios-wireless-ctl:323
+#: src/bin/smbios-wireless-ctl:318 src/bin/smbios-wireless-ctl:319
+#: src/bin/smbios-wireless-ctl:320 src/bin/smbios-wireless-ctl:321
+#: src/bin/smbios-wireless-ctl:322
 msgid "on"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-wireless-ctl:320
-#: src/bin/smbios-wireless-ctl:321 src/bin/smbios-wireless-ctl:322
-#: src/bin/smbios-wireless-ctl:323
+#: src/bin/smbios-wireless-ctl:318 src/bin/smbios-wireless-ctl:319
+#: src/bin/smbios-wireless-ctl:320 src/bin/smbios-wireless-ctl:321
+#: src/bin/smbios-wireless-ctl:322
 msgid "off"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:320
+#: src/bin/smbios-wireless-ctl:319
 #, c-format
 msgid "\tBluetooth switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:321
+#: src/bin/smbios-wireless-ctl:320
 #, c-format
 msgid "\tWWAN switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:322
+#: src/bin/smbios-wireless-ctl:321
 #, c-format
 msgid "\tUWB switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:323
+#: src/bin/smbios-wireless-ctl:322
 #, c-format
 msgid "\tWiGig switch control: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:324
+#: src/bin/smbios-wireless-ctl:323
 #, c-format
 msgid "\tswitch config: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:324 src/bin/smbios-wireless-ctl:326
+#: src/bin/smbios-wireless-ctl:323 src/bin/smbios-wireless-ctl:325
 msgid "locked"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:324 src/bin/smbios-wireless-ctl:326
+#: src/bin/smbios-wireless-ctl:323 src/bin/smbios-wireless-ctl:325
 msgid "not locked"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:325
+#: src/bin/smbios-wireless-ctl:324
 #, c-format
 msgid "\tWiFi locator: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:325
+#: src/bin/smbios-wireless-ctl:324
 msgid "enabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:325
+#: src/bin/smbios-wireless-ctl:324
 msgid "disabled"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:326
+#: src/bin/smbios-wireless-ctl:325
 #, c-format
 msgid "\tWiFi Locator config: %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:342 src/bin/smbios-keyboard-ctl:613
+#: src/bin/smbios-wireless-ctl:341 src/bin/smbios-keyboard-ctl:652
 #: src/bin/smbios-thermal-ctl:197
 #, c-format
 msgid "Libsmbios version : %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:343
+#: src/bin/smbios-wireless-ctl:342
 #, c-format
 msgid "smbios-wireless-ctl version : %s"
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:380 src/bin/smbios-lcd-brightness:113
-#: src/bin/smbios-keyboard-ctl:642 src/bin/smbios-thermal-ctl:213
+#: src/bin/smbios-wireless-ctl:379 src/bin/smbios-lcd-brightness:113
+#: src/bin/smbios-keyboard-ctl:687 src/bin/smbios-thermal-ctl:213
 msgid "ERROR: Could not execute SMI."
 msgstr ""
 
-#: src/bin/smbios-wireless-ctl:381 src/bin/smbios-lcd-brightness:114
-#: src/bin/smbios-keyboard-ctl:643 src/bin/smbios-thermal-ctl:214
+#: src/bin/smbios-wireless-ctl:380 src/bin/smbios-lcd-brightness:114
+#: src/bin/smbios-keyboard-ctl:688 src/bin/smbios-thermal-ctl:214
 msgid "The smi library returned this error:"
 msgstr ""
 
@@ -908,395 +908,408 @@ msgid "Option to set Trigger types for Keyboard Illumination  "
 msgstr ""
 
 #: src/bin/smbios-keyboard-ctl:53
-msgid "Set Keyboard Illumination Timeout Value"
+msgid "Set Keyboard Illumination Timeout Value (battery)"
 msgstr ""
 
 #: src/bin/smbios-keyboard-ctl:54
-msgid "Set Keyboard Illumination Level"
+msgid "Set Keyboard Illumination Timeout Value (ac)"
 msgstr ""
 
 #: src/bin/smbios-keyboard-ctl:55
+msgid "Set Keyboard Illumination Level"
+msgstr ""
+
+#: src/bin/smbios-keyboard-ctl:56
 msgid "Set/Get ALS (Ambient Light Sensor Status and Control Level)"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:85 src/bin/smbios-keyboard-ctl:125
-#: src/bin/smbios-keyboard-ctl:426
+#: src/bin/smbios-keyboard-ctl:86 src/bin/smbios-keyboard-ctl:128
+#: src/bin/smbios-keyboard-ctl:456
 #, c-format
 msgid ""
 "Get Keyboard Illumination Capability: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x"
 "%X,res[smi.cbRES3]=0x%X,res[smi.cbRES4]=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:88
+#: src/bin/smbios-keyboard-ctl:89
 msgid "\ttCould not retrieve supported USER Selectable Modes"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:91
+#: src/bin/smbios-keyboard-ctl:94
 msgid ""
 "\n"
 " Supported USER Selectable Modes: "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:92
+#: src/bin/smbios-keyboard-ctl:95
 msgid "\tOption\tMode"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:93 src/bin/smbios-keyboard-ctl:132
+#: src/bin/smbios-keyboard-ctl:96 src/bin/smbios-keyboard-ctl:135
 msgid "------------------------------------------------"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:104
+#: src/bin/smbios-keyboard-ctl:107
 msgid ""
 "\n"
 " Note: some modes might need the keyboard set at specific illumination "
 "levels\n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:128
+#: src/bin/smbios-keyboard-ctl:131
 msgid "\tCould not retrieve supported KeyBoard Illumination Capabilities"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:130
+#: src/bin/smbios-keyboard-ctl:133
 msgid ""
 "\n"
 " Select Keyboard illumination on: "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:131
+#: src/bin/smbios-keyboard-ctl:134
 msgid "\tTrigger Type\t\tOption"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:138
+#: src/bin/smbios-keyboard-ctl:141
 msgid ""
 "Eg: to Select Trigger for [Any Keystroke] and [Touchpad activity] specify "
 "your option like this 0,1)"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:140
-#, c-format
-msgid "Selected %s"
-msgstr ""
-
-#: src/bin/smbios-keyboard-ctl:154
+#: src/bin/smbios-keyboard-ctl:157
 msgid "Triggers Validated Successfully"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:167
+#: src/bin/smbios-keyboard-ctl:170
 #, c-format
 msgid "\t _set_keyboard_attr Flag error: %s  "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:172 src/bin/smbios-keyboard-ctl:239
-#: src/bin/smbios-keyboard-ctl:312 src/bin/smbios-keyboard-ctl:369
+#: src/bin/smbios-keyboard-ctl:175 src/bin/smbios-keyboard-ctl:252
+#: src/bin/smbios-keyboard-ctl:334 src/bin/smbios-keyboard-ctl:391
 #, c-format
 msgid ""
 "Get Keyboard illumination Current State: res[smi.cbRES1]=0x%X,res[smi."
 "cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:175
+#: src/bin/smbios-keyboard-ctl:178
 msgid ""
 "\t Failed to set Keyboard illumination attributes. Could not read the "
 "current settings"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:197
+#: src/bin/smbios-keyboard-ctl:194 src/bin/smbios-keyboard-ctl:199
+msgid "\t A timeout of zero is not supported"
+msgstr ""
+
+#: src/bin/smbios-keyboard-ctl:208
 msgid ""
 "\n"
 " The current mode (Always OFF) might prevent level changes, select a new mode"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:213
+#: src/bin/smbios-keyboard-ctl:225
 #, c-format
 msgid "Setting new params in _set_keyboard_attr : Arg2=0x%X Arg3=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:216
+#: src/bin/smbios-keyboard-ctl:228
 msgid " Set Trigger Failed. Failed to write config"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:218
+#: src/bin/smbios-keyboard-ctl:230
 #, c-format
 msgid ""
 "\n"
 "New %s parameter set Successfully\n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:222 src/bin/smbios-keyboard-ctl:503
-#: src/bin/smbios-keyboard-ctl:520 src/bin/smbios-keyboard-ctl:574
+#: src/bin/smbios-keyboard-ctl:234 src/bin/smbios-keyboard-ctl:535
+#: src/bin/smbios-keyboard-ctl:552 src/bin/smbios-keyboard-ctl:606
 #, c-format
 msgid "\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:242 src/bin/smbios-keyboard-ctl:315
+#: src/bin/smbios-keyboard-ctl:255 src/bin/smbios-keyboard-ctl:337
 msgid "\t Error reading keyboard settings."
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:246 src/bin/smbios-keyboard-ctl:389
+#: src/bin/smbios-keyboard-ctl:259 src/bin/smbios-keyboard-ctl:411
 msgid ""
 "\n"
 " Your Keyboard will illumination on: "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:260
+#: src/bin/smbios-keyboard-ctl:273
 #, c-format
 msgid ""
 "\n"
-"Old Keyboard illumination timeout is: %d %s"
+"Old Keyboard illumination battery timeout is: %d %s"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:271
+#: src/bin/smbios-keyboard-ctl:282
+#, c-format
+msgid ""
+"\n"
+"Old Keyboard illumination AC timeout is: %d %s"
+msgstr ""
+
+#: src/bin/smbios-keyboard-ctl:293
 msgid "\t Invalid Timeout parameters detected"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:278
+#: src/bin/smbios-keyboard-ctl:300
 msgid ""
 "\n"
 " Error: Invalid Timeout entry detected"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:282
+#: src/bin/smbios-keyboard-ctl:304
 #, c-format
 msgid "\t Timeout value out of range: %d"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:289
+#: src/bin/smbios-keyboard-ctl:311
 msgid ""
 "\n"
 " To set timeout value as 45 seconds enter: 45s "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:290
+#: src/bin/smbios-keyboard-ctl:312
 msgid ""
 " You can specify time out values in  s[Seconds], m[Minutes], h[hours], "
 "d[days]"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:291
-msgid " Timeout value range is 0-63, timeout value of 0 means its always ON "
+#: src/bin/smbios-keyboard-ctl:313
+msgid " Timeout value range is 1-63 "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:317
+#: src/bin/smbios-keyboard-ctl:339
 #, c-format
 msgid ""
 "\n"
 "Old Keyboard illumination level is: %d"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:332
+#: src/bin/smbios-keyboard-ctl:354
 #, c-format
 msgid ""
 "\n"
 " Value out of range, range is 0-%d"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:343
+#: src/bin/smbios-keyboard-ctl:365
 msgid ""
 "\n"
 " Current status of KeyBoard Illumination setting on your system: "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:344 src/bin/smbios-keyboard-ctl:422
+#: src/bin/smbios-keyboard-ctl:366 src/bin/smbios-keyboard-ctl:452
 #: src/bin/smbios-thermal-ctl:78 src/bin/smbios-thermal-ctl:123
 msgid "-------------------------------------------------------------------"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:349
+#: src/bin/smbios-keyboard-ctl:371
 #, c-format
 msgid ""
 "Get Keyboard Illumination Configuration: res[smi.cbRES1]=0x%X,res[smi."
 "cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:352
+#: src/bin/smbios-keyboard-ctl:374
 msgid ""
 " Info: Unable to fetch Keyboard Illumination Configuration information: "
 "Feature Not supported on this system\n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:359
+#: src/bin/smbios-keyboard-ctl:381
 msgid "\t Error: Detected Invalid Keyboar Illumination mode"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:363
+#: src/bin/smbios-keyboard-ctl:385
 msgid "Failed to read: Ambient Light trigger level"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:365
+#: src/bin/smbios-keyboard-ctl:387
 #, c-format
 msgid "\t Ambient Light level to trigger automatic keyboard illumination: 0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:366
+#: src/bin/smbios-keyboard-ctl:388
 #, c-format
 msgid ""
 "\t Last known Ambient Light level to trigger automatic keyboard "
 "illumination: 0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:372
+#: src/bin/smbios-keyboard-ctl:394
 msgid "\tYour Keyboard may not support Keyboard illumination Feature"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:374
+#: src/bin/smbios-keyboard-ctl:396
 msgid ""
 "\n"
 " Configured mode state: "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:403
+#: src/bin/smbios-keyboard-ctl:425
 #, c-format
 msgid ""
 "\n"
-" Keyboard illumination timeout has bee set at: %d %s"
+" Keyboard illumination timeout on battery has been set at: %d %s"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:404
-msgid " Note - Timeout value of 0 means its always ON "
+#: src/bin/smbios-keyboard-ctl:434
+#, c-format
+msgid ""
+"\n"
+" Keyboard illumination timeout on AC has been set at: %d %s"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:407
+#: src/bin/smbios-keyboard-ctl:437
 #, c-format
 msgid ""
 "\n"
 " Current setting of ALS value that turns the light on or off: %d"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:409
+#: src/bin/smbios-keyboard-ctl:439
 #, c-format
 msgid " Current ALS Reading : %d"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:411
+#: src/bin/smbios-keyboard-ctl:441
 #, c-format
 msgid " Current keyboard light level : %d"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:421
+#: src/bin/smbios-keyboard-ctl:451
 msgid ""
 "\n"
 " Capabilities of KeyBoard Illumination on your system: "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:429
+#: src/bin/smbios-keyboard-ctl:459
 msgid "Warning:: Your Keyboard may not support Keyboard illumination Feature"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:432
+#: src/bin/smbios-keyboard-ctl:464
 msgid " Supported USER Selectable Modes : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:446
+#: src/bin/smbios-keyboard-ctl:478
 msgid ""
 "\n"
 " Supported Keyboard illumination type : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:449
+#: src/bin/smbios-keyboard-ctl:481
 msgid ""
 "\n"
 " Supports Keyboard illumination on : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:456
+#: src/bin/smbios-keyboard-ctl:488
 msgid ""
 "\n"
 " Can configure Keyboard illumination timeout unit in : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:463
+#: src/bin/smbios-keyboard-ctl:495
 msgid ""
 "\n"
 " Supported Keyboard light brightness levels : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:466
+#: src/bin/smbios-keyboard-ctl:498
 msgid ""
 "\n"
 " Maximum acceptable seconds timeout value   : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:469
+#: src/bin/smbios-keyboard-ctl:501
 msgid ""
 "\n"
 " Maximum acceptable minutes timeout value   : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:472
+#: src/bin/smbios-keyboard-ctl:504
 msgid ""
 "\n"
 " Maximum acceptable hours timeout value     : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:475
+#: src/bin/smbios-keyboard-ctl:507
 msgid ""
 "\n"
 " Maximum acceptable days timeout value      : "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:479
+#: src/bin/smbios-keyboard-ctl:511
 #, c-format
 msgid ""
 "\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:487 src/bin/smbios-keyboard-ctl:540
+#: src/bin/smbios-keyboard-ctl:519 src/bin/smbios-keyboard-ctl:572
 #, c-format
 msgid ""
 "Get Ambient Light Sensor(ALS) Status: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x"
 "%X,res[smi.cbRES3]=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:490 src/bin/smbios-keyboard-ctl:543
+#: src/bin/smbios-keyboard-ctl:522 src/bin/smbios-keyboard-ctl:575
 msgid "Unable to get ALS settings: Feature Not supported on this system\n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:511
+#: src/bin/smbios-keyboard-ctl:543
 #, c-format
 msgid ""
 "Get Ambient Light Sensor(ALS) Brightness Table: res[smi.cbRES1]=0x%X,res[smi."
 "cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:514
+#: src/bin/smbios-keyboard-ctl:546
 msgid ""
 "Unable to get ALS Brightness Table: Feature Not supported on this system\n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:527
+#: src/bin/smbios-keyboard-ctl:559
 #, c-format
 msgid "ALS high/low limit: %d "
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:560
+#: src/bin/smbios-keyboard-ctl:592
 msgid "Invalid parm_str detected \n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:565
+#: src/bin/smbios-keyboard-ctl:597
 #, c-format
 msgid ""
 "Set Ambient Light Sensor(ALS) Status: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x"
 "%X,res[smi.cbRES3]=0x%X"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:568
+#: src/bin/smbios-keyboard-ctl:600
 msgid "Unable to Set ALS settings\n"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:614
+#: src/bin/smbios-keyboard-ctl:653
 #, c-format
 msgid "smbios-keyboard-ctl version : %s"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:619
+#: src/bin/smbios-keyboard-ctl:658
 msgid "Helper function to print current status of keyboard illumination"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:623
+#: src/bin/smbios-keyboard-ctl:662
 msgid "Setting USER Selectable Keyboard Mode"
 msgstr ""
 
-#: src/bin/smbios-keyboard-ctl:627
+#: src/bin/smbios-keyboard-ctl:666
 msgid "Setting Keyboard illumination Triggers "
 msgstr ""
 
@@ -1426,53 +1439,73 @@ msgstr ""
 msgid "Helper function to Set Thermal Mode"
 msgstr ""
 
-#: src/bin/smbios-upflag-ctl.c:87 src/bin/smbios-sys-info-lite.c:88
+#: src/bin/smbios-upflag-ctl.c:49 src/bin/smbios-get-ut-data.c:55
+#: src/bin/smbios-sys-info-lite.c:43 src/bin/smbios-state-byte-ctl.c:47
+msgid "Debug: Memory dump file to use instead of physical memory"
+msgstr ""
+
+#: src/bin/smbios-upflag-ctl.c:50 src/bin/smbios-get-ut-data.c:54
+#: src/bin/smbios-state-byte-ctl.c:48
+msgid "Debug: CMOS dump file to use instead of physical cmos"
+msgstr ""
+
+#: src/bin/smbios-upflag-ctl.c:51 src/bin/smbios-upflag-ctl.c:53
+msgid "Set Boot To UP Flag to true"
+msgstr ""
+
+#: src/bin/smbios-upflag-ctl.c:52
+msgid "Set Boot To UP Flag to false"
+msgstr ""
+
+#: src/bin/smbios-upflag-ctl.c:54 src/bin/smbios-get-ut-data.c:56
+#: src/bin/smbios-sys-info-lite.c:44
+msgid "Display libsmbios version information"
+msgstr ""
+
+#: src/bin/smbios-upflag-ctl.c:87 src/bin/smbios-sys-info-lite.c:87
 #, c-format
 msgid "Libsmbios version:    %s\n"
 msgstr ""
 
 #: src/bin/smbios-upflag-ctl.c:102
+#, c-format
 msgid "UP Boot Flag SET\n"
 msgstr ""
 
 #: src/bin/smbios-upflag-ctl.c:107
+#, c-format
 msgid "UP Boot Flag NOT SET\n"
 msgstr ""
 
 #: src/bin/smbios-get-ut-data.c:84 src/bin/smbios-get-ut-data.c:93
-#: src/bin/smbios-sys-info-lite.c:97
+#: src/bin/smbios-sys-info-lite.c:96
 #, c-format
 msgid "Libsmbios:    %s\n"
 msgstr ""
 
-#: src/bin/smbios-get-ut-data.c:113
+#: src/bin/smbios-get-ut-data.c:110
 #, c-format
 msgid "Dumping CMOS index(%d) data(%d)\n"
 msgstr ""
 
-#: src/bin/smbios-get-ut-data.c:252
-msgid "dumping table header.\n"
-msgstr ""
-
-#: src/bin/smbios-get-ut-data.c:257
-msgid "dumping table.\n"
-msgstr ""
-
-#: src/bin/smbios-get-ut-data.c:262
-msgid "dumped table.\n"
-msgstr ""
-
-#: src/bin/smbios-get-ut-data.c:263
+#: src/bin/smbios-get-ut-data.c:116 src/bin/smbios-get-ut-data.c:184
 #, c-format
-msgid "table length: %d\n"
+msgid "error opening dump file \"%s\": %m\n"
 msgstr ""
 
-#: src/bin/smbios-get-ut-data.c:267
-msgid "error dumping header ret(%d) sizeof(tep): %zd\n"
+#: src/bin/smbios-get-ut-data.c:190
+#, c-format
+msgid "could not allocate memory: %m\n"
 msgstr ""
 
-#: src/bin/smbios-get-ut-data.c:271
-msgid "error dumping table\n"
+#: src/bin/smbios-get-ut-data.c:196
+#, c-format
+msgid "could not read from memory: %m\n"
+msgstr ""
+
+#: src/bin/smbios-get-ut-data.c:201
+#, c-format
+msgid "could not write to \"%s\": %m\n"
 msgstr ""
 
 #: src/bin/smbios-sys-info-lite.c:58
@@ -1480,72 +1513,87 @@ msgstr ""
 msgid "OEM String %d: %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:102
+#: src/bin/smbios-sys-info-lite.c:101
 #, c-format
 msgid "System ID:    0x%04X\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:105 src/bin/smbios-sys-info-lite.c:116
+#: src/bin/smbios-sys-info-lite.c:104 src/bin/smbios-sys-info-lite.c:114
+#, c-format
 msgid "Error getting the System ID:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:113
+#: src/bin/smbios-sys-info-lite.c:111
 #, c-format
 msgid "OEM System ID:    0x%04X\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:124
+#: src/bin/smbios-sys-info-lite.c:121
 #, c-format
 msgid "Service Tag:  %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:125
+#: src/bin/smbios-sys-info-lite.c:122
+#, c-format
 msgid "Express Service Code: %lld\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:129
+#: src/bin/smbios-sys-info-lite.c:126
+#, c-format
 msgid "Error getting the Service Tag:  unknown error\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:136
+#: src/bin/smbios-sys-info-lite.c:132
 #, c-format
-msgid "Aset Tag:  %s\n"
+msgid "Asset Tag:  %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:139
-msgid "Error getting the Aset Tag:  unknown error\n"
+#: src/bin/smbios-sys-info-lite.c:135
+#, c-format
+msgid "Error getting the Asset Tag:  unknown error\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:146
+#: src/bin/smbios-sys-info-lite.c:141
 #, c-format
 msgid "Product Name: %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:149
+#: src/bin/smbios-sys-info-lite.c:144
+#, c-format
 msgid "Error getting the System Name:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:156
+#: src/bin/smbios-sys-info-lite.c:150
 #, c-format
 msgid "BIOS Version: %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:159
+#: src/bin/smbios-sys-info-lite.c:153
+#, c-format
 msgid "Error getting the BIOS Version:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:166
+#: src/bin/smbios-sys-info-lite.c:159
 #, c-format
 msgid "Vendor:       %s\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:169
+#: src/bin/smbios-sys-info-lite.c:162
+#, c-format
 msgid "Error getting the Vendor:    unknown error.\n"
 msgstr ""
 
-#: src/bin/smbios-sys-info-lite.c:174
+#: src/bin/smbios-sys-info-lite.c:166
 #, c-format
 msgid "Is Dell:      %d\n"
+msgstr ""
+
+#: src/bin/smbios-state-byte-ctl.c:49
+msgid "Set CMOS state byte to new value"
+msgstr ""
+
+#: src/bin/smbios-state-byte-ctl.c:50
+msgid "Set state byte owner"
 msgstr ""
 
 #: src/bin/smbios-state-byte-ctl.c:98
@@ -1553,7 +1601,7 @@ msgstr ""
 msgid "State Byte: 0x%04x\n"
 msgstr ""
 
-#: src/libsmbios_c/cmos/cmos_obj.c:289
+#: src/libsmbios_c/cmos/cmos_obj.c:282
 msgid ""
 "There was an allocation failure while trying to construct the cmos object."
 msgstr ""
@@ -1581,57 +1629,33 @@ msgid "The mmap() call returned mapping of -1 (failure). File: "
 msgstr ""
 
 #: src/libsmbios_c/memory/memory_linux.c:196
-#: src/libsmbios_c/memory/memory_linux.c:292
-#: src/libsmbios_c/smi/smi_linux.c:305
+#: src/libsmbios_c/memory/memory_linux.c:301
+#: src/libsmbios_c/smi/smi_linux.c:432
 msgid ""
 "\n"
 "The OS Error string was: "
 msgstr ""
 
-#: src/libsmbios_c/memory/memory_linux.c:258
+#: src/libsmbios_c/memory/memory_linux.c:264
 msgid ""
 "There was an allocation failure while trying to construct the memory object. "
 "Filename: "
 msgstr ""
 
-#: src/libsmbios_c/memory/memory_linux.c:277
+#: src/libsmbios_c/memory/memory_linux.c:287
 msgid "File open error during memory object construction. The filename: "
 msgstr ""
 
-#: src/libsmbios_c/smbios/smbios_obj.c:337
+#: src/libsmbios_c/smbios/smbios_obj.c:348
 msgid ""
 "Allocation error trying to allocate memory for error string. (ironic, "
 "yes?) \n"
 msgstr ""
 
-#: src/libsmbios_c/smbios/smbios_obj.c:344
+#: src/libsmbios_c/smbios/smbios_obj.c:355
 msgid ""
 "Could not instantiate SMBIOS table. The errors from the low-level modules "
 "were:\n"
-msgstr ""
-
-#: src/libsmbios_c/smbios/smbios_obj.c:470
-msgid "Could not read physical memory. Lowlevel error was:\n"
-msgstr ""
-
-#: src/libsmbios_c/smbios/smbios_obj.c:481
-msgid "Found _DMI_ anchor but could not parse legacy DMI structure."
-msgstr ""
-
-#: src/libsmbios_c/smbios/smbios_obj.c:496
-msgid "Found _SM_ anchor but could not parse SMBIOS structure."
-msgstr ""
-
-#: src/libsmbios_c/smbios/smbios_obj.c:509
-msgid "Did not find smbios table entry point in memory."
-msgstr ""
-
-#: src/libsmbios_c/smbios/smbios_obj.c:538
-msgid "Could not find Table Entry Point."
-msgstr ""
-
-#: src/libsmbios_c/smbios/smbios_obj.c:545
-msgid "Found table entry point but could not read table from memory. "
 msgstr ""
 
 #: src/libsmbios_c/smi/smi_obj.c:286
@@ -1642,7 +1666,7 @@ msgstr ""
 msgid "Failed to allocate memory for error string.\n"
 msgstr ""
 
-#: src/libsmbios_c/smi/smi_linux.c:304
+#: src/libsmbios_c/smi/smi_linux.c:431
 msgid ""
 "There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' "
 "kernel module loaded?"
@@ -1672,76 +1696,61 @@ msgstr ""
 msgid "Allocation failure while trying to create token object."
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:268
+#: src/libsmbios_c/token/token_obj.c:264
 msgid "Failed to obtain smbios table.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:278
+#: src/libsmbios_c/token/token_obj.c:274
 msgid "Memory allocation failure allocating error string.\n"
 msgstr ""
 
-#: src/libsmbios_c/token/token_obj.c:283
+#: src/libsmbios_c/token/token_obj.c:279
 msgid "Error while trying to add 0xD4 tokens.\n"
 msgstr ""
 
-#: src/python/libsmbios_c/_common.py:48
+#: src/python/libsmbios_c/_common.py:47
 msgid "null pointer returned"
 msgstr ""
 
-#: src/python/libsmbios_c/_common.py:57
+#: src/python/libsmbios_c/_common.py:56
 msgid "function returned error value of zero"
 msgstr ""
 
-#: src/python/libsmbios_c/_common.py:66
+#: src/python/libsmbios_c/_common.py:65
 msgid "function returned negative error code"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:88 src/python/libsmbios_c/smbios.py:99
-#: src/python/libsmbios_c/token.py:144
+#: src/python/libsmbios_c/smbios.py:89 src/python/libsmbios_c/smbios.py:101
 msgid "hit end of table."
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:106
+#: src/python/libsmbios_c/smbios.py:109
 #, python-format
 msgid "No SMBIOS structure found with handle %s"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:114
+#: src/python/libsmbios_c/smbios.py:118
 #, python-format
 msgid "No SMBIOS structure found with type %s"
 msgstr ""
 
-#: src/python/libsmbios_c/smbios.py:165
-#, python-format
-msgid "String from offset %d doesnt exist"
-msgstr ""
-
-#: src/python/libsmbios_c/smbios.py:170
-#, python-format
-msgid "String number %d doesnt exist"
-msgstr ""
-
-#: src/python/libsmbios_c/smbios.py:175
-msgid "Tried to get data past the end of the structure."
-msgstr ""
-
-#: src/python/libsmbios_c/smi.py:117
+#: src/python/libsmbios_c/smi.py:116
 msgid "SMI executed but returned error"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:119
+#: src/python/libsmbios_c/smi.py:118
 msgid "SMI is unsupported"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:121
+#: src/python/libsmbios_c/smi.py:120
 msgid "SMI did not execute"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:123
+#: src/python/libsmbios_c/smi.py:122
 msgid "The output buffer the BIOS requires is in the wrong format"
 msgstr ""
 
-#: src/python/libsmbios_c/smi.py:125
+#: src/python/libsmbios_c/smi.py:124
 msgid "The output buffer the BIOS requires is too small"
 msgstr ""
 
@@ -1749,11 +1758,11 @@ msgstr ""
 msgid "Could not determine System ID."
 msgstr ""
 
-#: src/python/libsmbios_c/token.py:149
+#: src/python/libsmbios_c/smbios_token.py:139
 msgid "Cannot dereference NULL ID"
 msgstr ""
 
-#: src/python/libsmbios_c/token.py:155
+#: src/python/libsmbios_c/smbios_token.py:146
 #, python-format
 msgid "ID 0x%04x not found"
 msgstr ""
