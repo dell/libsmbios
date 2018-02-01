@@ -12,6 +12,8 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
     - No longer installs broken dellMediaDirectCtl (Closes: #715812)
   * debian/control:
     - Drop ia64 (Closes: #554582)
+    - Update VCS
+    - Add Debian EFI as team owner
     - Add Mario to uploaders list (Closes: #838078)
     - Add python3 packages
     - Drop python2 packages
