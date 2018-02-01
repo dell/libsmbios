@@ -1,10 +1,10 @@
 Source: libsmbios
 Priority: optional
 Section: libs
-Maintainer: Jose Luis Tallon <jltallon@adv-solutions.net>
-Uploaders: tony mancill <tmancill@debian.org>, Mario Limonciello <mario.limonciello@dell.com>
-Vcs-Git: https://anonscm.debian.org/git/collab-maint/libsmbios.git
-Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/libsmbios.git
+Maintainer: Debian UEFI Maintainers <debian-efi@lists.debian.org>
+Uploaders: tony mancill <tmancill@debian.org>, Mario Limonciello <mario.limonciello@dell.com>, Jose Luis Tallon <jltallon@adv-solutions.net>, Steve McIntyre <93sam@debian.org>
+Vcs-Git: https://salsa.debian.org/efi-team/libsmbios.git
+Vcs-Browser: https://salsa.debian.org/efi-team/libsmbios
 Homepage: https://github.com/dell/libsmbios/
 Build-Depends: debhelper (>= 9),
                dh-python,
