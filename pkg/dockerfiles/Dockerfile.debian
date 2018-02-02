@@ -23,3 +23,5 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends \
 	autopoint
 RUN mkdir /build
 WORKDIR /build
+COPY . .
+CMD ["./pkg/mk-rel-deb.sh"]

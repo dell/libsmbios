@@ -2,7 +2,7 @@ FROM centos:7
 
 VOLUME /output
 
-ENV OUTPUT_DIR /dist
+ENV OUTPUT_DIR /build/dist
 ENV BUILD_DIR /build
 
 RUN yum install -y epel-release
@@ -14,4 +14,4 @@ RUN yum install -y \
 WORKDIR $BUILD_DIR
 COPY . .
 
-CMD ["./centos7-entrypoint.sh"]
+CMD ["./pkg/dockerfiles/centos7-entrypoint.sh"]

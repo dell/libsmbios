@@ -10,12 +10,10 @@ env:
   - OS=centos7
 
 install:
-  - if [[ "$OS" == "debian" ]]; then docker build -t libsmbios-debian-testing -f pkg/dockerfiles/Dockerfile-debian-testing .; fi
-  - if [[ "$OS" == "centos7" ]]; then ./pkg/build-dockerfile.sh centos7; fi
+  - ./pkg/build-dockerfile.sh $OS
 
 script:
-  - if [[ "$OS" == "debian" ]]; then docker run -t -v `pwd`:/build libsmbios-debian-testing pkg/mk-rel-deb.sh; fi
-  - if [[ "$OS" == "centos7" ]]; then mkdir -p output; docker run -v `pwd`/dist:/dist centos7-libsmbios; fi
+  - docker run -t -v `pwd`/dist:/build/dist libsmbios-$OS
 
 deploy:
   provider: releases
