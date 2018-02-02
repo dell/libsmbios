@@ -50,7 +50,7 @@
 
 Name: %{release_name}
 Version: %{release_version}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
 Summary: Libsmbios C shared libraries
 Group: System Environment/Libraries
