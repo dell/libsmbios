@@ -103,7 +103,7 @@ debmagic: dist-xz
 	chmod +x $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/debian/rules
 	cd $(DEB_TMP_BUILDDIR)/$(PACKAGE_NAME)-$(PACKAGE_VERSION) ; \
 	mv debian/changelog.in debian/changelog; \
-	dch -D $(DIST) "Built from source $(DESCRIBE)" -v "$(PACKAGE_VERSION)-0" ;\
+	dch -b -D $(DIST) "Built from source $(DESCRIBE)" -v "$(PACKAGE_VERSION)-0" ;\
 	dpkg-buildpackage -us -uc -D -rfakeroot ; \
 	mv ../*.deb $(TOPDIR)/dist/ ; \
 	cd -
