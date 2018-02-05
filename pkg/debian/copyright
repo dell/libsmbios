@@ -2,7 +2,7 @@ This package was debianized by Jose Luis Tallon <jltallon@adv-solutions.net> on
 Fri,  1 Jul 2005 23:34:21 +0200.
 
 It was downloaded from:
-    <http://linux.dell.com/libsmbios/download/libsmbios/>
+    <https://github.com/dell/libsmbios>
 and subsequently stripped of its cppunit/platform directory as it
 included memory dumps of a proprietary BIOS.
 
