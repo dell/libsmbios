@@ -11,6 +11,7 @@ include_HEADERS=
 noinst_PROGRAMS=
 check_PROGRAMS =
 check_SCRIPTS =
+man1_MANS =
 
 noinst_LTLIBRARIES =
 lib_LTLIBRARIES=
@@ -115,6 +116,13 @@ out/libsmbios_c/html/index.html: $(top_srcdir)/pkg/libsmbios_c.dox $(wildcard $(
 
 out/libsmbios_c++/html/index.html: $(top_srcdir)/pkg/libsmbios_c++.dox $(wildcard $(top_srcdir)/src/include/smbios/*.h)
 	doxygen $< > out/$$(basename $< .dox).out
+
+out/scripts/%.1 : src/bin/%
+	mkdir -p out/scripts
+	-$(HELP2MAN) --output=$@ --name=$^ --version-string=$(PACKAGE_VERSION) "LD_LIBRARY_PATH=$$PWD/out/.libs python3 $^"
+
+out/%.1 : out/%
+	-$(HELP2MAN) --output=$@ --name=$^ --version-string=$(PACKAGE_VERSION) $^
 
 ########## END DOCS ################
 

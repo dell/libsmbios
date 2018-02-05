@@ -177,6 +177,9 @@ if test x$wantgraphviz != xyes ; then
     AM_CONDITIONAL(HAVE_DOT, [false])
 fi
 
+#generate man pages for anything executable
+AC_PATH_PROG(HELP2MAN, help2man, false)
+
 # the manual assembly in the media direct sources fails to build on ia64 as it
 # relies on more registers than available on ia64; there's no ia64 system with
 # media direct, so it's disabled on ia64

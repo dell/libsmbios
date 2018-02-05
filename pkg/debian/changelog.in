@@ -8,6 +8,7 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
     - No longer installs sh script with bashisms (Closes: #772330)
     - Drops unsupported RBU based flashing (Closes: #496546)
     - Fixes improper function definition (Closes: #748243)
+    - Generate man pages with help2man (Closes: #748023)
   * No longer build deprecated C++ library.
     - No longer installs broken dellMediaDirectCtl (Closes: #715812)
   * debian/control:
@@ -23,6 +24,7 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
     - Rename libsmbios2 -> libsmbios-c2
       Provides/Conflicts/Replaces to make a good transition both for
       Debian & Ubuntu.
+    - Build depends on help2man.
   * debian/copyright:
     - Fix long lines (Closes: #803607, #803608, #803609)
   * debian/rules:

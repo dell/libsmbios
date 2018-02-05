@@ -57,7 +57,7 @@ Group: System Environment/Libraries
 Source: libsmbios-%{version}.tar.xz
 URL: http://github.com/dell/libsmbios
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{pkgconfig_BR} %{python_devel_BR}
+BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen help2man %{valgrind_BR} %{cppunit_BR} %{pkgconfig_BR} %{python_devel_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
@@ -250,6 +250,9 @@ cat > files-smbios-utils-python <<-EOF
 	%{_sbindir}/smbios-keyboard-ctl
 	%{_sbindir}/smbios-thermal-ctl
 	%{_sbindir}/smbios-battery-ctl
+
+	# man pages
+	%{_mandir}/*
 
 	# used by HAL in old location, so keep it around until HAL is updated.
 	%{_sbindir}/dellLcdBrightness
