@@ -148,7 +148,7 @@ programs against libsmbios.
 %setup -q -n libsmbios-%{version}
 find . -type d -exec chmod -f 755 {} \;
 find doc src -type f -exec chmod -f 644 {} \;
-find ./src/cppunit/ -name "*.sh" -type f -exec chmod 755  '{}' \;
+find ./src/pyunit/ -name "*.sh" -o -name "*.py" -type f -exec chmod 755  '{}' \;
 
 %build
 # this line lets us build an RPM directly from a git tarball
