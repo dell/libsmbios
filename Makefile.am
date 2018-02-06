@@ -35,19 +35,11 @@ endif
 
 include Makefile-std
 
-if BUILD_LIBSMBIOS_CXX
-include src/libsmbios_c++/Makefile.am
-endif
-
 include src/libsmbios_c/Makefile.am
 include src/python/Makefile.am
 include src/py-cli/Makefile.am
 include src/bin/Makefile.am
 include src/pyunit/Makefile.am
-
-if CPPUNIT_PRESENT
-include src/cppunit/Makefile.am
-endif
 
 pkgconfdir=$(sysconfdir)/$(PACKAGE)
 if HAVE_PYTHON
@@ -55,10 +47,10 @@ dist_pkgconf_DATA=etc/logging.conf
 endif
 
 pcdir = ${libdir}/pkgconfig
-pc_DATA = pkg/libsmbios_c.pc pkg/libsmbios_c++.pc
+pc_DATA = pkg/libsmbios_c.pc
 DISTCLEANFILES += pkg/*.pc *-uninstalled.pc pkg/config* pkg/depcomp
 
-CLEANFILES+=_buildtemp smbios-utils*.rpm out/libsmbios_c out/libsmbios_c++
+CLEANFILES+=_buildtemp smbios-utils*.rpm out/libsmbios_c
 DISTCLEANFILES += out ABOUT-NLS Makefile.in aclocal.m4 autom4te.cache/ configure m4/
 DISTCLEANFILES += pkg/compile pkg/install-sh pkg/ltmain.sh pkg/missing
 DISTCLEANFILES += pkg/mkinstall* pkg/py-compile pkg/test-driver
@@ -95,9 +87,6 @@ coverage:
 if HAVE_DOXYGEN
 all: doxygen
 DOXYGEN_DEPS=out/libsmbios_c/html/index.html
-if BUILD_LIBSMBIOS_CXX
-DOXYGEN_DEPS+=out/libsmbios_c++/html/index.html
-endif
 doxygen: $(DOXYGEN_DEPS)
 else
 all:
@@ -114,9 +103,6 @@ export DOT HAVE_DOT top_builddir top_srcdir
 out/libsmbios_c/html/index.html: $(top_srcdir)/pkg/libsmbios_c.dox $(wildcard $(top_srcdir)/src/include/smbios_c/*.h)
 	doxygen $< > out/$$(basename $< .dox).out
 
-out/libsmbios_c++/html/index.html: $(top_srcdir)/pkg/libsmbios_c++.dox $(wildcard $(top_srcdir)/src/include/smbios/*.h)
-	doxygen $< > out/$$(basename $< .dox).out
-
 out/scripts/%.1 : src/bin/%
 	mkdir -p out/scripts
 	-$(HELP2MAN) --output=$@ --name=$^ --version-string=$(PACKAGE_VERSION) "LD_LIBRARY_PATH=$$PWD/out/.libs python3 $^"
@@ -127,7 +113,6 @@ out/%.1 : out/%
 ########## END DOCS ################
 
 EXTRA_DIST += \
- pkg/libsmbios_c++.dox  \
  pkg/libsmbios_c.dox    \
  pkg/libsmbios.spec 	\
  pkg/scripts 		\

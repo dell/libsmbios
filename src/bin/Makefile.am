@@ -78,21 +78,3 @@ sbin_PROGRAMS += out/smbios-upflag-ctl
 out_smbios_upflag_ctl_SOURCES = src/bin/smbios-upflag-ctl.c
 out_smbios_upflag_ctl_LDADD = out/libsmbios_c.la out/libgetopt.la $(AM_LDADD)
 man1_MANS += out/smbios-upflag-ctl.1
-
-#
-# C++
-#
-if BUILD_LIBSMBIOS_CXX
-if BUILD_LINUX
-sbin_PROGRAMS += out/dellLEDCtl
-out_dellLEDCtl_SOURCES = src/bin/dellLEDCtl.cpp
-out_dellLEDCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-
-if BUILD_MEDIA_DIRECT
-sbin_PROGRAMS += out/dellMediaDirectCtl
-out_dellMediaDirectCtl_SOURCES = src/bin/dellMediaDirectCtl.cpp
-out_dellMediaDirectCtl_LDADD = out/libsmbios.la out/libgetopt.la $(AM_LDADD)
-endif
-
-endif #BUILD_LINUX
-endif #BUILD_LIBSMBIOS_CXX

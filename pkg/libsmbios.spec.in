@@ -26,12 +26,12 @@
 # not available in OS on several major OS
 %{?_without_unit_tests: %undefine run_unit_tests}
 %{?_with_unit_tests:    %define run_unit_tests 1}
+%define run_unit_tests 1
 
 %{!?as_needed:         %define as_needed 1}
 %{?_without_as_needed: %undefine as_needed}
 %{?_with_as_needed:    %define as_needed 1}
 
-%define cppunit_BR cppunit-devel
 %define pkgconfig_BR pkgconfig
 %define ctypes_BR python-ctypes
 %define valgrind_BR valgrind
@@ -45,7 +45,6 @@
 %endif
 
 # if unit tests are disabled, get rid of a few BuildRequires
-%{!?run_unit_tests: %define cppunit_BR %{nil}}
 %{!?run_unit_tests: %define valgrind_BR %{nil}}
 
 Name: %{release_name}
@@ -57,7 +56,7 @@ Group: System Environment/Libraries
 Source: libsmbios-%{version}.tar.xz
 URL: http://github.com/dell/libsmbios
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen help2man %{valgrind_BR} %{cppunit_BR} %{pkgconfig_BR} %{python_devel_BR}
+BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen help2man %{valgrind_BR} %{pkgconfig_BR} %{python_devel_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
@@ -172,32 +171,19 @@ echo \%doc _build/build-%{_arch}.log > buildlogs.txt
 runtest() {
     mkdir _$1$2
 %if 0%{?run_unit_tests}
-    pushd _$1$2
+    cd _$1$2
     ../configure
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
     touch -r ../configure.ac $1$2-%{_arch}.log
     make -e $1 2>&1 | tee $1$2.log
-    popd
+    cd ..
     echo \%doc _$1$2/$1$2-%{_arch}.log >> _build/buildlogs.txt
 %endif
 }
 
-if [ -d /usr/include/cppunit ]; then
-   # run this first since it is slightly faster than valgrind
-    VALGRIND="strace -f" runtest check strace > /dev/null || echo FAILED strace check
-fi
-
-if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-    runtest valgrind > /dev/null || echo FAILED valgrind check
-fi
-
-if [ -d /usr/include/cppunit ]; then
-    runtest check > /dev/null || echo FAILED check
-fi
-
-if [ ! -d /usr/include/cppunit ]; then
-    echo "Unit tests skipped due to missing cppunit."
-fi
+VALGRIND="strace -f" runtest check strace > /dev/null || echo FAILED strace check
+runtest valgrind > /dev/null || echo FAILED valgrind check
+runtest check > /dev/null || echo FAILED check
 
 %install
 rm -rf %{buildroot}
