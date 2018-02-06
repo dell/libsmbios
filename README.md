@@ -1,5 +1,6 @@
 # libsmbios
 [![Build Status](https://travis-ci.org/dell/libsmbios.png)](https://travis-ci.org/dell/libsmbios)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/dell-libsmbios/badge.svg)](https://scan.coverity.com/projects/dell-libsmbios)
 libsmbios provides a library to interface with the SMBIOS tables.
 It also provides extensions for proprietary methods of interfacing with Dell specific
 SMBIOS tables.
