@@ -21,7 +21,7 @@ distclean-local:
 
 .PHONY: git-tag
 git-tag:
-	git tag -u libsmbios -m "tag for official release: $(PACKAGE_STRING)" v$(PACKAGE_VERSION)
+	git tag -s -m "tag for official release: $(PACKAGE_STRING)" v$(PACKAGE_VERSION)
 
 .PHONY: get-version
 get-version:
