@@ -186,6 +186,8 @@ def _set_keyboard_attr( reg, flag='default'):
 
         if flag == 'trigger':
             trigger_map = 0
+            if reg is None:
+                raise RunTimeKeyboardErr( _("\t No valid trigger defined") )
             for opt in reg:
                 trigger_map|=1<<opt
 
