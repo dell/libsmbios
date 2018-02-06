@@ -27,6 +27,7 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
     - Build depends on help2man.
   * debian/copyright:
     - Fix long lines (Closes: #803607, #803608, #803609)
+    - Remove references to C++ stuff
   * debian/rules:
     - Switch to new debhelper format
     - Enable hardening flags
