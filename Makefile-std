@@ -55,17 +55,6 @@ install-exec-hook:
 # set default project. can be overridden on cmdline with 'make -e ...'
 PROJECT=home:$(USER)
 
-.PHONY: upload_buildservice
-upload_buildservice: dist
-	[ -n "$(PROJECT)" ] || (echo "Must specify PROJECT"; exit 1)
-	osc co $(PROJECT) $(PACKAGE)
-	rm -f $(PROJECT)/$(PACKAGE)/*
-	cp ${PACKAGE}*.tar.bz2 $(PROJECT)/$(PACKAGE)
-	cp */${PACKAGE}.spec $(PROJECT)/$(PACKAGE)
-	cd $(PROJECT)/$(PACKAGE); osc addremove
-	cd $(PROJECT)/$(PACKAGE); yes | osc updatepacmetafromspec
-	cd $(PROJECT)/$(PACKAGE); osc ci -m "scripted source update"
-
 TOPDIR := $(shell cd $(top_builddir);pwd)
 BUILDDIR = $(TOPDIR)/_rpmbuild
 RPMDIR = $(TOPDIR)
