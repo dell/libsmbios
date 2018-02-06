@@ -74,7 +74,7 @@ AM_RPM_DEFINES = --define "_topdir $(TOPDIR)" \
 .PHONY: rpm srpm
 rpm: pkg/$(PACKAGE_NAME).spec dist
 	mkdir -p $(BUILDDIR)
-	rpmbuild $(AM_RPM_DEFINES) -ba --nodeps $(SPECFILE)
+	rpmbuild $(AM_RPM_DEFINES) $(CI) -ba --nodeps $(SPECFILE)
 	rm -rf $(BUILDDIR)
 
 srpm: pkg/$(PACKAGE_NAME).spec dist

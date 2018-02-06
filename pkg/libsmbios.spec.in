@@ -26,7 +26,6 @@
 # not available in OS on several major OS
 %{?_without_unit_tests: %undefine run_unit_tests}
 %{?_with_unit_tests:    %define run_unit_tests 1}
-%define run_unit_tests 1
 
 %{!?as_needed:         %define as_needed 1}
 %{?_without_as_needed: %undefine as_needed}

@@ -16,4 +16,7 @@ rm -rf _builddir
 mkdir _builddir
 pushd _builddir
 ../autogen.sh
-make rpm
+if [ -n "$CI" ]; then
+	CI="CI=--define '_with_unit_tests 1'"
+fi
+make rpm "$CI"

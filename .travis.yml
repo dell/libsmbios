@@ -13,7 +13,7 @@ install:
   - ./pkg/build-dockerfile.sh $OS
 
 script:
-  - docker run -t -v `pwd`/dist:/build/dist libsmbios-$OS
+  - docker run -e CI=true -t -v `pwd`/dist:/build/dist libsmbios-$OS
 
 deploy:
   provider: releases
