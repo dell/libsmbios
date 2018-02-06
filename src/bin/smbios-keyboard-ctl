@@ -186,6 +186,8 @@ def _set_keyboard_attr( reg, flag='default'):
 
         if flag == 'trigger':
             trigger_map = 0
+            if reg is None:
+                raise RunTimeKeyboardErr( _("\t No valid trigger defined") )
             for opt in reg:
                 trigger_map|=1<<opt
 
@@ -349,10 +351,11 @@ def set_KeyBoardIllumination_level(s_level):
         res = smi.simple_ci_smi( 4, 11, 0 )
         range = get_byte(res[smi.cbRES3], 2)
         level = int(s_level)
+        if range == 0:
+            raise RunTimeKeyboardErr(_("\n Level setting not supported"))
 
         if level < 0 or level > range:
-            print(_("\n Value out of range, range is 0-%d") % range)
-            raise RunTimeKeyboardErr
+            raise RunTimeKeyboardErr(_("\n Value out of range, range is 0-%d") % range)
 
         print_current_level()
         _set_keyboard_attr(level, flag='level')

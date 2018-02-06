@@ -60,9 +60,6 @@ AC_SUBST([RELEASE_EXTRA], [release_extra_version()])
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MAJOR,$RELEASE_MAJOR,"Major release version")
 AC_DEFINE_UNQUOTED(LIBSMBIOS_RELEASE_MINOR,$RELEASE_MINOR,"Minor release version")
 
-# Ensure we use c++11 instead of c++14
-CXXFLAGS="$CXXFLAGS -std=c++11"
-
 if test "$enable_shared" != "no"; then
     AC_DEFINE([LIBSMBIOS_C_ALL_DYN_LINK],[1],[Enable dynamic libraries to build])
     CFLAGS="$CFLAGS -DLIBSMBIOS_C_ALL_DYN_LINK"
@@ -85,12 +82,6 @@ AC_SUBST([LIBSMBIOS_C_SONAME], [libsmbios_c.so.$LIBSMBIOS_C_SO_MAJOR])
 # Library ABI versions
 AC_SUBST([LIBSMBIOS_CPLUSPLUS_SO_MAJOR], [$(($LIBSMBIOS_CPLUSPLUS_LIBTOOL_CURRENT - $LIBSMBIOS_CPLUSPLUS_LIBTOOL_AGE))])
 AC_SUBST([LIBSMBIOS_CPLUSPLUS_SONAME], [libsmbios.so.$LIBSMBIOS_CPLUSPLUS_SO_MAJOR])
-
-dnl Help line for libsmbios_cxx
-AC_ARG_ENABLE([libsmbios_cxx],
-    AS_HELP_STRING([--enable-libsmbios_cxx],[Enable build of the c++ libsmbios.so library. This library is deprecated, most things should migrate to libsmbios_c.so. default: disabled]),
-    [want_libsmbios_cxx=$enableval], [want_libsmbios_cxx=no])
-AM_CONDITIONAL(BUILD_LIBSMBIOS_CXX, [test x$want_libsmbios_cxx == xyes])
 
 dnl Help line for doxygen
 AC_ARG_ENABLE(doxygen,
@@ -121,8 +112,6 @@ fi
 AC_PROG_CC
 AC_PROG_CC_C99
 AM_PROG_CC_C_O
-AC_PROG_CXX
-AC_PROG_CPP
 AC_PROG_INSTALL
 
 dnl Check for python support
@@ -177,6 +166,9 @@ if test x$wantgraphviz != xyes ; then
     AM_CONDITIONAL(HAVE_DOT, [false])
 fi
 
+#generate man pages for anything executable
+AC_PATH_PROG(HELP2MAN, help2man, false)
+
 # the manual assembly in the media direct sources fails to build on ia64 as it
 # relies on more registers than available on ia64; there's no ia64 system with
 # media direct, so it's disabled on ia64
@@ -195,8 +187,6 @@ AM_CONDITIONAL(BUILD_LINUX,   [test -n "$linux_os"])
 AM_CONDITIONAL(BUILD_WINDOWS, [test -n "$windows_os"])
 
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
-PKG_CHECK_MODULES([CPPUNIT],[cppunit],[],[echo "CPPUNIT not found, disabling CPPUNIT dependent modules"])
-AM_CONDITIONAL(CPPUNIT_PRESENT, [test -n "$CPPUNIT_LIBS"])
 
 # generate files and exit
 AC_CONFIG_FILES([Makefile])
@@ -204,8 +194,6 @@ AC_CONFIG_FILES([pkg/libsmbios.spec])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([libsmbios_c-uninstalled.pc:pkg/libsmbios_c-uninstalled.pc.in])
 AC_CONFIG_FILES([pkg/libsmbios_c.pc])
-AC_CONFIG_FILES([libsmbios_c++-uninstalled.pc:pkg/libsmbios_c++-uninstalled.pc.in])
-AC_CONFIG_FILES([pkg/libsmbios_c++.pc])
 AC_CONFIG_FILES([out/public-include/smbios/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([out/public-include/smbios_c/dlopen.h:pkg/dlopen.h.in])
 AC_CONFIG_FILES([pkg/pkginfo])

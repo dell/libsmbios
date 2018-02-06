@@ -136,15 +136,14 @@ class _TokenTable(ctypes.Structure):
     @traceLog()
     def __getitem__(self, id):
         if id is None:
-            print(_("Cannot dereference NULL ID") )
-            raise IndexError
+            raise IndexError(_("Cannot dereference NULL ID") )
         cur = ctypes.POINTER(Token)()
         cur =DLL.token_table_get_next_by_id( self._tableobj, cur, id )
         if bool(cur):
             return cur.contents
         else:
-            print(_("ID 0x%04x not found") % id )
-            raise IndexError
+            raise IndexError(_("SMBIOS Token ID 0x%04x not found") % id )
+
 
 
 #// format error string

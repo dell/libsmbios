@@ -11,6 +11,7 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends \
 	fakeroot \
 	git \
 	graphviz \
+	help2man \
 	python \
 	libxml2-dev \
 	lsb-release \
@@ -18,8 +19,9 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends \
 	autoconf \
 	automake \
 	libtool \
-	libcppunit-dev \
 	gettext \
 	autopoint
 RUN mkdir /build
 WORKDIR /build
+COPY . .
+CMD ["./pkg/mk-rel-deb.sh"]

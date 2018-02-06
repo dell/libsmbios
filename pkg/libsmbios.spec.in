@@ -31,7 +31,6 @@
 %{?_without_as_needed: %undefine as_needed}
 %{?_with_as_needed:    %define as_needed 1}
 
-%define cppunit_BR cppunit-devel
 %define pkgconfig_BR pkgconfig
 %define ctypes_BR python-ctypes
 %define valgrind_BR valgrind
@@ -45,19 +44,18 @@
 %endif
 
 # if unit tests are disabled, get rid of a few BuildRequires
-%{!?run_unit_tests: %define cppunit_BR %{nil}}
 %{!?run_unit_tests: %define valgrind_BR %{nil}}
 
 Name: %{release_name}
 Version: %{release_version}
-Release: 3%{?dist}
+Release: 1%{?dist}
 License: GPLv2+ or OSL 2.1
 Summary: Libsmbios C shared libraries
 Group: System Environment/Libraries
 Source: libsmbios-%{version}.tar.xz
 URL: http://github.com/dell/libsmbios
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen %{valgrind_BR} %{cppunit_BR} %{pkgconfig_BR} %{python_devel_BR}
+BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen help2man %{valgrind_BR} %{pkgconfig_BR} %{python_devel_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
 Provides: libsmbios-libs = 0:%{version}-%{release}
@@ -148,7 +146,7 @@ programs against libsmbios.
 %setup -q -n libsmbios-%{version}
 find . -type d -exec chmod -f 755 {} \;
 find doc src -type f -exec chmod -f 644 {} \;
-find ./src/cppunit/ -name "*.sh" -type f -exec chmod 755  '{}' \;
+find ./src/pyunit/ -name "*.sh" -o -name "*.py" -type f -exec chmod 755  '{}' \;
 
 %build
 # this line lets us build an RPM directly from a git tarball
@@ -172,32 +170,19 @@ echo \%doc _build/build-%{_arch}.log > buildlogs.txt
 runtest() {
     mkdir _$1$2
 %if 0%{?run_unit_tests}
-    pushd _$1$2
+    cd _$1$2
     ../configure
     make -e $1 CFLAGS="$CFLAGS -DDEBUG_OUTPUT_ALL" 2>&1 | tee $1$2.log
     touch -r ../configure.ac $1$2-%{_arch}.log
     make -e $1 2>&1 | tee $1$2.log
-    popd
+    cd ..
     echo \%doc _$1$2/$1$2-%{_arch}.log >> _build/buildlogs.txt
 %endif
 }
 
-if [ -d /usr/include/cppunit ]; then
-   # run this first since it is slightly faster than valgrind
-    VALGRIND="strace -f" runtest check strace > /dev/null || echo FAILED strace check
-fi
-
-if [ -e /usr/bin/valgrind -a -d /usr/include/cppunit ]; then
-    runtest valgrind > /dev/null || echo FAILED valgrind check
-fi
-
-if [ -d /usr/include/cppunit ]; then
-    runtest check > /dev/null || echo FAILED check
-fi
-
-if [ ! -d /usr/include/cppunit ]; then
-    echo "Unit tests skipped due to missing cppunit."
-fi
+VALGRIND="strace -f" runtest check strace > /dev/null || echo FAILED strace check
+runtest valgrind > /dev/null || echo FAILED valgrind check
+runtest check > /dev/null || echo FAILED check
 
 %install
 rm -rf %{buildroot}
@@ -210,7 +195,7 @@ mkdir -p %{buildroot}/%{_includedir}
 mkdir -p %{buildroot}/%{_bindir}
 cp -a $TOPDIR/src/include/*  %{buildroot}/%{_includedir}/
 cp -a out/public-include/*  %{buildroot}/%{_includedir}/
-rm -f %{buildroot}/%{_libdir}/lib*.{la,a}
+rm -f %{buildroot}/%{_libdir}/libsmbios*.*a
 find %{buildroot}/%{_includedir} out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
 mv out/libsmbios_c    out/libsmbios_c-%{_arch}
@@ -250,6 +235,9 @@ cat > files-smbios-utils-python <<-EOF
 	%{_sbindir}/smbios-keyboard-ctl
 	%{_sbindir}/smbios-thermal-ctl
 	%{_sbindir}/smbios-battery-ctl
+
+	# man pages
+	%{_mandir}/*
 
 	# used by HAL in old location, so keep it around until HAL is updated.
 	%{_sbindir}/dellLcdBrightness

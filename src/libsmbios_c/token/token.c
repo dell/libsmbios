@@ -56,7 +56,7 @@ const char * token_strerror()
         table = token_table_factory(TOKEN_DEFAULTS);        \
         if (!table) goto out;                               \
         token = token_table_get_next_by_id(table, 0, id);   \
-        free(table);                                        \
+        token_table_free(table);                            \
         if (!token) goto out;                               \
         return token_obj_##callname (token);                \
 out:                                                        \

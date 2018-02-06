@@ -13,6 +13,12 @@ gettext.install(GETTEXT_PACKAGE, localedir)
 standardFailMessage = _("\n\
 Common problems are:\n\
 \n\
+    -- 'SMM Mitigations' is enabled in BIOS setup.\n\
+        Run kernel 4.15 or later with \n\
+        dell-smbios-wmi enabled.\n\
+         or \n\
+        Disable 'SMM mitigations' in BIOS setup.\n\
+\n\
     -- Insufficient permissions to perform operation.\n\
        Try running as a more privileged account.\n\
           Linux  : run as 'root' user\n\
@@ -60,10 +66,10 @@ def addStdOptions(parser, passwordOpts=True, securityKeyOpt=False):
 
 def setup_std_options(options):
     if options.memory_dat is not None:
-        memory.MemoryAccess( memory.MEMORY_GET_SINGLETON | memory.MEMORY_UNIT_TEST_MODE, options.memory_dat)
+        memory.MemoryAccess( memory.MEMORY_GET_SINGLETON | memory.MEMORY_UNIT_TEST_MODE, options.memory_dat.encode('utf-8'))
 
     if options.cmos_dat is not None:
-        cmos.CmosAccess( cmos.CMOS_GET_SINGLETON | cmos.CMOS_UNIT_TEST_MODE, options.cmos_dat)
+        cmos.CmosAccess( cmos.CMOS_GET_SINGLETON | cmos.CMOS_UNIT_TEST_MODE, options.cmos_dat.encode('utf-8'))
 
     options.password_scancode = None
     if options.password is not None:

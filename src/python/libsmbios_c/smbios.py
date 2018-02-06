@@ -86,8 +86,7 @@ class _SmbiosTable(ctypes.Structure):
             if bool(cur):
                 yield cur.contents
             else:
-                print(_("hit end of table."))
-                raise StopIteration
+                raise StopIteration(_("hit end of table."))
 
     @traceLog()
     def iterByType(self, t):
@@ -98,16 +97,14 @@ class _SmbiosTable(ctypes.Structure):
                 if cur.contents.getType() == t:
                     yield cur.contents
             else:
-                print(_("hit end of table."))
-                raise StopIteration
+                raise StopIteration(_("hit end of table."))
 
     @traceLog()
     def getStructureByHandle(self, handle):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =DLL.smbios_table_get_next_struct_by_handle( self._tableobj, cur, handle )
         if not bool(cur):
-            print(_("No SMBIOS structure found with handle %s") % handle)
-            raise IndexError
+            raise IndexError(_("No SMBIOS structure found with handle %s") % handle)
         return cur.contents
 
     @traceLog()
@@ -115,8 +112,7 @@ class _SmbiosTable(ctypes.Structure):
         cur = ctypes.POINTER(SmbiosStructure)()
         cur =DLL.smbios_table_get_next_struct_by_type( self._tableobj, cur, t )
         if not bool(cur):
-            print(_("No SMBIOS structure found with type %s") % t)
-            raise IndexError
+            raise IndexError(_("No SMBIOS structure found with type %s") % t)
         return cur.contents
 
     __getitem__ = getStructureByType

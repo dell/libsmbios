@@ -44,12 +44,6 @@ out_testStandalone_LDADD = out/libxmlutil.la out/libtestmain.la $(AM_LDADD)
 out_testStandalone_LDFLAGS = $(AM_LDFLAGS) -static
 out_testStandalone_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += out/testC_smbios
-out_testC_smbios_SOURCES = src/cppunit/testC_smbios.h src/cppunit/testC_smbios.cpp
-out_testC_smbios_LDADD = out/libxmlutil.la out/libtestmain.la $(AM_LDADD)
-out_testC_smbios_LDFLAGS = $(AM_LDFLAGS) -static
-out_testC_smbios_CPPFLAGS = $(TEST_CPPFLAGS)
-
 check_PROGRAMS += out/testC_token
 out_testC_token_SOURCES = src/cppunit/testC_token.h src/cppunit/testC_token.cpp
 out_testC_token_LDADD = out/libxmlutil.la out/libtestmain.la $(AM_LDADD)
@@ -61,10 +55,4 @@ out_testC_smi_SOURCES = src/cppunit/testC_smi.h src/cppunit/testC_smi.cpp
 out_testC_smi_LDADD = out/libtestmain.la $(AM_LDADD)
 out_testC_smi_LDFLAGS = $(AM_LDFLAGS) -static
 out_testC_smi_CPPFLAGS = $(CPPUNIT_CFLAGS) $(AM_CPPFLAGS) $(UT_CFLAGS)
-
-check_PROGRAMS += out/testC_memory_cmos
-out_testC_memory_cmos_SOURCES = src/cppunit/testC_memory_cmos.h src/cppunit/testC_memory_cmos.cpp
-out_testC_memory_cmos_LDADD = out/libtestmain.la $(AM_LDADD)
-out_testC_memory_cmos_LDFLAGS = $(AM_LDFLAGS) -static
-out_testC_memory_cmos_CPPFLAGS = $(CPPUNIT_CFLAGS) $(AM_CPPFLAGS) $(UT_CFLAGS)
 endif
