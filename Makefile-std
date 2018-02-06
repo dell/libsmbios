@@ -9,7 +9,7 @@ EXTRA_DIST =
 EXTRA_PROGRAMS=
 
 CLEANFILES += $(EXTRA_PROGRAMS)
-CLEANFILES += po/*.gmo src/python/libsmbios_c/__pycache__/ src/pyunit/__pycache__/
+CLEANFILES += po/*.gmo src/python/libsmbios_c/__pycache__/ src/pyunit/__pycache__/ src/py-cli/__pycache__/
 DISTCLEANFILES += pkg/$(PACKAGE).spec
 
 
