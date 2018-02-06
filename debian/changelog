@@ -1,4 +1,4 @@
-libsmbios (2.4.0-1) UNRELEASED; urgency=medium
+libsmbios (2.4.0-1) unstable; urgency=medium
 
   * New upstream version.
     - Fixes crashes in smbios-get-ut-data with inappropriate permissions
@@ -34,7 +34,7 @@ libsmbios (2.4.0-1) UNRELEASED; urgency=medium
   * debian/smbios-utils.links:
     - Drop reference to old rbu flash tool.
 
- -- Mario Limonciello <mario.limonciello@dell.com>  Wed, 31 Jan 2018 14:27:34 -0600
+ -- Mario Limonciello <mario.limonciello@dell.com>  Tue, 06 Feb 2018 12:40:46 -0600
 
 libsmbios (2.3.1-1) unstable; urgency=medium
 
