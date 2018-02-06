@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # vim:et:ai:ts=4:sw=4:filetype=sh:tw=0:
 
 set -x
