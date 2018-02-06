@@ -13,6 +13,12 @@ gettext.install(GETTEXT_PACKAGE, localedir)
 standardFailMessage = _("\n\
 Common problems are:\n\
 \n\
+    -- 'SMM Mitigations' is enabled in BIOS setup.\n\
+        Run kernel 4.15 or later with \n\
+        dell-smbios-wmi enabled.\n\
+         or \n\
+        Disable 'SMM mitigations' in BIOS setup.\n\
+\n\
     -- Insufficient permissions to perform operation.\n\
        Try running as a more privileged account.\n\
           Linux  : run as 'root' user\n\
