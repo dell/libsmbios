@@ -195,7 +195,7 @@ mkdir -p %{buildroot}/%{_includedir}
 mkdir -p %{buildroot}/%{_bindir}
 cp -a $TOPDIR/src/include/*  %{buildroot}/%{_includedir}/
 cp -a out/public-include/*  %{buildroot}/%{_includedir}/
-rm -f %{buildroot}/%{_libdir}/lib*.{la,a}
+rm -f %{buildroot}/%{_libdir}/libsmbios*.*a
 find %{buildroot}/%{_includedir} out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
 mv out/libsmbios_c    out/libsmbios_c-%{_arch}
