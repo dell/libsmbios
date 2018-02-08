@@ -8,8 +8,6 @@ Vcs-Browser: https://salsa.debian.org/efi-team/libsmbios
 Homepage: https://github.com/dell/libsmbios/
 Build-Depends: debhelper (>= 10),
                dh-python,
-               dh-autoreconf,
-               autotools-dev,
                doxygen,
                graphviz,
                python3,
