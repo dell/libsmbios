@@ -219,7 +219,7 @@ ln -s smbios-lcd-brightness %{buildroot}/%{_sbindir}/dellLcdBrightness
 
 cat > files-python-smbios <<-EOF
 	%doc COPYING-GPL COPYING-OSL
-	%{python3_sitelib}/*
+	%{python3_sitearch}/*
 EOF
 
 cat > files-smbios-utils-python <<-EOF
