@@ -105,10 +105,10 @@ out/libsmbios_c/html/index.html: $(top_srcdir)/pkg/libsmbios_c.dox $(wildcard $(
 
 out/scripts/%.1 : src/bin/%
 	mkdir -p out/scripts
-	-$(HELP2MAN) --output=$@ --name=$^ --version-string=$(PACKAGE_VERSION) "LD_LIBRARY_PATH=$$PWD/out/.libs python3 $^"
+	-$(HELP2MAN) --output=$@ --name=$^ "LD_LIBRARY_PATH=$$PWD/out/.libs python3 $^"
 
 out/%.1 : out/%
-	-$(HELP2MAN) --output=$@ --name=$^ --version-string=$(PACKAGE_VERSION) $^
+	-$(HELP2MAN) --output=$@ --name=$^ $^
 
 ########## END DOCS ################
 
