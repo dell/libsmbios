@@ -44,8 +44,8 @@ struct linux_data
     int mem_errno;
     bool rw;
     void *lastMapping;
-    u64 lastMappedOffset;
-    u64 mappingSize;
+    off_t lastMappedOffset;
+    size_t mappingSize;
 };
 
 #define READ_MMAP 0
@@ -98,7 +98,7 @@ static void debug_dump_buffer(const char *fn, const char *s, const u8 *buffer, s
 #define debug_dump_buffer(...) do {} while(0)
 #endif
 
-static void remap(struct linux_data *private_data, u64 offset, bool rw)
+static void remap(struct linux_data *private_data, off_t offset, bool rw)
 {
     int flags = rw ? PROT_WRITE : PROT_READ;
     off_t mmoff = offset % private_data->mappingSize;

@@ -18,33 +18,32 @@
 %define other_name   libsmbios
 %endif
 
-%{!?build_python:   %define build_python 1}
-%{?_with_python:    %define build_python 1}
+%{!?build_python:   %global build_python 1}
+%{?_with_python:    %global build_python 1}
 %{?_without_python: %undefine build_python}
 
 # run_unit_tests not defined by default as cppunit
 # not available in OS on several major OS
 %{?_without_unit_tests: %undefine run_unit_tests}
-%{?_with_unit_tests:    %define run_unit_tests 1}
+%{?_with_unit_tests:    %global run_unit_tests 1}
 
-%{!?as_needed:         %define as_needed 1}
+%{!?as_needed:         %global as_needed 1}
 %{?_without_as_needed: %undefine as_needed}
-%{?_with_as_needed:    %define as_needed 1}
+%{?_with_as_needed:    %global as_needed 1}
 
-%define pkgconfig_BR pkgconfig
-%define ctypes_BR python-ctypes
-%define valgrind_BR valgrind
+%global pkgconfig_BR pkgconfig
+%global valgrind_BR valgrind
 # Some variable definitions so that we can be compatible between SUSE Build service and Fedora build system
 # SUSE: fedora_version  suse_version rhel_version centos_version sles_version
 # Fedora: fedora dist fc8 fc9
 
-%define python_devel_BR %{nil}
+%global python_devel_BR %{nil}
 %if 0%{?build_python}
-    %define python_devel_BR python34-devel
+    %global python_devel_BR python34-devel
 %endif
 
 # if unit tests are disabled, get rid of a few BuildRequires
-%{!?run_unit_tests: %define valgrind_BR %{nil}}
+%{!?run_unit_tests: %global valgrind_BR %{nil}}
 
 Name: %{release_name}
 Version: %{release_version}
@@ -55,6 +54,10 @@ Group: System Environment/Libraries
 Source: libsmbios-%{version}.tar.xz
 URL: http://github.com/dell/libsmbios
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: gettext-devel
+BuildRequires: libtool
 BuildRequires: strace libxml2-devel gcc-c++ gettext doxygen help2man %{valgrind_BR} %{pkgconfig_BR} %{python_devel_BR}
 # uncomment for official fedora
 Obsoletes: libsmbios-libs < 2.0.0
@@ -76,7 +79,7 @@ This package provides the C-based libsmbios library, with a C interface.
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
 Requires: %{release_name} = 0:%{version}-%{release}
-Requires: python3 %{ctypes_BR}
+Requires: python3
 
 %description -n python3-smbios
 This package provides a Python3 interface to libsmbios
@@ -216,7 +219,7 @@ ln -s smbios-lcd-brightness %{buildroot}/%{_sbindir}/dellLcdBrightness
 
 cat > files-python-smbios <<-EOF
 	%doc COPYING-GPL COPYING-OSL
-	%{python3_sitelib}/*
+	%{python3_sitearch}/*
 EOF
 
 cat > files-smbios-utils-python <<-EOF
@@ -296,6 +299,85 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 
 %changelog
+* Mon Dec 11 2017 Pete Walter <pwalter@fedoraproject.org> - 2.3.3-2
+- Remove obsolete python-ctypes requires (#1399686)
+
+* Tue Nov 14 2017 Pete Walter <pwalter@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3
+
+* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.0-3
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
+* Wed Mar 09 2016 Peter Jones <pjones@redhat.com> - 2.3.0-2
+- Once again, don't complain about compilers newer than tested with in the
+  public headers.
+- Fix up bad %%global vs %%define directives
+- Fix up bad old changelog dates
+- Note there's a missing changelog here from the 2.3.0 rebase
+
+* Thu Feb 25 2016 Peter Jones <pjones@redhat.com> - 2.2.28-16
+- Don't complain about compilers newer than tested with in the public
+  headers.
+
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.2.28-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Tue Sep 1 2015 Srinivas G Gowda <srinivas_g_gowda@dell.com> - 2.2.28-14
+- Fixes Bug 852719: Dell Open Manage falis to start when libsmbios in EPEL branch is used.
+- Patch re-enables display of "OEM String" in smbios-sys-info-lite.
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 2.2.28-12
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-6
+- Rebuilt for c++ ABI breakage
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.28-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Jun 30 2011 Praveen K Paladugu <praveen_paladugu@dell.com> 2.2.28-4
+- Adding the right tar ball, coz files were missing from the previous version. 
+
+* Thu Jun 30 2011 Praveen K Paladugu <praveen_paladugu@dell.com> - 2.2.28-3
+- Fixing the build failure of version 2.2.26-4.
+- The updated sources adds support for the compiler version available in F15 and other fixes.
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.26-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Mon Sep 27 2010 Matt Domsch <mdomsch@fedoraproject.org> - 2.2.26-3
+- build for Fedora 15
+
+* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 2.2.19-2
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
 * Tue Jul 06 2010 Michael Brown <michael-e_brown at dell.com> - 2.2.26-1
 - implement CSV export of token settings from smbios-token-ctl
 

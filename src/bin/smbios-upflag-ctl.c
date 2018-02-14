@@ -84,7 +84,7 @@ main (int argc, char **argv)
                 sysinfo_set_up_boot_flag( flag );
             break;
         case 255:
-            printf( _("Libsmbios version:    %s\n"), smbios_get_library_version_string());
+            printf("%s\n", smbios_get_library_version_string());
             exit(0);
             break;
         default:

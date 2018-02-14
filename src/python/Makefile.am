@@ -1,6 +1,6 @@
 # vim:noexpandtab:autoindent:tabstop=8:shiftwidth=8:filetype=make:nocindent:tw=0:
 
-pkgpythondir=$(pythondir)/libsmbios_c
+pkgpythondir=$(pyexecdir)/libsmbios_c
 
 if HAVE_PYTHON
 pkgpython_PYTHON = \

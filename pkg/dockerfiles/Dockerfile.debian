@@ -3,10 +3,8 @@ FROM debian:testing
 RUN echo "deb-src http://deb.debian.org/debian/ testing main" >> /etc/apt/sources.list
 RUN apt-get update -qq && apt-get install -yq --no-install-recommends \
 	build-essential \
-	autotools-dev \
 	debhelper \
 	devscripts \
-	dh-autoreconf \
 	doxygen \
 	fakeroot \
 	git \
