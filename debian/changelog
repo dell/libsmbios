@@ -1,3 +1,12 @@
+libsmbios (2.4.1-1) unstable; urgency=medium
+
+  * New upstream microversion.
+    - Better compatbility with help2man
+    - Fixes some issues found with new gcc.
+  * debian: cleanup old conffile (Closes: #890064)
+
+ -- Mario Limonciello <mario.limonciello@dell.com>  Wed, 14 Feb 2018 14:04:18 -0600
+
 libsmbios (2.4.0-1) unstable; urgency=medium
 
   * New upstream version.
