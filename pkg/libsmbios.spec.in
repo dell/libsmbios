@@ -79,7 +79,7 @@ This package provides the C-based libsmbios library, with a C interface.
 Summary: Python interface to Libsmbios C library
 Group: System Environment/Libraries
 Requires: %{release_name} = 0:%{version}-%{release}
-Requires: (python3 or python34 or python36)
+Requires: python3
 
 %description -n python3-smbios
 This package provides a Python3 interface to libsmbios
