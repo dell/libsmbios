@@ -194,10 +194,7 @@ mkdir %{buildroot}
 cd _build
 TOPDIR=..
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
-mkdir -p %{buildroot}/%{_includedir}
 mkdir -p %{buildroot}/%{_bindir}
-cp -a $TOPDIR/src/include/*  %{buildroot}/%{_includedir}/
-cp -a out/public-include/*  %{buildroot}/%{_includedir}/
 rm -f %{buildroot}/%{_libdir}/libsmbios*.*a
 find %{buildroot}/%{_includedir} out/libsmbios_c -exec touch -r $TOPDIR/configure.ac {} \;
 
@@ -267,7 +264,6 @@ rm -rf %{buildroot}
 %files -n libsmbios-devel -f _build/buildlogs.txt
 %defattr(-,root,root,-)
 %doc COPYING-GPL COPYING-OSL src/bin/getopts_LICENSE.txt
-%{_includedir}/smbios
 %{_includedir}/smbios_c
 %{_libdir}/libsmbios_c.so
 %{_libdir}/pkgconfig/*.pc

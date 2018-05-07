@@ -1,4 +1,4 @@
 debian/tmp/usr/lib/*/libsmbios_c.so
 debian/tmp/usr/lib/*/libsmbios_c.a
-src/include usr
+debian/tmp/usr/include/* usr/include/
 debian/tmp/usr/lib/*/pkgconfig/

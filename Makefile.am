@@ -40,6 +40,7 @@ include src/python/Makefile.am
 include src/py-cli/Makefile.am
 include src/bin/Makefile.am
 include src/pyunit/Makefile.am
+include src/include/Makefile.am
 
 pkgconfdir=$(sysconfdir)/$(PACKAGE)
 if HAVE_PYTHON
