@@ -167,7 +167,8 @@ if test x$wantgraphviz != xyes ; then
 fi
 
 #generate man pages for anything executable
-AC_PATH_PROG(HELP2MAN, help2man, false)
+AC_PATH_PROG(HELP2MAN, help2man)
+AM_CONDITIONAL(HAVE_HELP2MAN, [test $HELP2MAN])
 
 # the manual assembly in the media direct sources fails to build on ia64 as it
 # relies on more registers than available on ia64; there's no ia64 system with
