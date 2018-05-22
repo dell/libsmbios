@@ -104,12 +104,14 @@ export DOT HAVE_DOT top_builddir top_srcdir
 out/libsmbios_c/html/index.html: $(top_srcdir)/pkg/libsmbios_c.dox $(wildcard $(top_srcdir)/src/include/smbios_c/*.h)
 	doxygen $< > out/$$(basename $< .dox).out
 
+if HAVE_HELP2MAN
 out/scripts/%.1 : src/bin/%
 	mkdir -p out/scripts
 	-$(HELP2MAN) --output=$@ --name=$^ "LD_LIBRARY_PATH=$$PWD/out/.libs python3 $^"
 
 out/%.1 : out/%
 	-$(HELP2MAN) --output=$@ --name=$^ $^
+endif
 
 ########## END DOCS ################
 
