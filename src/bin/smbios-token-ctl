@@ -5,6 +5,8 @@
   #
   # Copyright (c) 2005 Dell Computer Corporation
   # Dual Licenced under GNU GPL and OSL
+  #   
+  # Some mod by Rakovskij Stanislav, 2018, rakovskij.stanislav@gmail.com
   #
   #############################################################################
 """smbios-token-ctl"""
@@ -229,6 +231,10 @@ def dumpTokens(tokenTable, tokenXlator, options):
             print(_("  value: %s = %s") % (type, cli.makePrintable(value)))
         except RuntimeError as e:
             pass
+        except Exception as e:
+            print("   Kitten exception:", e)
+            print("    Do not worry if this problem is not for every token.")
+            print("    Possibly you cannot use this token because of your bios does not support it or your OS handle it by self.") 
 
         desc = _("   Desc: ")
         sys.stdout.write(desc)
