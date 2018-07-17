@@ -28,6 +28,7 @@
 #include <string.h>     // memcpy
 #include <errno.h>
 #include <sys/mman.h>   // mmap
+#include <sys/stat.h>
 
 #include "smbios_c/obj/memory.h"
 #include "smbios_c/types.h"
@@ -46,6 +47,7 @@ struct linux_data
     void *lastMapping;
     off_t lastMappedOffset;
     size_t mappingSize;
+    size_t fileSize;
 };
 
 #define READ_MMAP 0
@@ -160,6 +162,12 @@ static int copy_mmap(const struct memory_access_obj *this, u8 *buffer, u64 offse
     fnprintf("buffer(%p) offset(%lld) length(%zd) rw(%d)\n", buffer, offset, length, rw);
     fnprintf("->rw: %d  fd: %p\n", private_data->rw, private_data->fd);
 
+    if(private_data->fileSize > 0 && length + offset > private_data->fileSize) {
+        error = _("File size is too small: File: ");
+        errno = EINVAL;
+        goto err_out;
+    }
+
     error = _("Could not (re)open file. File: ");
     if( (rw && !private_data->rw) || !private_data->fd)
         if (!reopen(private_data, rw))
@@ -257,6 +265,7 @@ __hidden int init_mem_struct_filename(struct memory_access_obj *m, const char *f
     int retval = 0;
     const char *error;
     struct linux_data *private_data;
+    struct stat st_dev;
 
     fnprintf("\n");
 
@@ -287,6 +296,12 @@ __hidden int init_mem_struct_filename(struct memory_access_obj *m, const char *f
     error = _("File open error during memory object construction. The filename: ");
     if (!reopen(private_data, false))
         goto out_fail;
+    if (fstat (fileno(private_data->fd), &st_dev) == -1)
+        goto out_fail;
+    if (S_ISCHR (st_dev.st_mode))
+        private_data->fileSize = -1;
+    else
+        private_data->fileSize = st_dev.st_size;
     closefds(private_data);
     m->initialized = 1;
     goto out;
