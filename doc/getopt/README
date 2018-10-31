@@ -79,7 +79,7 @@ This first entry here is '1', this is the number that getopts() will return
 if it matches any of the command line arguments.  The next entry "debug" is
 the long name of the command line argument.  It will be used like "--debug".
 The third entry is the description.  This is what will be shown in the event
-of using "-h" or "--help".  Or should the arguements not be there and it 
+of using "-h" or "--help".  Or should the arguments not be there and it 
 decides to dump out the usage. The fourth entry is the short name or "-d" as
 it would be seen on the command line.  The last (fifth) entry '1' is going to
 be either a one or a zero.  And it tells if there are any arguments for this 
@@ -87,7 +87,7 @@ option.  like "--debug 3" could be used here for setting debug level to '3'.
 
 Either the fullname (entry 2) or the short name (entry 4) can have NULL for
 its entry, signifying it should only use one or the other.  But you need 
-atleast 1 of them.  
+at least 1 of them.  
 
 -- IGNORE THIS PARAGRAPH --  This is only here for Historical references.
 At this current time, you can only have 1 argument for an option (space
