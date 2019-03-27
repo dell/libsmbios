@@ -75,8 +75,12 @@ def setup_std_options(options):
     if options.password is not None:
         options.password_scancode = braindead_asc_to_scancode(options.password)
     options.password_ascii = options.password
+    if options.password_ascii:
+        options.password_ascii = options.password_ascii.encode('utf-8')
     if options.raw:
         options.password_scancode = options.password
+    if options.password_scancode:
+        options.password_scancode = options.password_scancode.encode('utf-8')
 
     if getattr(options, "security_key", None) is not None:
         options.security_key = int(options.security_key, 0)
