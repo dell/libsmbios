@@ -117,7 +117,7 @@ def main():
             print()
             print(_("Setting new tag value: %s") % options.set)
             fn = info_list[ options.taglist[0] ][2]
-            fn(options.set.encode(), options.password_ascii, options.password_scancode)
+            exit_code = fn(options.set.encode(), options.password_ascii, options.password_scancode)
 
     except (smbios.TableParseError,) as e:
         exit_code=3
