@@ -374,8 +374,8 @@ int setServiceTagUsingCMOSToken(const char *newTag, const char *pass_ascii, cons
     // Step 2: reset checksum
     fnprintf("- csum ");
     s = token_get_smbios_struct(Cmos_Service_Token);
-    if (!s)
-	goto out;
+    if (s == NULL)
+        goto out;
     indexPort = ((struct indexed_io_access_structure*)s)->indexPort;
     dataPort = ((struct indexed_io_access_structure*)s)->dataPort;
     location = ((struct indexed_io_token *)token_get_ptr(Cmos_Service_Token))->location;
