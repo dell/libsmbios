@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # vim: et:ai:sw=4:ts=4:filetype=python:nocindent:
 
 import sys

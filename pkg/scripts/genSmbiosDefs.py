@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:
 
 
