@@ -138,12 +138,14 @@ def get_charging_mode() -> ChargingMode:
         active = table[mode.value].isActive()
         if active:
             if active_mode is not None:
-                print(f"\t WARNING: Inconsistency: both {active_mode} and\
-                     {mode} enabled at the same time")
+                raise RunTimeBatteryErr(
+                    f"Multiple charging modes enabled: {active_mode} and "
+                    f"{mode} enabled at the same time"
+                )
             active_mode = mode
 
     if active_mode is None:
-        raise Exception(f"\t WARNING: Inconsistency: no mode enabled")
+        raise RunTimeBatteryErr("No charging mode enabled")
     return active_mode
 
 
