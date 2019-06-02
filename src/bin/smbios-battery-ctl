@@ -6,6 +6,7 @@
 # Copyright (c) 2016 Dell Computer Corporation
 # by Srinivas Gowda <srinivas_g_gowda@dell.com>
 # Dual Licenced under GNU GPL and OSL
+# Contributor: (c) 2019 Marcin Mielniczuk <marmistrz dot dev at zoho dot eu>
 #
 #############################################################################
 """smbios-battery-ctl"""
