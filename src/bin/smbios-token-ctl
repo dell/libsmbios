@@ -5,6 +5,7 @@
   #
   # Copyright (c) 2005 Dell Computer Corporation
   # Dual Licenced under GNU GPL and OSL
+  # Contributor: (c) 2019 Marcin Mielniczuk <marmistrz dot dev at zoho dot eu>
   #
   #############################################################################
 """smbios-token-ctl"""
@@ -229,6 +230,8 @@ def dumpTokens(tokenTable, tokenXlator, options):
             print(_("  value: %s = %s") % (type, cli.makePrintable(value)))
         except RuntimeError as e:
             pass
+        except smbios_token.TokenManipulationFailure as e:
+            print(f"  value: token query failed: {e}")
 
         desc = _("   Desc: ")
         sys.stdout.write(desc)
@@ -424,6 +427,8 @@ def main():
         verboseLog.info( _("The token library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
+    except StopIteration:
+        pass
 
     return exit_code
 
@@ -468,4 +473,3 @@ INTERNAL_BLACKLIST = \
 
 if __name__ == "__main__":
     sys.exit( main() )
-
