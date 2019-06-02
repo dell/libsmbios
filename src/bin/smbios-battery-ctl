@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 # vim:expandtab:autoindent:tabstop=4:shiftwidth=4:filetype=python:tw=0
 
-  #############################################################################
-  #
-  # Copyright (c) 2016 Dell Computer Corporation
-  # by Srinivas Gowda <srinivas_g_gowda@dell.com>
-  # Dual Licenced under GNU GPL and OSL
-  #
-  #############################################################################
+#############################################################################
+#
+# Copyright (c) 2016 Dell Computer Corporation
+# by Srinivas Gowda <srinivas_g_gowda@dell.com>
+# Dual Licenced under GNU GPL and OSL
+#
+#############################################################################
 """smbios-battery-ctl"""
 
 
@@ -17,6 +17,8 @@ import gettext
 import locale
 import os
 import sys
+from enum import Enum
+from typing import Tuple
 
 # the following vars are all substituted on install
 # this bin isnt byte-compiled, so this is ok
@@ -46,8 +48,38 @@ class RunTimeBatteryErr(Exception): pass
 def command_parse():
     parser = cli.OptionParser(usage=__doc__, version=__VERSION__)
     cli.addStdOptions(parser, passwordOpts=True, securityKeyOpt=True)
-    parser.add_option("--battery-charge", "-c", action="store_true", default=False, help=_("This will get the Current Battery Charging State"))
+    parser.add_option(
+        "--battery-charge",
+        "-c",
+        action="store_true",
+        default=False,
+        help=_("This will get the Current Battery Charging State")
+    )
+    parser.add_option(
+        "--get-charging-cfg",
+        action="store_true",
+        default=False,
+        help=_("Get the current Primary Battery Charge Configuration")
+    )
 
+    choices = [str(mode) for mode in ChargingMode]
+    parser.add_option(
+        "--set-charging-mode",
+        metavar='<MODE>',
+        choices=choices,
+        help=_(f"Set the current Primary Battery Charge Configuration. Valid choices are: {choices}")
+    )
+    parser.add_option(
+        "--set-custom-charge-interval",
+        nargs=2,
+        metavar='<START> <END>',
+        type='int',
+        help=_(
+            "Set the percentage bounds for custom charge. Both must be integers. "
+            "START must lie in the range [50, 95], "
+            "END must lie in the range [55, 100], "
+            "END must be at least (START + 5)")
+    )
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit()
@@ -76,6 +108,89 @@ def print_express_charge_status(n):
     elif n == 3: print('\t One-time express')
     elif n == 0xFF: print('\t Battery is present, and it does not support express charge')
     else : print('\t Unknown')
+
+
+class ChargingMode(Enum):
+    PRIMARILY_AC = 0x0341
+    ADAPTIVE = 0x0342
+    CUSTOM = 0x0343  # 0x0348 is deprecated, cf. token_list.csv
+    STANDARD = 0x0346
+    EXPRESS = 0x0347
+
+    def __str__(self) -> str:
+        return self.name.lower()
+
+    @staticmethod
+    def from_string(s: str) -> 'ChargingMode':
+        try:
+            return ChargingMode[s.upper()]
+        except KeyError:
+            raise ValueError()
+
+
+CUSTOM_CHARGE_START = 0x0349
+CUSTOM_CHARGE_END = 0x034A
+
+
+def get_charging_mode() -> ChargingMode:
+    table = smbios_token.TokenTable()
+    active_mode = None
+    for mode in ChargingMode:
+        active = table[mode.value].isActive()
+        if active:
+            if active_mode is not None:
+                raise RunTimeBatteryErr(
+                    f"Multiple charging modes enabled: {active_mode} and "
+                    f"{mode} enabled at the same time"
+                )
+            active_mode = mode
+
+    if active_mode is None:
+        raise RunTimeBatteryErr("No charging mode enabled")
+    return active_mode
+
+
+def set_charging_mode(mode: ChargingMode) -> None:
+    table = smbios_token.TokenTable()
+    table[mode.value].activate()
+
+
+def get_custom_charge_interval() -> Tuple[int, int]:
+    table = smbios_token.TokenTable()
+    low = table[CUSTOM_CHARGE_START].getString()
+    high = table[CUSTOM_CHARGE_END].getString()
+
+    # The intervals are stored as 2-byte little endian integers
+    low_num = int.from_bytes(low, "little")
+    high_num = int.from_bytes(high, "little")
+
+    return (low_num, high_num)
+
+
+def set_custom_charge_interval(start: int, end: int) -> None:
+    table = smbios_token.TokenTable()
+    # Primary Battery Custom Charge Start must be in the range [50, 95] with a step value of 1
+    #       and at least 5% less than Primary Custom Charge End
+    # Primary Battery Custom Charge End must be in the range [55,100] with a step value of 1
+    #       and at least 5% greater than Primary Custom Charge Start
+    if end - start < 5:
+        raise ValueError("END must be at least (START + 5)")
+    if start < 50 or start > 95:
+        raise ValueError("START must lie in the range [50, 95]")
+    if end < 55 or end > 100:
+        raise ValueError("END must lie in the range [55, 100]")
+    start_bytes = start.to_bytes(2, "little")
+    end_bytes = end.to_bytes(2, "little")
+    table[CUSTOM_CHARGE_START].setString(start_bytes)
+    table[CUSTOM_CHARGE_END].setString(end_bytes)
+
+
+def print_primary_battery_cfg() -> None:
+    mode = get_charging_mode()
+    print(f"Charging mode: {mode}")
+    if mode == ChargingMode.CUSTOM:
+        interval = get_custom_charge_interval()
+        print(f"Charging interval: {interval}")
 
 
 def PrintBatteryChargingState():
@@ -121,6 +236,16 @@ def main():
             print(_("smbios-battery-ctl version : %s") % __VERSION__)
             verboseLog.info( _(" You can use smbios-battery-ctl utility to view/modify battery settings"))
             PrintBatteryChargingState()
+        if options.get_charging_cfg:
+            print_primary_battery_cfg()
+        if options.set_charging_mode is not None:
+            mode = ChargingMode.from_string(options.set_charging_mode)
+            set_charging_mode(mode)
+            print(f"Charging mode has been set to: {mode}")
+        if options.set_custom_charge_interval is not None:
+            (low, high) = options.set_custom_charge_interval
+            set_custom_charge_interval(low, high)
+            print(f"Custom charge interval has been set to ({low}, {high})")
 
     except (smi.SMIExecutionError, ) as e:
         exit_code=3
@@ -129,14 +254,14 @@ def main():
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (smbios.TableParseError, token.TokenTableParseError) as e:
+    except (smbios.TableParseError, smbios_token.TokenTableParseError) as e:
         exit_code=3
         moduleLog.info( _("ERROR: Could not parse system SMBIOS table.") )
         verboseLog.info( _("The smbios library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
 
-    except (token.TokenManipulationFailure,) as e:
+    except (smbios_token.TokenManipulationFailure,) as e:
         exit_code=4
         moduleLog.info( _("ERROR: Could not manipulate system token.") )
         verboseLog.info( _("The token library returned this error:") )
