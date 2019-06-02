@@ -73,6 +73,7 @@ def command_parse():
         "--set-custom-charge-interval",
         nargs=2,
         metavar='<START> <END>',
+        type='int',
         help=_(
             "Set the percentage bounds for custom charge. Both must be integers. "
             "START must lie in the range [50, 95], "
@@ -166,23 +167,22 @@ def get_custom_charge_interval() -> Tuple[int, int]:
     return (low_num, high_num)
 
 
-def set_custom_charge_interval(interval: Tuple[int, int]) -> None:
+def set_custom_charge_interval(start: int, end: int) -> None:
     table = smbios_token.TokenTable()
-    (low, high) = interval
     # Primary Battery Custom Charge Start must be in the range [50, 95] with a step value of 1
     #       and at least 5% less than Primary Custom Charge End
     # Primary Battery Custom Charge End must be in the range [55,100] with a step value of 1
     #       and at least 5% greater than Primary Custom Charge Start
-    if high - low < 5:
-        raise ValueError("too small interval")
-    if low < 50 or low > 95:
-        raise ValueError("start [50, 95]")
-    if high < 55 or high > 100:
-        raise ValueError("end [55, 100]")
-    low_bytes = low.to_bytes(2, "little")
-    high_bytes = high.to_bytes(2, "little")
-    table[CUSTOM_CHARGE_START].setString(low_bytes)
-    table[CUSTOM_CHARGE_END].setString(high_bytes)
+    if end - start < 5:
+        raise ValueError("END must be at least (START + 5)")
+    if start < 50 or start > 95:
+        raise ValueError("START must lie in the range [50, 95]")
+    if end < 55 or end > 100:
+        raise ValueError("END must lie in the range [55, 100]")
+    start_bytes = start.to_bytes(2, "little")
+    end_bytes = end.to_bytes(2, "little")
+    table[CUSTOM_CHARGE_START].setString(start_bytes)
+    table[CUSTOM_CHARGE_END].setString(end_bytes)
 
 
 def print_primary_battery_cfg() -> None:
@@ -238,11 +238,14 @@ def main():
             PrintBatteryChargingState()
         if options.get_charging_cfg:
             print_primary_battery_cfg()
-        if options.set_charging_mode:
-            print("set_charging_cfg unimplemented")
-            print(ChargingMode.from_string(options.set_charging_mode))
-        if options.set_custom_charge_interval:
-            print("set_custom_charge_interval unimplemented")
+        if options.set_charging_mode is not None:
+            mode = ChargingMode.from_string(options.set_charging_mode)
+            set_charging_mode(mode)
+            print(f"Charging mode has been set to: {mode}")
+        if options.set_custom_charge_interval is not None:
+            (low, high) = options.set_custom_charge_interval
+            set_custom_charge_interval(low, high)
+            print(f"Custom charge interval has been set to ({low}, {high})")
 
     except (smi.SMIExecutionError, ) as e:
         exit_code=3
