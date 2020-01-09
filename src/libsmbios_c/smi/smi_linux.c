@@ -284,8 +284,6 @@ void copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer
         if (! this->physical_buffer[i])
             continue;
 
-        /* blength incremented for each increasing physical buffer */
-        buf->ext.blength += this->physical_buffer_size[i];
         /* mark which attributes have buffer offsets */
         buf->ext.argattrib |= 1 << (i * 8);
         source = this->physical_buffer[i];
