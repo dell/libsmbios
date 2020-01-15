@@ -273,8 +273,8 @@ void copy_phys_bufs_smi(struct dell_smi_obj *this, struct callintf_cmd *kernel_b
 
 void copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer *buf, bool direction)
 {
-    // starts at offset of blength
-    u32 curoffset = (u8*) &buf->ext.blength - (u8*) &buf->std;
+    // starts at offset of data
+    u32 curoffset = (u8*) &buf->ext.data - (u8*) &buf->std;
 
     u8 *dest = 0;
     u8 *source = 0;
@@ -285,13 +285,14 @@ void copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer
             continue;
 
         /* mark which attributes have buffer offsets */
-        buf->ext.argattrib |= 1 << (i * 8);
-        source = this->physical_buffer[i];
-        dest = (u8*)&buf->std + curoffset;
-        if (direction == FROM_KERNEL_BUF)
-        {
+        if (direction == FROM_KERNEL_BUF) {
             source = (u8*)&buf->std + curoffset;
             dest = this->physical_buffer[i];
+        } else {
+            buf->ext.argattrib |= 1 << (i * 8);
+            buf->ext.blength += this->physical_buffer_size[i];
+            source = this->physical_buffer[i];
+            dest = (u8*)&buf->std + curoffset;
         }
 
         memcpy(dest, source, this->physical_buffer_size[i]);
