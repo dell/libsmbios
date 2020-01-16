@@ -179,13 +179,9 @@
 00B1,IOAPIC,Disabled,"Disables the IOAPIC (if it can be disabled)",,
 00B2,BIS,Reset,"Set Boot Integrity Services to Reset on next boot.",,
 00B3,"Embedded RAID Controller",Off,"The embedded RAID controller is disabled for the next boot cycle, and hidden from PCI space if the system permits.",,
-
 00B4,"Embedded RAID Controller",RAID,"The embedded RAID controller is enabled for RAID mode for the next boot cycle; the controller's A and B channels can operate in either SCSI or RAID mode.",,
-
 00B5,"Embedded RAID Controller",SCSI,"The embedded RAID controller is enabled for SCSI mode for the next boot cycle, and the controller's A and B channels will operate in SCSI mode only.",,
-
 00B6,"Embedded RAID Channel A Primary Copy",RAID,"The embedded RAID controller's Channel A is set to operate in RAID mode on the current system boot (from a BIOS perspective) or on the next system boot (from an application perspective). Notes: 1.This setting has no meaning unless the embedded RAID controller is set to operate in RAID mode (see token B4h). 2.The BIOS compares this value to the shadow copy settings (see tokens CDh through D0h) and prompts the user if a change is detected. 3.After handling the primary/shadow compare action, the BIOS copies the primary copy tokens to the shadow copy tokens on each boot.",,
-
 00B7,"Embedded RAID Channel A Primary Copy",SCSI,"The embedded RAID controller's Channel A is set to operate in SCSI mode on the next system boot. The notes for token B6h also apply to this token.",,
 00B8,"Embedded RAID Channel B Primary Copy",RAID,"The embedded RAID controller's Channel B is set to operate in RAID mode on the next system boot. The notes for token B6h also apply to this token.",,
 00B9,"Embedded RAID Channel B Primary Copy",SCSI,"The embedded RAID controller's Channel B is set to operate in SCSI mode on the next system boot. The notes for token B6h also apply to this token.",,
@@ -495,11 +491,9 @@
 01E9,"MEBx Hotkey",On,"Controls the display of the MEBx hotkey (Ctrl-P) at POST on the sign-on screen.",2.002,
 01EA,"Core-Based Turbo Mode",Off,"Allows one processor core to increase it's frequency by one bin whenever the other core has gone into an idle state (C3). Only available on certain processors.",2.002,
 01EB,"Core-Based Turbo Mode",Enabled,"Allows one processor core to increase it's frequency by one bin whenever the other core has gone into an idle state (C3). Only available on certain processors.",2.002,
-
 01EC,"Flash Cache Module",Disabled,"This is a flash-based disk cache technology that works with Vista (and possibly future OS's) to provide ReadyBoost and ReadyCache functionality.",2.002,
 01ED,"Flash Cache Module",Enabled,"This is a flash-based disk cache technology that works with Vista (and possibly future OS's) to provide ReadyBoost and ReadyCache functionality.",2.002,
 01EE,"Resume On Pen",Disabled,"Control whether a tablet PC will resume from the S3 state when the pen is removed from its retaining well.",2.002,
-
 01EF,"Resume On Pen",Enabled,"Control whether a tablet PC will resume from the S3 state when the pen is removed from its retaining well.",2.002,
 01F0,NIC3,Disabled,Disabled,2.002,
 01F1,NIC3,Enabled,Enabled,2.002,
