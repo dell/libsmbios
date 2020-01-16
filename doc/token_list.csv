@@ -936,57 +936,57 @@
 03C6,"Extend Post Time",0s,"No delay inserted at the moment when pressing special keys will be detected and acted upon as approrpriate",3.007,
 03C7,"Extend Post Time",5s,"5 second delay inserted at the moment when pressing special keys will be detected and acted upon as approrpriate",3.007,
 03C8,"Extend Post Time",10s,"10 second delay inserted at the moment when pressing special keys will be detected and acted upon as approrpriate",3.007,
-03C9,"Allow BIOS Downgrade",Enabled,"Allow downgrading system firmware.  Limited to special conditions",3.007
-03CA,"Allow BIOS Downgrade",Disabled,"Do not allow downgrading system firmware",3.007
-03CB,"Common System Identifier",Value,"16 bit value to use as system ID for platforms that support it",3.007
-03CC,"WWAN Antenna Revision",Value,"Revision of the WWAN antenna hardware, integer",3.007
-03CD,"BIOS Setup Advanced Mode",Enabled,"Advanced mode permits a user access to all settings in BIOS setup",3.007
-03CE,"BIOS Setup Advanced Mode",Disabled,"Advanced mode permits a user access to all settings in BIOS setup",3.007
-03CF,"Liquid Cooler 1",Enabled,"Liquid cooler 1 is enabled",3.007
-03D0,"Liquid Cooler 1",Disabled,"Liquid cooler 1 is disabled",3.007
-03D1,"Liquid Cooler 2",Enabled,"Liquid cooler 2 is enabled",3.007
-03D2,"Liquid Cooler 2",Disabled,"Liquid cooler 2 is disabled",3.007
-03D3,"Boot Fail Threshold",Value,"When OS fails to boot greater than this threshold, recovery is started",3.007
-03D4,"Service OS clear",Enabled,"Erase service OS non-volatile region",3.007
-03D5,"Service OS clear",Disabled,"Do not erase service OS non-volatile region",3.007
-03D6,"Service OS",Enabled,"Service OS is enabled",3.007
-03D7,"Service OS",Disabled,"Service OS is disabled",3.007
-03D8,"Recovery Tool",Enabled,"Recovery tool is enabled",3.007
-03D9,"Recovery Tool",Disabled,"Recovery tool is disabled",3.007
-03DA,"USB Port 16",Disabled,"Disable USB port 16",3.008
-03DB,"USB Port 16",Enabled,"Enable USB port 16",3.008
-03DC,"USB Port 17",Disabled,"Disable USB port 17",3.008
-03DD,"USB Port 17",Enabled,"Enable USB port 17",3.008
-03DE,"USB Port 18",Disabled,"Disable USB port 18",3.008
-03DF,"USB Port 18",Enabled,"Enable USB port 18",3.008
-03E0,"USB Port 19",Disabled,"Disable USB port 19",3.008
-03E1,"USB Port 19",Enabled,"Enable USB port 19",3.008
-03E2,"USB Port 20",Disabled,"Disable USB port 20",3.008
-03E3,"USB Port 20",Enabled,"Enable USB port 20",3.008
-03E4,"USB Port 21",Disabled,"Disable USB port 21",3.008
-03E5,"USB Port 21",Enabled,"Enable USB port 21",3.008
-03E6,"USB Port 22",Disabled,"Disable USB port 22",3.008
-03E7,"USB Port 22",Enabled,"Enable USB port 22",3.008
-03E8,"USB Port 23",Disabled,"Disable USB port 23",3.008
-03E9,"USB Port 23",Enabled,"Enable USB port 23",3.008
-03EA,"USB Port 24",Disabled,"Disable USB port 24",3.008
-03EB,"USB Port 24",Enabled,"Enable USB port 24",3.008
-03EC,"USB Port 25",Disabled,"Disable USB port 25",3.008
-03ED,"USB Port 25",Enabled,"Enable USB port 25",3.008
-03EE,"USB Port 26",Disabled,"Disable USB port 26",3.008
-03EF,"USB Port 26",Enabled,"Enable USB port 26",3.008
-03F0,"USB Port 27",Disabled,"Disable USB port 27",3.008
-03F1,"USB Port 27",Enabled,"Enable USB port 27",3.008
-03F2,"USB Port 28",Disabled,"Disable USB port 28",3.008
-03F3,"USB Port 28",Enabled,"Enable USB port 28",3.008
-03F4,"USB Port 29",Disabled,"Disable USB port 29",3.008
-03F5,"USB Port 29",Enabled,"Enable USB port 29",3.008
-03FA,"Dock Support on battery",Enabled,"allows user to use docking station without AC power",3.008
-03FB,"Dock Support on battery",Disabled,"prohibits user to use docking station without AC power",3.008
-03FC,"iRMT",Enabled,"Intel Ready Mode tech enabled",3.008
-03FD,"iRMT",Disabled,"Intel Ready Mode tech disabled",3.008
-03FE,"SD Card RO",Enabled,"SD Card read-only",3.008
-03FF,"SD Card RO",Disabled,"SD Card writable",3.008
+03C9,"Allow BIOS Downgrade",Enabled,"Allow downgrading system firmware.  Limited to special conditions",3.007,
+03CA,"Allow BIOS Downgrade",Disabled,"Do not allow downgrading system firmware",3.007,
+03CB,"Common System Identifier",Value,"16 bit value to use as system ID for platforms that support it",3.007,
+03CC,"WWAN Antenna Revision",Value,"Revision of the WWAN antenna hardware, integer",3.007,
+03CD,"BIOS Setup Advanced Mode",Enabled,"Advanced mode permits a user access to all settings in BIOS setup",3.007,
+03CE,"BIOS Setup Advanced Mode",Disabled,"Advanced mode permits a user access to all settings in BIOS setup",3.007,
+03CF,"Liquid Cooler 1",Enabled,"Liquid cooler 1 is enabled",3.007,
+03D0,"Liquid Cooler 1",Disabled,"Liquid cooler 1 is disabled",3.007,
+03D1,"Liquid Cooler 2",Enabled,"Liquid cooler 2 is enabled",3.007,
+03D2,"Liquid Cooler 2",Disabled,"Liquid cooler 2 is disabled",3.007,
+03D3,"Boot Fail Threshold",Value,"When OS fails to boot greater than this threshold, recovery is started",3.007,
+03D4,"Service OS clear",Enabled,"Erase service OS non-volatile region",3.007,
+03D5,"Service OS clear",Disabled,"Do not erase service OS non-volatile region",3.007,
+03D6,"Service OS",Enabled,"Service OS is enabled",3.007,
+03D7,"Service OS",Disabled,"Service OS is disabled",3.007,
+03D8,"Recovery Tool",Enabled,"Recovery tool is enabled",3.007,
+03D9,"Recovery Tool",Disabled,"Recovery tool is disabled",3.007,
+03DA,"USB Port 16",Disabled,"Disable USB port 16",3.008,
+03DB,"USB Port 16",Enabled,"Enable USB port 16",3.008,
+03DC,"USB Port 17",Disabled,"Disable USB port 17",3.008,
+03DD,"USB Port 17",Enabled,"Enable USB port 17",3.008,
+03DE,"USB Port 18",Disabled,"Disable USB port 18",3.008,
+03DF,"USB Port 18",Enabled,"Enable USB port 18",3.008,
+03E0,"USB Port 19",Disabled,"Disable USB port 19",3.008,
+03E1,"USB Port 19",Enabled,"Enable USB port 19",3.008,
+03E2,"USB Port 20",Disabled,"Disable USB port 20",3.008,
+03E3,"USB Port 20",Enabled,"Enable USB port 20",3.008,
+03E4,"USB Port 21",Disabled,"Disable USB port 21",3.008,
+03E5,"USB Port 21",Enabled,"Enable USB port 21",3.008,
+03E6,"USB Port 22",Disabled,"Disable USB port 22",3.008,
+03E7,"USB Port 22",Enabled,"Enable USB port 22",3.008,
+03E8,"USB Port 23",Disabled,"Disable USB port 23",3.008,
+03E9,"USB Port 23",Enabled,"Enable USB port 23",3.008,
+03EA,"USB Port 24",Disabled,"Disable USB port 24",3.008,
+03EB,"USB Port 24",Enabled,"Enable USB port 24",3.008,
+03EC,"USB Port 25",Disabled,"Disable USB port 25",3.008,
+03ED,"USB Port 25",Enabled,"Enable USB port 25",3.008,
+03EE,"USB Port 26",Disabled,"Disable USB port 26",3.008,
+03EF,"USB Port 26",Enabled,"Enable USB port 26",3.008,
+03F0,"USB Port 27",Disabled,"Disable USB port 27",3.008,
+03F1,"USB Port 27",Enabled,"Enable USB port 27",3.008,
+03F2,"USB Port 28",Disabled,"Disable USB port 28",3.008,
+03F3,"USB Port 28",Enabled,"Enable USB port 28",3.008,
+03F4,"USB Port 29",Disabled,"Disable USB port 29",3.008,
+03F5,"USB Port 29",Enabled,"Enable USB port 29",3.008,
+03FA,"Dock Support on battery",Enabled,"allows user to use docking station without AC power",3.008,
+03FB,"Dock Support on battery",Disabled,"prohibits user to use docking station without AC power",3.008,
+03FC,"iRMT",Enabled,"Intel Ready Mode tech enabled",3.008,
+03FD,"iRMT",Disabled,"Intel Ready Mode tech disabled",3.008,
+03FE,"SD Card RO",Enabled,"SD Card read-only",3.008,
+03FF,"SD Card RO",Disabled,"SD Card writable",3.008,
 0400,"Back Camera",Disabled,"Disables the rearward facing camera",3.005,
 0401,"Fn Lock",Enabled,"Permits the user to boot with the F1-F12 keys controlling their special features. The user will need to press <Fn> to make these keys act as F1-F12 when needed by software. The function of the <Fn> key is therefore inverted",3.005,
 0402,"Fn Lock",Disabled,"Permits the user to boot with the F1-F12 behaving as F1-F12 keys respectively. The user will need to press <Fn> to make them control their associated special features",3.005,
@@ -1019,67 +1019,67 @@
 041D,"Side USB Ports",Disable,"Disable all side USB ports",3.005,
 041E,"SGX",Enable,"Enables Intel secure guard extensions",3.008,
 041F,"SGX",Disable,"Disables Intel secure guard extensions",3.008,
-0420,"SGX Memory Size",Value,"Selects the memory allocation size for SGX {0:32, 1:64, 2: 128}",3.008
+0420,"SGX Memory Size",Value,"Selects the memory allocation size for SGX {0:32, 1:64, 2: 128}",3.008,
 0421,"PCI MMIO Size",Value,"Allocate memory mappied IO for PCI dynamically", 3.008
-0422,"Front USB 3.0 ports",Enable,"Enable front USB 3.0 ports",3.008
-0423,"Front USB 3.0 ports",Disable,"Disable front USB 3.0 ports",3.008
-0424,"Rear USB 3.0 ports",Enable,"Enable rear USB 3.0 ports",3.008
-0425,"Rear USB 3.0 ports",Disable,"Disable rear USB 3.0 ports",3.008
-0426,"Dock Battery Charge Configuration",Standard,"Dock battery is charged over longer period of time",3.008
-0427,"Dock Battery Charge Configuration",Express,"Dock battery is charged using Dell fast charging technology",3.008
-0428,"Active State Power Management",Auto,"There is handshaking between device and PCI express hub to determine best ASPM mode supported",3.008
-0429,"Active State Power Management",Disable,"ASPM is turned off at all times",3.008
-042A,"Active State Power Management",L1,"ASPM uses L1 mode only",3.008
-042B,"TPM Hash Algorithm",Value,"Selects the hash algorihm used for TPM2.0 measurements",3.008
-042C,"CPU Snoop Mode",Early,"Early snoop: latency sensitive",3.008
-042D,"CPU Snoop Mode",Home,"Home snoop: for high bandwidth",3.008
-042E,"System Isochronous Mode",Enabled,"Ideal for AV streaming apps",3.008
-042F,"System Isochronous Mode",Disabled,"Ideal for applications needing high memory bandwidth",3.008
-0430,"CPU Snoop Mode",ClusterOnDie,"Recommended for NUMA optimized applications",3.009
-0431,"WLAN Country Code",Value,"2 Byte WLAN country ID as defined in ISO/IEC 3166-1",3.009
-0432,"BIOS Recovery from HDD",Enabled,"Enables BIOS to save recovery image to HDD",3.009
-0433,"BIOS Recovery from HDD",Disabled,"Disables BIOS to save recovery image to HDD",3.009
-0434,"Sign of Life Indication",Enabled,"System will indicate during POST that power button press has been ack'ed",3.009
-0435,"Sign of Life Indication",Disabled,"System will not indicate during POST that power button press has been ack'ed",3.009
-0436,"Data Wipe",Enabled,"Enables system BIOS to perform secure wipe of storage devices",3.009
-0437,"Data Wipe",Disabled,"Disables system BIOS to perform secure wipe of storage devices",3.009
-0438,"Touchscreen",Enabled,"Enables touchscreen",3.009
-0439,"Touchscreen",Disabled,"Disables touchscreen",3.009
-043A,"M2 PCIe SSD0",Enabled,"This setting enables M2 PCIe SSD0",3.009
-043B,"M2 PCIe SSD0",Disabled,"This setting disables M2 PCIe SSD0",3.009
-043C,"M2 PCIe SSD1",Enabled,"This setting enables M2 PCIe SSD1",3.009
-043D,"M2 PCIe SSD1",Disabled,"This setting disables M2 PCIe SSD1",3.009
-043E,"Long Life Cycle Secondary Battery",Enabled,"Bios shall change attached battery in secondary interface to permanent long life mode",3.009
-043F,"Long Life Cycle Secondary Battery",Disabled,"Bios shall change attached battery in secondary interface to regular mode",3.009
-0440,"Thunderbolt Boot Support",Enabled,"Enables the ability to boot from thunderbolt devices",3.009
-0441,"Thunderbolt Boot Support",Disabled,"Disables the ability to boot from thunderbolt devices",3.009
-0442,"Thunderbolt preboot modules",Enabled,"Enables OROMs and pre-boot UEFI drivers from thunderbolt devices",3.009
-0443,"Thunderbolt preboot modules",Disabled,"Disables OROMs and pre-boot UEFI drivers from thunderbolt devices",3.009
-0444,"Always allow dell docks",Enabled,"Allows Dell Type-C docks to function when thunderbolt is disabled",3.009
-0445,"Always allow dell docks",Disabled,"Disallows Dell Type-C docks to function when thunderbolt is disabled",3.009
-0446,"Wake on dock",Enabled,"Enables waking system when docking connection made",3.009
-0447,"Wake on dock",Disabled,"Disables waking system when docking connection made",3.009
-0448,"SFP",Disabled,"Disables small form factor pluggable device",3.009
-0449,"SFP",EnabledPXE,"Enables small form factor pluggable device with PXE support",3.009
-044A,"SFP",EnabledNoPXE,"Enables small form factor pluggable device without PXE support",3.009
-044B,"SFP WOL",Enabled,Enables wake on small form factor pluggable network devices",3.009
-044C,"SFP WOL",Disabled,Disables wake on small form factor pluggable network devices",3.009
-044D,"Warnings and Errors",Prompt,POST will be stopped to have warnings and errors prompted by user input",3.009
-044E,"Warnings and Errors",ContinueWarnings,POST will continue on warnings and errors prompted by user input",3.009
-044F,"Warnings and Errors",ContinueAll,POST will continue on warnings and errors",3.009
-0451,"Keyboard Backlight with AC",Value,"Defines timeout value for keyboard backlight when AC plugged into system",3.009
-0452,"Keyboard Backlight with Battery",Value,"Defines timeout value for keyboard backlight when on battery",3.009
-0453,"Lid Switch",Enabled,"Lid switch function will be enabled.  OS setting determines behavior when lid is closed",3.009
-0454,"Lid Switch",Disabled,"Lid switch function will be disabled.  Display not affected when lid is closed",3.009
-0455,"Serial port 3",Disabled,"Disables system's 3rd serial port",3.009
-0456,"Serial port 3",Auto,"Enables auto configuration on system's 3rd serial port",3.009
-0457,"Serial port 4",Disabled,"Disables system's 4th serial port",3.009
-0458,"Serial port 4",Auto,"Enables auto configuration on system's 4th serial port",3.009
-0459,"Serial port 5",Disabled,"Disables system's 5th serial port",3.009
-045A,"Serial port 5",Auto,"Enables auto configuration on system's 5th serial port",3.009
-045B,"Serial port 6",Disabled,"Disables system's 6th serial port",3.009
-045C,"Serial port 6",Auto,"Enables auto configuration on system's 6th serial port",3.009
-045D,"CPU Snoop Mode",Opportunistic,"Good balance of latency and bandwidth",3.009
+0422,"Front USB 3.0 ports",Enable,"Enable front USB 3.0 ports",3.008,
+0423,"Front USB 3.0 ports",Disable,"Disable front USB 3.0 ports",3.008,
+0424,"Rear USB 3.0 ports",Enable,"Enable rear USB 3.0 ports",3.008,
+0425,"Rear USB 3.0 ports",Disable,"Disable rear USB 3.0 ports",3.008,
+0426,"Dock Battery Charge Configuration",Standard,"Dock battery is charged over longer period of time",3.008,
+0427,"Dock Battery Charge Configuration",Express,"Dock battery is charged using Dell fast charging technology",3.008,
+0428,"Active State Power Management",Auto,"There is handshaking between device and PCI express hub to determine best ASPM mode supported",3.008,
+0429,"Active State Power Management",Disable,"ASPM is turned off at all times",3.008,
+042A,"Active State Power Management",L1,"ASPM uses L1 mode only",3.008,
+042B,"TPM Hash Algorithm",Value,"Selects the hash algorihm used for TPM2.0 measurements",3.008,
+042C,"CPU Snoop Mode",Early,"Early snoop: latency sensitive",3.008,
+042D,"CPU Snoop Mode",Home,"Home snoop: for high bandwidth",3.008,
+042E,"System Isochronous Mode",Enabled,"Ideal for AV streaming apps",3.008,
+042F,"System Isochronous Mode",Disabled,"Ideal for applications needing high memory bandwidth",3.008,
+0430,"CPU Snoop Mode",ClusterOnDie,"Recommended for NUMA optimized applications",3.009,
+0431,"WLAN Country Code",Value,"2 Byte WLAN country ID as defined in ISO/IEC 3166-1",3.009,
+0432,"BIOS Recovery from HDD",Enabled,"Enables BIOS to save recovery image to HDD",3.009,
+0433,"BIOS Recovery from HDD",Disabled,"Disables BIOS to save recovery image to HDD",3.009,
+0434,"Sign of Life Indication",Enabled,"System will indicate during POST that power button press has been ack'ed",3.009,
+0435,"Sign of Life Indication",Disabled,"System will not indicate during POST that power button press has been ack'ed",3.009,
+0436,"Data Wipe",Enabled,"Enables system BIOS to perform secure wipe of storage devices",3.009,
+0437,"Data Wipe",Disabled,"Disables system BIOS to perform secure wipe of storage devices",3.009,
+0438,"Touchscreen",Enabled,"Enables touchscreen",3.009,
+0439,"Touchscreen",Disabled,"Disables touchscreen",3.009,
+043A,"M2 PCIe SSD0",Enabled,"This setting enables M2 PCIe SSD0",3.009,
+043B,"M2 PCIe SSD0",Disabled,"This setting disables M2 PCIe SSD0",3.009,
+043C,"M2 PCIe SSD1",Enabled,"This setting enables M2 PCIe SSD1",3.009,
+043D,"M2 PCIe SSD1",Disabled,"This setting disables M2 PCIe SSD1",3.009,
+043E,"Long Life Cycle Secondary Battery",Enabled,"Bios shall change attached battery in secondary interface to permanent long life mode",3.009,
+043F,"Long Life Cycle Secondary Battery",Disabled,"Bios shall change attached battery in secondary interface to regular mode",3.009,
+0440,"Thunderbolt Boot Support",Enabled,"Enables the ability to boot from thunderbolt devices",3.009,
+0441,"Thunderbolt Boot Support",Disabled,"Disables the ability to boot from thunderbolt devices",3.009,
+0442,"Thunderbolt preboot modules",Enabled,"Enables OROMs and pre-boot UEFI drivers from thunderbolt devices",3.009,
+0443,"Thunderbolt preboot modules",Disabled,"Disables OROMs and pre-boot UEFI drivers from thunderbolt devices",3.009,
+0444,"Always allow dell docks",Enabled,"Allows Dell Type-C docks to function when thunderbolt is disabled",3.009,
+0445,"Always allow dell docks",Disabled,"Disallows Dell Type-C docks to function when thunderbolt is disabled",3.009,
+0446,"Wake on dock",Enabled,"Enables waking system when docking connection made",3.009,
+0447,"Wake on dock",Disabled,"Disables waking system when docking connection made",3.009,
+0448,"SFP",Disabled,"Disables small form factor pluggable device",3.009,
+0449,"SFP",EnabledPXE,"Enables small form factor pluggable device with PXE support",3.009,
+044A,"SFP",EnabledNoPXE,"Enables small form factor pluggable device without PXE support",3.009,
+044B,"SFP WOL",Enabled,Enables wake on small form factor pluggable network devices",3.009,
+044C,"SFP WOL",Disabled,Disables wake on small form factor pluggable network devices",3.009,
+044D,"Warnings and Errors",Prompt,POST will be stopped to have warnings and errors prompted by user input",3.009,
+044E,"Warnings and Errors",ContinueWarnings,POST will continue on warnings and errors prompted by user input",3.009,
+044F,"Warnings and Errors",ContinueAll,POST will continue on warnings and errors",3.009,
+0451,"Keyboard Backlight with AC",Value,"Defines timeout value for keyboard backlight when AC plugged into system",3.009,
+0452,"Keyboard Backlight with Battery",Value,"Defines timeout value for keyboard backlight when on battery",3.009,
+0453,"Lid Switch",Enabled,"Lid switch function will be enabled.  OS setting determines behavior when lid is closed",3.009,
+0454,"Lid Switch",Disabled,"Lid switch function will be disabled.  Display not affected when lid is closed",3.009,
+0455,"Serial port 3",Disabled,"Disables system's 3rd serial port",3.009,
+0456,"Serial port 3",Auto,"Enables auto configuration on system's 3rd serial port",3.009,
+0457,"Serial port 4",Disabled,"Disables system's 4th serial port",3.009,
+0458,"Serial port 4",Auto,"Enables auto configuration on system's 4th serial port",3.009,
+0459,"Serial port 5",Disabled,"Disables system's 5th serial port",3.009,
+045A,"Serial port 5",Auto,"Enables auto configuration on system's 5th serial port",3.009,
+045B,"Serial port 6",Disabled,"Disables system's 6th serial port",3.009,
+045C,"Serial port 6",Auto,"Enables auto configuration on system's 6th serial port",3.009,
+045D,"CPU Snoop Mode",Opportunistic,"Good balance of latency and bandwidth",3.009,
 4000,"Correctable Memory Event Base Rate",Value,"Identifies the base rate that the BIOS uses to determine the frequency at which correctable memory 'threshold exceeded' events are logged. The value applies to a 512MB memory module, and is specified is the maximum acceptable count, e.g. if the value is specified as 05h then a 'threshold exceeded' event will be logged if a memory module receives 6 correctable events. Note: Any update to this value takes effect immediately. If the value is smaller than the system's default, the BIOS forces the value to the system default on the next system boot and uses the system default value for any logging activities during the current system boot.",,
 4001,"Memory Diagnostic",Present,"The memory diagnostic sets this token when it starts its tests to instruct the BIOS to reduce its correctable memory event threshold to zero (i.e. every correctable event is logged as a threshold exceeded event). This value is not reset to the Absent status by the BIOS on each system boot; therefore, it is the utility's responsibility to reset this value to 'Absent.' Note: This token is provided separately from the Correctable Memory Event Base Rate, since the product support group might have set the rate for the system based on a customer call and the diagnostic's processing shouldn't overwrite that value. Note 2: This token is in a checksum area. A utility changing the value of this token must update the checksum of the CMOS region where this token is defined.",,
 4002,"Memory Diagnostic",Absent,"The memory diagnostic sets this token when it completes its tests to instruct the BIOS to use the value specified by the Correctable Memory Event Base Rate token. Note: This token is in a checksum area. A utility changing the value of this token must update the checksum of the CMOS region where this token is defined.",,
@@ -1167,8 +1167,8 @@
 800B,"FBD Memory Test State","Memory Configuration 1","Those tokens are read only. BIOS sets those token values according to the FBD Memory IBIST and MBIST Request tokens. Those tokens will not exist in the SMBIOS table type 0D4h if the system does not support FBD Memory IBIST and MBIST.",,
 800C,"Trusted Platform Module",Deactivated,"Token for reporting the current activation state of the TPM.",2.005,192
 800D,"Signed Firmware Update",Disabled,"This token reports 'true' if the Signed Firmware Update feature is in the Disabled state",3.002,
-800E,"Trusted Platform Module",Owned,"Reports true if TPM owned, false if TPM not owned",3.008
-800F,"Support Assist",MajorMinorVersion,"Reports major version in byte 1, minor version in byte0",3.008
+800E,"Trusted Platform Module",Owned,"Reports true if TPM owned, false if TPM not owned",3.008,
+800F,"Support Assist",MajorMinorVersion,"Reports major version in byte 1, minor version in byte0",3.008,
 A000,"Chassis Intrusion","Trip Reset","Write-only Resets the sensor-detection logic to detect the next closed-to-open transition on the chassis door."
 A001,"Chassis Intrusion","Sequence Complete","Write-only The system-management instrumentation writes this attribute once the operating-system shutdown has been initiated to instruct the BIOS to complete the previously-requested system power-off sequence."
 A002,"Trusted Platform Module",Enable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the enable state will expose the TPM to the system. Used by Manufacturing; not for general customer use."
