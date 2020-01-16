@@ -87,12 +87,12 @@
 0055,Wake-on-LAN,Disabled,"The system will not respond to magic packets or other means of wake-on-LAN. The NIC chip section that looks for packets will not be powered.",,
 0056,Wake-on-LAN,Add-in-card,"Any NIC plugged into an expansion slot will be enabled for Wake-on-LAN. There's only one small white NIC power connector per riser, so if the user has two or more add-in NICs, whichever one is plugged into the special power connector is the source of any Wake-on-LAN signal.",,
 0057,Wake-on-LAN,On-board,"The on-board NIC is enabled for Wake-on-LAN.",,
-0058,"Management Driver",Present,"Internal use by system management software"
-0059,"Management Driver",Absent,"Internal use by system management software."
+0058,"Management Driver",Present,"Internal use by system management software",,
+0059,"Management Driver",Absent,"Internal use by system management software.",,
 005A,"Reset Button",Enable,"The system's reset button, if pressed, is enabled to perform a hardware reset of the system.",,
 005B,"Reset Button",Disable,"The system's reset button, if pressed, will not perform a hardware reset of the system.",,
-005C,"Remote BIOS Update",Enable,"Internal use by BIOS update utility."
-005D,"Remote BIOS Update",Disable,"Internal use by BIOS update utility."
+005C,"Remote BIOS Update",Enable,"Internal use by BIOS update utility.",,
+005D,"Remote BIOS Update",Disable,"Internal use by BIOS update utility.",,
 005E,"Universal Connect",Enable,"Prohibits Win95 from re-enumerating every time a new dock device is attached to the system.",,
 005F,"Universal Connect",Disable,"Allows Win95 to re-enumerate every time a new dock device is attached to the system.",,
 0060,"Infrared Mode",Fast,"The system IR port receives in Fast IR Mode.",,
@@ -1014,7 +1014,7 @@
 041E,"SGX",Enable,"Enables Intel secure guard extensions",3.008,
 041F,"SGX",Disable,"Disables Intel secure guard extensions",3.008,
 0420,"SGX Memory Size",Value,"Selects the memory allocation size for SGX {0:32, 1:64, 2: 128}",3.008,
-0421,"PCI MMIO Size",Value,"Allocate memory mappied IO for PCI dynamically", 3.008
+0421,"PCI MMIO Size",Value,"Allocate memory mappied IO for PCI dynamically",3.008,
 0422,"Front USB 3.0 ports",Enable,"Enable front USB 3.0 ports",3.008,
 0423,"Front USB 3.0 ports",Disable,"Disable front USB 3.0 ports",3.008,
 0424,"Rear USB 3.0 ports",Enable,"Enable rear USB 3.0 ports",3.008,
@@ -1163,7 +1163,7 @@
 800D,"Signed Firmware Update",Disabled,"This token reports 'true' if the Signed Firmware Update feature is in the Disabled state",3.002,
 800E,"Trusted Platform Module",Owned,"Reports true if TPM owned, false if TPM not owned",3.008,
 800F,"Support Assist",MajorMinorVersion,"Reports major version in byte 1, minor version in byte0",3.008,
-A000,"Chassis Intrusion","Trip Reset","Write-only Resets the sensor-detection logic to detect the next closed-to-open transition on the chassis door."
-A001,"Chassis Intrusion","Sequence Complete","Write-only The system-management instrumentation writes this attribute once the operating-system shutdown has been initiated to instruct the BIOS to complete the previously-requested system power-off sequence."
-A002,"Trusted Platform Module",Enable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the enable state will expose the TPM to the system. Used by Manufacturing; not for general customer use."
-A003,"Trusted Platform Module",Disable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the disable state will cause the BIOS to hardware disable the TPM at the next boot, and the TPM will NOT appear as installed hardware. Used by Manufacturing; not for general customer use."
+A000,"Chassis Intrusion","Trip Reset","Write-only Resets the sensor-detection logic to detect the next closed-to-open transition on the chassis door.",,
+A001,"Chassis Intrusion","Sequence Complete","Write-only The system-management instrumentation writes this attribute once the operating-system shutdown has been initiated to instruct the BIOS to complete the previously-requested system power-off sequence.",,
+A002,"Trusted Platform Module",Enable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the enable state will expose the TPM to the system. Used by Manufacturing; not for general customer use.",,
+A003,"Trusted Platform Module",Disable,"Write-only TPM is a hardware device to provide a secure storage module for use in a Trusted Computing OS environment. Setting the disable state will cause the BIOS to hardware disable the TPM at the next boot, and the TPM will NOT appear as installed hardware. Used by Manufacturing; not for general customer use.",,
