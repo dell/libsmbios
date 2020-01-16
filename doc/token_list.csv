@@ -587,7 +587,8 @@
 0243,Bitsmart,Disable,"Disable Bitsmart.",2.004,187
 0244,"E-Sata Ports",Enable,"Will enable all E-Sata ports. If the system supports a dock, all E-Sata ports to the dock are also enabled.",2.004,188
 0245,"E-Sata Ports",Disable,"Will disable all E-Sata ports. If the system supports a dock, all E-Sata ports to the dock are also disabled.",2.004,188
-0246,"Selective USB",Enabled,"Enable Selective USB feature to disable all USB ports, except for the 2 Selective USB ports. This option will allow only keyboard / mouse connected to the Selective USB ports for the boot process to continue.",2.005,"210 [190]" 0247,"Selective USB",Disabled,"Disable Selective USB feature to resume normal USB status and normal boot procedure.",2.005,"210 [190]"
+0246,"Selective USB",Enabled,"Enable Selective USB feature to disable all USB ports, except for the 2 Selective USB ports. This option will allow only keyboard / mouse connected to the Selective USB ports for the boot process to continue.",2.005,"210 [190]"
+0247,"Selective USB",Disabled,"Disable Selective USB feature to resume normal USB status and normal boot procedure.",2.005,"210 [190]"
 0248,"Help Desk",Enabled,"If Help Desk is enabled in BIOS setup, 'Ctrl+H Help Desk' hotkey message will show on the post screen if ME is alive and CIRA will be supported.",2.005,191
 0249,"Help Desk",Disabled,"If Help Desk is disabled in BIOS setup, 'Ctrl+H Help Desk' hotkey message will not show on the post screen even if ME is alive and CIRA will not be supported.",2.005,191
 024A,"Trusted Platform Module",Activate,"Token for remotely activating the TPM dependent on meeting certain security criteria.",2.005,193
