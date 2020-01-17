@@ -39,7 +39,7 @@
 
 %global python_devel_BR %{nil}
 %if 0%{?build_python}
-    %global python_devel_BR python34-devel
+    %global python_devel_BR python36-devel
 %endif
 
 # if unit tests are disabled, get rid of a few BuildRequires
@@ -165,7 +165,7 @@ chmod +x ./configure
     %{?!as_needed:--disable-as-needed} %{?!build_python:--disable-python}
 
 mkdir -p out/libsmbios_c
-make CFLAGS="-Werror" %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
+make CFLAGS="-Werror -g" %{?_smp_mflags} 2>&1 | tee build-%{_arch}.log
 
 echo \%doc _build/build-%{_arch}.log > buildlogs.txt
 
