@@ -7,7 +7,7 @@ services:
 
 env:
   - OS=debian
-  - OS=centos7
+  - OS=centos8
 
 install:
   - ./pkg/build-dockerfile.sh $OS
