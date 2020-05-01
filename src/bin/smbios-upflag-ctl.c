@@ -50,7 +50,7 @@ struct options opts[] =
     { 2, "cmos_file",  N_("Debug: CMOS dump file to use instead of physical cmos"), "c", 1 },
     { 3, "set",  N_("Set Boot To UP Flag to true"), "s", 0 },
     { 4, "clear",  N_("Set Boot To UP Flag to false"), "c", 0 },
-    { 5, "get",  N_("Set Boot To UP Flag to true"), "g", 0 },
+    { 5, "get",  N_("Get Boot UP Flag value"), "g", 0 },
     { 255, "version", N_("Display libsmbios version information"), "v", 0 },
     { 0, NULL, NULL, NULL, 0 }
 };
