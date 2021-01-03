@@ -38,7 +38,7 @@ install-data-hook:
 	    file=$(DESTDIR)/$$i                     ;\
 	    for var in $(REPLACE_VARS)	;\
 	    do	\
-	        perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $$file;\
+	        var="$$var" perl -p -i -e 's|^\Q$$ENV{var}\E\s*=.*|$$ENV{var}="$$ENV{$$ENV{var}}"|'  $$file;\
 	    done	;\
 	done
 
@@ -48,7 +48,7 @@ install-exec-hook:
 	    file=$(DESTDIR)/$$i                     ;\
 	    for var in $(REPLACE_VARS)	;\
 	    do	\
-	        perl -p -i -e "s|^$$var\s*=.*|$$var=\"$${!var}\"|"  $$file;\
+	        var="$$var" perl -p -i -e 's|^\Q$$ENV{var}\E\s*=.*|$$ENV{var}="$$ENV{$$ENV{var}}"|'  $$file;\
 	    done	;\
 	done
 
