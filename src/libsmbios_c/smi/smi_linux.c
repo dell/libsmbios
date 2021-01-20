@@ -271,7 +271,7 @@ void copy_phys_bufs_smi(struct dell_smi_obj *this, struct callintf_cmd *kernel_b
     }
 }
 
-void copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer *buf, bool direction)
+int copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer *buf, bool direction)
 {
     // starts at offset of data
     u32 curoffset = (u8*) &buf->ext.data - (u8*) &buf->std;
@@ -293,12 +293,15 @@ void copy_phys_bufs_wmi(struct dell_smi_obj *this, struct dell_wmi_smbios_buffer
             buf->ext.blength += this->physical_buffer_size[i];
             source = this->physical_buffer[i];
             dest = (u8*)&buf->std + curoffset;
+            if (curoffset + sizeof(buf->length) + this->physical_buffer_size[i] > buf->length)
+                return -EINVAL;
         }
 
         memcpy(dest, source, this->physical_buffer_size[i]);
         buf->std.input[i] = curoffset;
         curoffset += this->physical_buffer_size[i];
     }
+    return 0;
 }
 
 int __hidden wmi_supported()
@@ -334,7 +337,11 @@ int __hidden LINUX_dell_wmi_obj_execute(struct dell_smi_obj *this)
     memcpy(&buffer->std, &(this->smi_buf), sizeof(this->smi_buf));
 
     // copy in each physical addr buf
-    copy_phys_bufs_wmi(this, buffer, TO_KERNEL_BUF);
+    ret = copy_phys_bufs_wmi(this, buffer, TO_KERNEL_BUF);
+    if (ret) {
+        fnprintf("physical data buffer in overflow\n");
+        goto out_wmi;
+    }
 
     // perform command
     fd = open(wmi_char, O_NONBLOCK);
@@ -351,7 +358,7 @@ int __hidden LINUX_dell_wmi_obj_execute(struct dell_smi_obj *this)
     memcpy(&(this->smi_buf), &buffer->std, sizeof(this->smi_buf));
 
     // update smi buffer
-    copy_phys_bufs_wmi(this, buffer, FROM_KERNEL_BUF);
+    ret = copy_phys_bufs_wmi(this, buffer, FROM_KERNEL_BUF);
 
 out_wmi:
     free(buffer);
