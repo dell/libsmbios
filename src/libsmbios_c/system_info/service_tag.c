@@ -175,7 +175,11 @@ static char *getServiceTagFromCMOSToken()
 
     // if we got a value, we have to allocate a larger buffer to hold the result
     tag = calloc(1, SVC_TAG_LEN_MAX + 1);
-
+    if (!tag){
+        fnprintf("- out of memory\n");
+        tag = 0;
+        goto out;
+    }
     // Step 2: Decode 7-char tag from 5-char CMOS value
     fnprintf("- decode string\n");
     dell_decode_service_tag(tag, tempval, len);
@@ -252,6 +256,8 @@ __hidden char *getTagFromSMI(u16 select)
         goto out;
 
     retval = calloc(1, MAX_SMI_TAG_SIZE + 1); // smi function can hold at most 12 bytes, add one for '\0'
+    if (!retval)
+        return -1;
     memcpy(retval, (u8 *)(&(res[1])), MAX_SMI_TAG_SIZE);
 
     fnprintf("raw = ");

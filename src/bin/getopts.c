@@ -60,6 +60,10 @@ int getopts_usage(char *progName, struct options opts[])
       if (opts[count].name && opts[count].shortName)
         {
           cmd = calloc(1, strlen(opts[count].name) + strlen(opts[count].shortName) + 15);
+          if (!cmd)
+            {
+              return -1;
+            }
           if (opts[count].args)
             {
               sprintf(cmd, "--%s,\t-%s <args>\t\t", opts[count].name, opts[count].shortName);
@@ -72,6 +76,10 @@ int getopts_usage(char *progName, struct options opts[])
       else if (opts[count].name)
         {
           cmd = calloc(1, strlen(opts[count].name) + 15);
+          if (!cmd)
+            {
+              return -1;
+            }          
           if (opts[count].args)
             {
               sprintf(cmd, "--%s <args>\t\t\t", opts[count].name);
@@ -84,6 +92,10 @@ int getopts_usage(char *progName, struct options opts[])
       else if (opts[count].shortName)
         {
           cmd = calloc(1, strlen(opts[count].shortName) + 15);
+          if (!cmd)
+            {
+              return -1;
+            }          
           if (opts[count].args)
             {
               sprintf(cmd, "\t\t-%s <args>\t\t", opts[count].shortName);

@@ -374,6 +374,8 @@ int __hidden LINUX_dell_smi_obj_execute(struct dell_smi_obj *this)
     // allocate buffer
     fnprintf(" allocate buffer: %zd\n", alloc_size);
     buffer = calloc(1, alloc_size);
+    if(!buffer)
+        return -ENOMEM;
     kernel_buf = (struct callintf_cmd *)buffer;
 
     // LOCK
