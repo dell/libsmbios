@@ -79,6 +79,8 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
         toReturn = &singleton;
     else
         toReturn = (struct memory_access_obj *)calloc(1, sizeof(struct memory_access_obj));
+        if (!toReturn)
+            return NULL;
 
     if (toReturn->initialized)
         goto out;
@@ -186,6 +188,8 @@ out:
 s64  memory_obj_search(const struct memory_access_obj *m, const char *pat, size_t patlen, u64 start, u64 end, u64 stride)
 {
     u8 *buf = calloc(1, patlen);
+    if (!buf)
+        goto err_out;
     u64 cur = start;
     int ret;
     memory_obj_suggest_leave_open((struct memory_access_obj *)m);

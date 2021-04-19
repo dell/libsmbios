@@ -169,6 +169,9 @@ static void UT_cleanup(struct cmos_access_obj *this)
 int init_cmos_struct_filename(struct cmos_access_obj *m, const char *fn)
 {
     struct ut_data *priv_ut = (struct ut_data *)calloc(1, sizeof(struct ut_data));
+    if (!priv_ut)
+        return -1;
+
     priv_ut->filename = (char *)calloc(1, strlen(fn) + 1);
     strcpy(priv_ut->filename, fn);
 

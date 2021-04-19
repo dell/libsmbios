@@ -129,6 +129,10 @@ static char * _da_get_string(const struct token_obj *t, size_t *len)
         *len = 2;
 
     retval = calloc(1, sizeof(u16));
+    if (!retval){
+         fnprintf("out of memory");
+         return -1;
+    }
     memcpy(retval, &toRead, sizeof(u16));
 
 out:

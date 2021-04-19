@@ -74,6 +74,9 @@ LIBSMBIOS_C_DLL_SPEC struct cmos_access_obj *cmos_obj_factory(int flags, ...)
         toReturn = &singleton;
     else
         toReturn = (struct cmos_access_obj *)calloc(1, sizeof(struct cmos_access_obj));
+        if (!toReturn){
+            return NULL;
+        }
 
     if (toReturn->initialized)
         goto out;
@@ -219,6 +222,8 @@ void cmos_obj_register_write_callback(struct cmos_access_obj *m, cmos_write_call
 
     fnprintf(" allocate\n");
     new = calloc(1, sizeof(struct callback));
+    if (!new)
+        return -1;
     new->cb_fn = cb_fn;
     new->userdata = userdata;
     new->destructor = destructor;

@@ -73,6 +73,8 @@ LIBSMBIOS_C_DLL_SPEC const char *sysinfo_get_property_ownership_tag()
     buf[PROPERTY_TAG_LEN] = '\0';  // protect against potentially buggy BIOS (shouldnt ever be non-null)
     strip_trailing_whitespace((char *)buf);
     retval = calloc(1, strlen((char*)buf)+1); // dont see how these could ever overflow, let me know if I'm wrong. :)
+    if (!retval)
+        goto out_fail;    
     strcpy(retval, (const char*)buf);
     fnprintf("tag: -->%s<--\n", retval);
     goto out;

@@ -82,6 +82,8 @@ struct smbios_table *smbios_table_factory(int flags, ...)
         toReturn = &singleton;
     else
         toReturn = (struct smbios_table *)calloc(1, sizeof(struct smbios_table));
+        if (!toReturn)
+            return NULL;
 
     if (toReturn->initialized)
         goto out;

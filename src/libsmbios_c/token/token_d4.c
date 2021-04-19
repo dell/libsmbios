@@ -261,6 +261,10 @@ int setup_d4_checksum(struct indexed_io_access_structure *d4_struct)
         goto out;
 
     d = calloc(1, sizeof(struct checksum_details));
+    if (!d){
+        fnprintf("out of memory\n");
+        goto out_err;
+    }
 
     d->csumloc   = d4_struct->checkValueIndex;
     d->csumlen   = sizeof(u16);
