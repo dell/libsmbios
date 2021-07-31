@@ -131,7 +131,7 @@ class _TokenTable(ctypes.Structure):
             if bool(cur):
                 yield cur.contents
             else:
-                raise StopIteration
+                return
 
     @traceLog()
     def __getitem__(self, id):

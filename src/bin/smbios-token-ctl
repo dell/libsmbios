@@ -427,8 +427,6 @@ def main():
         verboseLog.info( _("The token library returned this error:") )
         verboseLog.info( str(e) )
         moduleLog.info( cli.standardFailMessage )
-    except StopIteration:
-        pass
 
     return exit_code
 
