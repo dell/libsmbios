@@ -98,65 +98,56 @@ int __hidden smbios_get_table_firm_tables(struct smbios_table *m)
         dirname = m->table_path;
 
     if (asprintf(&entry_fname, "%s/smbios_entry_point", dirname) < 0)
-        goto out_err;
+        goto done;
     fnprintf("Using %s for entry point\n", entry_fname);
 
     if (asprintf(&dmi_fname, "%s/DMI", dirname) < 0)
-        goto out_free_entry_path;
+        goto done;
     fnprintf("Using %s for DMI\n", dmi_fname);
 
     fnprintf("\n");
-    retval = -1;
 
     if (read_file(entry_fname, 5, &entry_buffer, &entry_length))
-        goto out_free_dmi_path;
+        goto done;
 
     error = _("Invalid SMBIOS table signature");
     /* parse SMBIOS structure */
     if (memcmp (entry_buffer, "_SM_", 4) == 0) {
         if (!smbios_verify_smbios (entry_buffer, entry_length, &m->table_length))
-            goto out_free_entry_buffer;
+            goto done;
     /* parse SMBIOS 3.0 structure */
     } else if (memcmp (entry_buffer, "_SM3_", 5) == 0) {
     if (!smbios_verify_smbios3 (entry_buffer, entry_length, &m->table_length))
-        goto out_free_entry_buffer;
+        goto done;
     } else
-        goto out_free_entry_buffer;
+        goto done;
 
     error = _("Could not read table from memory. ");
     m->table = (struct table*)calloc(1, m->table_length);
     if (!m->table)
-        goto out_free_entry_buffer;
+        goto done;
 
     retval = read_file(dmi_fname, m->table_length, (char**) &m->table, &m->table_length);
-    if (retval)
-        goto out_free_table;
-    goto out;
+    if (retval) {
+        fnprintf(" out_free_table\n");
+        free(m->table);
+        m->table = 0;
+        goto done;
+    }
 
-out_free_table:
-    fnprintf(" out_free_table\n");
-    free(m->table);
-    m->table = 0;
-
-out_free_entry_buffer:
-    free(entry_buffer);
-
-out_free_dmi_path:
-    free(dmi_fname);
-
-out_free_entry_path:
+    retval = 0;
+done:
     free(entry_fname);
-
-out_err:
-    fnprintf(" out_err\n");
-    if (strlen(m->errstring))
-        strlcat(m->errstring, "\n", ERROR_BUFSIZE);
-    strlcat (m->errstring, error, ERROR_BUFSIZE);
-    return retval;
-
-out:
+    free(dmi_fname);
     free(entry_buffer);
-    fnprintf(" out: %d\n", retval);
+    if (retval) {
+        fnprintf(" out_err\n");
+        if (strlen(m->errstring))
+            strlcat(m->errstring, "\n", ERROR_BUFSIZE);
+        strlcat (m->errstring, error, ERROR_BUFSIZE);
+    } else {
+        fnprintf(" out: %d\n", retval);
+    }
     return retval;
 }
 
