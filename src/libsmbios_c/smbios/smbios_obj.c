@@ -371,7 +371,8 @@ out_fail:
         if (m->errstring)
             strlcat(errbuf, m->errstring, ERROR_BUFSIZE);
     }
-    smbios_table_free(m);
+    if (m != &singleton)
+        smbios_table_free(m);
     return -1;
 }
 

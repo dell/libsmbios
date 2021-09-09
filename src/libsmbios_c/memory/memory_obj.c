@@ -98,7 +98,6 @@ struct memory_access_obj *memory_obj_factory(int flags, ...)
 
     // init_mem_* functions are responsible for free-ing memory if they return
     // failure
-    toReturn->initialized = 0;
     toReturn = 0;
 
 out:
