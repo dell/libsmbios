@@ -1,4 +1,0 @@
-debian/tmp/usr/sbin/*		usr/sbin
-debian/tmp/usr/share/smbios*    usr/share
-debian/tmp/etc/*                etc
-debian/tmp/usr/share/man*	usr/share
