@@ -11,8 +11,9 @@ To build a libsmbios tarball, you will need the following dependencies, in which
 1. libxml
 1. autoconf
 2. automake
-3. gettext
-4. libtool
+3. autopoint
+4. gettext
+5. libtool
 
 Building
 --
