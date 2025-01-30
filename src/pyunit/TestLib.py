@@ -21,12 +21,10 @@ def parseOptions(*args):
     pass
 
 def runTests( testCase ):
-    testToRun = 'test'
-
     myTestSuite = unittest.TestSuite()
     for i in testCase:
         try:
-            temp = unittest.makeSuite( i, testToRun )
+            temp = unittest.defaultTestLoader.loadTestsFromTestCase( i )
             myTestSuite.addTest(temp)
         except ValueError:
             pass
