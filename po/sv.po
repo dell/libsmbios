@@ -1,0 +1,1949 @@
+# Swedish translation for libsmbios
+# Copyright (c) 2018 Rosetta Contributors and Canonical Ltd 2018
+# This file is distributed under the same license as the libsmbios package.
+# Daniel Nylander <po@danielnylander.se>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libsmbios\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2020-01-31 19:36-0600\n"
+"PO-Revision-Date: 2025-12-18 20:24+0100\n"
+"Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/bin/smbios-passwd:48
+msgid "Show password information"
+msgstr "Visa lösenordsinformation"
+
+#: src/bin/smbios-passwd:54
+msgid "Keyboard Scancodes"
+msgstr "Tangentbordets skanningskoder"
+
+#: src/bin/smbios-passwd:55
+msgid "ASCII"
+msgstr "ASCII"
+
+#: src/bin/smbios-passwd:59
+msgid "User password"
+msgstr "Användarens lösenord"
+
+#: src/bin/smbios-passwd:60
+msgid "Admin password"
+msgstr "Administratörens lösenord"
+
+#: src/bin/smbios-passwd:61
+msgid "Owner password"
+msgstr "Ägarens lösenord"
+
+#: src/bin/smbios-passwd:102 src/bin/smbios-sys-info:124
+#: src/bin/smbios-token-ctl:420 src/bin/smbios-wakeup-ctl:122
+#: src/bin/smbios-wireless-ctl:387 src/bin/smbios-lcd-brightness:122
+#: src/bin/smbios-keyboard-ctl:698 src/bin/smbios-thermal-ctl:221
+msgid "ERROR: Could not parse system SMBIOS table."
+msgstr "FEL: Kunde inte tolka systemets SMBIOS-tabell."
+
+#: src/bin/smbios-passwd:103 src/bin/smbios-sys-info:125
+#: src/bin/smbios-token-ctl:421 src/bin/smbios-wakeup-ctl:123
+#: src/bin/smbios-wireless-ctl:388 src/bin/smbios-lcd-brightness:123
+#: src/bin/smbios-keyboard-ctl:699 src/bin/smbios-thermal-ctl:222
+msgid "The smbios library returned this error:"
+msgstr "smbios-biblioteket returnerade detta felet:"
+
+#: src/bin/smbios-sys-info:55
+msgid "Libsmbios version"
+msgstr "Libsmbios version"
+
+#: src/bin/smbios-sys-info:56
+msgid "Product Name"
+msgstr "Produktnamn"
+
+#: src/bin/smbios-sys-info:57
+msgid "Vendor"
+msgstr "Tillverkare"
+
+#: src/bin/smbios-sys-info:58
+msgid "BIOS Version"
+msgstr "BIOS-version"
+
+#: src/bin/smbios-sys-info:59
+msgid "System ID"
+msgstr "System-ID"
+
+#: src/bin/smbios-sys-info:60
+msgid "Service Tag"
+msgstr "Servicetagg"
+
+#: src/bin/smbios-sys-info:61
+msgid "Express Service Code"
+msgstr "Expresstjänstkod"
+
+#: src/bin/smbios-sys-info:62
+msgid "Asset Tag"
+msgstr "Tillgångstagg"
+
+#: src/bin/smbios-sys-info:63
+msgid "Property Ownership Tag"
+msgstr "Egenskapens ägarskapstagg"
+
+#: src/bin/smbios-sys-info:75
+msgid "Show or set service tag"
+msgstr "Visa eller ställ in tjänstetagg"
+
+#: src/bin/smbios-sys-info:76
+msgid "Show or set asset tag"
+msgstr "Visa eller ställ in tillgångstagg"
+
+#: src/bin/smbios-sys-info:77
+msgid "Show or set property tag"
+msgstr "Visa eller ställ in egenskapstagg"
+
+#: src/bin/smbios-sys-info:78
+msgid "Set specified tag to new value"
+msgstr "Ställ in angiven tagg till nytt värde"
+
+#: src/bin/smbios-sys-info:93
+msgid "Specify which tag to set."
+msgstr "Ange vilken tagg som ska ställas in."
+
+#: src/bin/smbios-sys-info:96
+msgid "Current tag value:"
+msgstr "Aktuellt taggvärde:"
+
+#: src/bin/smbios-sys-info:118
+#, c-format
+msgid "Setting new tag value: %s"
+msgstr "Ställer in nytt taggvärde: %s"
+
+#: src/bin/smbios-token-ctl:60
+msgid "Action: dump token table"
+msgstr "Åtgärd: dumpa token-tabell"
+
+#: src/bin/smbios-token-ctl:62
+msgid "Action: dump token table in CSV format"
+msgstr "Åtgärd: dumpa token-tabellen i CSV-format"
+
+#: src/bin/smbios-token-ctl:65
+msgid "Action: Restore token settings from CSV table dump"
+msgstr "Åtgärd: Återställ tokeninställningar från CSV-tabelldump"
+
+#: src/bin/smbios-token-ctl:68
+msgid "Action: return true if specified token is a string."
+msgstr "Åtgärd: returnera true om angiven token är en sträng."
+
+#: src/bin/smbios-token-ctl:72
+msgid "Action: return true if specified token is a bool."
+msgstr "Åtgärd: returnera true om angiven token är en bool."
+
+#: src/bin/smbios-token-ctl:76
+msgid "Action: return true if specified bool token is active."
+msgstr "Åtgärd: returnera true om angivet bool-token är aktivt."
+
+#: src/bin/smbios-token-ctl:80
+msgid "Action: get string token value."
+msgstr "Åtgärd: hämta strängtokenvärdet."
+
+#: src/bin/smbios-token-ctl:84
+msgid "Action: activate specified bool token."
+msgstr "Åtgärd: aktivera angiven bool-token."
+
+#: src/bin/smbios-token-ctl:88
+msgid "Action: set string token value."
+msgstr "Åtgärd: ställ in strängtokenvärde."
+
+#: src/bin/smbios-token-ctl:92
+msgid "Filter only token with ID."
+msgstr "Filtrera endast token med ID."
+
+#: src/bin/smbios-token-ctl:94
+msgid "Filter only token with name."
+msgstr "Filtrera endast token med namn."
+
+#: src/bin/smbios-token-ctl:96
+msgid "Filter only token with setting."
+msgstr "Filtrera endast token med inställning."
+
+#: src/bin/smbios-token-ctl:99
+msgid "path to the token.csv file."
+msgstr "sökväg till filen token.csv."
+
+#: src/bin/smbios-token-ctl:101
+msgid "Path to token blacklist file."
+msgstr "Sökväg till svartlistningsfilen för tokens."
+
+#: src/bin/smbios-token-ctl:108 src/bin/smbios-token-ctl:109
+#: src/bin/smbios-token-ctl:110 src/bin/smbios-token-ctl:111
+#: src/bin/smbios-token-ctl:282
+msgid "unknown"
+msgstr "okänt"
+
+#: src/bin/smbios-token-ctl:148 src/bin/smbios-token-ctl:340
+msgid "Ignoring parsing error in CSV file:"
+msgstr "Ignorerar tolkningsfel i CSV-fil:"
+
+#: src/bin/smbios-token-ctl:168
+#, c-format
+msgid "Skipping '%s' due to IOError.\n"
+msgstr "Hoppar över '%s' på grund av IOError.\n"
+
+#: src/bin/smbios-token-ctl:169
+#, c-format
+msgid "The error message was: %s"
+msgstr "Felmeddelandet var: %s"
+
+#: src/bin/smbios-token-ctl:176
+msgid "<weird unknown type>"
+msgstr "<konstig okänd typ>"
+
+#: src/bin/smbios-token-ctl:177
+msgid "<unknown value>"
+msgstr "<okänt värde>"
+
+#: src/bin/smbios-token-ctl:226
+#, c-format
+msgid "  Token: 0x%04x - %s (%s)"
+msgstr "  Token: 0x%04x - %s (%s)"
+
+#: src/bin/smbios-token-ctl:230
+#, c-format
+msgid "  value: %s = %s"
+msgstr "  värde: %s = %s"
+
+#: src/bin/smbios-token-ctl:236
+msgid "   Desc: "
+msgstr "   Beskr: "
+
+#: src/bin/smbios-token-ctl:263
+#, c-format
+msgid "Importing token values from '%s'"
+msgstr "Importerar tokenvärden från '%s'"
+
+#: src/bin/smbios-token-ctl:271
+#, c-format
+msgid ""
+"File format error. The first line should list the column names. Could not "
+"find the %s column"
+msgstr ""
+"Filformatfel. Den första raden ska innehålla kolumnnamnen. Kunde inte hitta "
+"kolumnen %s"
+
+#: src/bin/smbios-token-ctl:272
+msgid "Cannot continue, exiting."
+msgstr "Kan inte fortsätta, avslutar."
+
+#: src/bin/smbios-token-ctl:283
+#, c-format
+msgid "Not importing token that is unknown: 0x%04x"
+msgstr "Importerar inte okänd token: 0x%04x"
+
+#: src/bin/smbios-token-ctl:288
+#, c-format
+msgid ""
+"INFO: token 0x%04x settings file name does not match my DB. Applying setting "
+"anyways."
+msgstr ""
+"INFO: token 0x%04x inställningsfilens namn stämmer inte överens med min "
+"databas. Tillämpar inställningen ändå."
+
+#: src/bin/smbios-token-ctl:289 src/bin/smbios-token-ctl:294
+#, c-format
+msgid "\tsettings file: %s"
+msgstr "\tinställningsfil: %s"
+
+#: src/bin/smbios-token-ctl:290 src/bin/smbios-token-ctl:295
+#, c-format
+msgid "\tDB name      : %s"
+msgstr "\tDB-namn      : %s"
+
+#: src/bin/smbios-token-ctl:293
+#, c-format
+msgid ""
+"INFO: token 0x%04x settings file setting-name does not match my DB. Applying "
+"setting anyways."
+msgstr ""
+"INFO: token 0x%04x inställningsfilens inställningsnamn stämmer inte överens "
+"med min databas. Tillämpar inställningen ändå."
+
+#: src/bin/smbios-token-ctl:299
+#, c-format
+msgid ""
+"SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be bool, but "
+"it doesnt pass bool check."
+msgstr ""
+"HOPPAR ÖVER: TYPEN STÄMMER INTE. Inställningsfilen anger att token 0x%04x "
+"ska vara bool, men det klarar inte bool-kontrollen."
+
+#: src/bin/smbios-token-ctl:304
+#, c-format
+msgid "Importing setting for token (active): 0x%04x"
+msgstr "Importerar inställning för token (aktiv): 0x%04x"
+
+#: src/bin/smbios-token-ctl:307
+#, c-format
+msgid "Token already correct (bool, active): 0x%04x"
+msgstr "Token redan korrekt (bool, aktiv): 0x%04x"
+
+#: src/bin/smbios-token-ctl:310
+#, c-format
+msgid ""
+"Info: Cannot de-activate tokens, can only activate the contrapositive. "
+"(0x%04x == false)"
+msgstr ""
+"Info: Tokens kan inte inaktiveras, endast kontrapositiva kan aktiveras. "
+"(0x%04x == false)"
+
+#: src/bin/smbios-token-ctl:312
+#, c-format
+msgid "Token already correct (bool, inactive): 0x%04x"
+msgstr "Token redan korrekt (bool, inaktiv): 0x%04x"
+
+#: src/bin/smbios-token-ctl:314
+#, c-format
+msgid ""
+"UNEXPECTED VALUE: Bool token should only ever have values of 'true' or "
+"'false', but token 0x%04x tries to set value '%s'"
+msgstr ""
+"OVÄNTAT VÄRDE: Bool-token ska endast ha värdena \"true\" eller \"false\", "
+"men token 0x%04x försöker ställa in värdet \"%s\""
+
+#: src/bin/smbios-token-ctl:319
+#, c-format
+msgid ""
+"SKIPPING: TYPE MISMATCH. Settings file says token 0x%04x should be string, "
+"but it doesnt pass string check."
+msgstr ""
+"HOPPAR ÖVER: TYPEN STÄMMER INTE. Inställningsfilen anger att token 0x%04x "
+"ska vara en sträng, men den klarar inte strängkontrollen."
+
+#: src/bin/smbios-token-ctl:323
+#, c-format
+msgid "Importing setting for token (string): 0x%04x"
+msgstr "Importerar inställning för token (sträng): 0x%04x"
+
+#: src/bin/smbios-token-ctl:326
+#, c-format
+msgid "Token already correct (string=='%s'): 0x%04x"
+msgstr "Token redan korrekt (sträng=='%s'): 0x%04x"
+
+#: src/bin/smbios-token-ctl:329
+#, c-format
+msgid "Not importing token which is inapplicable to this system: 0x%04x"
+msgstr "Importerar inte token som inte är tillämpligt för detta system: 0x%04x"
+
+#: src/bin/smbios-token-ctl:334
+#, c-format
+msgid "Not importing blacklisted token 0x%04x. Reason: %s"
+msgstr "Importerar inte svartlistad token 0x%04x. Anledning: %s"
+
+#: src/bin/smbios-token-ctl:353
+msgid "require token-id or token name/setting pair."
+msgstr "kräver token-id eller token-namn/inställningspar."
+
+#: src/bin/smbios-token-ctl:364
+#, c-format
+msgid "token not found. Name(%s) Setting(%s)."
+msgstr "token hittades inte. Namn(%s) Inställning(%s)."
+
+#: src/bin/smbios-token-ctl:396
+msgid "Original Value"
+msgstr "Ursprungligt värde"
+
+#: src/bin/smbios-token-ctl:397
+#, c-format
+msgid "       token: 0x%04x"
+msgstr "       token: 0x%04x"
+
+#: src/bin/smbios-token-ctl:398 src/bin/smbios-token-ctl:415
+#, c-format
+msgid "        type: %s"
+msgstr "        typ: %s"
+
+#: src/bin/smbios-token-ctl:399 src/bin/smbios-token-ctl:416
+#, c-format
+msgid "       value: %s"
+msgstr "       värde: %s"
+
+#: src/bin/smbios-token-ctl:403
+msgid "Setting string value ..."
+msgstr "Ställer in strängvärde ..."
+
+#: src/bin/smbios-token-ctl:405 src/bin/smbios-token-ctl:411
+msgid "New value"
+msgstr "Nytt värde"
+
+#: src/bin/smbios-token-ctl:409
+msgid "Activating token..."
+msgstr "Aktiverar token..."
+
+#: src/bin/smbios-token-ctl:426 src/bin/smbios-wakeup-ctl:129
+#: src/bin/smbios-wireless-ctl:394 src/bin/smbios-lcd-brightness:129
+#: src/bin/smbios-keyboard-ctl:705 src/bin/smbios-thermal-ctl:228
+msgid "ERROR: Could not manipulate system token."
+msgstr "FEL: Det gick inte att manipulera systemtoken."
+
+#: src/bin/smbios-token-ctl:427 src/bin/smbios-wakeup-ctl:130
+#: src/bin/smbios-wireless-ctl:395 src/bin/smbios-lcd-brightness:130
+#: src/bin/smbios-keyboard-ctl:706 src/bin/smbios-thermal-ctl:229
+msgid "The token library returned this error:"
+msgstr "Tokenbiblioteket returnerade följande felmeddelande:"
+
+#: src/bin/smbios-wakeup-ctl:56
+msgid "Set wakeup hour. Must be 0-23"
+msgstr "Ställ in väckningstid för timme. Måste vara 0-23"
+
+#: src/bin/smbios-wakeup-ctl:57
+msgid "Set wakeup minute. Must be 0-59"
+msgstr "Ställ in väckningstid för minuter. Måste vara 0-59"
+
+#: src/bin/smbios-wakeup-ctl:58
+msgid "Set wakeup for every day"
+msgstr "Ställ in väckning för varje dag"
+
+#: src/bin/smbios-wakeup-ctl:59
+msgid "Set wakeup for weekdays only"
+msgstr "Ställ in väckning endast för vardagar"
+
+#: src/bin/smbios-wakeup-ctl:60
+msgid "Disable wakeups"
+msgstr "Inaktivera väckningar"
+
+#: src/bin/smbios-wakeup-ctl:67
+#, c-format
+msgid "Wakeup hour must be between 0 and 23. You passed: '%s'"
+msgstr "Väckningstiden måste vara mellan 0 och 23. Du angav: '%s'"
+
+#: src/bin/smbios-wakeup-ctl:71
+#, c-format
+msgid "Wakeup min must be between 0 and 59. You passed: '%s'"
+msgstr "Väckningstiden måste vara mellan 0 och 59. Du angav: '%s'"
+
+#: src/bin/smbios-wakeup-ctl:84
+msgid "\tWakeup disabled"
+msgstr "\tVäckning inaktiverad"
+
+#: src/bin/smbios-wakeup-ctl:86
+msgid "\tWakeup every day"
+msgstr "\tVäck varje dag"
+
+#: src/bin/smbios-wakeup-ctl:87 src/bin/smbios-wakeup-ctl:90
+#, c-format
+msgid "\tWakeup time:  %02d:%02d"
+msgstr "\tVäckningstid:  %02d:%02d"
+
+#: src/bin/smbios-wakeup-ctl:89
+msgid "\tWakeup weekdays"
+msgstr "\tVäckning vardagar"
+
+#: src/bin/smbios-wakeup-ctl:102
+msgid "Current wakeup settings:"
+msgstr "Aktuella väckningsinställningar:"
+
+#: src/bin/smbios-wakeup-ctl:107
+msgid "Setting new wakeup time:"
+msgstr "Ställer in ny väckningstid:"
+
+#: src/bin/smbios-wakeup-ctl:118
+msgid "ERROR: This system does not support programmed wakeups."
+msgstr "FEL: Detta system stöder inte programmerade väckningar."
+
+#: src/bin/smbios-wireless-ctl:48
+msgid "Show wireless configuration (default)"
+msgstr "Visa trådlös konfiguration (standard)"
+
+#: src/bin/smbios-wireless-ctl:50
+msgid "Set BIOS boot-time setting."
+msgstr "Ställ in BIOS-uppstartstid."
+
+#: src/bin/smbios-wireless-ctl:51
+msgid "Do not set BIOS boot-time setting."
+msgstr "Ställ inte in BIOS-uppstartsinställning."
+
+#: src/bin/smbios-wireless-ctl:53
+msgid "Set BIOS runtime setting (default)."
+msgstr "Ställ in BIOS-körtid (standard)."
+
+#: src/bin/smbios-wireless-ctl:55
+msgid "Do not set BIOS runtime setting."
+msgstr "Ställ inte in BIOS-körtidsinställning."
+
+#: src/bin/smbios-wireless-ctl:58
+msgid "Set radio runtime status for wireless LAN"
+msgstr "Ställ in radions driftstillstånd för trådlöst LAN"
+
+#: src/bin/smbios-wireless-ctl:60
+msgid "Set radio runtime status for Bluetooth"
+msgstr "Ställ in radions driftstillstånd för Bluetooth"
+
+#: src/bin/smbios-wireless-ctl:62
+msgid "Set radio runtime status for cellular (wireless WAN)"
+msgstr "Ställ in radions driftstillstånd för mobilnät (trådlöst WAN)"
+
+#: src/bin/smbios-wireless-ctl:64
+msgid "Set radio runtime status for UWB"
+msgstr "Ställ in radions driftstillstånd för UWB"
+
+#: src/bin/smbios-wireless-ctl:66
+msgid "Set radio runtime status for WiGig"
+msgstr "Ställ in radions driftstillstånd för WiGig"
+
+#: src/bin/smbios-wireless-ctl:69
+msgid "Set hardware switch so that it controls radio for wireless LAN"
+msgstr ""
+"Ställ in hårdvaruknappen så att den kontrollerar radion för trådlöst LAN"
+
+#: src/bin/smbios-wireless-ctl:71
+msgid "Set hardware switch so that it controls radio for Bluetooth"
+msgstr "Ställ in hårdvaruknappen så att den kontrollerar radion för Bluetooth"
+
+#: src/bin/smbios-wireless-ctl:73
+msgid ""
+"Set hardware switch so that it controls radio for cellular (wireless WAN)"
+msgstr ""
+"Ställ in hårdvaruknappen så att den kontrollerar radion för mobilnät "
+"(trådlöst WAN)"
+
+#: src/bin/smbios-wireless-ctl:75
+msgid "Set hardware switch so that it controls radio for UWB"
+msgstr "Ställ in hårdvaruknappen så att den kontrollerar radion för UWB"
+
+#: src/bin/smbios-wireless-ctl:77
+msgid "Set hardware switch so that it controls radio for WiGig"
+msgstr "Ställ in hårdvaruknappen så att den kontrollerar radion för WiGig"
+
+#: src/bin/smbios-wireless-ctl:80
+msgid "Enable or disable the WIFI locator switch"
+msgstr "Aktivera eller inaktivera växel för WIFI-locator"
+
+#: src/bin/smbios-wireless-ctl:83
+msgid ""
+"Get status for wireless LAN. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+msgstr ""
+"Hämta status för trådlöst nätverk. 0 = aktiverat. 1 = inaktiverat. 2 = finns "
+"inte. 3 = stöds inte. 4 = okänt."
+
+#: src/bin/smbios-wireless-ctl:85
+msgid ""
+"Get status for Bluetooth. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+msgstr ""
+"Hämta status för Bluetooth. 0 = aktiverat. 1 = inaktiverat. 2 = finns inte. "
+"3 = stöds inte. 4 = okänt."
+
+#: src/bin/smbios-wireless-ctl:87
+msgid ""
+"Get status for cellular (wireless WAN). 0 = enabled. 1 = disabled. 2 = not "
+"present. 3 = unsupported. 4 = unknown."
+msgstr ""
+"Hämta status för mobilnät (trådlöst WAN). 0 = aktiverat. 1 = inaktiverat. 2 "
+"= inte tillgängligt. 3 = stöds inte. 4 = okänt."
+
+#: src/bin/smbios-wireless-ctl:89
+msgid ""
+"Get status for UWB. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+msgstr ""
+"Hämta status för UWB. 0 = aktiverad. 1 = inaktiverad. 2 = inte tillgängligt. "
+"3 = stöds inte. 4 = okänt."
+
+#: src/bin/smbios-wireless-ctl:91
+msgid ""
+"Get status for WiGig. 0 = enabled. 1 = disabled. 2 = not present. 3 = "
+"unsupported. 4 = unknown."
+msgstr ""
+"Hämta status för WiGig. 0 = aktiverat. 1 = inaktiverat. 2 = inte "
+"tillgängligt. 3 = stöds inte. 4 = okänt."
+
+#: src/bin/smbios-wireless-ctl:94
+msgid "Get status for locator switch"
+msgstr "Hämta status för locator-växling"
+
+#: src/bin/smbios-wireless-ctl:104
+msgid "WLAN"
+msgstr "WLAN"
+
+#: src/bin/smbios-wireless-ctl:113
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: src/bin/smbios-wireless-ctl:120
+msgid "WWAN"
+msgstr "WWAN"
+
+#: src/bin/smbios-wireless-ctl:127
+msgid "UWB"
+msgstr "UWB"
+
+#: src/bin/smbios-wireless-ctl:134
+msgid "WiGig"
+msgstr "WiGig"
+
+#: src/bin/smbios-wireless-ctl:138
+msgid "Locator"
+msgstr "Locator"
+
+#: src/bin/smbios-wireless-ctl:145
+#, c-format
+msgid "Set boot settings for %s"
+msgstr "Ställ in uppstartsinställningar för %s"
+
+#: src/bin/smbios-wireless-ctl:159
+#, c-format
+msgid "\tThis system does not support boot time settings for %s"
+msgstr "\tDetta system saknar stöd för inställningar vid uppstartstid för %s"
+
+#: src/bin/smbios-wireless-ctl:165
+#, c-format
+msgid "Set runtime settings for %s"
+msgstr "Ställ in körtidsinställningar för %s"
+
+#: src/bin/smbios-wireless-ctl:168
+msgid ""
+"Runtime setting has no effect when boot time config is disabled. Ignoring."
+msgstr ""
+"Körtidsinställningen har ingen effekt när uppstartskonfigurationen är "
+"inaktiverad. Ignoreras."
+
+#: src/bin/smbios-wireless-ctl:174 src/bin/smbios-wireless-ctl:247
+#: src/bin/smbios-wireless-ctl:299
+msgid "This system does not support runtime control of wireless settings."
+msgstr ""
+"Detta system saknar stöd för körtidskontroll av trådlösa inställningar."
+
+#: src/bin/smbios-wireless-ctl:181
+#, c-format
+msgid "Set boot switch settings for %s"
+msgstr "Ställ in inställningar för uppstartsväxling för %s"
+
+#: src/bin/smbios-wireless-ctl:197
+#, c-format
+msgid ""
+"This system does not support boot-time wireless switch configuration for %s."
+msgstr ""
+"Detta system stöder inte konfiguration av trådlös växling vid uppstart för "
+"%s."
+
+#: src/bin/smbios-wireless-ctl:200
+#, c-format
+msgid ""
+"\n"
+"Set runtime switch settings for %s"
+msgstr ""
+"\n"
+"Ställ in inställningar för körtidsväxling för %s"
+
+#: src/bin/smbios-wireless-ctl:208 src/bin/smbios-wireless-ctl:224
+#: src/bin/smbios-wireless-ctl:318
+msgid ""
+"This system does not support runtime control of wireless switch settings."
+msgstr ""
+"Detta system saknar stöd för körtidskontroll av inställningar för trådlösa "
+"växlingar."
+
+#: src/bin/smbios-wireless-ctl:241
+#, c-format
+msgid ""
+"\n"
+"Radio Status for %s:"
+msgstr ""
+"\n"
+"Radiostatus för %s:"
+
+#: src/bin/smbios-wireless-ctl:250
+#, c-format
+msgid "\t%s enabled at boot"
+msgstr "\t%s aktiverad vid uppstart"
+
+#: src/bin/smbios-wireless-ctl:250
+#, c-format
+msgid "\t%s disabled at boot"
+msgstr "\t%s inaktiverad vid uppstart"
+
+#: src/bin/smbios-wireless-ctl:252
+#, c-format
+msgid "\t%s boot-time setting not present"
+msgstr "\t%s inställning för uppstartstid finns inte"
+
+#: src/bin/smbios-wireless-ctl:255
+#, c-format
+msgid "\t%s supported"
+msgstr "\t%s stöds"
+
+#: src/bin/smbios-wireless-ctl:259
+#, c-format
+msgid "\t%s disabled"
+msgstr "\t%s inaktiverad"
+
+#: src/bin/smbios-wireless-ctl:262
+#, c-format
+msgid "\t%s enabled"
+msgstr "\t%s aktiverad"
+
+#: src/bin/smbios-wireless-ctl:265
+#, c-format
+msgid "\t%s installed"
+msgstr "\t%s installerad"
+
+#: src/bin/smbios-wireless-ctl:268
+#, c-format
+msgid "\t%s not installed"
+msgstr "\t%s inte installerad"
+
+#: src/bin/smbios-wireless-ctl:271
+#, c-format
+msgid "\t%s controlled by wireless switch at boot"
+msgstr "\t%s kontrolleras av trådlös brytare vid uppstart"
+
+#: src/bin/smbios-wireless-ctl:271
+#, c-format
+msgid "\t%s not controlled by wireless switch at boot"
+msgstr "\t%s kontrolleras inte av trådlös brytare vid uppstart"
+
+#: src/bin/smbios-wireless-ctl:273
+#, c-format
+msgid "\t%s boot-time wireless switch setting not present"
+msgstr "\t%s inställning för trådlös växling vid uppstart finns inte"
+
+#: src/bin/smbios-wireless-ctl:276
+#, c-format
+msgid "\t%s runtime switch control currently enabled"
+msgstr "\t%s körtidsknappkontroll för närvarande aktiverad"
+
+#: src/bin/smbios-wireless-ctl:276
+#, c-format
+msgid "\t%s runtime switch control currently disabled"
+msgstr "\t%s körtidsknappkontroll för närvarande inaktiverad"
+
+#: src/bin/smbios-wireless-ctl:280
+#, c-format
+msgid "\t%s not supported"
+msgstr "\t%s stöds inte"
+
+#: src/bin/smbios-wireless-ctl:287
+#, c-format
+msgid "\t%s legacy switch enabled"
+msgstr "\t%s äldre switch aktiverad"
+
+#: src/bin/smbios-wireless-ctl:287
+#, c-format
+msgid "\t%s legacy switch disabled"
+msgstr "\t%s äldre switch inaktiverad"
+
+#: src/bin/smbios-wireless-ctl:292
+#, c-format
+msgid "\tStatus Code: %d"
+msgstr "\tStatuskod: %d"
+
+#: src/bin/smbios-wireless-ctl:295
+msgid "Wireless Info:"
+msgstr "Trådlös information:"
+
+#: src/bin/smbios-wireless-ctl:301
+msgid "\tHardware switch supported"
+msgstr "\tHårdvarubrytare stöds"
+
+#: src/bin/smbios-wireless-ctl:304
+msgid "\tHardware switch not supported"
+msgstr "\tHårdvarubrytare stöds inte"
+
+#: src/bin/smbios-wireless-ctl:306
+msgid "\tWiFi Locator supported"
+msgstr "\tWiFi-lokalisering stöds"
+
+#: src/bin/smbios-wireless-ctl:306
+msgid "\tWiFi Locator not supported"
+msgstr "\tWiFi-lokalisering stöds inte"
+
+#: src/bin/smbios-wireless-ctl:307
+msgid "\tWireless Keyboard supported"
+msgstr "\tTrådlöst tangentbord stöds"
+
+#: src/bin/smbios-wireless-ctl:307
+msgid "\tWireless Keyboard not supported"
+msgstr "\tTrådlöst tangentbord stöds inte"
+
+#: src/bin/smbios-wireless-ctl:308
+#, c-format
+msgid "\tNVRAM Size: %d bytes"
+msgstr "\tNVRAM-storlek: %d byte"
+
+#: src/bin/smbios-wireless-ctl:309
+#, c-format
+msgid "\tNVRAM format version: %d"
+msgstr "\tNVRAM-formatversion: %d"
+
+#: src/bin/smbios-wireless-ctl:314
+msgid ""
+"\n"
+"Wireless Switch Configuration"
+msgstr ""
+"\n"
+"Konfiguration av trådlös växling"
+
+#: src/bin/smbios-wireless-ctl:319
+#, c-format
+msgid "\tWLAN switch control: %s"
+msgstr "\tWLAN-växlingskontroll: %s"
+
+#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-wireless-ctl:320
+#: src/bin/smbios-wireless-ctl:321 src/bin/smbios-wireless-ctl:322
+#: src/bin/smbios-wireless-ctl:323
+msgid "on"
+msgstr "på"
+
+#: src/bin/smbios-wireless-ctl:319 src/bin/smbios-wireless-ctl:320
+#: src/bin/smbios-wireless-ctl:321 src/bin/smbios-wireless-ctl:322
+#: src/bin/smbios-wireless-ctl:323
+msgid "off"
+msgstr "av"
+
+#: src/bin/smbios-wireless-ctl:320
+#, c-format
+msgid "\tBluetooth switch control: %s"
+msgstr "\tBluetooth-brytare: %s"
+
+#: src/bin/smbios-wireless-ctl:321
+#, c-format
+msgid "\tWWAN switch control: %s"
+msgstr "\tWWAN-växlingskontroll: %s"
+
+#: src/bin/smbios-wireless-ctl:322
+#, c-format
+msgid "\tUWB switch control: %s"
+msgstr "\tUWB-växlingskontroll: %s"
+
+#: src/bin/smbios-wireless-ctl:323
+#, c-format
+msgid "\tWiGig switch control: %s"
+msgstr "\tWiGig-växlingskontroll: %s"
+
+#: src/bin/smbios-wireless-ctl:324
+#, c-format
+msgid "\tswitch config: %s"
+msgstr "\tväxlingskonfiguration: %s"
+
+#: src/bin/smbios-wireless-ctl:324 src/bin/smbios-wireless-ctl:326
+msgid "locked"
+msgstr "låst"
+
+#: src/bin/smbios-wireless-ctl:324 src/bin/smbios-wireless-ctl:326
+msgid "not locked"
+msgstr "inte låst"
+
+#: src/bin/smbios-wireless-ctl:325
+#, c-format
+msgid "\tWiFi locator: %s"
+msgstr "\tWiFi-lokalisering: %s"
+
+#: src/bin/smbios-wireless-ctl:325
+msgid "enabled"
+msgstr "aktiverad"
+
+#: src/bin/smbios-wireless-ctl:325
+msgid "disabled"
+msgstr "inaktiverad"
+
+#: src/bin/smbios-wireless-ctl:326
+#, c-format
+msgid "\tWiFi Locator config: %s"
+msgstr "\tWiFi-lokalisatorns konfiguration: %s"
+
+#: src/bin/smbios-wireless-ctl:342 src/bin/smbios-keyboard-ctl:656
+#: src/bin/smbios-thermal-ctl:198
+#, c-format
+msgid "Libsmbios version : %s"
+msgstr "Libsmbios version : %s"
+
+#: src/bin/smbios-wireless-ctl:343
+#, c-format
+msgid "smbios-wireless-ctl version : %s"
+msgstr "smbios-wireless-ctl version : %s"
+
+#: src/bin/smbios-wireless-ctl:380 src/bin/smbios-lcd-brightness:115
+#: src/bin/smbios-keyboard-ctl:691 src/bin/smbios-thermal-ctl:214
+msgid "ERROR: Could not execute SMI."
+msgstr "FEL: Kunde inte köra SMI."
+
+#: src/bin/smbios-wireless-ctl:381 src/bin/smbios-lcd-brightness:116
+#: src/bin/smbios-keyboard-ctl:692 src/bin/smbios-thermal-ctl:215
+msgid "The smi library returned this error:"
+msgstr "smi-biblioteket returnerade följande felmeddelande:"
+
+#: src/bin/smbios-lcd-brightness:48
+msgid "Set new value"
+msgstr "Ange nytt värde"
+
+#: src/bin/smbios-lcd-brightness:49
+msgid "Set new value to be used while running on battery power"
+msgstr "Ställ in nytt värde som ska användas vid drift på batteriström"
+
+#: src/bin/smbios-lcd-brightness:50
+msgid "Set new value to be used while running on AC power"
+msgstr "Ställ in nytt värde som ska användas vid drift på extern ström"
+
+#: src/bin/smbios-lcd-brightness:55
+#, c-format
+msgid "Reading current %s mode setting"
+msgstr "Läser aktuell %s-lägesinställning"
+
+#: src/bin/smbios-lcd-brightness:56
+#, c-format
+msgid "    current: %s"
+msgstr "    aktuellt: %s"
+
+#: src/bin/smbios-lcd-brightness:57
+#, c-format
+msgid "        min: %s"
+msgstr "        min: %s"
+
+#: src/bin/smbios-lcd-brightness:58
+#, c-format
+msgid "        max: %s"
+msgstr "        max: %s"
+
+#: src/bin/smbios-lcd-brightness:62
+#, c-format
+msgid "Write new %s mode setting"
+msgstr "Skriv ny lägesinställning för %s"
+
+#: src/bin/smbios-lcd-brightness:76
+msgid "Battery"
+msgstr "Batteri"
+
+#: src/bin/smbios-lcd-brightness:80
+msgid "AC"
+msgstr "Extern ström"
+
+#: src/bin/smbios-lcd-brightness:103
+msgid "LCD Brightness is not settable on this machine using this utility."
+msgstr ""
+"LCD-ljusstyrkan kan inte ställas in på den här maskinen med det här "
+"verktyget."
+
+#: src/bin/smbios-lcd-brightness:107
+msgid "Could not set value because the password was incorrect"
+msgstr "Kunde inte ställa in värdet eftersom lösenordet var felaktigt"
+
+#: src/bin/smbios-lcd-brightness:111
+msgid "value outside legal bounds"
+msgstr "värde utanför giltiga gränser"
+
+#: src/bin/smbios-keyboard-ctl:50
+msgid "This will Display the Supported Features for Keyboard illumination"
+msgstr "Detta visar de funktioner som stöds för tangentbordsbelysning"
+
+#: src/bin/smbios-keyboard-ctl:51
+msgid "This will Display the current Status of Keyboard Illumination Settings"
+msgstr ""
+"Detta visar aktuell status för inställningarna för tangentbordsbelysning"
+
+#: src/bin/smbios-keyboard-ctl:52
+msgid "Option to set USER Selectable Keyboard Mode"
+msgstr "Flagga för att ställa in valbart tangentbordsläge för ANVÄNDARE"
+
+#: src/bin/smbios-keyboard-ctl:53
+msgid "Option to set Trigger types for Keyboard Illumination  "
+msgstr "Flagga för att ställa in aktiveringstyper för tangentbordsbelysning  "
+
+#: src/bin/smbios-keyboard-ctl:54
+msgid "Set Keyboard Illumination Timeout Value (battery)"
+msgstr "Ställ in tidsgräns för tangentbordsbelysning (batteri)"
+
+#: src/bin/smbios-keyboard-ctl:55
+msgid "Set Keyboard Illumination Timeout Value (ac)"
+msgstr "Ställ in tidsgräns för tangentbordsbelysning (extern ström)"
+
+#: src/bin/smbios-keyboard-ctl:56
+msgid "Set Keyboard Illumination Level"
+msgstr "Ställ in tangentbordets belysningsnivå"
+
+#: src/bin/smbios-keyboard-ctl:57
+msgid "Set/Get ALS (Ambient Light Sensor Status and Control Level)"
+msgstr "Ställ in/hämta ALS (status och kontrollnivå för omgivningsljussensor)"
+
+#: src/bin/smbios-keyboard-ctl:87 src/bin/smbios-keyboard-ctl:129
+#: src/bin/smbios-keyboard-ctl:460
+#, c-format
+msgid ""
+"Get Keyboard Illumination Capability: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X,res[smi.cbRES4]=0x%X"
+msgstr ""
+"Hämta förmågor för tangentbordsbelysning: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X,res[smi.cbRES4]=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:90
+msgid "\ttCould not retrieve supported USER Selectable Modes"
+msgstr "\tKunde inte hämta användarvalbara lägen som stöds"
+
+#: src/bin/smbios-keyboard-ctl:95
+msgid ""
+"\n"
+" Supported USER Selectable Modes: "
+msgstr ""
+"\n"
+" Valbara lägen som stöds för ANVÄNDARE: "
+
+#: src/bin/smbios-keyboard-ctl:96
+msgid "\tOption\tMode"
+msgstr "\tFlagga\tLäge"
+
+#: src/bin/smbios-keyboard-ctl:97 src/bin/smbios-keyboard-ctl:136
+msgid "------------------------------------------------"
+msgstr "------------------------------------------------"
+
+#: src/bin/smbios-keyboard-ctl:108
+msgid ""
+"\n"
+" Note: some modes might need the keyboard set at specific illumination "
+"levels\n"
+msgstr ""
+"\n"
+" Observera: vissa lägen kan kräva att tangentbordet ställs in på specifika "
+"belysningsnivåer\n"
+
+#: src/bin/smbios-keyboard-ctl:132
+msgid "\tCould not retrieve supported KeyBoard Illumination Capabilities"
+msgstr "\tKunde inte hämta funktioner för tangentbordsbelysning som stöds"
+
+#: src/bin/smbios-keyboard-ctl:134
+msgid ""
+"\n"
+" Select Keyboard illumination on: "
+msgstr ""
+"\n"
+" Välj tangentbordsbelysning på: "
+
+#: src/bin/smbios-keyboard-ctl:135
+msgid "\tTrigger Type\t\tOption"
+msgstr "\tAktiveringstyp\t\tFlagga"
+
+#: src/bin/smbios-keyboard-ctl:142
+msgid ""
+"Eg: to Select Trigger for [Any Keystroke] and [Touchpad activity] specify "
+"your option like this 0,1)"
+msgstr ""
+"Exempel: För att välja aktivering för [Valfri tangenttryckning] och "
+"[pekplatteaktivitet] anger du ditt alternativ så här 0,1)"
+
+#: src/bin/smbios-keyboard-ctl:158
+msgid "Triggers Validated Successfully"
+msgstr "Aktiverare validerades ok"
+
+#: src/bin/smbios-keyboard-ctl:171
+#, c-format
+msgid "\t _set_keyboard_attr Flag error: %s  "
+msgstr "\t Flaggfel i _set_keyboard_attr: %s  "
+
+#: src/bin/smbios-keyboard-ctl:176 src/bin/smbios-keyboard-ctl:255
+#: src/bin/smbios-keyboard-ctl:337 src/bin/smbios-keyboard-ctl:395
+#, c-format
+msgid ""
+"Get Keyboard illumination Current State: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Hämta aktuellt tillstånd för tangentbordsbelysning: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:179
+msgid ""
+"\t Failed to set Keyboard illumination attributes. Could not read the "
+"current settings"
+msgstr ""
+"\t Misslyckades med att ställa in attributen för tangentbordsbelysningen. "
+"Kunde inte läsa de aktuella inställningarna"
+
+#: src/bin/smbios-keyboard-ctl:191
+msgid "\t No valid trigger defined"
+msgstr "\t Ingen giltig aktivering definierad"
+
+#: src/bin/smbios-keyboard-ctl:197 src/bin/smbios-keyboard-ctl:202
+msgid "\t A timeout of zero is not supported"
+msgstr "\t En tidsgräns på noll stöds inte"
+
+#: src/bin/smbios-keyboard-ctl:211
+msgid ""
+"\n"
+" The current mode (Always OFF) might prevent level changes, select a new mode"
+msgstr ""
+"\n"
+" Det aktuella läget (Alltid AV) kan förhindra nivåändringar. Välj ett nytt "
+"läge"
+
+#: src/bin/smbios-keyboard-ctl:228
+#, c-format
+msgid "Setting new params in _set_keyboard_attr : Arg2=0x%X Arg3=0x%X"
+msgstr "Ställer in nya parametrar i _set_keyboard_attr : Arg2=0x%X Arg3=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:231
+msgid " Set Trigger Failed. Failed to write config"
+msgstr ""
+" Inställning av aktivering misslyckades. Det gick inte att skriva "
+"konfiguration"
+
+#: src/bin/smbios-keyboard-ctl:233
+#, c-format
+msgid ""
+"\n"
+"New %s parameter set Successfully\n"
+msgstr ""
+"\n"
+"Ny %s-parameter ställdes in\n"
+
+#: src/bin/smbios-keyboard-ctl:237 src/bin/smbios-keyboard-ctl:539
+#: src/bin/smbios-keyboard-ctl:556 src/bin/smbios-keyboard-ctl:610
+#, c-format
+msgid "\t Error Return Code : cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X "
+msgstr "\t Felreturkod: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X "
+
+#: src/bin/smbios-keyboard-ctl:258 src/bin/smbios-keyboard-ctl:340
+msgid "\t Error reading keyboard settings."
+msgstr "\t Fel vid läsning av tangentbordsinställningar."
+
+#: src/bin/smbios-keyboard-ctl:262 src/bin/smbios-keyboard-ctl:415
+msgid ""
+"\n"
+" Your Keyboard will illumination on: "
+msgstr ""
+"\n"
+" Ditt tangentbord tänds: "
+
+#: src/bin/smbios-keyboard-ctl:276
+#, c-format
+msgid ""
+"\n"
+"Old Keyboard illumination battery timeout is: %d %s"
+msgstr ""
+"\n"
+"Gamla tidsgränsen för tangentbordsbelysning på batteri är: %d %s"
+
+#: src/bin/smbios-keyboard-ctl:285
+#, c-format
+msgid ""
+"\n"
+"Old Keyboard illumination AC timeout is: %d %s"
+msgstr ""
+"\n"
+"Gamla tidsgränsen för tangentbordsbelysning på extern ström är: %d %s"
+
+#: src/bin/smbios-keyboard-ctl:296
+msgid "\t Invalid Timeout parameters detected"
+msgstr "\t Ogiltiga tidsgränsparametrar upptäcktes"
+
+#: src/bin/smbios-keyboard-ctl:303
+msgid ""
+"\n"
+" Error: Invalid Timeout entry detected"
+msgstr ""
+"\n"
+" Fel: Ogiltig tidsgräns upptäcktes"
+
+#: src/bin/smbios-keyboard-ctl:307
+#, c-format
+msgid "\t Timeout value out of range: %d"
+msgstr "\t Tidsgränsvärde utanför intervallet: %d"
+
+#: src/bin/smbios-keyboard-ctl:314
+msgid ""
+"\n"
+" To set timeout value as 45 seconds enter: 45s "
+msgstr ""
+"\n"
+" För att ställa in tidsgränsvärdet till 45 sekunder, ange: 45s "
+
+#: src/bin/smbios-keyboard-ctl:315
+msgid ""
+" You can specify time out values in  s[Seconds], m[Minutes], h[hours], "
+"d[days]"
+msgstr ""
+" Du kan ange tidsgränsvärden i  s[sekunder], m[minuter], h[timmar], d[dagar]"
+
+#: src/bin/smbios-keyboard-ctl:316
+msgid " Timeout value range is 1-63 "
+msgstr " Tidsgränsvärdet ligger mellan 1 och 63 "
+
+#: src/bin/smbios-keyboard-ctl:342
+#, c-format
+msgid ""
+"\n"
+"Old Keyboard illumination level is: %d"
+msgstr ""
+"\n"
+"Gamla belysningsnivån för tangentbordet är: %d"
+
+#: src/bin/smbios-keyboard-ctl:356
+msgid ""
+"\n"
+" Level setting not supported"
+msgstr ""
+"\n"
+" Nivåinställning stöds inte"
+
+#: src/bin/smbios-keyboard-ctl:359
+#, c-format
+msgid ""
+"\n"
+" Value out of range, range is 0-%d"
+msgstr ""
+"\n"
+" Värdet ligger utanför intervallet, intervallet är 0-%d"
+
+#: src/bin/smbios-keyboard-ctl:369
+msgid ""
+"\n"
+" Current status of KeyBoard Illumination setting on your system: "
+msgstr ""
+"\n"
+" Aktuell status för inställningen för tangentbordsbelysning på ditt system: "
+
+#: src/bin/smbios-keyboard-ctl:370 src/bin/smbios-keyboard-ctl:456
+#: src/bin/smbios-thermal-ctl:79 src/bin/smbios-thermal-ctl:124
+msgid "-------------------------------------------------------------------"
+msgstr "-------------------------------------------------------------------"
+
+#: src/bin/smbios-keyboard-ctl:375
+#, c-format
+msgid ""
+"Get Keyboard Illumination Configuration: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Hämta konfiguration för tangentbordsbelysning: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:378
+msgid ""
+" Info: Unable to fetch Keyboard Illumination Configuration information: "
+"Feature Not supported on this system\n"
+msgstr ""
+" Info: Det går inte att hämta information om tangentbordets "
+"belysningskonfiguration: Funktionen stöds inte på detta system\n"
+
+#: src/bin/smbios-keyboard-ctl:385
+msgid "\t Error: Detected Invalid Keyboar Illumination mode"
+msgstr "\t Fel: Ogiltigt tangentbordsbelysningsläge upptäckt"
+
+#: src/bin/smbios-keyboard-ctl:389
+msgid "Failed to read: Ambient Light trigger level"
+msgstr "Läsning misslyckades: Aktiveringsnivå för omgivande ljus"
+
+#: src/bin/smbios-keyboard-ctl:391
+#, c-format
+msgid "\t Ambient Light level to trigger automatic keyboard illumination: 0x%X"
+msgstr ""
+"\t Omgivande ljusnivå för att aktivera automatisk tangentbordsbelysning: 0x%X"
+
+#: src/bin/smbios-keyboard-ctl:392
+#, c-format
+msgid ""
+"\t Last known Ambient Light level to trigger automatic keyboard "
+"illumination: 0x%X"
+msgstr ""
+"\t Senast kända omgivningsljusnivå för att aktivera automatisk "
+"tangentbordsbelysning: 0x%X"
+
+#: src/bin/smbios-keyboard-ctl:398
+msgid "\tYour Keyboard may not support Keyboard illumination Feature"
+msgstr ""
+"\tDitt tangentbord kanske inte har stöd för funktionen för "
+"tangentbordsbelysning"
+
+#: src/bin/smbios-keyboard-ctl:400
+msgid ""
+"\n"
+" Configured mode state: "
+msgstr ""
+"\n"
+" Konfigurerat lägestillstånd: "
+
+#: src/bin/smbios-keyboard-ctl:429
+#, c-format
+msgid ""
+"\n"
+" Keyboard illumination timeout on battery has been set at: %d %s"
+msgstr ""
+"\n"
+" Tidsgränsen för tangentbordets belysning vid batteridrift har ställts in "
+"på: %d %s"
+
+#: src/bin/smbios-keyboard-ctl:438
+#, c-format
+msgid ""
+"\n"
+" Keyboard illumination timeout on AC has been set at: %d %s"
+msgstr ""
+"\n"
+" Tidsgränsen för tangentbordets belysning vid extern strömkälla har ställts "
+"in på: %d %s"
+
+#: src/bin/smbios-keyboard-ctl:441
+#, c-format
+msgid ""
+"\n"
+" Current setting of ALS value that turns the light on or off: %d"
+msgstr ""
+"\n"
+" Aktuell inställning av ALS-värdet som tänder eller släcker ljuset: %d"
+
+#: src/bin/smbios-keyboard-ctl:443
+#, c-format
+msgid " Current ALS Reading : %d"
+msgstr " Aktuell ALS-avläsning: %d"
+
+#: src/bin/smbios-keyboard-ctl:445
+#, c-format
+msgid " Current keyboard light level : %d"
+msgstr " Aktuell tangentbordsbelysningsnivå: %d"
+
+#: src/bin/smbios-keyboard-ctl:455
+msgid ""
+"\n"
+" Capabilities of KeyBoard Illumination on your system: "
+msgstr ""
+"\n"
+" Förmågor för tangentbordsbelysning på ditt system: "
+
+#: src/bin/smbios-keyboard-ctl:463
+msgid "Warning:: Your Keyboard may not support Keyboard illumination Feature"
+msgstr ""
+"Varning:: Ditt tangentbord kanske inte stöder funktionen för "
+"tangentbordsbelysning"
+
+#: src/bin/smbios-keyboard-ctl:468
+msgid " Supported USER Selectable Modes : "
+msgstr " Valbara lägen för ANVÄNDARE som stöds: "
+
+#: src/bin/smbios-keyboard-ctl:482
+msgid ""
+"\n"
+" Supported Keyboard illumination type : "
+msgstr ""
+"\n"
+" Typ av tangentbordsbelysning som stöds: "
+
+#: src/bin/smbios-keyboard-ctl:485
+msgid ""
+"\n"
+" Supports Keyboard illumination on : "
+msgstr ""
+"\n"
+" Har stöd för tangentbordsbelysning på: "
+
+#: src/bin/smbios-keyboard-ctl:492
+msgid ""
+"\n"
+" Can configure Keyboard illumination timeout unit in : "
+msgstr ""
+"\n"
+" Kan konfigurera tidsgränsen för tangentbordsbelysning i: "
+
+#: src/bin/smbios-keyboard-ctl:499
+msgid ""
+"\n"
+" Supported Keyboard light brightness levels : "
+msgstr ""
+"\n"
+" Ljusstyrkenivåer för tangentbordet som stöds: "
+
+#: src/bin/smbios-keyboard-ctl:502
+msgid ""
+"\n"
+" Maximum acceptable seconds timeout value   : "
+msgstr ""
+"\n"
+" Maximalt acceptabelt tidsgränsvärde i sekunder: "
+
+#: src/bin/smbios-keyboard-ctl:505
+msgid ""
+"\n"
+" Maximum acceptable minutes timeout value   : "
+msgstr ""
+"\n"
+" Maximalt acceptabelt tidsgränsvärde i minuter : "
+
+#: src/bin/smbios-keyboard-ctl:508
+msgid ""
+"\n"
+" Maximum acceptable hours timeout value     : "
+msgstr ""
+"\n"
+" Maximalt acceptabelt tidsgränsvärde i timmar  : "
+
+#: src/bin/smbios-keyboard-ctl:511
+msgid ""
+"\n"
+" Maximum acceptable days timeout value      : "
+msgstr ""
+"\n"
+" Maximalt acceptabelt tidsgränsvärde i dagar   : "
+
+#: src/bin/smbios-keyboard-ctl:515
+#, c-format
+msgid ""
+"\t Error Return Code: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X "
+msgstr "\t Felreturkod: cbRES1: 0x%X cbRES2: 0x%X cbRES3: 0x%X cbRES4: 0x%X "
+
+#: src/bin/smbios-keyboard-ctl:523 src/bin/smbios-keyboard-ctl:576
+#, c-format
+msgid ""
+"Get Ambient Light Sensor(ALS) Status: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Hämta status för omgivningsljussensor (ALS): "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:526 src/bin/smbios-keyboard-ctl:579
+msgid "Unable to get ALS settings: Feature Not supported on this system\n"
+msgstr ""
+"Kunde inte hämta ALS-inställningar: Funktionen stöds inte på det här "
+"systemet\n"
+
+#: src/bin/smbios-keyboard-ctl:547
+#, c-format
+msgid ""
+"Get Ambient Light Sensor(ALS) Brightness Table: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Hämta tabell för ljusstyrka från omgivningsljussensor (ALS): "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:550
+msgid ""
+"Unable to get ALS Brightness Table: Feature Not supported on this system\n"
+msgstr ""
+"Kunde inte hämta ALS-ljusstyrketabellen: Funktionen stöds inte på det här "
+"systemet\n"
+
+#: src/bin/smbios-keyboard-ctl:563
+#, c-format
+msgid "ALS high/low limit: %d "
+msgstr "ALS hög/låg gräns: %d "
+
+#: src/bin/smbios-keyboard-ctl:596
+msgid "Invalid parm_str detected \n"
+msgstr "Ogiltig parm_str upptäcktes \n"
+
+#: src/bin/smbios-keyboard-ctl:601
+#, c-format
+msgid ""
+"Set Ambient Light Sensor(ALS) Status: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Ställ in status för omgivningsljussensor (ALS): "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-keyboard-ctl:604
+msgid "Unable to Set ALS settings\n"
+msgstr "Kunde inte ställa in ALS-inställningar\n"
+
+#: src/bin/smbios-keyboard-ctl:657
+#, c-format
+msgid "smbios-keyboard-ctl version : %s"
+msgstr "smbios-keyboard-ctl version : %s"
+
+#: src/bin/smbios-keyboard-ctl:662
+msgid "Helper function to print current status of keyboard illumination"
+msgstr ""
+"Hjälpfunktion för att skriva ut aktuell status för tangentbordsbelysning"
+
+#: src/bin/smbios-keyboard-ctl:666
+msgid "Setting USER Selectable Keyboard Mode"
+msgstr "Ställer in tangentbordsläge valbart av ANVÄNDARE"
+
+#: src/bin/smbios-keyboard-ctl:670
+msgid "Setting Keyboard illumination Triggers "
+msgstr "Ställer in aktivering av tangentbordsbelysning "
+
+#: src/bin/smbios-thermal-ctl:48
+msgid "This will Display the Supported Features of USTT and AAC"
+msgstr "Detta visar de funktioner som stöds av USTT och AAC"
+
+#: src/bin/smbios-thermal-ctl:49
+msgid "This will Display the Thermal Information of a system"
+msgstr "Detta visar systemets termiska information"
+
+#: src/bin/smbios-thermal-ctl:50
+msgid "Option to set Thermal Mode; balanced, cool-bottom, quiet, performance"
+msgstr ""
+"Flagga för att ställa in termiskt läge: balanced, cool-bottom, quiet, "
+"performance"
+
+#: src/bin/smbios-thermal-ctl:78
+msgid ""
+"\n"
+" Print all the Available Thermal Information of your system: "
+msgstr ""
+"\n"
+" Skriv ut all tillgänglig termisk information om ditt system: "
+
+#: src/bin/smbios-thermal-ctl:83
+#, c-format
+msgid ""
+"Get Thermal Information: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X, "
+"res[smi.cbRES3]=0x%X"
+msgstr ""
+"Hämta termisk information: res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X, "
+"res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-thermal-ctl:87 src/bin/smbios-thermal-ctl:118
+msgid " Info: Unable to Get Thermal Information on this system\n"
+msgstr " Info: Kunde inte hämta termisk information om detta system\n"
+
+#: src/bin/smbios-thermal-ctl:90
+msgid ""
+" \n"
+"Supported Thermal Modes: "
+msgstr ""
+" \n"
+"Termiska lägen som stöds: "
+
+#: src/bin/smbios-thermal-ctl:96
+msgid ""
+" \n"
+"Supported Active Acoustic Controller (AAC) modes: "
+msgstr ""
+" \n"
+"AAC-lägen (Active Acoustic Controller) som stöds: "
+
+#: src/bin/smbios-thermal-ctl:103
+msgid ""
+" \n"
+"Supported AAC Configuration type: "
+msgstr ""
+" \n"
+"AAC-konfigurationstyper som stöds: "
+
+#: src/bin/smbios-thermal-ctl:114
+#, c-format
+msgid ""
+"Get Thermal Information: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Hämta termisk information: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-thermal-ctl:123
+msgid ""
+"\n"
+" Print Current Status of Thermal Information: "
+msgstr ""
+"\n"
+" Skriv ut aktuell status för termisk information: "
+
+#: src/bin/smbios-thermal-ctl:125
+msgid ""
+" \n"
+"Current Thermal Modes: "
+msgstr ""
+" \n"
+"Aktuella termiska lägen: "
+
+#: src/bin/smbios-thermal-ctl:131 src/bin/smbios-thermal-ctl:138
+msgid ""
+" \n"
+"Current Active Acoustic Controller (AAC) Mode: "
+msgstr ""
+" \n"
+"Aktuellt aktivt läge för akustisk kontroll (AAC): "
+
+#: src/bin/smbios-thermal-ctl:150
+msgid ""
+" \n"
+"Current Fan Failure Mode: "
+msgstr ""
+" \n"
+"Aktuellt fläktfelläge: "
+
+#: src/bin/smbios-thermal-ctl:160
+#, c-format
+msgid "Selected Thermal Mode = %s"
+msgstr "Valt termiskt läge = %s"
+
+#: src/bin/smbios-thermal-ctl:168
+#, c-format
+msgid ""
+"Invalid thermal mode option specified: %s,                        Supported "
+"modes : balanced, cool-bottom, quiet, performance"
+msgstr ""
+"Ogiltig flagga för termiskt läge angiven: %s,                        Lägen "
+"som stöds: balanced, cool-bottom, quiet, performance"
+
+#: src/bin/smbios-thermal-ctl:177
+#, c-format
+msgid ""
+"Set Thermal Information: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+msgstr ""
+"Ställ in termisk information: "
+"res[smi.cbRES1]=0x%X,res[smi.cbRES2]=0x%X,res[smi.cbRES3]=0x%X"
+
+#: src/bin/smbios-thermal-ctl:181
+#, c-format
+msgid ""
+"Set Thermal Information failed: arg2- %x cbRES1: 0x%X                      "
+"cbRES2: 0x%X cbRES3: 0x%X \n"
+msgstr ""
+"Inställning av termisk information misslyckades: arg2- %x cbRES1: "
+"0x%X                      cbRES2: 0x%X cbRES3: 0x%X \n"
+
+#: src/bin/smbios-thermal-ctl:184
+#, c-format
+msgid "Thermal Information Set successfully to: %s"
+msgstr "Termisk information inställd till: %s"
+
+#: src/bin/smbios-thermal-ctl:199
+#, c-format
+msgid "smbios-thermal-ctl version : %s"
+msgstr "smbios-thermal-ctl version : %s"
+
+#: src/bin/smbios-thermal-ctl:200
+msgid " You can use smbios-thermal-ctl utlity to control the fan speed"
+msgstr ""
+" Du kan använda verktyget smbios-thermal-ctl för att styra fläkthastigheten"
+
+#: src/bin/smbios-thermal-ctl:205
+msgid "Helper function to Get current Thermal Mode settings"
+msgstr "Hjälpfunktion för att hämta aktuella inställningar för termiskt läge"
+
+#: src/bin/smbios-thermal-ctl:209
+msgid "Helper function to Set Thermal Mode"
+msgstr "Hjälpfunktion för att ställa in termiskt läge"
+
+#: src/bin/smbios-upflag-ctl.c:49 src/bin/smbios-get-ut-data.c:55
+#: src/bin/smbios-sys-info-lite.c:43 src/bin/smbios-state-byte-ctl.c:47
+msgid "Debug: Memory dump file to use instead of physical memory"
+msgstr ""
+"Felsökning: Minnesdumpfiler som ska användas istället för fysiskt minne"
+
+#: src/bin/smbios-upflag-ctl.c:50 src/bin/smbios-get-ut-data.c:54
+#: src/bin/smbios-state-byte-ctl.c:48
+msgid "Debug: CMOS dump file to use instead of physical cmos"
+msgstr "Felsökning: CMOS-dumpfilen som ska användas istället för fysisk CMOS"
+
+#: src/bin/smbios-upflag-ctl.c:51 src/bin/smbios-upflag-ctl.c:53
+msgid "Set Boot To UP Flag to true"
+msgstr "Ställ in Boot To UP Flag till true"
+
+#: src/bin/smbios-upflag-ctl.c:52
+msgid "Set Boot To UP Flag to false"
+msgstr "Ställ in Boot To UP Flag till false"
+
+#: src/bin/smbios-upflag-ctl.c:54 src/bin/smbios-get-ut-data.c:56
+#: src/bin/smbios-sys-info-lite.c:44 src/bin/smbios-state-byte-ctl.c:51
+msgid "Display libsmbios version information"
+msgstr "Visa versionsinformation för libsmbios"
+
+#: src/bin/smbios-upflag-ctl.c:102
+#, c-format
+msgid "UP Boot Flag SET\n"
+msgstr "UP-uppstartsflagga INSTÄLLD\n"
+
+#: src/bin/smbios-upflag-ctl.c:107
+#, c-format
+msgid "UP Boot Flag NOT SET\n"
+msgstr "UP-uppstartsflagga INTE INSTÄLLD\n"
+
+#: src/bin/smbios-get-ut-data.c:93 src/bin/smbios-sys-info-lite.c:96
+#, c-format
+msgid "Libsmbios:    %s\n"
+msgstr "Libsmbios:    %s\n"
+
+#: src/bin/smbios-get-ut-data.c:110
+#, c-format
+msgid "Dumping CMOS index(%d) data(%d)\n"
+msgstr "Dumpning av CMOS-index(%d) data(%d)\n"
+
+#: src/bin/smbios-get-ut-data.c:116 src/bin/smbios-get-ut-data.c:184
+#, c-format
+msgid "error opening dump file \"%s\": %m\n"
+msgstr "fel vid öppning av dumpfilen \"%s\": %m\n"
+
+#: src/bin/smbios-get-ut-data.c:190
+#, c-format
+msgid "could not allocate memory: %m\n"
+msgstr "kunde inte allokera minne: %m\n"
+
+#: src/bin/smbios-get-ut-data.c:196
+#, c-format
+msgid "could not read from memory: %m\n"
+msgstr "kunde inte läsa från minnet: %m\n"
+
+#: src/bin/smbios-get-ut-data.c:201
+#, c-format
+msgid "could not write to \"%s\": %m\n"
+msgstr "kunde inte skriva till \"%s\": %m\n"
+
+#: src/bin/smbios-sys-info-lite.c:58
+#, c-format
+msgid "OEM String %d: %s\n"
+msgstr "OEM-sträng %d: %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:101
+#, c-format
+msgid "System ID:    0x%04X\n"
+msgstr "System-ID:    0x%04X\n"
+
+#: src/bin/smbios-sys-info-lite.c:104 src/bin/smbios-sys-info-lite.c:114
+#, c-format
+msgid "Error getting the System ID:    unknown error.\n"
+msgstr "Fel vid hämtning av system-ID:  okänt fel.\n"
+
+#: src/bin/smbios-sys-info-lite.c:111
+#, c-format
+msgid "OEM System ID:    0x%04X\n"
+msgstr "OEM-system-ID:    0x%04X\n"
+
+#: src/bin/smbios-sys-info-lite.c:121
+#, c-format
+msgid "Service Tag:  %s\n"
+msgstr "Servicetagg:  %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:122
+#, c-format
+msgid "Express Service Code: %lld\n"
+msgstr "Expresstjänstkod: %lld\n"
+
+#: src/bin/smbios-sys-info-lite.c:126
+#, c-format
+msgid "Error getting the Service Tag:  unknown error\n"
+msgstr "Fel vid hämtning av servicetaggen:  okänt fel\n"
+
+#: src/bin/smbios-sys-info-lite.c:132
+#, c-format
+msgid "Asset Tag:  %s\n"
+msgstr "Tillgångstagg:  %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:135
+#, c-format
+msgid "Error getting the Asset Tag:  unknown error\n"
+msgstr "Fel vid hämtning av tillgångstagg:  okänt fel\n"
+
+#: src/bin/smbios-sys-info-lite.c:141
+#, c-format
+msgid "Product Name: %s\n"
+msgstr "Produktnamn: %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:144
+#, c-format
+msgid "Error getting the System Name:    unknown error.\n"
+msgstr "Fel vid hämtning av systemnamn:   okänt fel.\n"
+
+#: src/bin/smbios-sys-info-lite.c:150
+#, c-format
+msgid "BIOS Version: %s\n"
+msgstr "BIOS-version: %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:153
+#, c-format
+msgid "Error getting the BIOS Version:    unknown error.\n"
+msgstr "Fel vid hämtning av BIOS-version:  okänt fel.\n"
+
+#: src/bin/smbios-sys-info-lite.c:159
+#, c-format
+msgid "Vendor:       %s\n"
+msgstr "Tillverkare:       %s\n"
+
+#: src/bin/smbios-sys-info-lite.c:162
+#, c-format
+msgid "Error getting the Vendor:    unknown error.\n"
+msgstr "Fel vid hämtning av tillverkare:   okänt fel.\n"
+
+#: src/bin/smbios-sys-info-lite.c:166
+#, c-format
+msgid "Is Dell:      %d\n"
+msgstr "Är Dell:      %d\n"
+
+#: src/bin/smbios-state-byte-ctl.c:49
+msgid "Set CMOS state byte to new value"
+msgstr "Ställ in CMOS-tillståndsbyte till nytt värde"
+
+#: src/bin/smbios-state-byte-ctl.c:50
+msgid "Set state byte owner"
+msgstr "Ställ in ägare för tillståndsbyte"
+
+#: src/bin/smbios-state-byte-ctl.c:103
+#, c-format
+msgid "State Byte: 0x%04x\n"
+msgstr "Tillståndsbyte: 0x%04x\n"
+
+#: src/libsmbios_c/cmos/cmos_obj.c:282
+msgid ""
+"There was an allocation failure while trying to construct the cmos object."
+msgstr "Det uppstod ett allokeringsfel vid försöket att skapa cmos-objektet."
+
+#: src/libsmbios_c/cmos/cmos_linux.c:75
+msgid "Error trying to raise IO Privilege level.\n"
+msgstr "Fel vid försök att höja IO-behörighetsnivån.\n"
+
+#: src/libsmbios_c/cmos/cmos_linux.c:76
+msgid "The OS Error string was: "
+msgstr "OS-felsträngen var: "
+
+#: src/libsmbios_c/common/common.c:17
+msgid ""
+"This message should be localized if setlocale() has been called and gettext "
+"compiled in.\n"
+msgstr ""
+"Detta meddelande bör lokaliseras om setlocale() har anropats och gettext har "
+"kompilerats in.\n"
+
+#: src/libsmbios_c/memory/memory_linux.c:166
+msgid "File size is too small: File: "
+msgstr "Filstorleken är för liten: Fil: "
+
+#: src/libsmbios_c/memory/memory_linux.c:171
+msgid "Could not (re)open file. File: "
+msgstr "Kunde inte (åter)öppna filen. Fil: "
+
+#: src/libsmbios_c/memory/memory_linux.c:182
+msgid "The mmap() call returned mapping of -1 (failure). File: "
+msgstr "mmap()-anropet returnerade mappningen -1 (fel). Fil: "
+
+#: src/libsmbios_c/memory/memory_linux.c:204
+#: src/libsmbios_c/memory/memory_linux.c:316
+#: src/libsmbios_c/smi/smi_linux.c:431
+msgid ""
+"\n"
+"The OS Error string was: "
+msgstr ""
+"\n"
+"OS-felsträngen var: "
+
+#: src/libsmbios_c/memory/memory_linux.c:273
+msgid ""
+"There was an allocation failure while trying to construct the memory object. "
+"Filename: "
+msgstr ""
+"Det uppstod ett allokeringsfel när minnesobjektet skulle skapas. Filnamn: "
+
+#: src/libsmbios_c/memory/memory_linux.c:296
+msgid "File open error during memory object construction. The filename: "
+msgstr "Fel vid öppning av fil under konstruktion av minnesobjekt. Filnamnet: "
+
+#: src/libsmbios_c/smbios/smbios_obj.c:348
+msgid ""
+"Allocation error trying to allocate memory for error string. (ironic, "
+"yes?) \n"
+msgstr ""
+"Allokeringsfel vid försök att allokera minne för felsträng. (ironiskt, eller "
+"hur?) \n"
+
+#: src/libsmbios_c/smbios/smbios_obj.c:355
+msgid ""
+"Could not instantiate SMBIOS table. The errors from the low-level modules "
+"were:\n"
+msgstr ""
+"Kunde inte instansiera SMBIOS-tabellen. Felen från lågnivåmodulerna var:\n"
+
+#: src/libsmbios_c/smi/smi_obj.c:286
+msgid "Failed to find appropriate SMBIOS 0xD4 structure.\n"
+msgstr "Misslyckades med att hitta lämplig SMBIOS 0xD4-struktur.\n"
+
+#: src/libsmbios_c/smi/smi_obj.c:295
+msgid "Failed to allocate memory for error string.\n"
+msgstr "Misslyckades med att allokera minne för felsträngen.\n"
+
+#: src/libsmbios_c/smi/smi_linux.c:430
+msgid ""
+"There was an error trying to perform the smi execute() cmd. Is the 'dcdbas' "
+"kernel module loaded?"
+msgstr ""
+"Det uppstod ett fel vid försöket att utföra kommandot smi execute(). Är "
+"kärnmodulen 'dcdbas' inläst?"
+
+#: src/libsmbios_c/token/token_d4.c:87
+msgid "error reading cmos. Lowlevel returned: \n"
+msgstr "fel vid läsning av CMOS. Lågnivå returnerad: \n"
+
+#: src/libsmbios_c/token/token_d4.c:104
+msgid "Error trying to read cmos. Lowlevel returned: \n"
+msgstr "Fel vid försök att läsa cmos. Lowlevel returnerade:\n"
+
+#: src/libsmbios_c/token/token_d4.c:124
+msgid "error trying to write cmos. Lowlevel returned: \n"
+msgstr "fel vid försök att skriva cmos. Lowlevel returnerade: \n"
+
+#: src/libsmbios_c/token/token_d4.c:181 src/libsmbios_c/token/token_d4.c:221
+msgid "Error while trying to write cmos. Lowlevel error was:\n"
+msgstr "Fel vid försök att skriva cmos. Lågnivåfelet var:\n"
+
+#: src/libsmbios_c/token/token_d4.c:309
+msgid "Error trying to set up CMOS checksum routines.\n"
+msgstr "Fel vid försök att konfigurera rutiner för CMOS-kontrollsumma.\n"
+
+#: src/libsmbios_c/token/token_d4.c:342
+msgid "Allocation failure while trying to create token object."
+msgstr "Allokeringsfel vid försök att skapa tokenobjekt."
+
+#: src/libsmbios_c/token/token_obj.c:264
+msgid "Failed to obtain smbios table.\n"
+msgstr "Misslyckades med att hämta smbios-tabellen.\n"
+
+#: src/libsmbios_c/token/token_obj.c:274
+msgid "Memory allocation failure allocating error string.\n"
+msgstr "Minneallokeringsfel vid allokering av felsträng.\n"
+
+#: src/libsmbios_c/token/token_obj.c:279
+msgid "Error while trying to add 0xD4 tokens.\n"
+msgstr "Fel vid försök att lägga till 0xD4-tokens.\n"
+
+#: src/python/libsmbios_c/_common.py:47
+msgid "null pointer returned"
+msgstr "null-pekare returnerad"
+
+#: src/python/libsmbios_c/_common.py:56
+msgid "function returned error value of zero"
+msgstr "funktionen returnerade felvärdet noll"
+
+#: src/python/libsmbios_c/_common.py:65
+msgid "function returned negative error code"
+msgstr "funktionen returnerade negativ felkod"
+
+#: src/python/libsmbios_c/smbios.py:89 src/python/libsmbios_c/smbios.py:100
+msgid "hit end of table."
+msgstr "träffade tabellslut."
+
+#: src/python/libsmbios_c/smbios.py:107
+#, python-format
+msgid "No SMBIOS structure found with handle %s"
+msgstr "Ingen SMBIOS-struktur hittades med handtaget %s"
+
+#: src/python/libsmbios_c/smbios.py:115
+#, python-format
+msgid "No SMBIOS structure found with type %s"
+msgstr "Ingen SMBIOS-struktur hittades med typen %s"
+
+#: src/python/libsmbios_c/smi.py:116
+msgid "SMI executed but returned error"
+msgstr "SMI kördes men returnerade fel"
+
+#: src/python/libsmbios_c/smi.py:118
+msgid "SMI is unsupported"
+msgstr "SMI stöds inte"
+
+#: src/python/libsmbios_c/smi.py:120
+msgid "SMI did not execute"
+msgstr "SMI kördes inte"
+
+#: src/python/libsmbios_c/smi.py:122
+msgid "The output buffer the BIOS requires is in the wrong format"
+msgstr "Den utdatabuffert som BIOS kräver har fel format"
+
+#: src/python/libsmbios_c/smi.py:124
+msgid "The output buffer the BIOS requires is too small"
+msgstr "Den utdatabuffert som BIOS kräver är för liten"
+
+#: src/python/libsmbios_c/system_info.py:54
+msgid "Could not determine System ID."
+msgstr "Kunde inte fastställa system-ID."
+
+#: src/python/libsmbios_c/smbios_token.py:139
+msgid "Cannot dereference NULL ID"
+msgstr "Kan inte avreferera NULL-ID"
+
+#: src/python/libsmbios_c/smbios_token.py:145
+#, python-format
+msgid "SMBIOS Token ID 0x%04x not found"
+msgstr "SMBIOS-token-ID 0x%04x hittades inte"
